@@ -45,19 +45,20 @@ class MathSearchHooks {
 	 * @param $parser Parser
 	 * @return
 	 */
-	static function onMathFormulaRendered( $Renderer ) {
+	static function onMathFormulaRendered( $Renderer,$parser ) {
 		$dbw = wfGetDB( DB_MASTER );
-		wfDebugLog("MathSearch",'Store index for $'.$Renderer->tex.'$ in database');
+		wfDebugLog("MathSearch",'Store index for $'.$Renderer->getTex().'$ in database');
 		$inputhash = $dbw->encodeBlob( $Renderer->getInputHash() );
 		$dbw->replace('mathindex',
 		array( 'pageid','anchor', ),
 		array(
-				'pageid' => $Renderer->pageID,
-				'anchor' =>  $Renderer->anchor ,
+				'pageid' => $parser->getTitle()->getArticleID(),
+				'anchor' =>  $Renderer->getAnchorID() ,
 				'inputhash' => $inputhash
 				));
-			wfDebugLog("Math","inputhash=$inputhash (".md5($Renderer->tex).")");
+			wfDebugLog("Math","inputhash=$inputhash (".md5($Renderer->getTex()).")");
 		return true;
 
 }
+
 }
