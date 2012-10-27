@@ -9,15 +9,9 @@
 $specialPageAliases = array();
  
 /** English
- * @author <your username>
+ * @author Moritz Schubotz
  */
 $specialPageAliases['en'] = array(
-        'MathSearch' => array( 'MathSearch', 'My Extension' ),
+        'MathSearch' => array( 'MathSearch' ),
 );
- 
-/** Deutsch
- * @author <your username>
- */
-$specialPageAliases['de'] = array(
-        'MathSearch' => array( 'MeineErweiterung', 'Meine Erweiterung' ),
-);
+

@@ -8,16 +8,16 @@
 $messages = array();
  
 /** English
- * @author <your username>
+ * @author Moritz Schubotz
  */
 $messages['en'] = array(
-        'MathSearch' => 'My Extension', // Ignore
-        'MathSearch-desc' => "Extension's description",
+        'mathsearch-desc' => 'Integrates the [http://search.mathweb.org/about.html MathWeb Search] engine',
 );
  
 /** Message documentation
- * @author <your username>
+ * @author Moritz Schubotz
  */
 $messages['qqq'] = array(
-        'MathSearch-desc' => "{{desc}}",
+        'mathsearch-desc' => "{{desc}}",
 );
+

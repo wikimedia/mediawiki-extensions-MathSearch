@@ -13,7 +13,7 @@ $wgExtensionCredits['specialpage'][] = array(
         'name' => 'MathSearch',
         'author' => 'Moritz Schubotz',
         'url' => 'https://www.mediawiki.org/wiki/Extension:MathSearch',
-        'descriptionmsg' => 'MathSearch-desc',
+        'descriptionmsg' => 'mathsearch-desc',
         'version' => '0.0.0',
 );
  
