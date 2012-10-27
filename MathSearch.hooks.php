@@ -43,7 +43,7 @@ class MathSearchHooks {
 	 * @param $content
 	 * @param $attributes
 	 * @param $parser Parser
-	 * @return
+	 * @return boolean (true)
 	 */
 	static function onMathFormulaRendered( $Renderer,$parser ) {
 		$dbw = wfGetDB( DB_MASTER );
@@ -56,7 +56,6 @@ class MathSearchHooks {
 				'anchor' =>  $Renderer->getAnchorID() ,
 				'inputhash' => $inputhash
 				));
-			wfDebugLog("Math","inputhash=$inputhash (".md5($Renderer->getTex()).")");
 		return true;
 
 }
