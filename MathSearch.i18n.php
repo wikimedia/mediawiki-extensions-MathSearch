@@ -35,11 +35,32 @@ $messages['es'] = array(
 	'mathsearch-desc' => 'Integra el motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
+/** French (français)
+ * @author Gomoko
+ */
+$messages['fr'] = array(
+	'mathsearch-desc' => 'Intégrer le moteur [http://search.mathweb.org/about.html MathWeb Search]',
+);
+
+/** Galician (galego)
+ * @author Toliño
+ */
+$messages['gl'] = array(
+	'mathsearch-desc' => 'Integra o motor [http://search.mathweb.org/about.html MathWeb Search]',
+);
+
 /** Upper Sorbian (hornjoserbsce)
  * @author Michawiki
  */
 $messages['hsb'] = array(
 	'mathsearch-desc' => 'Integruje [http://search.mathweb.org/about.html pytawu MathWeb]',
+);
+
+/** Italian (italiano)
+ * @author Beta16
+ */
+$messages['it'] = array(
+	'mathsearch-desc' => 'Integra il motore di ricerca [http://search.mathweb.org/about.html MathWeb]',
 );
 
 /** Japanese (日本語)
