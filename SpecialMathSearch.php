@@ -31,7 +31,7 @@ class SpecialMathSearch extends SpecialPage {
   $text = $wgRequest->getVal( 'text' );
   // $pattern = null;
   if ( $s = $wgRequest->getVal( 'pattern' ) ) $pattern = $s;
-  else if ( $param ) $pattern = $param;
+  else if ( $param ) $pattern = htmlspecialchars_decode($param);
   $wgOut->addHTML( $this->searchForm( $pattern, $text ) );
   $time_start = microtime( true );
   if ( $pattern ) { $this->render( $pattern );
@@ -46,11 +46,18 @@ class SpecialMathSearch extends SpecialPage {
    // $wgOut->addWikiText($this->searchResults($pattern));
 	$mathout = "";
 		// $wgOut->addWikiText(var_export($this->mathResults,true));
+	if($this->mathResults)
 		foreach ( $this->mathResults as $pageID => $page ) {
 			$article = Article::newFromId( $pageID );
+			if ($article)
+			{
 			$pagename = (string)$article->getTitle();
 			$wgOut->addWikiText( "[[$pagename]]:" );
 			$this->DisplayMath( $pageID );
+			//echo "success with pid:$pageID\n";
+			}
+			else
+				echo "error with pid:$pageID update mathematical index\n";
 		}
   } // *
   $ls = new LuceneSearch();
@@ -85,7 +92,25 @@ $pageList = "";
   wfDebugLog( 'mathsearch', 'EOF' );
   wfDebugLog( 'mathsearch', var_export( $this->mathResults , true ) );
   }
-  $wgOut->addWikiText( $pattern );
+  //$wgOut->addHtml(htmlspecialchars( $pattern) );
+    $wgOut->addWikiText("<math> $pattern </math>" );
+	//dbw = wfGetDB( DB_MASTER );$dbw->encodeBlob(pack( 'H32'
+	//$inputhash= $dbw->encodeBlob(pack( 'H32',md5($pattern) );
+	//$wgOut->addWikiText("$inputhash");
+	$dbr = wfGetDB( DB_SLAVE );
+	$inputhash= $dbr->encodeBlob(pack( 'H32',md5($pattern) ));
+	$rpage = $dbr->select(
+			'mathindex',
+			array(
+				'pageid', 'anchor', 'timestamp'//,'math_mathml'
+			),
+			array(
+				'inputhash' =>$inputhash # Binary packed, not hex
+			),
+			__METHOD__
+		);
+		foreach($rpage as $row)
+			var_dump($row);
   /*$wt="{{#ask:".substr($pageList,2)."
 | ?Dct:title
 | ?Personname
@@ -113,9 +138,9 @@ function DisplayMath( $pageID ) {
 		if ( $res ) {
 			$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
 			$wgOut->addWikiText( "[[$pagename#math$anchorID|Eq: $anchorID]] ", false );
-			$wgOut->addHtml( MathRenderer::embedMathML( $res->mathml ) );
+			$wgOut->addHtml( MathLaTeXML::embedMathML( $res->mathml ) );
 			$wgOut->addHtml( "<br />" );
-			wfDebugLog( "MathSearch", "PositionInfo:" . var_export( $this->MathResults[$pageID][$anchorID], true ) );
+			wfDebugLog( "MathSearch", "PositionInfo:" . var_export( $this->mathResults[$pageID][$anchorID], true ) );
 			}
 		else
 			wfDebugLog( "MathSearch", "Failure: Could not get entry $anchorID for page $pagename (id $pageID) :" . var_export( $this->mathResults, true ) );
@@ -150,15 +175,21 @@ return true;
  }
 
  function LaTeXMLRender( $URL, $texcmd ) {
-  $texcmd = urlencode( "\$" . $texcmd . "\$" );
+ global $wgOut;
+  //$texcmd = urlencode( "\$ $texcmd urlencode \$" );
   $post = "profile=mwsquery&tex=$texcmd";
       $time_start = microtime( true );
-    $res = Http::post( $URL, array( "postData" => $post, "timeout" => 60 ) );
+    $res = Http::post( $URL."?profile=mwsquery", array( "postData" => $texcmd, "timeout" => 60 ) );
   $time_end = microtime( true );
     $time = $time_end - $time_start;
   wfDebugLog( "MathSearch", "rendered in $time seconds" );
 
   $result = json_decode( $res );
+   //var_dump($result);
+     //$wgOut->addHTML( "Query:\n". htmlspecialchars ($result->result));
+  wfDebugLog( "MathSearch", "Latexml request: ".var_export($post,true)."\n" );
+  wfDebugLog( "MathSearch", "Latexml output:\n".var_export( $result,true)."\n---\n" );
+  $wgOut->addHTML( "Query:<br />". htmlspecialchars (var_export($result->result,true))."<br />");
   if ( $result->result ) {
 		return $result->result;
   } else {
@@ -166,8 +197,7 @@ return true;
    // var_dump($post);
    die( "bad request $URL" );
   }
-  wfDebugLog( "MathSearch", "Latexml request: $post\n" );
-  wfDebugLog( "MathSearch", "Latexml output:\n $result\n---\n" );
+
  }
 
  function render( $tex ) {

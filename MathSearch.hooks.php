@@ -37,7 +37,7 @@ class MathSearchHooks {
 		return true;
 	}
 	
-		/**
+	/**
 	 * Callback function that is called after a formula was rendered
 	 *
 	 * @param $content
@@ -45,19 +45,19 @@ class MathSearchHooks {
 	 * @param $parser Parser
 	 * @return boolean (true)
 	 */
-	static function onMathFormulaRendered( $Renderer,$parser ) {
+	static function onMathFormulaRendered( $Renderer) {
 		$dbw = wfGetDB( DB_MASTER );
 		wfDebugLog("MathSearch",'Store index for $'.$Renderer->getTex().'$ in database');
 		$inputhash = $dbw->encodeBlob( $Renderer->getInputHash() );
 		$dbw->replace('mathindex',
 		array( 'pageid','anchor', ),
 		array(
-				'pageid' => $parser->getTitle()->getArticleID(),
+				'pageid' => $Renderer->getPageID(),
 				'anchor' =>  $Renderer->getAnchorID() ,
 				'inputhash' => $inputhash
 				));
 		return true;
+	}
 
-}
 
 }
