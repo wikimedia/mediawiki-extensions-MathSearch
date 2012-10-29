@@ -24,58 +24,84 @@
 require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
 
 class CreateMath extends Maintenance {
+	var $res;
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
-		//$this->addOption( 'show-private', 'Show the text even if it\'s not available to the public' );
-		//$this->addArg( 'title', 'Page title' );
+		$this->addArg('dir','The directory where the harvest files go to.');
+		$this->addArg('ffmax',"The maximal number of formula per file.",false);
 	}
+	
 	private function generateIndexString($row){
 	// enable user error handling
 	//var_dump($row);
 	//return true;
 	//die("EOF");
 	//if(!is_null($row->mathml)){
+	$out="";
 		try{ 
+		set_error_handler(create_function('', "throw new Exception(); return true;"));
 			$xml=new SimpleXMLElement($row->mathml);
 			//var_dump($xml->math->semantics);
-			if($xml->math->semantics->{'annotation-xml'})
-			$smath= $xml->math->semantics->{'annotation-xml'}->children()->asXML();
-			else //EMPTY math
-				return false;
+			if($xml->math){
+			//$smath= $xml->math->semantics->{'annotation-xml'}->children()->asXML();
+
+			$out.="\n<mws:expr url=\"".$row->pageid."#math".$row->anchor."\">\n\t";
+		//$this->output( $smath )  ;
+			//$this->output($xml->math->children()->asXML());
+
+		$out.=$xml->math->children()->asXML();
+		$out.= "\n</mws:expr>\n";
+				return $out;
+		}			//else //EMPTY math
+				return "";
+					//die($out);
 		} catch (Exception $e){ 
 			echo "ERROR while converting ".var_export($row,true).":$e";
-			return false;
+			return "";
 		}
-		$this->output( "\n<mws:expr url=\"".$row->pageid."#math".$row->anchor."\">\n\t");
-		$this->output( $smath )  ;
-		$this->output( "\n</mws:expr>\n");
-		return true;
 		//}		else		return false;
 	}
+	private function wFile($fn,$min,$inc){
 
-	public function execute() {
-		$db = wfGetDB( DB_SLAVE );
-		$res = $db->select(
-        'mathsearch',                                   // $table
-        array( 'pageid',	'anchor',	'mathml' )//,            // $vars (columns of the table)
-		/*'',
-		__METHOD__,  
-		array( 'LIMIT'=> '10')*/
-		);
+		//if($res&&sizeof($res)>0){
 		$XMLHead=<<<XML
 <?xml version="1.0"?>
 <mws:harvest xmlns:mws="http://search.mathweb.org/ns" xmlns:m="http://www.w3.org/1998/Math/MathML">
 XML;
-		$XMLBody="</mws:harvest>";
-		$this->output( $XMLHead);
-		foreach($res as $row){
-			$this->generateIndexString($row);
+		$XMLFooter="</mws:harvest>";
+		$out= $XMLHead;
+		$max=$min+$inc;
+		for($i=$min;$i<$max;$i++){
+			$this->res->seek($i);
+			$out.=$this->generateIndexString($this->res->fetchObject());
+		}
+		$out.= "\n".$XMLFooter ;
+		$fh = fopen($fn, 'w');
+		fwrite($fh,$out);
+		fclose($fh);
+		//die ("written");
+		return true;
 		}
 
-		$this->output( "\n".$XMLBody );
-	}
+	public function execute() {
+		$i=0;
+		$inc = $this->getArg(1,1000); 
+		$db = wfGetDB( DB_SLAVE );
+		$this->res = $db->select(
+        'mathsearch',                                   // $table
+        array( 'pageid',	'anchor',	'mathml' )/*,            // $vars (columns of the table)
+		'',
+		__METHOD__,  
+		array( 'LIMIT'=> $inc, 'OFFSET'=>$min)//*/
+		);
+		do{
+			$fn = $this->getArg(0) .'/math'.sprintf('%012d',$i ).'.xml';
+			$res=$this->wFile($fn,$i,$inc);
+			$i+=$inc;
+		} while ($res);
+		
 }
-
+}
 $maintClass = "CreateMath";
 require_once( RUN_MAINTENANCE_IF_MAIN );

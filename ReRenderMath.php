@@ -25,6 +25,7 @@ require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
 
 class UpdateMath extends Maintenance {
 	const RTI_CHUNK_SIZE = 10;
+	var $purge=false;
 	
 	/**
 	 * @var DatabaseBase
@@ -34,7 +35,7 @@ class UpdateMath extends Maintenance {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
 		//$this->addArg('dir','The directory where the harvest files go to.');
-		$this->addArg('ffmax',"The maximal number of formula per file.",false);
+		$this->addOption('purge',"If set all formulae are rendered again from strech. (Very time consuming!)",false,false,"f");
 		//$this->addOption( 'show-private', 'Show the text even if it\'s not available to the public' );
 		//$this->addArg( 'title', 'Page title' );
 	}
@@ -45,9 +46,9 @@ class UpdateMath extends Maintenance {
 		$res = $this->db->select( 'page', 'MAX(page_id) AS count' );
 		$s = $this->db->fetchObject( $res );
 		$count = $s->count;
-		$this->output( "Rebuilding index fields for {$count} pages...\n" );
+		$this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
 		$n = 0;
-		$fcout=0;
+		$fcount=0;
 	
 		while ( $n < $count ) {
 			if ( $n ) {
@@ -63,15 +64,15 @@ class UpdateMath extends Maintenance {
 	
 			foreach ( $res as $s ) {
 				$revtext = Revision::getRevisionText( $s );
-				$fcout+=self::doUpdate( $s->page_id, $revtext, $s->page_title );
+				$fcount+=self::doUpdate( $s->page_id, $revtext, $s->page_title,$this->purge );
 			}
 			$n += self::RTI_CHUNK_SIZE;
 		}
 		$this->output( "Updated {$fcount} formulae!\n" );
 	}
-	private static  function doUpdate($pId,$pText,$pTitle=""){
+	private static function doUpdate($pId,$pText,$pTitle="",$purge=false){
 		//TODO: fix link id problem
-		$anchorID=-1;
+		$anchorID=0;
 		$matches=preg_match_all("#<math>(.*?)</math>#s", $pText,$math);
 		if($matches){
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
@@ -79,9 +80,8 @@ class UpdateMath extends Maintenance {
 				$renderer=MathRenderer::getRenderer($formula,array(),MW_MATH_LATEXML);
 				$renderer->setAnchorID($anchorID++);
 				$renderer->setPageID($pId);
-				$renderer->render();
-				wfRunHooks( 'MathFormulaRendered',
-				array( &$renderer) );//Enables indexing of math formula
+				$renderer->render($purge);
+				$res=wfRunHooks( 'MathFormulaRendered',array( &$renderer) );//Enables indexing of math formula
 				$renderer->writeCache();
 			}
 			return $matches;
@@ -89,6 +89,7 @@ class UpdateMath extends Maintenance {
 		return 0;
 	}
 	public function execute() {
+		$this->purge = $this->getOption("purge",false); 
 		$this->db = wfGetDB( DB_MASTER );
 		$this->output( "Done.\n" );
 		$this->populateSearchIndex();
