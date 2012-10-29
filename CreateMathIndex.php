@@ -38,18 +38,19 @@ class CreateMath extends Maintenance {
 	//return true;
 	//die("EOF");
 	//if(!is_null($row->mathml)){
+	//var_dump($row->mathml);
 	$out="";
 		try{ 
 		set_error_handler(create_function('', "throw new Exception(); return true;"));
 			$xml=new SimpleXMLElement($row->mathml);
 			//var_dump($xml->math->semantics);
 			if($xml->math){
-			//$smath= $xml->math->semantics->{'annotation-xml'}->children()->asXML();
+			$smath= $xml->math->semantics->{'annotation-xml'}->children()->asXML();
 
 			$out.="\n<mws:expr url=\"".$row->pageid."#math".$row->anchor."\">\n\t";
 		//$this->output( $smath )  ;
 			//$this->output($xml->math->children()->asXML());
-
+		//$out.=$row->mathml;
 		$out.=$xml->math->children()->asXML();
 		$out.= "\n</mws:expr>\n";
 				return $out;
@@ -71,7 +72,7 @@ class CreateMath extends Maintenance {
 XML;
 		$XMLFooter="</mws:harvest>";
 		$out= $XMLHead;
-		$max=$min+$inc;
+		$max=max($min+$inc,$this->res->numRows()-1);
 		for($i=$min;$i<$max;$i++){
 			$this->res->seek($i);
 			$out.=$this->generateIndexString($this->res->fetchObject());
@@ -80,8 +81,10 @@ XML;
 		$fh = fopen($fn, 'w');
 		fwrite($fh,$out);
 		fclose($fh);
+		if($max<$this->res->numRows()-1)
 		//die ("written");
 		return true;
+		else return false;
 		}
 
 	public function execute() {
@@ -100,7 +103,7 @@ XML;
 			$res=$this->wFile($fn,$i,$inc);
 			$i+=$inc;
 		} while ($res);
-		
+		echo("done");
 }
 }
 $maintClass = "CreateMath";
