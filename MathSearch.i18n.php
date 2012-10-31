@@ -70,6 +70,13 @@ $messages['ja'] = array(
 	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 検索]エンジンを統合する',
 );
 
+/** Korean (한국어)
+ * @author 아라
+ */
+$messages['ko'] = array(
+	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 검색] 엔진 통합',
+);
+
 /** Macedonian (македонски)
  * @author Bjankuloski06
  */
