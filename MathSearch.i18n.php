@@ -83,3 +83,10 @@ $messages['ko'] = array(
 $messages['mk'] = array(
 	'mathsearch-desc' => 'Овозможува интеграција на пребарувачот [http://search.mathweb.org/about.html MathWeb]',
 );
+
+/** Simplified Chinese (中文（简体）‎)
+ * @author Yfdyh000
+ */
+$messages['zh-hans'] = array(
+	'mathsearch-desc' => '整合[http://search.mathweb.org/about.html MathWeb 搜索]引擎',
+);
