@@ -50,11 +50,11 @@ class MathSearchHooks {
 		wfDebugLog( "MathSearch", 'Store index for $' . $Renderer->getTex() . '$ in database' );
 		$inputhash = $dbw->encodeBlob( $Renderer->getInputHash() );
 		$dbw->replace( 'mathindex',
-		array( 'pageid', 'anchor', ),
+		array( 'mathindex_pageid', 'anchor', ),
 		array(
-				'pageid' => $Renderer->getPageID(),
-				'anchor' =>  $Renderer->getAnchorID() ,
-				'inputhash' => $inputhash
+				'mathindex_page_id' => $Renderer->getPageID(),
+				'mathindex_anchor' =>  $Renderer->getAnchorID() ,
+				'mathindex_inputhash' => $inputhash
 				) );
 		return true;
 	}

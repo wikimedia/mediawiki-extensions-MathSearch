@@ -18,11 +18,13 @@ CREATE TABLE /*_*/mathindex (
   -- Timestamp. Is set by the database autmatically
   mathindex_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  PRIMARY KEY mathindex_pagename (mathindex_page_id,mathindex_anchor),
-  KEY mathindex_inputhash (mathindex_inputhash),
-  KEY mathindex_pageid (mathindex_page_id)
+  PRIMARY KEY (mathindex_page_id,mathindex_anchor)
+
   
 ) /*$wgDBTableOptions*/;
+
+  CREATE INDEX /*i*/mathindex_inputhash ON mathindex (mathindex_inputhash);
+  CREATE INDEX /*i*/mathindex_page_id ON mathindex (mathindex_page_id);
 
 --
 -- RELATIONEN DER TABELLE `mathindex`:

@@ -40,26 +40,35 @@ class CreateMath extends Maintenance {
 	// if(!is_null($row->mathml)){
 	// var_dump($row->mathml);
 	$out = "";
-		try {
-		set_error_handler( create_function( '', "throw new Exception(); return true;" ) );
-			$xml = new SimpleXMLElement( $row->mathml );
+		//try {
+		//set_error_handler( create_function( '', "throw new Exception(); return true;" ) );
+                $xml= simplexml_load_string($row->math_mathml);
+                if (!$xml) {
+    echo "Failed loading XML\n";
+    foreach(libxml_get_errors() as $error) {
+        echo "\t", $error->message;
+    }
+    libxml_clear_errors();
+    echo "ERROR while converting " . var_export( $row->math_mathml, true ) . ":$e";
+    return "";}
+			//$xml = new SimpleXMLElement( $row->math_mathml );
 			// var_dump($xml->math->semantics);
 			if ( $xml->math ) {
 			$smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
 
-			$out .= "\n<mws:expr url=\"" . $row->pageid . "#math" . $row->anchor . "\">\n\t";
+			$out .= "\n<mws:expr url=\"" . $row->mathindex_page_id . "#math" . $row->mathindex_anchor . "\">\n\t";
 		// $this->output( $smath )  ;
 			// $this->output($xml->math->children()->asXML());
 		// $out.=$row->mathml;
 		$out .= $xml->math->children()->asXML();
 		$out .= "\n</mws:expr>\n";
 				return $out;
-		}			// else //EMPTY math
-				return "";
+	//	}			// else //EMPTY math
+		//		return "";
 					// die($out);
-		} catch ( Exception $e ) {
-			echo "ERROR while converting " . var_export( $row, true ) . ":$e";
-			return "";
+		//} catch ( Exception $e ) {
+			//echo "ERROR while converting " . var_export( $row, true ) . ":$e";
+			
 		}
 		// }		else		return false;
 	}
@@ -76,6 +85,8 @@ XML;
 		for ( $i = $min; $i < $max; $i++ ) {
 			$this->res->seek( $i );
 			$out .= $this->generateIndexString( $this->res->fetchObject() );
+            restore_error_handler (  );
+
 		}
 		$out .= "\n" . $XMLFooter ;
 		$fh = fopen( $fn, 'w' );
@@ -88,13 +99,14 @@ XML;
 		}
 
 	public function execute() {
+        libxml_use_internal_errors(true);
 		$i = 0;
 		$inc = $this->getArg( 1, 1000 );
 		$db = wfGetDB( DB_SLAVE );
 		$this->res = $db->select(
-        'mathsearch',                                   // $table
-        array( 'pageid',	'anchor',	'mathml' )/*,            // $vars (columns of the table)
-		'',
+        array('mathindex','math'),                                   // $table
+        array( 'mathindex_page_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash','mathindex_inputhash' ),            // $vars (columns of the table)
+		'math_inputhash = mathindex_inputhash'/*,
 		__METHOD__,
 		array( 'LIMIT'=> $inc, 'OFFSET'=>$min)//*/
 		);
