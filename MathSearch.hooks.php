@@ -45,7 +45,7 @@ class MathSearchHooks {
 	 * @param $parser Parser
 	 * @return boolean (true)
 	 */
-	static function onMathFormulaRendered( $Renderer ) {
+	static function onMathFormulaRendered( $Renderer) {
 		$dbw = wfGetDB( DB_MASTER );
 		wfDebugLog( "MathSearch", 'Store index for $' . $Renderer->getTex() . '$ in database' );
 		$inputhash = $dbw->encodeBlob( $Renderer->getInputHash() );
