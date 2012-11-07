@@ -40,18 +40,18 @@ class CreateMath extends Maintenance {
 	// if(!is_null($row->mathml)){
 	// var_dump($row->mathml);
 	$out = "";
-		//try {
-		//set_error_handler( create_function( '', "throw new Exception(); return true;" ) );
-                $xml= simplexml_load_string($row->math_mathml);
-                if (!$xml) {
+		// try {
+		// set_error_handler( create_function( '', "throw new Exception(); return true;" ) );
+                $xml = simplexml_load_string( $row->math_mathml );
+                if ( !$xml ) {
     echo "Failed loading XML\n";
-    foreach(libxml_get_errors() as $error) {
+    foreach ( libxml_get_errors() as $error ) {
         echo "\t", $error->message;
     }
     libxml_clear_errors();
     echo "ERROR while converting " . var_export( $row->math_mathml, true ) . ":$e";
-    return "";}
-			//$xml = new SimpleXMLElement( $row->math_mathml );
+    return ""; }
+			// $xml = new SimpleXMLElement( $row->math_mathml );
 			// var_dump($xml->math->semantics);
 			if ( $xml->math ) {
 			$smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
@@ -66,9 +66,9 @@ class CreateMath extends Maintenance {
 	//	}			// else //EMPTY math
 		//		return "";
 					// die($out);
-		//} catch ( Exception $e ) {
-			//echo "ERROR while converting " . var_export( $row, true ) . ":$e";
-			
+		// } catch ( Exception $e ) {
+			// echo "ERROR while converting " . var_export( $row, true ) . ":$e";
+
 		}
 		// }		else		return false;
 	}
@@ -99,13 +99,13 @@ XML;
 		}
 
 	public function execute() {
-        libxml_use_internal_errors(true);
+        libxml_use_internal_errors( true );
 		$i = 0;
 		$inc = $this->getArg( 1, 1000 );
 		$db = wfGetDB( DB_SLAVE );
 		$this->res = $db->select(
-        array('mathindex','math'),                                   // $table
-        array( 'mathindex_page_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash','mathindex_inputhash' ),            // $vars (columns of the table)
+        array( 'mathindex', 'math' ),                                   // $table
+        array( 'mathindex_page_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash', 'mathindex_inputhash' ),            // $vars (columns of the table)
 		'math_inputhash = mathindex_inputhash'/*,
 		__METHOD__,
 		array( 'LIMIT'=> $inc, 'OFFSET'=>$min)//*/
