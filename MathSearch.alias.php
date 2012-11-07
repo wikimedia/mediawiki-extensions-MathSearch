@@ -5,9 +5,9 @@
  * @file
  * @ingroup Extensions
  */
- 
+
 $specialPageAliases = array();
- 
+
 /** English
  * @author Moritz Schubotz
  */

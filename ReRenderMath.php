@@ -25,8 +25,8 @@ require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
 
 class UpdateMath extends Maintenance {
 	const RTI_CHUNK_SIZE = 10;
-	var $purge=false;
-	
+	var $purge = false;
+
 	/**
 	 * @var DatabaseBase
 	 */
@@ -34,10 +34,10 @@ class UpdateMath extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
-		//$this->addArg('dir','The directory where the harvest files go to.');
-		$this->addOption('purge',"If set all formulae are rendered again from strech. (Very time consuming!)",false,false,"f");
-		//$this->addOption( 'show-private', 'Show the text even if it\'s not available to the public' );
-		//$this->addArg( 'title', 'Page title' );
+		// $this->addArg('dir','The directory where the harvest files go to.');
+		$this->addOption( 'purge', "If set all formulae are rendered again from strech. (Very time consuming!)", false, false, "f" );
+		// $this->addOption( 'show-private', 'Show the text even if it\'s not available to the public' );
+		// $this->addArg( 'title', 'Page title' );
 	}
 	/**
 	 * Populates the search index with content from all pages
@@ -48,40 +48,40 @@ class UpdateMath extends Maintenance {
 		$count = $s->count;
 		$this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
 		$n = 0;
-		$fcount=0;
-	
+		$fcount = 0;
+
 		while ( $n < $count ) {
 			if ( $n ) {
 				$this->output( $n . " of $count \n" );
 			}
 			$end = $n + self::RTI_CHUNK_SIZE - 1;
-	
+
 			$res = $this->db->select( array( 'page', 'revision', 'text' ),
 					array( 'page_id', 'page_namespace', 'page_title', 'old_flags', 'old_text' ),
 					array( "page_id BETWEEN $n AND $end", 'page_latest = rev_id', 'rev_text_id = old_id' ),
 					__METHOD__
 			);
-	
+
 			foreach ( $res as $s ) {
 				$revtext = Revision::getRevisionText( $s );
-				$fcount+=self::doUpdate( $s->page_id, $revtext, $s->page_title,$this->purge );
+				$fcount += self::doUpdate( $s->page_id, $revtext, $s->page_title, $this->purge );
 			}
 			$n += self::RTI_CHUNK_SIZE;
 		}
 		$this->output( "Updated {$fcount} formulae!\n" );
 	}
-	private static function doUpdate($pId,$pText,$pTitle="",$purge=false){
-		//TODO: fix link id problem
-		$anchorID=0;
-		$matches=preg_match_all("#<math>(.*?)</math>#s", $pText,$math);
-		if($matches){
+	private static function doUpdate( $pId, $pText, $pTitle = "", $purge = false ) {
+		// TODO: fix link id problem
+		$anchorID = 0;
+		$matches = preg_match_all( "#<math>(.*?)</math>#s", $pText, $math );
+		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
-			foreach($math[1] as $formula){
-				$renderer=MathRenderer::getRenderer($formula,array(),MW_MATH_LATEXML);
-				$renderer->setAnchorID($anchorID++);
-				$renderer->setPageID($pId);
-				$renderer->render($purge);
-				$res=wfRunHooks( 'MathFormulaRendered',array( &$renderer) );//Enables indexing of math formula
+			foreach ( $math[1] as $formula ) {
+				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_LATEXML );
+				$renderer->setAnchorID( $anchorID++ );
+				$renderer->setPageID( $pId );
+				$renderer->render( $purge );
+				$res = wfRunHooks( 'MathFormulaRendered', array( &$renderer ) );// Enables indexing of math formula
 				$renderer->writeCache();
 			}
 			return $matches;
@@ -89,7 +89,7 @@ class UpdateMath extends Maintenance {
 		return 0;
 	}
 	public function execute() {
-		$this->purge = $this->getOption("purge",false); 
+		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
 		$this->output( "Done.\n" );
 		$this->populateSearchIndex();
