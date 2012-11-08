@@ -34,10 +34,7 @@ class UpdateMath extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
-		//$this->addArg('dir','The directory where the harvest files go to.');
 		$this->addOption('purge',"If set all formulae are rendered again from strech. (Very time consuming!)",false,false,"f");
-		//$this->addOption( 'show-private', 'Show the text even if it\'s not available to the public' );
-		//$this->addArg( 'title', 'Page title' );
 	}
 	/**
 	 * Populates the search index with content from all pages
