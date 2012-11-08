@@ -1,28 +1,42 @@
 <?php
-	# Alert the user that this is not a valid entry point to MediaWiki if they try to access the special pages file directly.
+/**
+ * MediaWiki math search extension
+ *
+ * @file
+ * @ingroup Extensions
+ * @version 0.1
+ * @author Moritz Schubotz
+ * @author Brion Vibber
+ * @copyright © 2002-2012 various MediaWiki contributors
+ * @license GPLv2 license; info in main package.
+ * @link http://www.mediawiki.org/wiki/Extension:MathSearch Documentation
+ */
+
+# Alert the user that this is not a valid entry point to MediaWiki if they try to access the special pages file directly.
 if ( !defined( 'MEDIAWIKI' ) ) {
-        echo <<<EOT
-To install my extension, put the following line in LocalSettings.php:
-require_once( "\$IP/extensions/MathSearch/MathSearch.php" );
-EOT;
-        exit( 1 );
+	die( 'This is not a valid entry point to MediaWiki.\n'
+		.'To install my extension, put the following line in LocalSettings.php:\n'
+		.'require_once( \"\$IP/extensions/MathSearch/MathSearch.php\" );');
 }
 
 $wgExtensionCredits['specialpage'][] = array(
-        'path' => __FILE__,
-        'name' => 'MathSearch',
-        'author' => 'Moritz Schubotz',
-        'url' => 'https://www.mediawiki.org/wiki/Extension:MathSearch',
-        'descriptionmsg' => 'mathsearch-desc',
-        'version' => '0.0.0',
+	'path' => __FILE__,
+	'name' => 'MathSearch',
+	'author' => 'Moritz Schubotz',
+	'url' => 'https://www.mediawiki.org/wiki/Extension:MathSearch',
+	'descriptionmsg' => 'mathsearch-desc',
+	'version' => '0.1.0',
 );
 
 $dir = dirname( __FILE__ ) . '/';
+
 $wgAutoloadClasses['MathSearchHooks'] = $dir . 'MathSearch.hooks.php';
-$wgAutoloadClasses['SpecialMathSearch'] = $dir . 'SpecialMathSearch.php'; # Location of the SpecialMathSearch class (Tell MediaWiki to load this file)
-$wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php'; # Location of a messages file (Tell MediaWiki to load this file)
-$wgExtensionMessagesFiles['MathSearchAlias'] = $dir . 'MathSearch.alias.php'; # Location of an aliases file (Tell MediaWiki to load this file)
-$wgSpecialPages['MathSearch'] = 'SpecialMathSearch'; # Tell MediaWiki about the new special page and its class name
+$wgAutoloadClasses['SpecialMathSearch'] = $dir . 'SpecialMathSearch.php'; 
+
+$wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php'; 
+$wgExtensionMessagesFiles['MathSearchAlias'] = $dir . 'MathSearch.alias.php'; 
+
+$wgSpecialPages['MathSearch'] = 'SpecialMathSearch';
 
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['MathFormulaRendered'][] = 'MathSearchHooks::onMathFormulaRendered';

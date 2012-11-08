@@ -1,7 +1,5 @@
 <?php
 /**
- * Outputs page text to stdout, useful for command-line editing automation.
- * Example: php getText.php "page title" | sed -e '...' | php edit.php "page title"
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,13 +29,13 @@ class UpdateMath extends Maintenance {
 	 * @var DatabaseBase
 	 */
 	private $db;
+	/**
+	 * 
+	 */
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
-		// $this->addArg('dir','The directory where the harvest files go to.');
 		$this->addOption( 'purge', "If set all formulae are rendered again from strech. (Very time consuming!)", false, false, "f" );
-		// $this->addOption( 'show-private', 'Show the text even if it\'s not available to the public' );
-		// $this->addArg( 'title', 'Page title' );
 	}
 	/**
 	 * Populates the search index with content from all pages
@@ -70,6 +68,13 @@ class UpdateMath extends Maintenance {
 		}
 		$this->output( "Updated {$fcount} formulae!\n" );
 	}
+	/**
+	 * @param unknown $pId
+	 * @param unknown $pText
+	 * @param string $pTitle
+	 * @param string $purge
+	 * @return number
+	 */
 	private static function doUpdate( $pId, $pText, $pTitle = "", $purge = false ) {
 		// TODO: fix link id problem
 		$anchorID = 0;
@@ -81,19 +86,23 @@ class UpdateMath extends Maintenance {
 				$renderer->setAnchorID( $anchorID++ );
 				$renderer->setPageID( $pId );
 				$renderer->render( $purge );
-				$res = wfRunHooks( 'MathFormulaRendered', array( &$renderer ) );// Enables indexing of math formula
+				// Enable indexing of math formula
+				$res = wfRunHooks( 'MathFormulaRendered', array( &$renderer ) );
 				$renderer->writeCache();
 			}
 			return $matches;
 		}
 		return 0;
 	}
+	/**
+	 * 
+	 */
 	public function execute() {
 		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
 		$this->output( "Done.\n" );
 		$this->populateSearchIndex();
-}
+	}
 }
 
 $maintClass = "UpdateMath";

@@ -15,9 +15,9 @@ class MathSearchHooks {
 	 * @return bool
 	 */
 	static function onLoadExtensionSchemaUpdates( $updater = null ) {
-//		if( is_null( $updater ) ) {
-//			throw new MWException( "Math extension is only necessary in 1.18 or above" );
-//		}
+		if( is_null( $updater ) ) {
+			throw new MWException( "Mathsearch extension requires Mediawiki 1.18 or above" );
+		}
 		$map = array(
 			'mysql' => 'mathsearch.sql',
 			// 'sqlite' => 'math.sql',
@@ -30,7 +30,6 @@ class MathSearchHooks {
 		if ( isset( $map[$type] ) ) {
 			$sql = dirname( __FILE__ ) . '/db/' . $map[$type];
 			$updater->addExtensionTable( 'mathindex', $sql );
-			// $sqlindex = dirname( __FILE__ ) . '/db/' . $map[$type].'.index';
 		} else {
 			throw new MWException( "Math extension does not currently support $type database." );
 		}
