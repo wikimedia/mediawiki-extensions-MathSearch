@@ -15,28 +15,27 @@ class MathSearchHooks {
 	 * @return bool
 	 */
 	static function onLoadExtensionSchemaUpdates( $updater = null ) {
-//		if( is_null( $updater ) ) {
-//			throw new MWException( "Math extension is only necessary in 1.18 or above" );
-//		}
+		if( is_null( $updater ) ) {
+			throw new MWException( "Mathsearch extension requires Mediawiki 1.18 or above" );
+		}
 		$map = array(
 			'mysql' => 'mathsearch.sql',
-			//'sqlite' => 'math.sql',
-			//'postgres' => 'math.pg.sql',
-			//'oracle' => 'math.oracle.sql',
-			//'mssql' => 'math.mssql.sql',
-			//'db2' => 'math.db2.sql',
+			// 'sqlite' => 'math.sql',
+			// 'postgres' => 'math.pg.sql',
+			// 'oracle' => 'math.oracle.sql',
+			// 'mssql' => 'math.mssql.sql',
+			// 'db2' => 'math.db2.sql',
 		);
 		$type = $updater->getDB()->getType();
 		if ( isset( $map[$type] ) ) {
 			$sql = dirname( __FILE__ ) . '/db/' . $map[$type];
 			$updater->addExtensionTable( 'mathindex', $sql );
-			//$sqlindex = dirname( __FILE__ ) . '/db/' . $map[$type].'.index';
 		} else {
 			throw new MWException( "Math extension does not currently support $type database." );
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Callback function that is called after a formula was rendered
 	 *
@@ -47,15 +46,15 @@ class MathSearchHooks {
 	 */
 	static function onMathFormulaRendered( $Renderer) {
 		$dbw = wfGetDB( DB_MASTER );
-		wfDebugLog("MathSearch",'Store index for $'.$Renderer->getTex().'$ in database');
+		wfDebugLog( "MathSearch", 'Store index for $' . $Renderer->getTex() . '$ in database' );
 		$inputhash = $dbw->encodeBlob( $Renderer->getInputHash() );
-		$dbw->replace('mathindex',
-		array( 'pageid','anchor', ),
+		$dbw->replace( 'mathindex',
+		array( 'mathindex_pageid', 'anchor', ),
 		array(
-				'pageid' => $Renderer->getPageID(),
-				'anchor' =>  $Renderer->getAnchorID() ,
-				'inputhash' => $inputhash
-				));
+				'mathindex_page_id' => $Renderer->getPageID(),
+				'mathindex_anchor' =>  $Renderer->getAnchorID() ,
+				'mathindex_inputhash' => $inputhash
+				) );
 		return true;
 	}
 
