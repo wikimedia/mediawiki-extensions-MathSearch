@@ -49,6 +49,13 @@ $messages['gl'] = array(
 	'mathsearch-desc' => 'Integra o motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
+/** Hebrew (עברית)
+ * @author Amire80
+ */
+$messages['he'] = array(
+	'mathsearch-desc' => 'הוספת תמיכה במנוע החיפוש [http://search.mathweb.org/about.html MathWeb Search]',
+);
+
 /** Upper Sorbian (hornjoserbsce)
  * @author Michawiki
  */
