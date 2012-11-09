@@ -5,13 +5,15 @@
  * @file
  * @ingroup Extensions
  */
- 
+
 $specialPageAliases = array();
- 
-/** English
- * @author Moritz Schubotz
- */
+
+/** English (English) */
 $specialPageAliases['en'] = array(
-        'MathSearch' => array( 'MathSearch' ),
+	'MathSearch' => array( 'MathSearch' ),
 );
 
+/** Macedonian (македонски) */
+$specialPageAliases['mk'] = array(
+	'MathSearch' => array( 'МатПребарување' ),
+);
