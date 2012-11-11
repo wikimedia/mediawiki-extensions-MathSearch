@@ -16,9 +16,10 @@ $messages['en'] = array(
 
 /** Message documentation (Message documentation)
  * @author Moritz Schubotz
+ * @author Shirayuki
  */
 $messages['qqq'] = array(
-	'mathsearch-desc' => '{{desc}}',
+	'mathsearch-desc' => '{{desc|name=Math Search|http://www.mediawiki.org/wiki/Extension:MathSearch}}',
 );
 
 /** German (Deutsch)
@@ -89,6 +90,13 @@ $messages['ko'] = array(
  */
 $messages['mk'] = array(
 	'mathsearch-desc' => 'Овозможува интеграција на пребарувачот [http://search.mathweb.org/about.html MathWeb]',
+);
+
+/** Dutch (Nederlands)
+ * @author Rcdeboer
+ */
+$messages['nl'] = array(
+	'mathsearch-desc' => 'Integreert de [http://search.mathweb.org/about.html MathWeb Zoekmachine]',
 );
 
 /** Simplified Chinese (中文（简体）‎)
