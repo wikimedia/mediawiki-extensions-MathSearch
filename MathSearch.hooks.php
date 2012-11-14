@@ -44,7 +44,7 @@ class MathSearchHooks {
 	 * @param $parser Parser
 	 * @return boolean (true)
 	 */
-	static function onMathFormulaRendered( $Renderer) {
+	static function onMathFormulaRendered( $Renderer, &$Result) {
 		$dbw = wfGetDB( DB_MASTER );
 		wfDebugLog( "MathSearch", 'Store index for $' . $Renderer->getTex() . '$ in database' );
 		$inputhash = $dbw->encodeBlob( $Renderer->getInputHash() );
@@ -55,6 +55,7 @@ class MathSearchHooks {
 				'mathindex_anchor' =>  $Renderer->getAnchorID() ,
 				'mathindex_inputhash' => $inputhash
 				) );
+		//$Result.=' <a href="/wiki/Special:MathSearch?pattern='.urlencode($this->tex).'&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>';
 		return true;
 	}
 

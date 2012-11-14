@@ -32,11 +32,15 @@ $dir = dirname( __FILE__ ) . '/';
 
 $wgAutoloadClasses['MathSearchHooks'] = $dir . 'MathSearch.hooks.php';
 $wgAutoloadClasses['SpecialMathSearch'] = $dir . 'SpecialMathSearch.php'; 
+$wgAutoloadClasses['FormulaInfo'] = $dir . 'FormulaInfo.php'; 
 
 $wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php'; 
 $wgExtensionMessagesFiles['MathSearchAlias'] = $dir . 'MathSearch.alias.php'; 
 
+$wgSpecialPageGroups['MathSearch'] = 'mathsearch';
+$wgSpecialPageGroups['FormulaInfo'] = 'mathsearch';
 $wgSpecialPages['MathSearch'] = 'SpecialMathSearch';
+$wgSpecialPages['FormulaInfo'] = 'FormulaInfo';
 
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['MathFormulaRendered'][] = 'MathSearchHooks::onMathFormulaRendered';
