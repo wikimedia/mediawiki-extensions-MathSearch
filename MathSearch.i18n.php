@@ -29,6 +29,13 @@ $messages['de'] = array(
 	'mathsearch-desc' => 'Ermöglicht die Integration der [http://search.mathweb.org/about.html MathWeb-Suchmaschine]',
 );
 
+/** Lower Sorbian (dolnoserbski)
+ * @author Michawiki
+ */
+$messages['dsb'] = array(
+	'mathsearch-desc' => 'Integrěrujo [http://search.mathweb.org/about.html pytawu MathWeb]',
+);
+
 /** Spanish (español)
  * @author Ralgis
  */
