@@ -13,6 +13,11 @@ $specialPageAliases['en'] = array(
 	'MathSearch' => array( 'MathSearch' ),
 );
 
+/** Italian (italiano) */
+$specialPageAliases['it'] = array(
+	'MathSearch' => array( 'RicercaMat' ),
+);
+
 /** Macedonian (македонски) */
 $specialPageAliases['mk'] = array(
 	'MathSearch' => array( 'МатПребарување' ),
