@@ -34,9 +34,9 @@ class SpecialMathSearch extends SpecialPage {
 		$this->setHeaders();
 		$param = $wgRequest->getText( 'param' );
 		$text = $wgRequest->getVal( 'text' );
-		// $pattern = null;
-		if ( $s = $wgRequest->getVal( 'pattern' ) ) $pattern = $s;
-		else if ( $param ) $pattern = htmlspecialchars_decode( $param );
+		$pattern = $wgRequest->getVal( 'pattern' );
+		if ( $param ){
+			 $pattern = htmlspecialchars_decode( $param );}
 		$wgOut->addHTML( $this->searchForm( $pattern, $text ) );
 		$time_start = microtime( true );
 		if ( $pattern ) {
