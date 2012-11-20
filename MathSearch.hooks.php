@@ -55,8 +55,7 @@ class MathSearchHooks {
 				'mathindex_anchor' =>  $Renderer->getAnchorID() ,
 				'mathindex_inputhash' => $inputhash
 				) );
-		$Result='<a href="/index.php/Spezial:FormulaInfo?pid=' .$Renderer->getPageID().'&eid='.$Renderer->getAnchorID().'">'.$Result.'</a>';
-		//$Result.=' <a href="/wiki/Special:MathSearch?pattern='.urlencode($this->tex).'&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>';
+		$Result='<a href="/index.php/Special:FormulaInfo?pid=' .$Renderer->getPageID().'&eid='.$Renderer->getAnchorID().'">'.$Result.'</a>';
 		return true;
 	}
 

@@ -57,7 +57,8 @@ class FormulaInfo extends SpecialPage {
 			//$wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
 			if ( $res ) {
 				$wgOut->addWikiText('TeX : <code>'.$res->math_tex.'</code>');
-				$wgOut->addWikiText('validxml : <code>'.$res->valid_xml.'</code>');
+				$wgOut->addWikiText('validxml : <code>'.$res->valid_xml.'</code> recheck:',false);
+				$wgOut->addHtml(MathLaTeXML::isValidMathML($res->math_mathml)?"valid":"invalid");
 				$wgOut->addWikiText('status : <code>'.$res->math_status.'</code>');
 				$log=htmlspecialchars( $res->math_log );
 				$sPos=strpos($log,$StartS);
@@ -72,6 +73,7 @@ class FormulaInfo extends SpecialPage {
 				$wgOut->addHtml( "<br />" );
 				$wgOut->addHtml( "<br />" );
 				$wgOut->addHtml(htmlspecialchars( $res->math_log ) );
+				
 			}
 		
 	}
