@@ -33,6 +33,7 @@ $dir = dirname( __FILE__ ) . '/';
 $wgAutoloadClasses['MathSearchHooks'] = $dir . 'MathSearch.hooks.php';
 $wgAutoloadClasses['SpecialMathSearch'] = $dir . 'SpecialMathSearch.php'; 
 $wgAutoloadClasses['FormulaInfo'] = $dir . 'FormulaInfo.php'; 
+$wgAutoloadClasses['MathObject'] = $dir . 'MathObject.php';
 
 $wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php'; 
 $wgExtensionMessagesFiles['MathSearchAlias'] = $dir . 'MathSearch.alias.php'; 

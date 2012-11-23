@@ -44,19 +44,18 @@ class MathSearchHooks {
 	 * @param $parser Parser
 	 * @return boolean (true)
 	 */
-	static function onMathFormulaRendered( $Renderer, &$Result) {
+	static function onMathFormulaRendered( $Renderer, &$Result=null,$pid=0,$eid=0) {
 		$dbw = wfGetDB( DB_MASTER );
 		wfDebugLog( "MathSearch", 'Store index for $' . $Renderer->getTex() . '$ in database' );
 		$inputhash = $dbw->encodeBlob( $Renderer->getInputHash() );
 		$dbw->replace( 'mathindex',
 		array( 'mathindex_pageid', 'anchor', ),
 		array(
-				'mathindex_page_id' => $Renderer->getPageID(),
-				'mathindex_anchor' =>  $Renderer->getAnchorID() ,
+				'mathindex_page_id' => $pid,
+				'mathindex_anchor' =>  $eid ,
 				'mathindex_inputhash' => $inputhash
 				) );
-		$Result='<a href="/index.php/Spezial:FormulaInfo?pid=' .$Renderer->getPageID().'&eid='.$Renderer->getAnchorID().'">'.$Result.'</a>';
-		//$Result.=' <a href="/wiki/Special:MathSearch?pattern='.urlencode($this->tex).'&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>';
+		$Result='<a href="/index.php/Special:FormulaInfo?pid=' .$pid.'&eid='.$eid.'" id="math'.$eid.'>'.$Result.'</a>';
 		return true;
 	}
 

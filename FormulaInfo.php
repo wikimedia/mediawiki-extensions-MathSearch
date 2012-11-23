@@ -39,40 +39,47 @@ class FormulaInfo extends SpecialPage {
 			$wgOut->addWikiText('There is no page with page id:'.$pid.' in the database.');
 			return false;
 		}
+		
 		$pagename = (string)$article->getTitle();
-		$wgOut->addWikiText( "* Page found: [[$pagename#math$eid|$pagename  (eq $eid)]] " );
+		$wgOut->addWikiText( "* Page found: [[$pagename#math$eid|$pagename]] (eq $eid)  ",false);
+		$wgOut->addHtml('<a href="/index.php?title='.$pagename.'&action=purge&mathpurge=true">(force rerendering)</a>' );
+		$mo=MathObject::constructformpage($pid,$eid);
+		wfDebugLog( "MathSearch",var_export($mo->getAllOccurences(),true));
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->selectRow(
 			array('mathindex','math'),
 			array( 'math_mathml', 'mathindex_page_id', 'mathindex_anchor',
-					'mathindex_inputhash','math_inputhash','math_log','math_tex','valid_xml','math_status' ),
+					'mathindex_inputhash','math_inputhash','math_log','math_tex','valid_xml','math_status'
+					,'mathindex_timestamp','math_timestamp' ),
 			'mathindex_page_id = "' . $pid
 				.'" AND mathindex_anchor= "' . $eid
 				.'" AND mathindex_inputhash = math_inputhash'
 			);
-			if($res){
-			}
-			$StartS='Symbols assumed as simple identifiers (with # of occurences):';
-			$StopS='Conversion complete';
-			//$wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
-			if ( $res ) {
-				$wgOut->addWikiText('TeX : <code>'.$res->math_tex.'</code>');
-				$wgOut->addWikiText('validxml : <code>'.$res->valid_xml.'</code>');
-				$wgOut->addWikiText('status : <code>'.$res->math_status.'</code>');
-				$log=htmlspecialchars( $res->math_log );
-				$sPos=strpos($log,$StartS);
-				$sPos+=strlen($StartS);
-				$ePos=strpos($log,$StopS,$sPos);
-				$varS=substr($log, $sPos,$ePos-$sPos);
-				$wgOut->addWikiText('Variables:'.trim($varS));
-				$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
-				//$wgOut->addWikiText( "[[$pagename#math$eid|Eq: $eid]] ", false );
-				$wgOut->addHtml( htmlspecialchars( $res->math_mathml ) );
-				$wgOut->addHtml( "<br />" );
-				$wgOut->addHtml( "<br />" );
-				$wgOut->addHtml( "<br />" );
-				$wgOut->addHtml(htmlspecialchars( $res->math_log ) );
-			}
+		if(! $res){
+			$wgOut->addWikiText('No matching database entries in math and mathsearch tables found in the database.');
+			return false;
+		}
 		
+		$StartS='Symbols assumed as simple identifiers (with # of occurences):';
+		$StopS='Conversion complete';
+		//$wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
+		$wgOut->addWikiText('TeX : <code>'.$mo->getTex().'</code>');
+		$wgOut->addWikiText('Rendered at : <code>'.$res->math_timestamp.'</code> an idexed at <code>'.$res->mathindex_timestamp.'</code>');
+		$wgOut->addWikiText('validxml : <code>'.$res->valid_xml.'</code> recheck:',false);
+		$wgOut->addHtml(MathLaTeXML::isValidMathML($res->math_mathml)?"valid":"invalid");
+		$wgOut->addWikiText('status : <code>'.$res->math_status.'</code>');
+		$log=htmlspecialchars( $res->math_log );
+		$sPos=strpos($log,$StartS);
+		$sPos+=strlen($StartS);
+		$ePos=strpos($log,$StopS,$sPos);
+		$varS=substr($log, $sPos,$ePos-$sPos);
+		$wgOut->addWikiText('Variables:'.trim($varS));
+		$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
+		//$wgOut->addWikiText( "[[$pagename#math$eid|Eq: $eid]] ", false );
+		$wgOut->addHtml( htmlspecialchars( $res->math_mathml ) );
+		$wgOut->addHtml( "<br />" );
+		$wgOut->addHtml( "<br />" );
+		$wgOut->addHtml( "<br />" );
+		$wgOut->addHtml(htmlspecialchars( $res->math_log ) );
 	}
 }
