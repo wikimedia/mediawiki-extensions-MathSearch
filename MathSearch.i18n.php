@@ -22,6 +22,13 @@ $messages['qqq'] = array(
 	'mathsearch-desc' => '{{desc|name=Math Search|http://www.mediawiki.org/wiki/Extension:MathSearch}}',
 );
 
+/** Breton (brezhoneg)
+ * @author Y-M D
+ */
+$messages['br'] = array(
+	'mathsearch-desc' => 'Enframmañ al lusker [http://search.mathweb.org/about.html MathWeb Search]',
+);
+
 /** German (Deutsch)
  * @author Metalhead64
  */
