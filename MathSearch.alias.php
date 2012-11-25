@@ -28,6 +28,11 @@ $specialPageAliases['mk'] = array(
 	'MathSearch' => array( 'МатПребарување' ),
 );
 
+/** Punjabi (ਪੰਜਾਬੀ) */
+$specialPageAliases['pa'] = array(
+	'MathSearch' => array( 'ਮੋਬਾਈਲ_ਖੋਜ' ),
+);
+
 /** Sicilian (sicilianu) */
 $specialPageAliases['scn'] = array(
 	'MathSearch' => array( 'RicercaMat' ),
