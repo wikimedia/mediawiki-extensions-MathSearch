@@ -30,7 +30,7 @@ $specialPageAliases['mk'] = array(
 
 /** Punjabi (ਪੰਜਾਬੀ) */
 $specialPageAliases['pa'] = array(
-	'MathSearch' => array( 'ਮੋਬਾਈਲ_ਖੋਜ' ),
+	'MathSearch' => array( 'ਮੋਬਾਈਲ_ਖੋਜ', 'ਹਿਸਾਬ_ਖੋਜੋ' ),
 );
 
 /** Sicilian (sicilianu) */
