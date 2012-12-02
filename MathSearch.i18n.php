@@ -113,6 +113,13 @@ $messages['nl'] = array(
 	'mathsearch-desc' => 'Integreert de [http://search.mathweb.org/about.html MathWeb Zoekmachine]',
 );
 
+/** Ukrainian (українська)
+ * @author Base
+ */
+$messages['uk'] = array(
+	'mathsearch-desc' => 'Інтегрує рушій [http://search.mathweb.org/about.html MathWeb Search]',
+);
+
 /** Simplified Chinese (中文（简体）‎)
  * @author Yfdyh000
  */
