@@ -22,6 +22,13 @@ $messages['qqq'] = array(
 	'mathsearch-desc' => '{{desc|name=Math Search|http://www.mediawiki.org/wiki/Extension:MathSearch}}',
 );
 
+/** Asturian (asturianu)
+ * @author Xuacu
+ */
+$messages['ast'] = array(
+	'mathsearch-desc' => 'Integra el motor de gueta [http://search.mathweb.org/about.html MathWeb Search]',
+);
+
 /** Breton (brezhoneg)
  * @author Y-M D
  */
