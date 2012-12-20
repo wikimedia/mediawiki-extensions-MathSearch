@@ -37,3 +37,8 @@ $specialPageAliases['pa'] = array(
 $specialPageAliases['scn'] = array(
 	'MathSearch' => array( 'RicercaMat' ),
 );
+
+/** Vietnamese (Tiếng Việt) */
+$specialPageAliases['vi'] = array(
+	'MathSearch' => array( 'Tìm_kiếm_toán_học' ),
+);
