@@ -113,11 +113,32 @@ $messages['mk'] = array(
 	'mathsearch-desc' => 'Овозможува интеграција на пребарувачот [http://search.mathweb.org/about.html MathWeb]',
 );
 
+/** Maltese (Malti)
+ * @author Chrisportelli
+ */
+$messages['mt'] = array(
+	'mathsearch-desc' => "Tintegra l-mutur ta' tfittxija[http://search.mathweb.org/about.html MathWeb]",
+);
+
 /** Dutch (Nederlands)
  * @author Rcdeboer
  */
 $messages['nl'] = array(
 	'mathsearch-desc' => 'Integreert de [http://search.mathweb.org/about.html MathWeb Zoekmachine]',
+);
+
+/** Polish (polski)
+ * @author Matma Rex
+ */
+$messages['pl'] = array(
+	'mathsearch-desc' => 'Integruje wyszukiwarkę [http://search.mathweb.org/about.html MathWeb Search]',
+);
+
+/** Piedmontese (Piemontèis)
+ * @author Dragonòt
+ */
+$messages['pms'] = array(
+	'mathsearch-desc' => 'A ìntegra ël motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
 /** Ukrainian (українська)
