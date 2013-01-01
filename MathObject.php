@@ -18,6 +18,7 @@ class MathObject extends MathRenderer {
 	
 	public static function constructformpagerow($res){
 		global $wgDebugMath;
+		if($res->mathindex_page_id>0){
 		$instance = new self();
 		$instance->setPageID($res->mathindex_page_id);
 		$instance->setAnchorID($res->mathindex_anchor);
@@ -27,6 +28,9 @@ class MathObject extends MathRenderer {
 		$instance->inputhash=$res->mathindex_inputhash;
 		$instance->_readfromDB();
 		return $instance;
+		} else {
+			return false;
+		}
 	}
 	
 	public static function constructformpage($pid,$eid){
@@ -57,8 +61,10 @@ class MathObject extends MathRenderer {
 		foreach($res as $row){
 			wfDebugLog("MathSearch",var_export($row,true));
 			$var=self::constructformpagerow($row);
-			$var->printLink2Page(false);
-			array_push($out, $var);
+			if ($var){
+				$var->printLink2Page(false);
+				array_push($out, $var);
+			}
 		}
 		return $out;
 	}
@@ -91,19 +97,6 @@ class MathObject extends MathRenderer {
 			$in=array_merge($in,$debug_in);
 		}
 		return $in;
-	}
-	public function getPageTitle(){
-		$article = Article::newFromId( $this->getPageID());
-		return (string)$article->getTitle();
-	}
-	public function printLink2Page($hidePage=true){
-		global $wgOut;
-		$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
-		$pageString=$hidePage?"":$this->getPageTitle()." ";
-		$wgOut->addWikiText( "[[".$this->getPageTitle()."#math".$this->getAnchorID()
-				."|".$pageString."Eq: ".$this->getAnchorID()."]] ", false );
-		//$wgOut->addHtml( MathLaTeXML::embedMathML( $this->mathml ) );
-		$wgOut->addHtml( "<br />" );
 	}
 	
 	public function render($purge = false){
