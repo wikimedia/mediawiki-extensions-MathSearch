@@ -44,6 +44,7 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addWikiText( "* Page found: [[$pagename#math$eid|$pagename]] (eq $eid)  ",false);
 		$wgOut->addHtml('<a href="/index.php?title='.$pagename.'&action=purge&mathpurge=true">(force rerendering)</a>' );
 		$mo=MathObject::constructformpage($pid,$eid);
+		$wgOut->addWikiText("Occurences on the following pages:");
 		wfDebugLog( "MathSearch",var_export($mo->getAllOccurences(),true));
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->selectRow(

@@ -47,7 +47,7 @@ class SpecialMathSearch extends SpecialPage {
 			// $wgOut->addHTML(var_export($this->mathResults, true));
 		}
 		$text = $wgRequest->getVal( 'text' );
-		$wgOut->addWikiText( "for example <math>\sin(a+?b)</math>" );
+		
 		if ( $text == "" ) {
 			// $wgOut->addWikiText($this->searchResults($pattern));
 			$mathout = "";
@@ -111,7 +111,7 @@ class SpecialMathSearch extends SpecialPage {
 			array('mathindex_inputhash' => $inputhash )
 		);
 		foreach ( $rpage as $row )
-			var_dump( $row );
+			wfDebugLog("MathSearch",var_export( $row,true ));
 		/*$wt="{{#ask:".substr($pageList,2)."
 		 | ?Dct:title
 		| ?Personname
@@ -176,7 +176,7 @@ class SpecialMathSearch extends SpecialPage {
 		$out .= "<form method=\"get\" action=\"$action\">\n";
 		// The search text field.
 		$pattern = htmlspecialchars( $pattern );
-		$out .= "<p>Search for LaTeX pattern <input type=\"text\" name=\"pattern\"" . " value=\"$pattern\" size=\"36\" />\n";
+		$out .= "<p>Search for LaTeX pattern <input type=\"text\" name=\"pattern\"" . " value=\"$pattern\" size=\"36\" /> for example \sin(a+?b) \n";
 		$out .= "<p>Search for Text pattern <input type=\"text\" name=\"text\"" . " value=\"$text\" size=\"36\" />\n";
 		// The search button.
 		$out .= "<input type=\"submit\" name=\"searchx\" value=\"Search\" /></p>\n";
@@ -206,7 +206,7 @@ class SpecialMathSearch extends SpecialPage {
 		// $wgOut->addHTML( "Query:\n". htmlspecialchars ($result->result));
 		wfDebugLog( "MathSearch", "Latexml request: " . var_export( $post, true ) . "\n" );
 		wfDebugLog( "MathSearch", "Latexml output:\n" . var_export( $result, true ) . "\n---\n" );
-		$wgOut->addHTML( "Query:<br />" . htmlspecialchars ( var_export( $result->result, true ) ) . "<br />" );
+		//$wgOut->addHTML( "Query:<br />" . htmlspecialchars ( var_export( $result->result, true ) ) . "<br />" );
 		if ( $result->result ) {
 			return $result->result;
 		} else {
