@@ -48,6 +48,7 @@ class MathSearchHooks {
 		$dbw = wfGetDB( DB_MASTER );
 		wfDebugLog( "MathSearch", 'Store index for $' . $Renderer->getTex() . '$ in database' );
 		$inputhash = $dbw->encodeBlob( $Renderer->getInputHash() );
+		try{
 		$dbw->replace( 'mathindex',
 		array( 'mathindex_pageid', 'anchor', ),
 		array(
@@ -55,6 +56,12 @@ class MathSearchHooks {
 				'mathindex_anchor' =>  $eid ,
 				'mathindex_inputhash' => $inputhash
 				) );
+		} catch (Exception $e){
+			wfDebugLog( "MathSearch", 'Problem writing to math index!' 
+				.' You might want the rebuild the index by running:'
+				.'"php extensions/MathSearch/ReRenderMath.php". The error is'
+				.$e->getMessage());
+		}
 		$Result='<a href="/index.php/Special:FormulaInfo?pid=' .$pid.'&eid='.$eid.'" id="math'.$eid.'">'.$Result.'</a>';
 		return true;
 	}
