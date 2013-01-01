@@ -25,12 +25,31 @@ class FormulaInfo extends SpecialPage {
 		$pid=$wgRequest->getVal('pid');//Page ID
 		$eid=$wgRequest->getVal('eid');//Equation ID
 		if(is_null($pid) or is_null($eid)){
-			$wgOut->addHTML('<b>Please specify page and equation id</b>');
+			$tex=$wgRequest->getVal('tex','');
+			if($tex==''){
+				$wgOut->addHTML('<b>Please specify page and equation id</b>');
+			} else {
+				self::InfoTex($tex);
+			}
 		} else {
 			self::DisplayInfo($pid,$eid);
 		}
 	}
-	
+	public static function InfoTex($tex){
+		global $wgDebugMath,$wgOut;
+		if(!$wgDebugMath){
+			$wgOut->addWikiTex("tex queries only supported in debug mode");
+			return false;
+		}
+		$wgOut->addWikiText("Info for <code>".$tex.'</code>');
+		$mo=new MathObject($tex);
+		$allPages=$mo->getAllOccurences();
+		if($allPages){
+			self::DisplayInfo($allPages[0]->getPageID(), $allPages[0]->getAnchorID());
+		} else{
+			$wgOut->addWikiText("No occurences found clean up the database to remove unused formulae");
+		}
+	}
 	public static function DisplayInfo($pid,$eid){
 		global $wgOut;
 		$wgOut->addWikiText('Display information for equation id:'.$eid.' on page id:'.$pid);

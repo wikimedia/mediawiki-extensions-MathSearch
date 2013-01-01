@@ -75,17 +75,25 @@ class UpdateMath extends Maintenance {
 	 * @param string $purge
 	 * @return number
 	 */
-	private static function doUpdate( $pId, $pText, $pTitle = "", $purge = false ) {
+	private static function doUpdate( $pid, $pText, $pTitle = "", $purge = false ) {
 		// TODO: fix link id problem
 		$anchorID = 0;
+		$res="";
+		Sanitizer::removeHTMLtags($pText,null,array(),array(),array('nowiki'));
 		$matches = preg_match_all( "#<math>(.*?)</math>#s", $pText, $math );
 		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math[1] as $formula ) {
+				$tstart=time();
 				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_LATEXML );
 				$renderer->render( $purge );
 				// Enable indexing of math formula
-				$res = wfRunHooks( 'MathFormulaRendered', array( &$renderer ,null,$pid,$anchorID++) );
+				$res = wfRunHooks( 'MathFormulaRendered', array( &$renderer ,&$res,$pid,$anchorID++) );
+				$tend=time();
+				if($tend-$tstart>2){
+					echo( "\t\t slow equation ".($anchorID-1) .
+						"beginning with".substr($formula,0,10)."rendered in ".($tend-$tstart)."s. \n" );
+				}
 				$renderer->writeCache();
 			}
 			return $matches;

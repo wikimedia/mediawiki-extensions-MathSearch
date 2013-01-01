@@ -92,6 +92,19 @@ class MathObject extends MathRenderer {
 		}
 		return $in;
 	}
+	public function getPageTitle(){
+		$article = Article::newFromId( $this->getPageID());
+		return (string)$article->getTitle();
+	}
+	public function printLink2Page($hidePage=true){
+		global $wgOut;
+		$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
+		$pageString=$hidePage?"":$this->getPageTitle()." ";
+		$wgOut->addWikiText( "[[".$this->getPageTitle()."#math".$this->getAnchorID()
+				."|".$pageString."Eq: ".$this->getAnchorID()."]] ", false );
+		//$wgOut->addHtml( MathLaTeXML::embedMathML( $this->mathml ) );
+		$wgOut->addHtml( "<br />" );
+	}
 	
 	public function render($purge = false){
 		

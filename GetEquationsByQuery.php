@@ -9,82 +9,74 @@
  * @file
  * @ingroup extensions
  */
-class FormulaInfo extends SpecialPage {
+class GetEquationsByQuery extends SpecialPage {
 	/**
 	 * 
 	 */
 	function __construct() {
-		parent::__construct( 'FormulaInfo' );
+		parent::__construct( 'GetEquationsByQuery' );
 	}
 
 	/**
 	 * @param unknown $par
 	 */
 	function execute( $par ) {
-		global $wgRequest, $wgOut;
-		$sqlFilter=$wgRequest->getVal('sqlfilter');
+		global $wgRequest, $wgOut,$wgDebugMath;
+		if(! $wgDebugMath){
+			$wgOut->addWikiText("==Debug mode needed==  This function is only supported in math debug mode.");
+			return false;
+		}
+
+		$filterID=$wgRequest->getInt('filterID',1000);
+		switch ($filterID){
+			case 0:
+				$sqlFilter=array('valid_xml'=>'0');
+				break;
+			case 1:
+				$sqlFilter=array('math_status'=>'3');
+				break;
+			case 2:
+				$math5=$wgRequest->getVal('first5',null);
+				$sqlFilter=array('valid_xml'=>'0',
+					'left(math_mathml,5)'=>$math5);
+				break;
+			case 3:
+				$math5=$wgRequest->getVal('first5',null);
+				$sqlFilter=array('valid_xml'=>'0',
+						'left(math_tex,5)'=>$math5);
+				break;
+			case 1000:
+			default:
+				$sqlFilter=array('math_status'=>'3','valid_xml'=>'0');
+		}
+		$wgOut->addWikiText("Displaying first 10 equation for query: <pre>".var_export($sqlFilter,true).'</pre>');
+		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 				array('math'),
 				array( 'math_mathml','math_inputhash','math_log','math_tex','valid_xml','math_status'
 						,'math_timestamp' ),
-				$sqlFilter
+				$sqlFilter,
+				__METHOD__,
+				array('LIMIT'=>$wgRequest->getInt('limit',10),
+						'OFFSET' => $wgRequest->getInt('offset',0))
 		);
-		foreach ($row as $res){
-			$mo=MathObject::constructformpagerow($res);
+		foreach ($res as $row){
+			$wgOut->addWikiText('Renderd at <b>'.$row->math_timestamp.'</b> ', FALSE);
+			$wgOut->addHtml('<a href="/index.php/Special:FormulaInfo?tex='.urlencode($row->math_tex).'">more info</a>');
+			$wgOut->addWikiText(':TeX-Code:<pre>'.$row->math_tex.'</pre> <br />');
+			$showmml=$wgRequest->getVal('showmml',false);
+			if($showmml){
+				$tstart=microtime(true);
+				$renderer = MathRenderer::getRenderer( $row->math_tex, array(), MW_MATH_LATEXML );
+				$result=$renderer->render( true );
+				$tend=microtime(true);
+				$wgOut->addWikiText(":rendering in ".($tend-$tstart)."s.",false );
+				$renderer->writeCache();
+				$wgOut->addHtml("Output:".$result."<br/>");
+			}
+			
 		}
 		
 	}
 	
-	public static function DisplayInfo($pid,$eid){
-		global $wgOut;
-		$wgOut->addWikiText('Display information for equation id:'.$eid.' on page id:'.$pid);
-		$article = Article::newFromId( $pid );
-		if(!$article){
-			$wgOut->addWikiText('There is no page with page id:'.$pid.' in the database.');
-			return false;
-		}
-		
-		$pagename = (string)$article->getTitle();
-		$wgOut->addWikiText( "* Page found: [[$pagename#math$eid|$pagename]] (eq $eid)  ",false);
-		$wgOut->addHtml('<a href="/index.php?title='.$pagename.'&action=purge&mathpurge=true">(force rerendering)</a>' );
-		$mo=MathObject::constructformpage($pid,$eid);
-		$wgOut->addWikiText("Occurences on the following pages:");
-		wfDebugLog( "MathSearch",var_export($mo->getAllOccurences(),true));
-		$dbr = wfGetDB( DB_SLAVE );
-		$res = $dbr->selectRow(
-			array('mathindex','math'),
-			array( 'math_mathml', 'mathindex_page_id', 'mathindex_anchor',
-					'mathindex_inputhash','math_inputhash','math_log','math_tex','valid_xml','math_status'
-					,'mathindex_timestamp','math_timestamp' ),
-			'mathindex_page_id = "' . $pid
-				.'" AND mathindex_anchor= "' . $eid
-				.'" AND mathindex_inputhash = math_inputhash'
-			);
-		if(! $res){
-			$wgOut->addWikiText('No matching database entries in math and mathsearch tables found in the database.');
-			return false;
-		}
-		
-		$StartS='Symbols assumed as simple identifiers (with # of occurences):';
-		$StopS='Conversion complete';
-		//$wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
-		$wgOut->addWikiText('TeX : <code>'.$mo->getTex().'</code>');
-		$wgOut->addWikiText('Rendered at : <code>'.$res->math_timestamp.'</code> an idexed at <code>'.$res->mathindex_timestamp.'</code>');
-		$wgOut->addWikiText('validxml : <code>'.$res->valid_xml.'</code> recheck:',false);
-		$wgOut->addHtml(MathLaTeXML::isValidMathML($res->math_mathml)?"valid":"invalid");
-		$wgOut->addWikiText('status : <code>'.$res->math_status.'</code>');
-		$log=htmlspecialchars( $res->math_log );
-		$sPos=strpos($log,$StartS);
-		$sPos+=strlen($StartS);
-		$ePos=strpos($log,$StopS,$sPos);
-		$varS=substr($log, $sPos,$ePos-$sPos);
-		$wgOut->addWikiText('Variables:'.trim($varS));
-		$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
-		//$wgOut->addWikiText( "[[$pagename#math$eid|Eq: $eid]] ", false );
-		$wgOut->addHtml( htmlspecialchars( $res->math_mathml ) );
-		$wgOut->addHtml( "<br />" );
-		$wgOut->addHtml( "<br />" );
-		$wgOut->addHtml( "<br />" );
-		$wgOut->addHtml(htmlspecialchars( $res->math_log ) );
-	}
 }

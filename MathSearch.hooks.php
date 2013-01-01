@@ -55,7 +55,7 @@ class MathSearchHooks {
 				'mathindex_anchor' =>  $eid ,
 				'mathindex_inputhash' => $inputhash
 				) );
-		$Result='<a href="/index.php/Special:FormulaInfo?pid=' .$pid.'&eid='.$eid.'" id="math'.$eid.'>'.$Result.'</a>';
+		$Result='<a href="/index.php/Special:FormulaInfo?pid=' .$pid.'&eid='.$eid.'" id="math'.$eid.'">'.$Result.'</a>';
 		return true;
 	}
 
