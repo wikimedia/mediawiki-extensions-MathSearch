@@ -26,7 +26,7 @@ class MathObject extends MathRenderer {
 			$instance->index_timestamp=$res->mathindex_timestamp;
 		}
 		$instance->inputhash=$res->mathindex_inputhash;
-		$instance->_readfromDB();
+		$instance->readfromDB();
 		return $instance;
 		} else {
 			return false;
