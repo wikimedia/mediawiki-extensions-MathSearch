@@ -36,16 +36,20 @@ class UpdateMath extends Maintenance {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
 		$this->addOption( 'purge', "If set all formulae are rendered again from strech. (Very time consuming!)", false, false, "f" );
+		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false);
+		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false);
 	}
 	/**
 	 * Populates the search index with content from all pages
 	 */
-	protected function populateSearchIndex() {
+	protected function populateSearchIndex($n = 0,$cmax=-1) {
 		$res = $this->db->select( 'page', 'MAX(page_id) AS count' );
 		$s = $this->db->fetchObject( $res );
 		$count = $s->count;
+		if($cmax>0&&$count>cmax){
+			$count=$cmax;
+		}
 		$this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
-		$n = 0;
 		$fcount = 0;
 
 		while ( $n < $count ) {
@@ -59,11 +63,13 @@ class UpdateMath extends Maintenance {
 					array( "page_id BETWEEN $n AND $end", 'page_latest = rev_id', 'rev_text_id = old_id' ),
 					__METHOD__
 			);
-
+			$dbw = wfGetDB( DB_MASTER );
+			$dbw->begin();
 			foreach ( $res as $s ) {
 				$revtext = Revision::getRevisionText( $s );
 				$fcount += self::doUpdate( $s->page_id, $revtext, $s->page_title, $this->purge );
 			}
+			$dbw->commit();
 			$n += self::RTI_CHUNK_SIZE;
 		}
 		$this->output( "Updated {$fcount} formulae!\n" );
@@ -107,7 +113,7 @@ class UpdateMath extends Maintenance {
 		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
 		$this->output( "Done.\n" );
-		$this->populateSearchIndex();
+		$this->populateSearchIndex($this->getArg(0,0),$this->getArg(1,-1));
 	}
 }
 
