@@ -22,7 +22,7 @@
 require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
 
 class UpdateMath extends Maintenance {
-	const RTI_CHUNK_SIZE = 10;
+	const RTI_CHUNK_SIZE = 100;
 	var $purge = false;
 	var $dbw=null;
 
@@ -90,7 +90,7 @@ class UpdateMath extends Maintenance {
 		// TODO: fix link id problem
 		$anchorID = 0;
 		$res="";
-		$pText=Sanitizer::removeHTMLtags($pText,null,array(),array(),array('nowiki'));
+		$pText=Sanitizer::removeHTMLcomments($pText);
 		$matches = preg_match_all( "#<math>(.*?)</math>#s", $pText, $math );
 		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
