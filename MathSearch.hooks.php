@@ -45,18 +45,34 @@ class MathSearchHooks {
 	 * @return boolean (true)
 	 */
 	static function onMathFormulaRendered( $Renderer, &$Result=null,$pid=0,$eid=0) {
-		$dbw = wfGetDB( DB_MASTER );
 		if($pid >0){ //Only store something if a pageid was set.
-			wfDebugLog( "MathSearch", 'Store index for $' . $Renderer->getTex() . '$ in database' );
-			$inputhash = $dbw->encodeBlob( $Renderer->getInputHash() );
 			try{
-			$dbw->replace( 'mathindex',
-			array( 'mathindex_pageid', 'anchor', ),
-			array(
+			$dbr = wfGetDB( DB_SLAVE);
+			$exists=$dbr->selectRow('mathindex', 
+				array( 'mathindex_page_id', 'mathindex_anchor','mathindex_inputhash' ),
+				array(
 					'mathindex_page_id' => $pid,
-					'mathindex_anchor' =>  $eid ,
-					'mathindex_inputhash' => $inputhash
-					) );
+					'mathindex_anchor' => $eid,
+					'mathindex_inputhash' => $Renderer->getInputHash())
+					) ;
+			if($exists){
+				wfDebugLog( "MathSearch", 'Index $' . $Renderer->getTex() . '$ already in database.' );
+			} else {
+				wfDebugLog( "MathSearch", 'Store index for $' . $Renderer->getTex() . '$ in database' );
+				$dbw = wfGetDB( DB_MASTER );
+				$inputhash=$Renderer->getInputHash();
+				$dbw->onTransactionIdle(
+						function () use ($pid,$eid,$inputhash,$dbw){
+							$dbw->replace( 'mathindex',
+							array( 'mathindex_page_id', 'mathindex_anchor' ),
+							array(
+								'mathindex_page_id' => $pid,
+								'mathindex_anchor' =>  $eid ,
+								'mathindex_inputhash' => $inputhash
+							) );
+						}
+				);
+				}
 			} catch (Exception $e){
 				wfDebugLog( "MathSearch", 'Problem writing to math index!' 
 					.' You might want the rebuild the index by running:'

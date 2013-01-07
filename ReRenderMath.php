@@ -24,6 +24,7 @@ require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
 class UpdateMath extends Maintenance {
 	const RTI_CHUNK_SIZE = 10;
 	var $purge = false;
+	var $dbw=null;
 
 	/**
 	 * @var DatabaseBase
@@ -46,7 +47,7 @@ class UpdateMath extends Maintenance {
 		$res = $this->db->select( 'page', 'MAX(page_id) AS count' );
 		$s = $this->db->fetchObject( $res );
 		$count = $s->count;
-		if($cmax>0&&$count>cmax){
+		if($cmax>0&&$count>$cmax){
 			$count=$cmax;
 		}
 		$this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
@@ -63,13 +64,17 @@ class UpdateMath extends Maintenance {
 					array( "page_id BETWEEN $n AND $end", 'page_latest = rev_id', 'rev_text_id = old_id' ),
 					__METHOD__
 			);
-			$dbw = wfGetDB( DB_MASTER );
-			$dbw->begin();
+			$this->dbw->begin();
+			//echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
 				$revtext = Revision::getRevisionText( $s );
-				$fcount += self::doUpdate( $s->page_id, $revtext, $s->page_title, $this->purge );
+				$fcount += self::doUpdate( $s->page_id, $revtext, $s->page_title, $this->purge,$this->dbw );
 			}
-			$dbw->commit();
+			//echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
+			$start=microtime(true);
+			$this->dbw->commit();
+			echo " committed in ".(microtime(true)-$start)."s\n\n";
+			//echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$n += self::RTI_CHUNK_SIZE;
 		}
 		$this->output( "Updated {$fcount} formulae!\n" );
@@ -81,7 +86,7 @@ class UpdateMath extends Maintenance {
 	 * @param string $purge
 	 * @return number
 	 */
-	private static function doUpdate( $pid, $pText, $pTitle = "", $purge = false ) {
+	private static function doUpdate( $pid, $pText, $pTitle = "", $purge = false ,$dbw) {
 		// TODO: fix link id problem
 		$anchorID = 0;
 		$res="";
@@ -94,13 +99,20 @@ class UpdateMath extends Maintenance {
 				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_LATEXML );
 				$renderer->render( $purge );
 				// Enable indexing of math formula
-				$res = wfRunHooks( 'MathFormulaRendered', array( &$renderer ,&$res,$pid,$anchorID++) );
+				wfRunHooks( 'MathFormulaRendered', array( &$renderer ,&$notused,$pid,$anchorID) );
+				$anchorID++;
 				$tend=time();
 				if($tend-$tstart>2){
 					echo( "\t\t slow equation ".($anchorID-1) .
 						"beginning with".substr($formula,0,10)."rendered in ".($tend-$tstart)."s. \n" );
 				}
-				$renderer->writeCache();
+				if($renderer->isSuccess()){
+					$renderer->writeCache();
+				} else {
+					echo "F:\t\t equation ".($anchorID-1) .
+						"-failed beginning with".substr($formula,0,5)
+						."mathml:". $renderer->mathml;
+				}
 			}
 			return $matches;
 		}
@@ -110,6 +122,7 @@ class UpdateMath extends Maintenance {
 	 * 
 	 */
 	public function execute() {
+		$this->dbw=wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
 		$this->output( "Done.\n" );
