@@ -90,7 +90,7 @@ class UpdateMath extends Maintenance {
 		// TODO: fix link id problem
 		$anchorID = 0;
 		$res="";
-		Sanitizer::removeHTMLtags($pText,null,array(),array(),array('nowiki'));
+		$pText=Sanitizer::removeHTMLtags($pText,null,array(),array(),array('nowiki'));
 		$matches = preg_match_all( "#<math>(.*?)</math>#s", $pText, $math );
 		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
