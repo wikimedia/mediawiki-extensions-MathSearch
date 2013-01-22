@@ -141,6 +141,13 @@ $messages['pms'] = array(
 	'mathsearch-desc' => 'A ìntegra ël motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
+/** tarandíne (tarandíne)
+ * @author Joetaras
+ */
+$messages['roa-tara'] = array(
+	'mathsearch-desc' => "Integre 'u motore de [http://search.mathweb.org/about.html Ricerche MathWeb]",
+);
+
 /** Ukrainian (українська)
  * @author Base
  */
