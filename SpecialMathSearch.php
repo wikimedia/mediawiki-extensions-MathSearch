@@ -25,6 +25,14 @@ class SpecialMathSearch extends SpecialPage {
 		parent::__construct( 'MathSearch' );
 	}
 
+	function getLucene() {
+		if (class_exists("LuceneSearch")){
+			return new LuceneSearch();
+		} else {
+			wfDebugLog( "MathSearch", "Text search not possible. Class LuceneSearch is missing." );
+			return false;
+		}
+	}
 	/**
 	 * @param unknown $par
 	 */
@@ -66,7 +74,8 @@ class SpecialMathSearch extends SpecialPage {
 					echo "error with pid:$pageID update mathematical index\n";
 			}
 		} // *
-		$ls = new LuceneSearch();
+		$ls = self::getLucene() ;
+		if ($ls) {
 		$ls->limit = 1000000;
 		$sres = $ls->searchText( $text );
 		if ( $sres ) {
@@ -97,6 +106,7 @@ class SpecialMathSearch extends SpecialPage {
 
 			wfDebugLog( 'mathsearch', 'EOF' );
 			wfDebugLog( 'mathsearch', var_export( $this->mathResults , true ) );
+		}
 		}
 		// $wgOut->addHtml(htmlspecialchars( $pattern) );
 		$wgOut->addWikiText( "<math> $pattern </math>" );
@@ -177,8 +187,12 @@ class SpecialMathSearch extends SpecialPage {
 		// The search text field.
 		$pattern = htmlspecialchars( $pattern );
 		$out .= "<p>Search for LaTeX pattern <input type=\"text\" name=\"pattern\"" . " value=\"$pattern\" size=\"36\" /> for example \sin(a+?b) \n";
-		$out .= "<p>Search for Text pattern <input type=\"text\" name=\"text\"" . " value=\"$text\" size=\"36\" />\n";
-		// The search button.
+		if(self::getLucene()){
+			$out .= "<p>Search for Text pattern <input type=\"text\" name=\"text\"" . " value=\"$text\" size=\"36\" />\n";
+		} else {
+			$out .= "<p> LuceneSearch not found. Text search <b>disabled</b>!<br/> For details see <a href=\"http://www.mediawiki.org/wiki/Extension:MWSearch\">MWSearch</a>.</p>";
+		}
+			// The search button.
 		$out .= "<input type=\"submit\" name=\"searchx\" value=\"Search\" /></p>\n";
 		// The table of namespace checkboxes.
 		$out .= "<p><table><tr>\n";
@@ -210,8 +224,8 @@ class SpecialMathSearch extends SpecialPage {
 		if ( $result->result ) {
 			return $result->result;
 		} else {
-			// var_dump($result);
-			// var_dump($post);
+			 var_dump($result);
+			 var_dump($post);
 			die( "bad request $URL" );
 		}
 
