@@ -13,6 +13,11 @@ $specialPageAliases['en'] = array(
 	'MathSearch' => array( 'MathSearch' ),
 );
 
+/** German (Deutsch) */
+$specialPageAliases['de'] = array(
+	'MathSearch' => array( 'MathWeb-Suche' ),
+);
+
 /** Italian (italiano) */
 $specialPageAliases['it'] = array(
 	'MathSearch' => array( 'RicercaMat' ),
