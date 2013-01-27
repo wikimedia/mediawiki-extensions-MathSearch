@@ -15,7 +15,6 @@ class MathObject extends MathRenderer {
 	public function setPageID( $ID ) {
 		$this->pageID = $ID;
 	}
-	
 	public static function constructformpagerow($res){
 		global $wgDebugMath;
 		if($res->mathindex_page_id>0){
@@ -32,7 +31,55 @@ class MathObject extends MathRenderer {
 			return false;
 		}
 	}
+	public function getObservations(){
+		global $wgOut;
+		$dbr=wfGetDB(DB_SLAVE);
+		$res=$dbr->select(array("mathobservation","varstat")
+				, array("mathobservation_featurename", "mathobservation_featuretype",'varstat_featurecount',
+						"count(*) as cnt"),
+				array("mathobservation_inputhash"=>$this->getInputHash(),
+						'varstat_featurename = mathobservation_featurename',
+						'varstat_featuretype = mathobservation_featuretype')
+				,__METHOD__,
+				array('GROUP BY'=>'mathobservation_featurename',
+						'ORDER BY'=>'varstat_featurecount')
+				);
+		foreach($res as $row){
+			$totcnt=$dbr->selectField('varstat', 'varstat_featurecount',array(
+					'`varstat_featurename`'=>$row->mathobservation_featurename,
+					'`varstat_featuretype`'=>$row->mathobservation_featuretype));
+			$wgOut->addWikiText('*'.$row->mathobservation_featuretype.' <code>'.
+					utf8_decode($row->mathobservation_featurename).'</code> ('.$row->cnt.'/'.
+					$row->varstat_featurecount
+					//$totcnt
+					.")" );
+		}
+	}
 	
+	public function updateObservations($dbw=null){
+		$this->readFromDB();
+		preg_match_all("#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u", $this->mathml,$rule,PREG_SET_ORDER);
+		if($dbw==null){
+			$dbgiven=false;
+			$dbw = wfGetDB( DB_MASTER );
+			$dbw->begin();
+		} else {
+			$dbgiven=true;
+		}
+		$dbw->delete("mathobservation", array("mathobservation_inputhash"=>$this->getInputHash()));
+		foreach($rule as $feature){
+			$dbw->insert("mathobservation", array(
+					"mathobservation_inputhash"=>$this->getInputHash(),
+					"mathobservation_featurename"=>utf8_encode($feature[4]),
+					"mathobservation_featuretype"=>utf8_encode($feature[1]),
+			));
+		if(!$dbgiven){
+			$dbw->commit();
+			}
+			
+		}
+		
+	}
 	public static function constructformpage($pid,$eid){
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->selectRow(
@@ -50,14 +97,14 @@ class MathObject extends MathRenderer {
 	 * @return array(MathObject)
 	 */
 	public function getAllOccurences(){
-
 		$out=array();
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 				'mathindex',
 				self::dbIndexFieldsArray(),
-				'mathindex_inputhash="'.$this->getInputHash().'"'
+				array('mathindex_inputhash'=>$this->getInputHash())
 		);
+		
 		foreach($res as $row){
 			wfDebugLog("MathSearch",var_export($row,true));
 			$var=self::constructformpagerow($row);
@@ -72,6 +119,7 @@ class MathObject extends MathRenderer {
 		$article = Article::newFromId( $this->getPageID());
 		return (string)$article->getTitle();
 	}
+	
 	public function printLink2Page($hidePage=true){
 		global $wgOut;
 		$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
@@ -103,3 +151,10 @@ class MathObject extends MathRenderer {
 		
 	}
 }
+/*
+ * $sql = "INSERT INTO varstat (\n"
+    . "`varstat_featurename` ,\n"
+    . "` varstat_featuretype` ,\n"
+    . "`varstat_featurecount`\n"
+    . ") SELECT `mathobservation_featurename`,`mathobservation_featuretype`, count(*) as CNT FROM `mathobservation` JOIN mathindex on `mathobservation_inputhash` =mathindex_inputhash GROUP by `mathobservation_featurename`, `mathobservation_featuretype` ORDER BY CNT DESC";
+ */

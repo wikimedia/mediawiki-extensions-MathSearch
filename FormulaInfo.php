@@ -52,6 +52,7 @@ class FormulaInfo extends SpecialPage {
 	}
 	public static function DisplayInfo($pid,$eid){
 		global $wgOut;
+		$wgOut->addWikiText('==General==');
 		$wgOut->addWikiText('Display information for equation id:'.$eid.' on page id:'.$pid);
 		$article = Article::newFromId( $pid );
 		if(!$article){
@@ -88,18 +89,22 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addWikiText('validxml : <code>'.$res->valid_xml.'</code> recheck:',false);
 		$wgOut->addHtml(MathLaTeXML::isValidMathML($res->math_mathml)?"valid":"invalid");
 		$wgOut->addWikiText('status : <code>'.$res->math_status.'</code>');
+		$wgOut->addWikiText('MathML : ',false);
+		$wgOut->addHTML($mo->mathml);
 		$log=htmlspecialchars( $res->math_log );
-		$sPos=strpos($log,$StartS);
-		$sPos+=strlen($StartS);
-		$ePos=strpos($log,$StopS,$sPos);
-		$varS=substr($log, $sPos,$ePos-$sPos);
-		$wgOut->addWikiText('Variables:'.trim($varS));
-		$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
+		$mml=$mo->mathml;
+		preg_match_all("#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u", $mml,$rule,PREG_SET_ORDER);
+		$wgOut->addWikiText('==Variables==');
+		$mo->getObservations();
 		//$wgOut->addWikiText( "[[$pagename#math$eid|Eq: $eid]] ", false );
-		$wgOut->addHtml( htmlspecialchars( $res->math_mathml ) );
+		$wgOut->addWikiText('==MathML==');
+		
+		$wgOut->addHtml( "<br />" );
+		$wgOut->addHtml( htmlspecialchars( $mo->mathml ) );
 		$wgOut->addHtml( "<br />" );
 		$wgOut->addHtml( "<br />" );
 		$wgOut->addHtml( "<br />" );
+		$wgOut->addWikiText('==LOG==');
 		$wgOut->addHtml(htmlspecialchars( $res->math_log ) );
 	}
 }
