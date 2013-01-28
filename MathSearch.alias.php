@@ -33,6 +33,11 @@ $specialPageAliases['mk'] = array(
 	'MathSearch' => array( 'МатПребарување' ),
 );
 
+/** Dutch (Nederlands) */
+$specialPageAliases['nl'] = array(
+	'MathSearch' => array( 'Mathzoeken' ),
+);
+
 /** Punjabi (ਪੰਜਾਬੀ) */
 $specialPageAliases['pa'] = array(
 	'MathSearch' => array( 'ਮੋਬਾਈਲ_ਖੋਜ', 'ਹਿਸਾਬ_ਖੋਜੋ' ),
