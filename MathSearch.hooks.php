@@ -18,21 +18,24 @@ class MathSearchHooks {
 		if( is_null( $updater ) ) {
 			throw new MWException( "Mathsearch extension requires Mediawiki 1.18 or above" );
 		}
-		$map = array(
-			'mysql' => 'mathsearch.sql',
-			// 'sqlite' => 'math.sql',
-			// 'postgres' => 'math.pg.sql',
-			// 'oracle' => 'math.oracle.sql',
-			// 'mssql' => 'math.mssql.sql',
-			// 'db2' => 'math.db2.sql',
-		);
-		$type = $updater->getDB()->getType();
-		if ( isset( $map[$type] ) ) {
-			$sql = dirname( __FILE__ ) . '/db/' . $map[$type];
-			$updater->addExtensionTable( 'mathindex', $sql );
-		} else {
-			throw new MWException( "Math extension does not currently support $type database." );
-		}
+// 		$map = array(
+// 			'mysql' => 'mathsearch.sql',
+// 			// 'sqlite' => 'math.sql',
+// 			// 'postgres' => 'math.pg.sql',
+// 			// 'oracle' => 'math.oracle.sql',
+// 			// 'mssql' => 'math.mssql.sql',
+// 			// 'db2' => 'math.db2.sql',
+// 		);
+// 		$type = $updater->getDB()->getType();
+// 		if ( isset( $map[$type] ) ) {
+			$dir = dirname( __FILE__ ) . '/db/' ;//. $map[$type];
+			$updater->addExtensionTable( 'mathindex', $dir.'mathsearch.sql' );
+			$updater->addExtensionTable('mathobservation',  $dir.'mathobservation.sql');
+			$updater->addExtensionTable('mathvarstat', $dir.'mathvarstat.sql');
+			$updater->addExtensionTable('mathpagestat', $dir.'mathpagestat.sql');
+// 		} else {
+// 			throw new MWException( "Math extension does not currently support $type database." );
+// 		}
 		return true;
 	}
 

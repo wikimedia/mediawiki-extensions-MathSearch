@@ -14,10 +14,7 @@ CREATE TABLE /*_*/mathobservation (
   mathobservation_featurename varchar(10) NOT NULL,
 
   -- Timestamp. Is set by the database autmatically
-  mathobservation_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-  PRIMARY KEY (mathindex_page_id,mathindex_anchor)
-
+  mathobservation_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   
 ) /*$wgDBTableOptions*/;
 

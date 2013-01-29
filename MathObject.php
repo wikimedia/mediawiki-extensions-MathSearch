@@ -31,28 +31,28 @@ class MathObject extends MathRenderer {
 			return false;
 		}
 	}
+	
 	public function getObservations(){
 		global $wgOut;
 		$dbr=wfGetDB(DB_SLAVE);
-		$res=$dbr->select(array("mathobservation","varstat")
+		$res=$dbr->select(array("mathobservation","mathvarstat",'mathpagestat')
 				, array("mathobservation_featurename", "mathobservation_featuretype",'varstat_featurecount',
-						"count(*) as cnt"),
+						'pagestat_featurecount', "count(*) as localcnt"),
 				array("mathobservation_inputhash"=>$this->getInputHash(),
 						'varstat_featurename = mathobservation_featurename',
-						'varstat_featuretype = mathobservation_featuretype')
+						'varstat_featuretype = mathobservation_featuretype',
+						'pagestat_pageid'=>$this->getPageID(),
+						'pagestat_featurename = mathobservation_featurename',
+						'pagestat_featuretype = mathobservation_featuretype',
+						)
 				,__METHOD__,
 				array('GROUP BY'=>'mathobservation_featurename',
 						'ORDER BY'=>'varstat_featurecount')
 				);
 		foreach($res as $row){
-			$totcnt=$dbr->selectField('varstat', 'varstat_featurecount',array(
-					'`varstat_featurename`'=>$row->mathobservation_featurename,
-					'`varstat_featuretype`'=>$row->mathobservation_featuretype));
 			$wgOut->addWikiText('*'.$row->mathobservation_featuretype.' <code>'.
-					utf8_decode($row->mathobservation_featurename).'</code> ('.$row->cnt.'/'.
-					$row->varstat_featurecount
-					//$totcnt
-					.")" );
+					utf8_decode($row->mathobservation_featurename).'</code> ('.$row->localcnt.'/'
+					.$row->pagestat_featurecount."/".$row->varstat_featurecount.')' );
 		}
 	}
 	
@@ -157,4 +157,8 @@ class MathObject extends MathRenderer {
     . "` varstat_featuretype` ,\n"
     . "`varstat_featurecount`\n"
     . ") SELECT `mathobservation_featurename`,`mathobservation_featuretype`, count(*) as CNT FROM `mathobservation` JOIN mathindex on `mathobservation_inputhash` =mathindex_inputhash GROUP by `mathobservation_featurename`, `mathobservation_featuretype` ORDER BY CNT DESC";
+    
+    
+    $sql = "INSERT INTO mathpagestat(`pagestat_featurename`,`pagestat_featuretype`,`pagestat_pageid`,`pagestat_featurecount`)\n"
+    . "SELECT `mathobservation_featurename`,`mathobservation_featuretype`,mathindex_page_id, count(*) as CNT FROM `mathobservation` JOIN mathindex on `mathobservation_inputhash` =mathindex_inputhash GROUP by `mathobservation_featurename`, `mathobservation_featuretype`,mathindex_page_id ORDER BY CNT DESC";
  */

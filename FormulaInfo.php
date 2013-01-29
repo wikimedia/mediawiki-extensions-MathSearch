@@ -66,34 +66,18 @@ class FormulaInfo extends SpecialPage {
 		$mo=MathObject::constructformpage($pid,$eid);
 		$wgOut->addWikiText("Occurences on the following pages:");
 		wfDebugLog( "MathSearch",var_export($mo->getAllOccurences(),true));
-		$dbr = wfGetDB( DB_SLAVE );
-		$res = $dbr->selectRow(
-			array('mathindex','math'),
-			array( 'math_mathml', 'mathindex_page_id', 'mathindex_anchor',
-					'mathindex_inputhash','math_inputhash','math_log','math_tex','valid_xml','math_status'
-					,'mathindex_timestamp','math_timestamp' ),
-			'mathindex_page_id = "' . $pid
-				.'" AND mathindex_anchor= "' . $eid
-				.'" AND mathindex_inputhash = math_inputhash'
-			);
-		if(! $res){
-			$wgOut->addWikiText('No matching database entries in math and mathsearch tables found in the database.');
-			return false;
-		}
-		
+	
 		$StartS='Symbols assumed as simple identifiers (with # of occurences):';
 		$StopS='Conversion complete';
 		//$wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
 		$wgOut->addWikiText('TeX : <code>'.$mo->getTex().'</code>');
-		$wgOut->addWikiText('Rendered at : <code>'.$res->math_timestamp.'</code> an idexed at <code>'.$res->mathindex_timestamp.'</code>');
-		$wgOut->addWikiText('validxml : <code>'.$res->valid_xml.'</code> recheck:',false);
-		$wgOut->addHtml(MathLaTeXML::isValidMathML($res->math_mathml)?"valid":"invalid");
-		$wgOut->addWikiText('status : <code>'.$res->math_status.'</code>');
+		#$wgOut->addWikiText('Rendered at : <code>'.$res->math_timestamp.'</code> an idexed at <code>'.$res->mathindex_timestamp.'</code>');
+		#$wgOut->addWikiText('validxml : <code>'.$res->valid_xml.'</code> recheck:',false);
+		#$wgOut->addHtml(MathLaTeXML::isValidMathML($res->math_mathml)?"valid":"invalid");
+		#$wgOut->addWikiText('status : <code>'.$res->math_status.'</code>');
 		$wgOut->addWikiText('MathML : ',false);
 		$wgOut->addHTML($mo->mathml);
-		$log=htmlspecialchars( $res->math_log );
-		$mml=$mo->mathml;
-		preg_match_all("#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u", $mml,$rule,PREG_SET_ORDER);
+		#$log=htmlspecialchars( $res->math_log );
 		$wgOut->addWikiText('==Variables==');
 		$mo->getObservations();
 		//$wgOut->addWikiText( "[[$pagename#math$eid|Eq: $eid]] ", false );
@@ -104,7 +88,7 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addHtml( "<br />" );
 		$wgOut->addHtml( "<br />" );
 		$wgOut->addHtml( "<br />" );
-		$wgOut->addWikiText('==LOG==');
-		$wgOut->addHtml(htmlspecialchars( $res->math_log ) );
+		//$wgOut->addWikiText('==LOG==');
+		//$wgOut->addHtml(htmlspecialchars( $res->math_log ) );
 	}
 }
