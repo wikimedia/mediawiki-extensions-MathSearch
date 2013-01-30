@@ -51,7 +51,7 @@ class FormulaInfo extends SpecialPage {
 		}
 	}
 	public static function DisplayInfo($pid,$eid){
-		global $wgOut;
+		global $wgOut, $wgDebugMath;
 		$wgOut->addWikiText('==General==');
 		$wgOut->addWikiText('Display information for equation id:'.$eid.' on page id:'.$pid);
 		$article = Article::newFromId( $pid );
@@ -71,13 +71,13 @@ class FormulaInfo extends SpecialPage {
 		$StopS='Conversion complete';
 		//$wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
 		$wgOut->addWikiText('TeX : <code>'.$mo->getTex().'</code>');
-		#$wgOut->addWikiText('Rendered at : <code>'.$res->math_timestamp.'</code> an idexed at <code>'.$res->mathindex_timestamp.'</code>');
-		#$wgOut->addWikiText('validxml : <code>'.$res->valid_xml.'</code> recheck:',false);
-		#$wgOut->addHtml(MathLaTeXML::isValidMathML($res->math_mathml)?"valid":"invalid");
-		#$wgOut->addWikiText('status : <code>'.$res->math_status.'</code>');
+
 		$wgOut->addWikiText('MathML : ',false);
 		$wgOut->addHTML($mo->mathml);
 		#$log=htmlspecialchars( $res->math_log );
+		$wgOut->addWikiText('==Similar pages==');
+		$wgOut->addWikiText('Calculataed based on the variables occuring on the entire '.$pagename.' page' );
+		$mo->findSimilarPages($pid);
 		$wgOut->addWikiText('==Variables==');
 		$mo->getObservations();
 		//$wgOut->addWikiText( "[[$pagename#math$eid|Eq: $eid]] ", false );
@@ -88,7 +88,14 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addHtml( "<br />" );
 		$wgOut->addHtml( "<br />" );
 		$wgOut->addHtml( "<br />" );
-		//$wgOut->addWikiText('==LOG==');
-		//$wgOut->addHtml(htmlspecialchars( $res->math_log ) );
+		if($wgDebugMath){
+		$wgOut->addWikiText('==LOG and Debug==');
+		$wgOut->addWikiText('Rendered at : <code>'.$mo->getTimestamp() 
+			.'</code> an idexed at <code>'.$mo->getIndexTimestamp().'</code>');
+		$wgOut->addWikiText('validxml : <code>'.$mo->valid_xml.'</code> recheck:',false);
+		$wgOut->addHtml(MathLaTeXML::isValidMathML($mo->mathml)?"valid":"invalid");
+		$wgOut->addWikiText('status : <code>'.$mo->status_code.'</code>');
+		$wgOut->addHtml(htmlspecialchars( $mo->log ) );
+		}
 	}
 }

@@ -15,6 +15,9 @@ class MathObject extends MathRenderer {
 	public function setPageID( $ID ) {
 		$this->pageID = $ID;
 	}
+	public function getIndexTimestamp(){
+		return $this->index_timestamp;
+	}
 	public static function constructformpagerow($res){
 		global $wgDebugMath;
 		if($res->mathindex_page_id>0){
@@ -31,7 +34,29 @@ class MathObject extends MathRenderer {
 			return false;
 		}
 	}
-	
+	public static function findSimilarPages($pid){
+		global $wgOut;
+		$out="";
+		$dbr=wfGetDB(DB_SLAVE);
+		$res=$dbr->select('mathpagesimilarity',
+			array('pagesimilarity_A as A','pagesimilarity_B as B','pagesimilarity_Value as V'),
+			"pagesimilarity_A=$pid OR pagesimilarity_B=$pid",
+			__METHOD__,
+			array("ORDER BY"=>'V DESC', "LIMIT"=>10)
+			);
+		foreach($res as $row){
+			if($row->A==$pid){
+				$other=$row->B;
+			} else {
+				$other = $row->A;
+			}
+			$article = WikiPage::newFromId( $other);
+			$out.='# [['.$article->getTitle().']] similarity '.
+					$row->V * 100 . "%\n";
+					//.' ( pageid'.$other.'/'.$row->A.')' );
+		}
+		$wgOut->addWikiText($out);
+	}
 	public function getObservations(){
 		global $wgOut;
 		$dbr=wfGetDB(DB_SLAVE);
@@ -42,8 +67,7 @@ class MathObject extends MathRenderer {
 						'varstat_featurename = mathobservation_featurename',
 						'varstat_featuretype = mathobservation_featuretype',
 						'pagestat_pageid'=>$this->getPageID(),
-						'pagestat_featurename = mathobservation_featurename',
-						'pagestat_featuretype = mathobservation_featuretype',
+						'pagestat_featureid = varstat_id'
 						)
 				,__METHOD__,
 				array('GROUP BY'=>'mathobservation_featurename',
