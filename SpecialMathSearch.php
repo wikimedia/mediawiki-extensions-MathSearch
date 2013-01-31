@@ -207,6 +207,7 @@ class SpecialMathSearch extends SpecialPage {
 	 */
 	function LaTeXMLRender( $URL, $texcmd ) {
 		global $wgOut;
+		//$URL="http://latexml.physikerwelt.de/convert";
 		// $texcmd = urlencode( "\$ $texcmd urlencode \$" );
 		$post = "profile=mwsquery&tex=$texcmd";
 		$time_start = microtime( true );

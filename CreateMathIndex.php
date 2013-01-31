@@ -58,10 +58,11 @@ class CreateMath extends Maintenance {
 			return "";
 		}
 		if ( $xml->math ) {
-			$smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
+			//$smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
 			$out .= "\n<mws:expr url=\"" . $row->mathindex_page_id . "#math" . $row->mathindex_anchor . "\">\n\t";
 			$out .= $xml->math->children()->asXML();
 			$out .= "\n</mws:expr>\n";
+			return $out;
 		}
 	}
 	
@@ -77,13 +78,13 @@ class CreateMath extends Maintenance {
 		for ( $i = $min; $i < $max; $i++ ) {
 			$this->res->seek( $i );
 			$out .= self::generateIndexString( $this->res->fetchObject() );
-            restore_error_handler (  );
-
+			restore_error_handler (  );
 		}
 		$out .= "\n" . self::$XMLFooter ;
 		$fh = fopen( $fn, 'w' );
 		fwrite( $fh, $out );
 		fclose( $fh );
+		echo "written file $fn with entries($min ... $max)\n";
 		if ( $max < $this->res->numRows() -1 )
 			return true;
 		else
@@ -98,10 +99,12 @@ class CreateMath extends Maintenance {
 		$i = 0;
 		$inc = $this->getArg( 1, 1000 );
 		$db = wfGetDB( DB_SLAVE );
+		echo "getting list of all equations from the database\n";
 		$this->res = $db->select(
 			array( 'mathindex', 'math' ),
 			array( 'mathindex_page_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash', 'mathindex_inputhash' ),            // $vars (columns of the table)
 			'math_inputhash = mathindex_inputhash');
+		echo "write ".$this->res->numRows(). " results to index\n";
 		do {
 			$fn = $this->getArg( 0 ) . '/math' . sprintf( '%012d', $i ) . '.xml';
 			$res = $this->wFile( $fn, $i, $inc );
