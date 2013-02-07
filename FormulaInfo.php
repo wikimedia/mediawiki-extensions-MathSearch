@@ -66,14 +66,12 @@ class FormulaInfo extends SpecialPage {
 		$mo=MathObject::constructformpage($pid,$eid);
 		$wgOut->addWikiText("Occurences on the following pages:");
 		wfDebugLog( "MathSearch",var_export($mo->getAllOccurences(),true));
-	
-		$StartS='Symbols assumed as simple identifiers (with # of occurences):';
-		$StopS='Conversion complete';
 		//$wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
 		$wgOut->addWikiText('TeX : <code>'.$mo->getTex().'</code>');
-
+		
 		$wgOut->addWikiText('MathML : ',false);
 		$wgOut->addHTML($mo->mathml);
+		$wgOut->addHtml('<a href="/wiki/Special:MathSearch?pattern='.urlencode($mo->getTex()).'&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>' );
 		#$log=htmlspecialchars( $res->math_log );
 		$wgOut->addWikiText('==Similar pages==');
 		$wgOut->addWikiText('Calculataed based on the variables occuring on the entire '.$pagename.' page' );

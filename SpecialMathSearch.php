@@ -154,20 +154,32 @@ class SpecialMathSearch extends SpecialPage {
 						.'" AND mathindex_inputhash = math_inputhash'
 					);
 			if ( $res ) {
+				$mml=utf8_decode($res->math_mathml);
 				$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
 				$wgOut->addWikiText( "[[$pagename#math$anchorID|Eq: $anchorID]] ", false );
-				$wgOut->addHtml( MathLaTeXML::embedMathML( $res->math_mathml ) );
+				$wgOut->addHtml( MathLaTeXML::embedMathML( $mml ) );
 				$wgOut->addHtml( "<br />" );
+				$xpath=$answ[0]['xpath'];
+				$xmml=new SimpleXMLElement($res->math_mathml);
+				$hit=$xmml->xpath($xpath);
+				while(list( , $node) = each($hit)) {
+					//$wgOut->addHtml(var_export($node,true));
+					$wgOut->addHtml("<math>".utf8_decode($node->asXML())."</math>");
+				}
+
+				
 				wfDebugLog( "MathSearch", "PositionInfo:" . var_export( $this->mathResults[$pageID][$anchorID], true ) );
 			}
 			else
 				wfDebugLog( "MathSearch", "Failure: Could not get entry $anchorID for page $pagename (id $pageID) :" . var_export( $this->mathResults, true ) );
 		}
-		/*$xansw=new SimpleXMLElement($answ);
-		 foreach($xansw->children("mws",TRUE) as $substpair){
-		$substattrs=$substpair->attributes();
-		$substarr[]=array("qvar"=>(string) $substattrs["qvar"], "xpath"=>(string) $substattrs["xpath"]);
-		}*/// */
+		//var_dump($answ);
+		
+// 		$xansw=new SimpleXMLElement($answ);
+// 		 foreach($xansw->children("mws",TRUE) as $substpair){
+// 		$substattrs=$substpair->attributes();
+// 		$substarr[]=array("qvar"=>(string) $substattrs["qvar"], "xpath"=>(string) $substattrs["xpath"]);
+// 		}/// */
 		// $this->mathResults[$pname][$eqAnchor][]=array("xpath"=>(string) $attrs["xpath"],"mappings"=>$substarr);
 		// foreach($page as $anchor=>$eq){//$out.=var_export($eq, true);	}
 		return true;

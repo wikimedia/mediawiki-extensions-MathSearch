@@ -38,6 +38,7 @@ class MathObject extends MathRenderer {
 		global $wgOut;
 		$out="";
 		$dbr=wfGetDB(DB_SLAVE);
+		try{
 		$res=$dbr->select('mathpagesimilarity',
 			array('pagesimilarity_A as A','pagesimilarity_B as B','pagesimilarity_Value as V'),
 			"pagesimilarity_A=$pid OR pagesimilarity_B=$pid",
@@ -56,10 +57,14 @@ class MathObject extends MathRenderer {
 					//.' ( pageid'.$other.'/'.$row->A.')' );
 		}
 		$wgOut->addWikiText($out);
+		}catch(Exception $e){
+			return "DatabaseProblem";
+		}
 	}
 	public function getObservations(){
 		global $wgOut;
 		$dbr=wfGetDB(DB_SLAVE);
+		try{
 		$res=$dbr->select(array("mathobservation","mathvarstat",'mathpagestat')
 				, array("mathobservation_featurename", "mathobservation_featuretype",'varstat_featurecount',
 						'pagestat_featurecount', "count(*) as localcnt"),
@@ -73,6 +78,9 @@ class MathObject extends MathRenderer {
 				array('GROUP BY'=>'mathobservation_featurename',
 						'ORDER BY'=>'varstat_featurecount')
 				);
+		}catch(Exception $e){
+			return "DatabaseProblem";
+		}
 		foreach($res as $row){
 			$wgOut->addWikiText('*'.$row->mathobservation_featuretype.' <code>'.
 					utf8_decode($row->mathobservation_featurename).'</code> ('.$row->localcnt.'/'
