@@ -90,10 +90,10 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addWikiText('==LOG and Debug==');
 		$wgOut->addWikiText('Rendered at : <code>'.$mo->getTimestamp() 
 			.'</code> an idexed at <code>'.$mo->getIndexTimestamp().'</code>');
-		$wgOut->addWikiText('validxml : <code>'.$mo->valid_xml.'</code> recheck:',false);
-		$wgOut->addHtml(MathLaTeXML::isValidMathML($mo->mathml)?"valid":"invalid");
-		$wgOut->addWikiText('status : <code>'.$mo->status_code.'</code>');
-		$wgOut->addHtml(htmlspecialchars( $mo->log ) );
+		$wgOut->addWikiText('validxml : <code>'.$mo->getValidXml().'</code> recheck:',false);
+		$wgOut->addHtml(MathLaTeXML::isValidMathML($mo->getMathml())?"valid":"invalid");
+		$wgOut->addWikiText('status : <code>'.$mo->getStatusCode().'</code>');
+		$wgOut->addHtml(htmlspecialchars( $mo->getLog() ) );
 		}
 	}
 }

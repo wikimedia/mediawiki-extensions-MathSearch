@@ -9,6 +9,8 @@
  * @file
  * @ingroup extensions
  */
+//Include for the Object-Oriented API
+require_once 'modules/Zorba/XQueryProcessor.php';
 class XQueryGenerator extends SpecialPage {
 	/**
 	 * 
@@ -83,6 +85,32 @@ class XQueryGenerator extends SpecialPage {
 			$xml = new SimpleXMLElement($renderer->mathml);
 			$wgOut->addWikiText('<syntaxhighlight lang="xml">//*:mrow['.self::generateConstraint($xml->mrow).']</syntaxhighlight>');
 		}
+		$xquery = new XQueryProcessor();
+
+$query = <<<'XQ'
+declare variable $foo  as xs:string external;
+declare variable $bar  as xs:integer external;
+declare variable $doc1 as document-node() external;
+declare variable $doc2 as document-node() external;
+
+$foo, $bar, $doc1, $doc2
+XQ;
+$doc=$xquery->parseXML($renderer->mathml);
+$xquery->importQuery($query);
+$query='for $x in //*:mrow['.self::generateConstraint($xml->mrow).'] return 
+ <res>{$x}</res>';
+ //$xquery->importQuery($query);
+$xquery->setVariable('world', 'World!');
+$xquery->setVariable('foo', 'bar');
+
+$xquery->setVariable('bar', 3);
+
+$doc = $xquery->parseXML("<root />");
+$xquery->setVariable("doc1", $doc);
+
+$doc = $xquery->parseXML($renderer->mathml);
+$xquery->setVariable("doc2", $doc);
+$wgOut->addHtml( $xquery->execute());
 
 	}
 	

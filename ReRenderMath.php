@@ -106,7 +106,7 @@ class UpdateMath extends Maintenance {
 					echo( "\t\t slow equation ".($anchorID-1) .
 						"beginning with".substr($formula,0,10)."rendered in ".($tend-$tstart)."s. \n" );
 				}
-				if($renderer->isSuccess()){
+				if($renderer->getSuccess()){
 					$renderer->writeCache();
 				} else {
 					echo "F:\t\t equation ".($anchorID-1) .

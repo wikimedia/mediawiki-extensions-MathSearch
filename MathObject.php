@@ -27,8 +27,9 @@ class MathObject extends MathRenderer {
 		if ($wgDebugMath){
 			$instance->index_timestamp=$res->mathindex_timestamp;
 		}
-		$instance->inputhash=$res->mathindex_inputhash;
-		$instance->readfromDB();
+		$instance->inputHash=$res->mathindex_inputhash;
+		$instance->readDatabaseEntry();
+		wfDebugLog("MathSearch",'got'.var_export($instance,true));
 		return $instance;
 		} else {
 			return false;
@@ -81,11 +82,12 @@ class MathObject extends MathRenderer {
 		}catch(Exception $e){
 			return "DatabaseProblem";
 		}
+		if ($res){
 		foreach($res as $row){
 			$wgOut->addWikiText('*'.$row->mathobservation_featuretype.' <code>'.
 					utf8_decode($row->mathobservation_featurename).'</code> ('.$row->localcnt.'/'
 					.$row->pagestat_featurecount."/".$row->varstat_featurecount.')' );
-		}
+		}}
 	}
 	
 	public function updateObservations($dbw=null){
