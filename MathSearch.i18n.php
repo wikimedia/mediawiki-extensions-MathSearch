@@ -11,6 +11,9 @@ $messages = array();
  * @author Moritz Schubotz
  */
 $messages['en'] = array(
+        'mathsearch' => 'Math Search', 
+		'formulainfo' => 'Formula Info', 
+        'specialpages-group-mathsearch' => 'Math Search',
         'mathsearch-desc' => 'Integrates the [http://search.mathweb.org/about.html MathWeb Search] engine',
 );
 

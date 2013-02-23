@@ -8,7 +8,9 @@
 
 $specialPageAliases = array();
 
-/** English (English) */
+/** English
+ * @author Moritz Schubotz
+ */
 $specialPageAliases['en'] = array(
 	'MathSearch' => array( 'MathSearch' ),
 );

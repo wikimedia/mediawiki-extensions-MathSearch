@@ -22,7 +22,7 @@
 require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
 
 class UpdateMath extends Maintenance {
-	const RTI_CHUNK_SIZE = 10;
+	const RTI_CHUNK_SIZE = 1;
 	var $purge = false;
 	var $dbw=null;
 
@@ -59,25 +59,16 @@ class UpdateMath extends Maintenance {
 			}
 			$end = $n + self::RTI_CHUNK_SIZE - 1;
 
-			$res = $this->db->select( array( 'page', 'revision', 'text' ),
-					array( 'page_id', 'page_namespace', 'page_title', 'old_flags', 'old_text' ),
-					array( "page_id BETWEEN $n AND $end", 'page_latest = rev_id', 'rev_text_id = old_id' ),
-					__METHOD__
-			);
-			$this->dbw->begin();
-			//echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
-			foreach ( $res as $s ) {
-				$revtext = Revision::getRevisionText( $s );
-				$fcount += self::doUpdate( $s->page_id, $revtext, $s->page_title, $this->purge,$this->dbw );
-			}
-			//echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
+			$res = $this->db->selectField('mathpagestat', 'pagestat_pageid',"pagestat_pageid=$n");
+			if($res){
+				$this->dbw->begin();
+				$fcount += self::doUpdate( $res,$this->dbw );
 			$start=microtime(true);
 			$this->dbw->commit();
 			echo " committed in ".(microtime(true)-$start)."s\n\n";
-			//echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
+			}
 			$n += self::RTI_CHUNK_SIZE;
 		}
-		$this->output( "Updated {$fcount} formulae!\n" );
 	}
 	/**
 	 * @param unknown $pId
@@ -86,37 +77,17 @@ class UpdateMath extends Maintenance {
 	 * @param string $purge
 	 * @return number
 	 */
-	private static function doUpdate( $pid, $pText, $pTitle = "", $purge = false ,$dbw) {
+	private static function doUpdate( $pid  ,$dbw) {
 		// TODO: fix link id problem
-		$anchorID = 0;
-		$res="";
-		$pText=Sanitizer::removeHTMLcomments($pText);
-		$matches = preg_match_all( "#<math>(.*?)</math>#s", $pText, $math );
-		if ( $matches ) {
-			echo( "\t processing $matches math fields for {$pTitle} page\n" );
-			foreach ( $math[1] as $formula ) {
-				$tstart=time();
-				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_LATEXML );
-				$renderer->render( $purge );
-				// Enable indexing of math formula
-				wfRunHooks( 'MathFormulaRendered', array( &$renderer ,&$notused,$pid,$anchorID) );
-				$anchorID++;
-				$tend=time();
-				if($tend-$tstart>2){
-					echo( "\t\t slow equation ".($anchorID-1) .
-						"beginning with".substr($formula,0,10)."rendered in ".($tend-$tstart)."s. \n" );
-				}
-				if($renderer->isSuccess()){
-					$renderer->writeCache();
-				} else {
-					echo "F:\t\t equation ".($anchorID-1) .
-						"-failed beginning with".substr($formula,0,5)
-						."mathml:". $renderer->mathml;
-				}
-			}
-			return $matches;
-		}
-		return 0;
+		$sql = "INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value)\n"
+				. "SELECT DISTINCT '.$pid.',`pagestat_pageid`,\n"
+				. "CosProd('.$pid.',`pagestat_pageid`)\n"
+						. "FROM `mathpagestat` WHERE pagestat_pageid<".$pid;
+		echo "writing entries for page $pid...";
+		$start=microtime(true);
+		$dbw->query($sql);
+		echo 'done in '.(microtime(true)-$start)."\n";
+		return 1;
 	}
 	/**
 	 * 
