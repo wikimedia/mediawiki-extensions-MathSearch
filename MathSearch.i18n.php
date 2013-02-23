@@ -43,6 +43,9 @@ $messages['br'] = array(
  * @author Metalhead64
  */
 $messages['de'] = array(
+	'mathsearch' => 'Math-Suche',
+	'formulainfo' => 'Formelinformation',
+	'specialpages-group-mathsearch' => 'Math-Suche',
 	'mathsearch-desc' => 'Ermöglicht die Integration der [http://search.mathweb.org/about.html MathWeb-Suchmaschine]',
 );
 
@@ -106,7 +109,10 @@ $messages['ja'] = array(
  * @author 아라
  */
 $messages['ko'] = array(
-	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 검색] 엔진 통합',
+	'mathsearch' => '수학 찾기',
+	'formulainfo' => '수식 정보',
+	'specialpages-group-mathsearch' => '수학 찾기',
+	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 검색] 엔진을 통합합니다',
 );
 
 /** Macedonian (македонски)
