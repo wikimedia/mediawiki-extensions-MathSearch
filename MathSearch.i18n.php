@@ -22,6 +22,8 @@ $messages['en'] = array(
  * @author Shirayuki
  */
 $messages['qqq'] = array(
+	'mathsearch' => '{{Identical|Math search}}',
+	'specialpages-group-mathsearch' => '{{Identical|Math search}}',
 	'mathsearch-desc' => '{{desc|name=Math Search|http://www.mediawiki.org/wiki/Extension:MathSearch}}',
 );
 
@@ -102,6 +104,9 @@ $messages['it'] = array(
  * @author Shirayuki
  */
 $messages['ja'] = array(
+	'mathsearch' => '数式の検索',
+	'formulainfo' => '数式の情報',
+	'specialpages-group-mathsearch' => '数式の検索',
 	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 検索]エンジンを統合する',
 );
 
@@ -119,6 +124,9 @@ $messages['ko'] = array(
  * @author Bjankuloski06
  */
 $messages['mk'] = array(
+	'mathsearch' => 'Math-пребарување',
+	'formulainfo' => 'Инфо за формула',
+	'specialpages-group-mathsearch' => 'Math-пребарување',
 	'mathsearch-desc' => 'Овозможува интеграција на пребарувачот [http://search.mathweb.org/about.html MathWeb]',
 );
 
