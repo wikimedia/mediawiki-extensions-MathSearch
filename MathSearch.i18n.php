@@ -69,6 +69,9 @@ $messages['es'] = array(
  * @author Gomoko
  */
 $messages['fr'] = array(
+	'mathsearch' => 'Recherche mathématique',
+	'formulainfo' => 'Information sur la formule',
+	'specialpages-group-mathsearch' => 'Recherche mathématique',
 	'mathsearch-desc' => 'Intégrer le moteur [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
@@ -76,6 +79,9 @@ $messages['fr'] = array(
  * @author Toliño
  */
 $messages['gl'] = array(
+	'mathsearch' => 'Procura matemática',
+	'formulainfo' => 'Información sobre a fórmula',
+	'specialpages-group-mathsearch' => 'Procura matemática',
 	'mathsearch-desc' => 'Integra o motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
