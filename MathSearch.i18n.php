@@ -55,6 +55,9 @@ $messages['de'] = array(
  * @author Michawiki
  */
 $messages['dsb'] = array(
+	'mathsearch' => 'Math-pytanje',
+	'formulainfo' => 'Formulowe informacije',
+	'specialpages-group-mathsearch' => 'Math-pytanje',
 	'mathsearch-desc' => 'Integrěrujo [http://search.mathweb.org/about.html pytawu MathWeb]',
 );
 
@@ -96,6 +99,9 @@ $messages['he'] = array(
  * @author Michawiki
  */
 $messages['hsb'] = array(
+	'mathsearch' => 'Math-pytanje',
+	'formulainfo' => 'Formlowe informacije',
+	'specialpages-group-mathsearch' => 'Math-pytanje',
 	'mathsearch-desc' => 'Integruje [http://search.mathweb.org/about.html pytawu MathWeb]',
 );
 
