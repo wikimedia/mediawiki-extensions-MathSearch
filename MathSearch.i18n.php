@@ -132,6 +132,16 @@ $messages['ko'] = array(
 	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 검색] 엔진을 통합합니다',
 );
 
+/** Minangkabau (Baso Minangkabau)
+ * @author Iwan Novirion
+ */
+$messages['min'] = array(
+	'mathsearch' => 'Pancarian Cocok',
+	'formulainfo' => 'Info Formula',
+	'specialpages-group-mathsearch' => 'Pancarian Cocok',
+	'mathsearch-desc' => 'Integrasi [http://search.mathweb.org/about.html Masin Pancari MathWeb]',
+);
+
 /** Macedonian (македонски)
  * @author Bjankuloski06
  */
@@ -174,6 +184,9 @@ $messages['pms'] = array(
  * @author Joetaras
  */
 $messages['roa-tara'] = array(
+	'mathsearch' => 'Math Ricerche',
+	'formulainfo' => "'Mbormaziune sus a Formule",
+	'specialpages-group-mathsearch' => 'Math Ricerche',
 	'mathsearch-desc' => "Integre 'u motore de [http://search.mathweb.org/about.html Ricerche MathWeb]",
 );
 
