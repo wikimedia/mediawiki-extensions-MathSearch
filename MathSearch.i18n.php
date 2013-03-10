@@ -31,6 +31,9 @@ $messages['qqq'] = array(
  * @author Xuacu
  */
 $messages['ast'] = array(
+	'mathsearch' => 'Gueta matemática',
+	'formulainfo' => 'Información de la fórmula',
+	'specialpages-group-mathsearch' => 'Gueta matemática',
 	'mathsearch-desc' => 'Integra el motor de gueta [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
