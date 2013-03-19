@@ -163,9 +163,13 @@ $messages['mt'] = array(
 );
 
 /** Dutch (Nederlands)
+ * @author Konovalov
  * @author Rcdeboer
  */
 $messages['nl'] = array(
+	'mathsearch' => 'Wiskundig zoeken',
+	'formulainfo' => 'Formule informatie',
+	'specialpages-group-mathsearch' => 'Wiskundig zoeken',
 	'mathsearch-desc' => 'Integreert de [http://search.mathweb.org/about.html MathWeb Zoekmachine]',
 );
 
