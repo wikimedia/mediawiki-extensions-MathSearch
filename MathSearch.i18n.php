@@ -22,7 +22,9 @@ $messages['en'] = array(
  * @author Shirayuki
  */
 $messages['qqq'] = array(
-	'mathsearch' => '{{Identical|Math search}}',
+	'mathsearch' => '{{doc-special|MathSearch}}
+{{Identical|Math search}}',
+	'formulainfo' => '{{doc-special|FormulaInfo}}',
 	'specialpages-group-mathsearch' => '{{doc-special-group|that=are related to the extension MathSearch|like=[[Special:MathSearch]], [[Special:FormulaInfo]], [[Special:GetEquationsByQuery]], [[Special:XQueryGenerator]]}}
 {{Identical|Math search}}',
 	'mathsearch-desc' => '{{desc|name=Math Search|http://www.mediawiki.org/wiki/Extension:MathSearch}}',
