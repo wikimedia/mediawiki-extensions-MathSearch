@@ -23,9 +23,11 @@ $messages['en'] = array(
  */
 $messages['qqq'] = array(
 	'mathsearch' => '{{doc-special|MathSearch}}
+"Math Search" is the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.
 {{Identical|Math search}}',
 	'formulainfo' => '{{doc-special|FormulaInfo}}',
 	'specialpages-group-mathsearch' => '{{doc-special-group|that=are related to the extension MathSearch|like=[[Special:MathSearch]], [[Special:FormulaInfo]], [[Special:GetEquationsByQuery]], [[Special:XQueryGenerator]]}}
+"Math Search" is also the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.
 {{Identical|Math search}}',
 	'mathsearch-desc' => '{{desc|name=Math Search|http://www.mediawiki.org/wiki/Extension:MathSearch}}',
 );
@@ -136,6 +138,23 @@ $messages['ko'] = array(
 	'formulainfo' => '수식 정보',
 	'specialpages-group-mathsearch' => '수학 찾기',
 	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 검색] 엔진을 통합합니다',
+);
+
+/** Colognian (Ripoarisch)
+ * @author Purodha
+ */
+$messages['ksh'] = array(
+	'formulainfo' => 'Aanjaabe övver Formelle',
+);
+
+/** Luxembourgish (Lëtzebuergesch)
+ * @author Robby
+ */
+$messages['lb'] = array(
+	'mathsearch' => 'Math Search',
+	'formulainfo' => "Informatioun iwwert d'Formel",
+	'specialpages-group-mathsearch' => 'Math Search',
+	'mathsearch-desc' => "Integréiert d'[http://search.mathweb.org/about.html MathWeb Search] Software",
 );
 
 /** Minangkabau (Baso Minangkabau)
