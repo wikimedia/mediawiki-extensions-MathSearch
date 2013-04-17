@@ -83,7 +83,8 @@ class MathSearchHooks {
 					.$e->getMessage());
 			}
 		}
-		$Result='<a href="/index.php/Special:FormulaInfo?pid=' .$pid.'&eid='.$eid.'" id="math'.$eid.'">'.$Result.'</a>';
+		$url=SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( array( 'pid'=>$pid, 'eid' => $eid ) );
+		$Result='<a href="'.$url.'">'.$Result.'</a>';
 		return true;
 	}
 
