@@ -10,7 +10,7 @@
  * @ingroup extensions
  */
 //Include for the Object-Oriented API
-require_once 'modules/Zorba/XQueryProcessor.php';
+
 class XQueryGenerator extends SpecialPage {
 	/**
 	 * 
@@ -19,6 +19,7 @@ class XQueryGenerator extends SpecialPage {
 		parent::__construct( 'XQueryGenerator' );
 	}
 	function searchForm( $tex, $type ) {
+
 		$out = '';
 		// The form header, which links back to this page.
 		$pageID = Title::makeTitle( NS_SPECIAL, 'XQueryGenerator' );
@@ -40,7 +41,12 @@ class XQueryGenerator extends SpecialPage {
 	 * @param unknown $par
 	 */
 	function execute( $par ) {
-		global $wgRequest, $wgOut;
+		global $wgRequest, $wgOut,$wgDebugMath;
+		if(! $wgDebugMath){
+			$wgOut->addWikiText("==Debug mode needed==  This function is only supported in math debug mode.");
+			return false;
+		}
+		require_once 'modules/Zorba/XQueryProcessor.php';
 		$tex=$wgRequest->getVal('tex');//Page ID
 		$type=$wgRequest->getVal('type');//Equation ID
 		if(is_null($tex) or is_null($type)){
