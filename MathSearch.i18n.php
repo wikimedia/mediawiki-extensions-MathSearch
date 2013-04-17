@@ -38,9 +38,9 @@ $messages['qqq'] = array(
  * @author Xuacu
  */
 $messages['ast'] = array(
-	'mathsearch' => 'Gueta matem�tica',
-	'formulainfo' => 'Informaci�n de la f�rmula',
-	'specialpages-group-mathsearch' => 'Gueta matem�tica',
+	'mathsearch' => 'Gueta matemática',
+	'formulainfo' => 'Información de la fórmula',
+	'specialpages-group-mathsearch' => 'Gueta matemática',
 	'mathsearch-desc' => 'Integra el motor de gueta [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
@@ -48,7 +48,7 @@ $messages['ast'] = array(
  * @author Y-M D
  */
 $messages['br'] = array(
-	'mathsearch-desc' => 'Enframma� al lusker [http://search.mathweb.org/about.html MathWeb Search]',
+	'mathsearch-desc' => 'Enframmañ al lusker [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
 /** German (Deutsch)
@@ -58,7 +58,7 @@ $messages['de'] = array(
 	'mathsearch' => 'Math-Suche',
 	'formulainfo' => 'Formelinformation',
 	'specialpages-group-mathsearch' => 'Math-Suche',
-	'mathsearch-desc' => 'Erm�glicht die Integration der [http://search.mathweb.org/about.html MathWeb-Suchmaschine]',
+	'mathsearch-desc' => 'Ermöglicht die Integration der [http://search.mathweb.org/about.html MathWeb-Suchmaschine]',
 );
 
 /** Lower Sorbian (dolnoserbski)
@@ -68,41 +68,41 @@ $messages['dsb'] = array(
 	'mathsearch' => 'Math-pytanje',
 	'formulainfo' => 'Formulowe informacije',
 	'specialpages-group-mathsearch' => 'Math-pytanje',
-	'mathsearch-desc' => 'Integrerujo [http://search.mathweb.org/about.html pytawu MathWeb]',
+	'mathsearch-desc' => 'Integrěrujo [http://search.mathweb.org/about.html pytawu MathWeb]',
 );
 
-/** Spanish (espa�ol)
+/** Spanish (español)
  * @author Ralgis
  */
 $messages['es'] = array(
 	'mathsearch-desc' => 'Integra el motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
-/** French (fran�ais)
+/** French (français)
  * @author Gomoko
  */
 $messages['fr'] = array(
-	'mathsearch' => 'Recherche math�matique',
+	'mathsearch' => 'Recherche mathématique',
 	'formulainfo' => 'Information sur la formule',
-	'specialpages-group-mathsearch' => 'Recherche math�matique',
-	'mathsearch-desc' => 'Int�grer le moteur [http://search.mathweb.org/about.html MathWeb Search]',
+	'specialpages-group-mathsearch' => 'Recherche mathématique',
+	'mathsearch-desc' => 'Intégrer le moteur [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
 /** Galician (galego)
- * @author Toli�o
+ * @author Toliño
  */
 $messages['gl'] = array(
-	'mathsearch' => 'Procura matem�tica',
-	'formulainfo' => 'Informaci�n sobre a f�rmula',
-	'specialpages-group-mathsearch' => 'Procura matem�tica',
+	'mathsearch' => 'Procura matemática',
+	'formulainfo' => 'Información sobre a fórmula',
+	'specialpages-group-mathsearch' => 'Procura matemática',
 	'mathsearch-desc' => 'Integra o motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
-/** Hebrew (?????)
+/** Hebrew (עברית)
  * @author Amire80
  */
 $messages['he'] = array(
-	'mathsearch-desc' => '????? ????? ????? ?????? [http://search.mathweb.org/about.html MathWeb Search]',
+	'mathsearch-desc' => 'הוספת תמיכה במנוע החיפוש [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
 /** Upper Sorbian (hornjoserbsce)
@@ -122,41 +122,41 @@ $messages['it'] = array(
 	'mathsearch-desc' => 'Integra il motore di ricerca [http://search.mathweb.org/about.html MathWeb]',
 );
 
-/** Japanese (???)
+/** Japanese (日本語)
  * @author Shirayuki
  */
 $messages['ja'] = array(
-	'mathsearch' => '?????',
-	'formulainfo' => '?????',
-	'specialpages-group-mathsearch' => '?????',
-	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb ??]?????????',
+	'mathsearch' => '数式の検索',
+	'formulainfo' => '数式の情報',
+	'specialpages-group-mathsearch' => '数式の検索',
+	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 検索]エンジンを統合する',
 );
 
-/** Korean (???)
- * @author ??
+/** Korean (한국어)
+ * @author 아라
  */
 $messages['ko'] = array(
-	'mathsearch' => '?? ??',
-	'formulainfo' => '?? ??',
-	'specialpages-group-mathsearch' => '?? ??',
-	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb ??] ??? ?????',
+	'mathsearch' => '수학 찾기',
+	'formulainfo' => '수식 정보',
+	'specialpages-group-mathsearch' => '수학 찾기',
+	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 검색] 엔진을 통합합니다',
 );
 
 /** Colognian (Ripoarisch)
  * @author Purodha
  */
 $messages['ksh'] = array(
-	'formulainfo' => 'Aanjaabe �vver Formelle',
+	'formulainfo' => 'Aanjaabe övver Formelle',
 );
 
-/** Luxembourgish (L�tzebuergesch)
+/** Luxembourgish (Lëtzebuergesch)
  * @author Robby
  */
 $messages['lb'] = array(
 	'mathsearch' => 'Math Search',
 	'formulainfo' => "Informatioun iwwert d'Formel",
 	'specialpages-group-mathsearch' => 'Math Search',
-	'mathsearch-desc' => "Integr�iert d'[http://search.mathweb.org/about.html MathWeb Search] Software",
+	'mathsearch-desc' => "Integréiert d'[http://search.mathweb.org/about.html MathWeb Search] Software",
 );
 
 /** Minangkabau (Baso Minangkabau)
@@ -169,14 +169,14 @@ $messages['min'] = array(
 	'mathsearch-desc' => 'Integrasi [http://search.mathweb.org/about.html Masin Pancari MathWeb]',
 );
 
-/** Macedonian (??????????)
+/** Macedonian (македонски)
  * @author Bjankuloski06
  */
 $messages['mk'] = array(
-	'mathsearch' => 'Math-???????????',
-	'formulainfo' => '???? ?? ???????',
-	'specialpages-group-mathsearch' => 'Math-???????????',
-	'mathsearch-desc' => '?????????? ??????????? ?? ???????????? [http://search.mathweb.org/about.html MathWeb]',
+	'mathsearch' => 'Math-пребарување',
+	'formulainfo' => 'Инфо за формула',
+	'specialpages-group-mathsearch' => 'Math-пребарување',
+	'mathsearch-desc' => 'Овозможува интеграција на пребарувачот [http://search.mathweb.org/about.html MathWeb]',
 );
 
 /** Maltese (Malti)
@@ -201,17 +201,17 @@ $messages['nl'] = array(
  * @author Matma Rex
  */
 $messages['pl'] = array(
-	'mathsearch-desc' => 'Integruje wyszukiwarke [http://search.mathweb.org/about.html MathWeb Search]',
+	'mathsearch-desc' => 'Integruje wyszukiwarkę [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
-/** Piedmontese (Piemont�is)
- * @author Dragon�t
+/** Piedmontese (Piemontèis)
+ * @author Dragonòt
  */
 $messages['pms'] = array(
-	'mathsearch-desc' => 'A �ntegra �l motor [http://search.mathweb.org/about.html MathWeb Search]',
+	'mathsearch-desc' => 'A ìntegra ël motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
-/** tarand�ne (tarand�ne)
+/** tarandíne (tarandíne)
  * @author Joetaras
  */
 $messages['roa-tara'] = array(
@@ -221,16 +221,16 @@ $messages['roa-tara'] = array(
 	'mathsearch-desc' => "Integre 'u motore de [http://search.mathweb.org/about.html Ricerche MathWeb]",
 );
 
-/** Ukrainian (??????????)
+/** Ukrainian (українська)
  * @author Base
  */
 $messages['uk'] = array(
-	'mathsearch-desc' => '???????? ????? [http://search.mathweb.org/about.html MathWeb Search]',
+	'mathsearch-desc' => 'Інтегрує рушій [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
-/** Simplified Chinese (??(??)?)
+/** Simplified Chinese (中文（简体）‎)
  * @author Yfdyh000
  */
 $messages['zh-hans'] = array(
-	'mathsearch-desc' => '??[http://search.mathweb.org/about.html MathWeb ??]??',
+	'mathsearch-desc' => '整合[http://search.mathweb.org/about.html MathWeb 搜索]引擎',
 );
