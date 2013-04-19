@@ -47,6 +47,8 @@ $messages['ast'] = array(
 	'formulainfo' => 'Información de la fórmula',
 	'specialpages-group-mathsearch' => 'Gueta matemática',
 	'mathsearch-desc' => 'Integra el motor de gueta [http://search.mathweb.org/about.html MathWeb Search]',
+	'getequationsbyquery' => 'Algamar ecuaciones por consulta',
+	'xquerygenerator' => 'Xenerador X-query',
 );
 
 /** Breton (brezhoneg)
@@ -188,6 +190,8 @@ $messages['mk'] = array(
 	'formulainfo' => 'Инфо за формула',
 	'specialpages-group-mathsearch' => 'Math-пребарување',
 	'mathsearch-desc' => 'Овозможува интеграција на пребарувачот [http://search.mathweb.org/about.html MathWeb]',
+	'getequationsbyquery' => 'Дај равенки по барање',
+	'xquerygenerator' => 'Создавач на XQuery',
 );
 
 /** Maltese (Malti)
