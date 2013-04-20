@@ -114,7 +114,12 @@ $messages['gl'] = array(
  * @author Amire80
  */
 $messages['he'] = array(
+	'mathsearch' => 'חיפוש מתמטיקה',
+	'formulainfo' => 'מידע על הנוסחה',
+	'specialpages-group-mathsearch' => 'חיפוש מתמטיקה',
 	'mathsearch-desc' => 'הוספת תמיכה במנוע החיפוש [http://search.mathweb.org/about.html MathWeb Search]',
+	'getequationsbyquery' => 'קבלת משוואות לפי שאילתה',
+	'xquerygenerator' => 'מחולל X-query',
 );
 
 /** Upper Sorbian (hornjoserbsce)
