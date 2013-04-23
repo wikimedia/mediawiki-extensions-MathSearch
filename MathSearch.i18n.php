@@ -26,12 +26,17 @@ $messages['en'] = array(
 $messages['qqq'] = array(
 	'mathsearch' => '{{doc-special|MathSearch}}
 "Math Search" is the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.
+
+Math Search is used to search for a formula based on their MathML representation.
 {{Identical|Math search}}',
-	'formulainfo' => '{{doc-special|FormulaInfo}}',
+	'formulainfo' => '{{doc-special|FormulaInfo}}
+The special page displays technical information about the formula, e.g. the variables it contains and information about rendering etc.',
 	'specialpages-group-mathsearch' => '{{doc-special-group|that=are related to the extension MathSearch|like=[[Special:MathSearch]], [[Special:FormulaInfo]], [[Special:GetEquationsByQuery]], [[Special:XQueryGenerator]]}}
 "Math Search" is also the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.
 {{Identical|Math search}}',
 	'mathsearch-desc' => '{{desc|name=Math Search|http://www.mediawiki.org/wiki/Extension:MathSearch}}',
+	'getequationsbyquery' => '{{doc-special|GetEquationByQuery}}',
+	'xquerygenerator' => '{{doc-special|XQueryGenerator}}',
 );
 
 /** Asturian (asturianu)
@@ -42,6 +47,8 @@ $messages['ast'] = array(
 	'formulainfo' => 'Información de la fórmula',
 	'specialpages-group-mathsearch' => 'Gueta matemática',
 	'mathsearch-desc' => 'Integra el motor de gueta [http://search.mathweb.org/about.html MathWeb Search]',
+	'getequationsbyquery' => 'Algamar ecuaciones por consulta',
+	'xquerygenerator' => 'Xenerador X-query',
 );
 
 /** Breton (brezhoneg)
@@ -59,6 +66,8 @@ $messages['de'] = array(
 	'formulainfo' => 'Formelinformation',
 	'specialpages-group-mathsearch' => 'Math-Suche',
 	'mathsearch-desc' => 'Ermöglicht die Integration der [http://search.mathweb.org/about.html MathWeb-Suchmaschine]',
+	'getequationsbyquery' => 'Gleichungen von Abfrage erhalten',
+	'xquerygenerator' => 'XQuery-Generator',
 );
 
 /** Lower Sorbian (dolnoserbski)
@@ -80,12 +89,14 @@ $messages['es'] = array(
 
 /** French (français)
  * @author Gomoko
+ * @author Metroitendo
  */
 $messages['fr'] = array(
 	'mathsearch' => 'Recherche mathématique',
 	'formulainfo' => 'Information sur la formule',
 	'specialpages-group-mathsearch' => 'Recherche mathématique',
 	'mathsearch-desc' => 'Intégrer le moteur [http://search.mathweb.org/about.html MathWeb Search]',
+	'getequationsbyquery' => 'Obtenir les équations par requête',
 );
 
 /** Galician (galego)
@@ -96,13 +107,19 @@ $messages['gl'] = array(
 	'formulainfo' => 'Información sobre a fórmula',
 	'specialpages-group-mathsearch' => 'Procura matemática',
 	'mathsearch-desc' => 'Integra o motor [http://search.mathweb.org/about.html MathWeb Search]',
+	'getequationsbyquery' => 'Obter as ecuacións por pescuda',
 );
 
 /** Hebrew (עברית)
  * @author Amire80
  */
 $messages['he'] = array(
+	'mathsearch' => 'חיפוש מתמטיקה',
+	'formulainfo' => 'מידע על הנוסחה',
+	'specialpages-group-mathsearch' => 'חיפוש מתמטיקה',
 	'mathsearch-desc' => 'הוספת תמיכה במנוע החיפוש [http://search.mathweb.org/about.html MathWeb Search]',
+	'getequationsbyquery' => 'קבלת משוואות לפי שאילתה',
+	'xquerygenerator' => 'מחולל X-query',
 );
 
 /** Upper Sorbian (hornjoserbsce)
@@ -130,6 +147,7 @@ $messages['ja'] = array(
 	'formulainfo' => '数式の情報',
 	'specialpages-group-mathsearch' => '数式の検索',
 	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 検索]エンジンを統合する',
+	'getequationsbyquery' => 'クエリによる式の取得',
 );
 
 /** Korean (한국어)
@@ -177,6 +195,8 @@ $messages['mk'] = array(
 	'formulainfo' => 'Инфо за формула',
 	'specialpages-group-mathsearch' => 'Math-пребарување',
 	'mathsearch-desc' => 'Овозможува интеграција на пребарувачот [http://search.mathweb.org/about.html MathWeb]',
+	'getequationsbyquery' => 'Дај равенки по барање',
+	'xquerygenerator' => 'Создавач на XQuery',
 );
 
 /** Maltese (Malti)
@@ -219,6 +239,8 @@ $messages['roa-tara'] = array(
 	'formulainfo' => "'Mbormaziune sus a Formule",
 	'specialpages-group-mathsearch' => 'Math Ricerche',
 	'mathsearch-desc' => "Integre 'u motore de [http://search.mathweb.org/about.html Ricerche MathWeb]",
+	'getequationsbyquery' => "Pigghie le equaziune cu l'inderrogazione",
+	'xquerygenerator' => 'Generatore X-query',
 );
 
 /** Ukrainian (українська)
