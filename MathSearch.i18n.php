@@ -88,6 +88,7 @@ $messages['es'] = array(
 );
 
 /** French (français)
+ * @author Crochet.david
  * @author Gomoko
  * @author Metroitendo
  */
@@ -97,6 +98,7 @@ $messages['fr'] = array(
 	'specialpages-group-mathsearch' => 'Recherche mathématique',
 	'mathsearch-desc' => 'Intégrer le moteur [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'Obtenir les équations par requête',
+	'xquerygenerator' => 'Générateur X-query',
 );
 
 /** Galician (galego)
