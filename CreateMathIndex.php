@@ -58,7 +58,6 @@ class CreateMath extends Maintenance {
 			libxml_clear_errors();
 			return "";
 		}
-		var_dump($row->mathindex_page_id.'#'.$row->mathindex_anchor );
 		//if ( $xml->math ) {
 			//$smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
 			$out .= "\n<".self::$mwsns ."expr url=\"" . $row->mathindex_page_id . "#math" . $row->mathindex_anchor . "\">\n\t";
