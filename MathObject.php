@@ -91,7 +91,7 @@ class MathObject extends MathRenderer {
 	}
 	
 	public function updateObservations($dbw=null){
-		$this->readFromDB();
+		$this->readDatabaseEntry();
 		preg_match_all("#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u", $this->mathml,$rule,PREG_SET_ORDER);
 		if($dbw==null){
 			$dbgiven=false;

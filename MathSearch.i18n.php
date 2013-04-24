@@ -17,6 +17,7 @@ $messages['en'] = array(
         'mathsearch-desc' => 'Integrates the [http://search.mathweb.org/about.html MathWeb Search] engine',
 		'getequationsbyquery'=>'Get equations by query',
 		'xquerygenerator'=>'X-query generator',
+		'mathdebug'=>'Test Renderer',
 );
 
 /** Message documentation (Message documentation)

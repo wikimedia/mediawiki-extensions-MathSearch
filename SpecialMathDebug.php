@@ -3,7 +3,7 @@ class SpecialMathDebug extends SpecialPage {
 
 
 	function __construct() {
-		parent::__construct( 'Math', 'siteadmin' );
+		parent::__construct( 'MathDebug', 'edit', true );
 	}
 	/**
 	 * Sets headers - this should be called from the execute() method of all derived classes!
