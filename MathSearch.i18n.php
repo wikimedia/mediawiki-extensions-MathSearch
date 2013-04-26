@@ -38,6 +38,7 @@ The special page displays technical information about the formula, e.g. the vari
 	'mathsearch-desc' => '{{desc|name=Math Search|http://www.mediawiki.org/wiki/Extension:MathSearch}}',
 	'getequationsbyquery' => '{{doc-special|GetEquationByQuery}}',
 	'xquerygenerator' => '{{doc-special|XQueryGenerator}}',
+	'mathdebug' => '{{doc-special|MathDebug}}',
 );
 
 /** Asturian (asturianu)
@@ -50,6 +51,7 @@ $messages['ast'] = array(
 	'mathsearch-desc' => 'Integra el motor de gueta [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'Algamar ecuaciones por consulta',
 	'xquerygenerator' => 'Xenerador X-query',
+	'mathdebug' => 'Probar el dibuxador',
 );
 
 /** Breton (brezhoneg)
@@ -69,6 +71,7 @@ $messages['de'] = array(
 	'mathsearch-desc' => 'Ermöglicht die Integration der [http://search.mathweb.org/about.html MathWeb-Suchmaschine]',
 	'getequationsbyquery' => 'Gleichungen von Abfrage erhalten',
 	'xquerygenerator' => 'XQuery-Generator',
+	'mathdebug' => 'Testrenderer',
 );
 
 /** Lower Sorbian (dolnoserbski)
@@ -100,6 +103,7 @@ $messages['fr'] = array(
 	'mathsearch-desc' => 'Intégrer le moteur [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'Obtenir les équations par requête',
 	'xquerygenerator' => 'Générateur X-query',
+	'mathdebug' => 'Rendu de test',
 );
 
 /** Galician (galego)
@@ -200,6 +204,7 @@ $messages['mk'] = array(
 	'mathsearch-desc' => 'Овозможува интеграција на пребарувачот [http://search.mathweb.org/about.html MathWeb]',
 	'getequationsbyquery' => 'Дај равенки по барање',
 	'xquerygenerator' => 'Создавач на XQuery',
+	'mathdebug' => 'Текстоисписник',
 );
 
 /** Maltese (Malti)
@@ -244,6 +249,7 @@ $messages['roa-tara'] = array(
 	'mathsearch-desc' => "Integre 'u motore de [http://search.mathweb.org/about.html Ricerche MathWeb]",
 	'getequationsbyquery' => "Pigghie le equaziune cu l'inderrogazione",
 	'xquerygenerator' => 'Generatore X-query',
+	'mathdebug' => "Test d'u render",
 );
 
 /** Ukrainian (українська)
