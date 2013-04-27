@@ -259,6 +259,13 @@ $messages['uk'] = array(
 	'mathsearch-desc' => 'Інтегрує рушій [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
+/** Urdu (اردو)
+ * @author Noor2020
+ */
+$messages['ur'] = array(
+	'mathdebug' => 'آزمائشی سرانجام کار',
+);
+
 /** Simplified Chinese (中文（简体）‎)
  * @author Yfdyh000
  */
