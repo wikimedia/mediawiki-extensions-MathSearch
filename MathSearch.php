@@ -37,6 +37,7 @@ $wgAutoloadClasses['MathObject'] = $dir . 'MathObject.php';
 $wgAutoloadClasses['XQueryGenerator'] = $dir . 'XQueryGenerator.php';
 $wgAutoloadClasses['GetEquationsByQuery'] = $dir . 'GetEquationsByQuery.php';
 $wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';
+$wgAutoloadClasses['SpecialMathIndex'] = $dir . 'SpecialMathIndex.php';
 
 
 $wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php'; 
@@ -47,11 +48,13 @@ $wgSpecialPageGroups['FormulaInfo'] = 'mathsearch';
 $wgSpecialPageGroups['GetEquationsByQuery'] = 'mathsearch';
 $wgSpecialPageGroups['XQueryGenerator'] = 'mathsearch';
 $wgSpecialPageGroups['MathDebug'] = 'mathsearch';
+$wgSpecialPageGroups['MathIndex'] = 'mathsearch';
 $wgSpecialPages['MathSearch'] = 'SpecialMathSearch';
 $wgSpecialPages['FormulaInfo'] = 'FormulaInfo';
 $wgSpecialPages['XQueryGenerator'] = 'XQueryGenerator'; //Temporary test page
 $wgSpecialPages['GetEquationsByQuery'] = 'GetEquationsByQuery';
 $wgSpecialPages['MathDebug'] = 'SpecialMathDebug';
+$wgSpecialPages['MathIndex'] = 'SpecialMathIndex';
 
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['MathFormulaRendered'][] = 'MathSearchHooks::onMathFormulaRendered';
