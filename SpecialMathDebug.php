@@ -14,34 +14,63 @@ class SpecialMathDebug extends SpecialPage {
 		$out->setRobotPolicy( "noindex,nofollow" );
 		$out->setPageTitle( $this->getDescription() );
 	}
+	
+	
 	function execute( $par ) {
-		global $wgDebugMath;
+		global $wgDebugMath, $wgRequest;
 		$output = $this->getOutput();
 		$this->setHeaders();
-		if ( $wgDebugMath ) {
-			if (  !$this->userCanExecute( $this->getUser() )  ) {
-				$this->displayRestrictionError();
-				return;
-			} else {
-				$this->testParser();
-			}
+		$offset=$wgRequest->getVal('offset',0);
+		$length=$wgRequest->getVal('length',10);
+		if (  !$this->userCanExecute( $this->getUser() )  ) {
+			$this->displayRestrictionError();
+			return;
 		} else {
-			$output->addWikiText( '\'\'\'This page is avaliblible in math debug mode only.\'\'\'' . "\n\n" .
-				'Enable the math debug mode by setting <code> $wgDebugMath = true</code> .' );
+			$this->displayButtons($offset,$length);
+			$this->testParser($offset,$length);
 		}
 	}
-	function testParser() {
+	function displayButtons($offset=0,$length=10) {
+		$out = $this->getOutput();
+		$out->addHTML('<form method=\'get\'>'
+			.'<input value="Show :" type="submit">'
+			.' <input name="length" size="3" value="'
+			.$length
+			.'" class="textfield"  onfocus="this.select()" type="text">'
+			.' test(s) starting from test # <input name="offset" size="6" value="'
+			.($offset+$length)
+			.'" class="textfield" onfocus="this.select()" type="text"></form>'
+			);
+	}
+	function testParser($offset=0,$length=10) {
+		global $wgUseMathJax,$wgUseLaTeXML;
 		$out = $this->getOutput();
 		$out->addModules( array( 'ext.math.mathjax.enabler' ));
-		foreach ( self::testQuery() as $t ) {
-			$out->addWikiText( "MW_MATH_SOURCE:" . str_replace('class="tex"','class="-NO-JAX-"',MathRenderer::renderMath( $t, array(), MW_MATH_SOURCE )) );
-			$out->addWikiText( "MW_MATH_PNG:", false );
-			$out->addHTML( MathRenderer::renderMath( $t, array(), MW_MATH_PNG ) . "<br \>" );
-			$out->addWikiText( "MW_MATH_MATHJAX:", false );
-			$out->addHTML( MathRenderer::renderMath( $t, array(), MW_MATH_MATHJAX ) );
+		$i=0;
+		foreach ( array_slice(self::testQuery(),$offset,$length,true) as $key=>$t ) {
+			$out->addWikiText( "=== Test #".($offset+$i++).": $key === " );
+			$out->addHTML( self::render($t, MW_MATH_SOURCE ) );
+			$out->addHTML( self::render($t, MW_MATH_PNG ) );
+			if($wgUseLaTeXML){
+				$out->addHTML( self::render($t, MW_MATH_LATEXML ) );
+			}
+			if($wgUseMathJax){
+				$out->addHTML( self::render($t, MW_MATH_MATHJAX,false ) );
+			} 
 		}
 	}
 
+	private static function render($t,$mode,$aimJax=true){
+		$res =$mode.':'. MathRenderer::renderMath( $t, array(), $mode );
+		if( $aimJax ) {
+			self::aimHTMLFromJax( $res );
+		} 
+		return $res.'<br/>';
+	}
+	private static function aimHTMLFromJax(&$s){
+		$s =str_replace('class="tex"','class="-NO-JAX-"',$s);
+		return $s;
+	}
 	private static function testQuery() {
 		return array( 'math_tex' => '\\int_a^b x^{5x dx',
 				'e^{i \\pi} + 1 = 0\\,\\!',
