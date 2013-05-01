@@ -7,7 +7,7 @@
  * @version 0.1
  * @author Moritz Schubotz
  * @author Brion Vibber
- * @copyright � 2002-2012 various MediaWiki contributors
+ * @copyright © 2002-2012 various MediaWiki contributors
  * @license GPLv2 license; info in main package.
  * @link http://www.mediawiki.org/wiki/Extension:MathSearch Documentation
  */
@@ -31,8 +31,8 @@ $wgExtensionCredits['specialpage'][] = array(
 $dir = dirname( __FILE__ ) . '/';
 
 $wgAutoloadClasses['MathSearchHooks'] = $dir . 'MathSearch.hooks.php';
-$wgAutoloadClasses['SpecialMathSearch'] = $dir . 'SpecialMathSearch.php'; 
-$wgAutoloadClasses['FormulaInfo'] = $dir . 'FormulaInfo.php'; 
+$wgAutoloadClasses['SpecialMathSearch'] = $dir . 'SpecialMathSearch.php';
+$wgAutoloadClasses['FormulaInfo'] = $dir . 'FormulaInfo.php';
 $wgAutoloadClasses['MathObject'] = $dir . 'MathObject.php';
 $wgAutoloadClasses['XQueryGenerator'] = $dir . 'XQueryGenerator.php';
 $wgAutoloadClasses['GetEquationsByQuery'] = $dir . 'GetEquationsByQuery.php';
@@ -40,8 +40,8 @@ $wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';
 $wgAutoloadClasses['SpecialMathIndex'] = $dir . 'SpecialMathIndex.php';
 
 
-$wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php'; 
-$wgExtensionMessagesFiles['MathSearchAlias'] = $dir . 'MathSearch.alias.php'; 
+$wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php';
+$wgExtensionMessagesFiles['MathSearchAlias'] = $dir . 'MathSearch.alias.php';
 
 $wgSpecialPageGroups['MathSearch'] = 'mathsearch';
 $wgSpecialPageGroups['FormulaInfo'] = 'mathsearch';

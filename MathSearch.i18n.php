@@ -11,13 +11,13 @@ $messages = array();
  * @author Moritz Schubotz
  */
 $messages['en'] = array(
-        'mathsearch' => 'Math search', 
-		'formulainfo' => 'Formula info', 
-        'specialpages-group-mathsearch' => 'Math search',
-        'mathsearch-desc' => 'Integrates the [http://search.mathweb.org/about.html MathWeb Search] engine',
-		'getequationsbyquery'=>'Get equations by query',
-		'xquerygenerator'=>'X-query generator',
-		'mathdebug'=>'Test Renderer',
+	'mathsearch' => 'Math search', // Special page
+	'formulainfo' => 'Formula info', // Special page
+	'specialpages-group-mathsearch' => 'Math search',
+	'mathsearch-desc' => 'Integrates the [http://search.mathweb.org/about.html MathWeb Search] engine',
+	'getequationsbyquery' => 'Get equations by query', // Special page
+	'xquerygenerator' => 'X-query generator', // Special page
+	'mathdebug' => 'Test Renderer', // Special page
 );
 
 /** Message documentation (Message documentation)
