@@ -218,12 +218,16 @@ $messages['mt'] = array(
 /** Dutch (Nederlands)
  * @author Konovalov
  * @author Rcdeboer
+ * @author Siebrand
  */
 $messages['nl'] = array(
 	'mathsearch' => 'Wiskundig zoeken',
 	'formulainfo' => 'Formule informatie',
 	'specialpages-group-mathsearch' => 'Wiskundig zoeken',
 	'mathsearch-desc' => 'Integreert de [http://search.mathweb.org/about.html MathWeb Zoekmachine]',
+	'getequationsbyquery' => 'Vergelijkingen zoeken',
+	'xquerygenerator' => 'XQuerygenerator',
+	'mathdebug' => 'Verwerking testen',
 );
 
 /** Polish (polski)
