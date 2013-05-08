@@ -115,6 +115,7 @@ $messages['gl'] = array(
 	'specialpages-group-mathsearch' => 'Procura matemática',
 	'mathsearch-desc' => 'Integra o motor [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'Obter as ecuacións por pescuda',
+	'xquerygenerator' => 'Xerador X-query',
 	'mathdebug' => 'Probar o renderizador',
 );
 
