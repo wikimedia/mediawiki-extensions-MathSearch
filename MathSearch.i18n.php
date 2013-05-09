@@ -223,7 +223,7 @@ $messages['mt'] = array(
  */
 $messages['nl'] = array(
 	'mathsearch' => 'Wiskundig zoeken',
-	'formulainfo' => 'Formule informatie',
+	'formulainfo' => 'Formulegegevens',
 	'specialpages-group-mathsearch' => 'Wiskundig zoeken',
 	'mathsearch-desc' => 'Integreert de [http://search.mathweb.org/about.html MathWeb Zoekmachine]',
 	'getequationsbyquery' => 'Vergelijkingen zoeken',
