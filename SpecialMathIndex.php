@@ -34,7 +34,7 @@ class SpecialMathIndex extends SpecialPage {
 		$out = $this->getOutput();
 //		$out->addWikiText($text)
 	}
-	
+
 
 
 }

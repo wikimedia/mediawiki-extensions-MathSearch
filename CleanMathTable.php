@@ -30,7 +30,7 @@ class UpdateMath extends Maintenance {
 	 */
 	private $db;
 	/**
-	 * 
+	 *
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -43,7 +43,7 @@ class UpdateMath extends Maintenance {
 	 * <code>DELETE math FROM (`math` LEFT OUTER JOIN `mathindex` ON ( (`mathindex`.`mathindex_inputhash` = `math`.`math_inputhash`) )) WHERE mathindex_inputhash IS NULL </code>
 	 */
 	public function execute() {
-		//FIXME: this does not work at all
+		// FIXME: this does not work at all
 		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
 		$this->db->query( "DELETE math FROM (`math` LEFT OUTER JOIN `mathindex` ON ( (`mathindex`.`mathindex_inputhash` = `math`.`math_inputhash`) )) WHERE mathindex_inputhash IS NULL " );

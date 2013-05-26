@@ -9,11 +9,11 @@
  * @file
  * @ingroup extensions
  */
-//Include for the Object-Oriented API
+// Include for the Object-Oriented API
 
 class XQueryGenerator extends SpecialPage {
 	/**
-	 * 
+	 *
 	 */
 	function __construct() {
 		parent::__construct( 'XQueryGenerator' );
@@ -41,55 +41,55 @@ class XQueryGenerator extends SpecialPage {
 	 * @param unknown $par
 	 */
 	function execute( $par ) {
-		global $wgRequest, $wgOut,$wgDebugMath;
-		if(! $wgDebugMath){
-			$wgOut->addWikiText("==Debug mode needed==  This function is only supported in math debug mode.");
+		global $wgRequest, $wgOut, $wgDebugMath;
+		if ( ! $wgDebugMath ) {
+			$wgOut->addWikiText( "==Debug mode needed==  This function is only supported in math debug mode." );
 			return false;
 		}
 		require_once 'modules/Zorba/XQueryProcessor.php';
-		$tex=$wgRequest->getVal('tex');//Page ID
-		$type=$wgRequest->getVal('type');//Equation ID
-		if(is_null($tex) or is_null($type)){
-			$out=$this->searchForm($tex, $type);
-			$wgOut->addHTML($out);
+		$tex = $wgRequest->getVal( 'tex' );// Page ID
+		$type = $wgRequest->getVal( 'type' );// Equation ID
+		if ( is_null( $tex ) or is_null( $type ) ) {
+			$out = $this->searchForm( $tex, $type );
+			$wgOut->addHTML( $out );
 		} else {
-			self::DisplayInfo($tex , $type);
+			self::DisplayInfo( $tex , $type );
 		}
 	}
-	private static function isSyntaxHighlightingPossible(){
+	private static function isSyntaxHighlightingPossible() {
 		global $wgParser;
 		$tags = $wgParser->getTags();
-		return in_array('syntaxhighlight', $tags);
+		return in_array( 'syntaxhighlight', $tags );
 	}
-		
-	
-	public static function DisplayInfo($tex , $type){
-		global $wgOut, $wgDebugMath,$wgParser;
-		$settings= 'xhtml&'.
-			'whatsin=math&'.
-			'whatsout=math&'.
-			'pmml&'.
-			'preload=LaTeX.pool&'.
-			'preload=article.cls&'.
-			'preload=amsmath&'.
-			'preload=amsthm&'.
-			'preload=amstext&'.
-			'preload=amssymb&'.
-			'preload=eucal&'.
-			'preload=[dvipsnames]xcolor&'.
-			'preload=url&'.
-			'preload=hyperref&'.
-			'preload=mws&'.
+
+
+	public static function DisplayInfo( $tex , $type ) {
+		global $wgOut, $wgDebugMath, $wgParser;
+		$settings = 'xhtml&' .
+			'whatsin=math&' .
+			'whatsout=math&' .
+			'pmml&' .
+			'preload=LaTeX.pool&' .
+			'preload=article.cls&' .
+			'preload=amsmath&' .
+			'preload=amsthm&' .
+			'preload=amstext&' .
+			'preload=amssymb&' .
+			'preload=eucal&' .
+			'preload=[dvipsnames]xcolor&' .
+			'preload=url&' .
+			'preload=hyperref&' .
+			'preload=mws&' .
 			'preload=texvc';
-		$wgOut->addWikiText('==General==');
-		$renderer=MathLaTeXML::getRenderer($tex,array(),MW_MATH_LATEXML);
-		$renderer->setLaTeXMLSettings($settings);
-		$wgOut->addHTML($renderer->render(true));
-		$wgOut->addWikiText('==code==');
-		if (self::isSyntaxHighlightingPossible()){
-			$wgOut->addWikiText('<syntaxhighlight lang="xml">'.$renderer->mathml.'</syntaxhighlight>');
-			$xml = new SimpleXMLElement($renderer->mathml);
-			$wgOut->addWikiText('<syntaxhighlight lang="xml">//*:mrow['.self::generateConstraint($xml->mrow).']</syntaxhighlight>');
+		$wgOut->addWikiText( '==General==' );
+		$renderer = MathLaTeXML::getRenderer( $tex, array(), MW_MATH_LATEXML );
+		$renderer->setLaTeXMLSettings( $settings );
+		$wgOut->addHTML( $renderer->render( true ) );
+		$wgOut->addWikiText( '==code==' );
+		if ( self::isSyntaxHighlightingPossible() ) {
+			$wgOut->addWikiText( '<syntaxhighlight lang="xml">' . $renderer->mathml . '</syntaxhighlight>' );
+			$xml = new SimpleXMLElement( $renderer->mathml );
+			$wgOut->addWikiText( '<syntaxhighlight lang="xml">//*:mrow[' . self::generateConstraint( $xml->mrow ) . ']</syntaxhighlight>' );
 		}
 		$xquery = new XQueryProcessor();
 
@@ -101,40 +101,40 @@ declare variable $doc2 as document-node() external;
 
 $foo, $bar, $doc1, $doc2
 XQ;
-$doc=$xquery->parseXML($renderer->mathml);
-$xquery->importQuery($query);
-$query='for $x in //*:mrow['.self::generateConstraint($xml->mrow).'] return 
+$doc = $xquery->parseXML( $renderer->mathml );
+$xquery->importQuery( $query );
+$query = 'for $x in //*:mrow[' . self::generateConstraint( $xml->mrow ) . '] return
  <res>{$x}</res>';
- //$xquery->importQuery($query);
-$xquery->setVariable('world', 'World!');
-$xquery->setVariable('foo', 'bar');
+ // $xquery->importQuery($query);
+$xquery->setVariable( 'world', 'World!' );
+$xquery->setVariable( 'foo', 'bar' );
 
-$xquery->setVariable('bar', 3);
+$xquery->setVariable( 'bar', 3 );
 
-$doc = $xquery->parseXML("<root />");
-$xquery->setVariable("doc1", $doc);
+$doc = $xquery->parseXML( "<root />" );
+$xquery->setVariable( "doc1", $doc );
 
-$doc = $xquery->parseXML($renderer->mathml);
-$xquery->setVariable("doc2", $doc);
-$wgOut->addHtml( $xquery->execute());
+$doc = $xquery->parseXML( $renderer->mathml );
+$xquery->setVariable( "doc2", $doc );
+$wgOut->addHtml( $xquery->execute() );
 
 	}
-	
-	private static function generateConstraint($xml){
-		$i=0;
-		$out="";
-		$hastext=false;
-		foreach($xml->children() as $child){
+
+	private static function generateConstraint( $xml ) {
+		$i = 0;
+		$out = "";
+		$hastext = false;
+		foreach ( $xml->children() as $child ) {
 			$i++;
-			if($hastext){
-				$out.=' and ';
+			if ( $hastext ) {
+				$out .= ' and ';
 			}
-			$out.='*['.$i.']/name() =\''. $child->getName().'\'';
-			$hastext=true;
-			if($child->count()>0){
-				$out.=' and *['.$i."][\n\t".self::generateConstraint($child)."\n]";
+			$out .= '*[' . $i . ']/name() =\'' . $child->getName() . '\'';
+			$hastext = true;
+			if ( $child->count() > 0 ) {
+				$out .= ' and *[' . $i . "][\n\t" . self::generateConstraint( $child ) . "\n]";
 			} else {
-				$out.=' and *['.$i."]/text()='".$child[0]."'";
+				$out .= ' and *[' . $i . "]/text()='" . $child[0] . "'";
 			}
  		}
 		return $out;

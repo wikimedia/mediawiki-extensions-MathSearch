@@ -28,20 +28,20 @@ require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
  *
  */
 class CreateMath extends Maintenance {
-	private static $mwsns="mws:";
-	private static $XMLHead; 
-	private static $XMLFooter; 
+	private static $mwsns = "mws:";
+	private static $XMLHead;
+	private static $XMLFooter;
 	private $res;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Generates harvest files for the MathWebSearch Deamon.';
 		$this->addArg( 'dir', 'The directory where the harvest files go to.' );
 		$this->addArg( 'ffmax', "The maximal number of formula per file.", false );
-		$this->addOption('mwsns','The namespace or mws normally "mws"',false );
+		$this->addOption( 'mwsns', 'The namespace or mws normally "mws"', false );
 	}
 
 	/**
@@ -58,19 +58,19 @@ class CreateMath extends Maintenance {
 			libxml_clear_errors();
 			return "";
 		}
-		//if ( $xml->math ) {
-			//$smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
-			$out .= "\n<".self::$mwsns ."expr url=\"" . $row->mathindex_page_id . "#math" . $row->mathindex_anchor . "\">\n\t";
-			$out .=  utf8_decode($row->math_mathml);//$xml->math->children()->asXML();
-			$out .= "\n</".self::$mwsns."expr>\n";
+		// if ( $xml->math ) {
+			// $smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
+			$out .= "\n<" . self::$mwsns . "expr url=\"" . $row->mathindex_page_id . "#math" . $row->mathindex_anchor . "\">\n\t";
+			$out .=  utf8_decode( $row->math_mathml );// $xml->math->children()->asXML();
+			$out .= "\n</" . self::$mwsns . "expr>\n";
 			return $out;
 		/*} else {
 			var_dump($xml);
 			die("nomath");
 		}*/
-		
+
 	}
-	
+
 	/**
 	 * @param unknown $fn
 	 * @param unknown $min
@@ -87,8 +87,8 @@ class CreateMath extends Maintenance {
 		}
 		$out .= "\n" . self::$XMLFooter ;
 		$fh = fopen( $fn, 'w' );
-		//echo $out;
-		//die ("test");
+		// echo $out;
+		// die ("test");
 		fwrite( $fh, $out );
 		fclose( $fh );
 		echo "written file $fn with entries($min ... $max)\n";
@@ -99,24 +99,24 @@ class CreateMath extends Maintenance {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public function execute() {
 		libxml_use_internal_errors( true );
 		$i = 0;
 		$inc = $this->getArg( 1, 100 );
-		self::$mwsns=$this->getOption( 'mwsns', '' );
-		self::$XMLHead = "<?xml version=\"1.0\"?>\n<".self::$mwsns."harvest xmlns:mws=\"http://search.mathweb.org/ns\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\">";
-		self::$XMLFooter = "</".self::$mwsns."harvest>";
+		self::$mwsns = $this->getOption( 'mwsns', '' );
+		self::$XMLHead = "<?xml version=\"1.0\"?>\n<" . self::$mwsns . "harvest xmlns:mws=\"http://search.mathweb.org/ns\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\">";
+		self::$XMLFooter = "</" . self::$mwsns . "harvest>";
 		$db = wfGetDB( DB_SLAVE );
 		echo "getting list of all equations from the database\n";
 		$this->res = $db->select(
 			array( 'mathindex', 'math' ),
 			array( 'mathindex_page_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash', 'mathindex_inputhash' ),            // $vars (columns of the table)
 			'math_inputhash = mathindex_inputhash'
-				,__METHOD__,
-				array('ORDER BY'=>'mathindex_page_id'));
-		echo "write ".$this->res->numRows(). " results to index\n";
+				, __METHOD__,
+				array( 'ORDER BY' => 'mathindex_page_id' ) );
+		echo "write " . $this->res->numRows() . " results to index\n";
 		do {
 			$fn = $this->getArg( 0 ) . '/math' . sprintf( '%012d', $i ) . '.xml';
 			$res = $this->wFile( $fn, $i, $inc );

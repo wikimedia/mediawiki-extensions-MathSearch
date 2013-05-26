@@ -15,8 +15,8 @@
 # Alert the user that this is not a valid entry point to MediaWiki if they try to access the special pages file directly.
 if ( !defined( 'MEDIAWIKI' ) ) {
 	die( 'This is not a valid entry point to MediaWiki.\n'
-		.'To install my extension, put the following line in LocalSettings.php:\n'
-		.'require_once( \"\$IP/extensions/MathSearch/MathSearch.php\" );');
+		. 'To install my extension, put the following line in LocalSettings.php:\n'
+		. 'require_once( \"\$IP/extensions/MathSearch/MathSearch.php\" );' );
 }
 
 $wgExtensionCredits['specialpage'][] = array(
@@ -51,7 +51,7 @@ $wgSpecialPageGroups['MathDebug'] = 'mathsearch';
 $wgSpecialPageGroups['MathIndex'] = 'mathsearch';
 $wgSpecialPages['MathSearch'] = 'SpecialMathSearch';
 $wgSpecialPages['FormulaInfo'] = 'FormulaInfo';
-$wgSpecialPages['XQueryGenerator'] = 'XQueryGenerator'; //Temporary test page
+$wgSpecialPages['XQueryGenerator'] = 'XQueryGenerator'; // Temporary test page
 $wgSpecialPages['GetEquationsByQuery'] = 'GetEquationsByQuery';
 $wgSpecialPages['MathDebug'] = 'SpecialMathDebug';
 $wgSpecialPages['MathIndex'] = 'SpecialMathIndex';

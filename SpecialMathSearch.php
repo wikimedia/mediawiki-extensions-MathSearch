@@ -19,14 +19,14 @@ class SpecialMathSearch extends SpecialPage {
 	var $mathResults;
 
 	/**
-	 * 
+	 *
 	 */
 	function __construct() {
 		parent::__construct( 'MathSearch' );
 	}
 
 	function getLucene() {
-		if (class_exists("LuceneSearch")){
+		if ( class_exists( "LuceneSearch" ) ) {
 			return new LuceneSearch();
 		} else {
 			wfDebugLog( "MathSearch", "Text search not possible. Class LuceneSearch is missing." );
@@ -43,8 +43,8 @@ class SpecialMathSearch extends SpecialPage {
 		$param = $wgRequest->getText( 'param' );
 		$text = $wgRequest->getVal( 'text' );
 		$pattern = $wgRequest->getVal( 'pattern' );
-		if ( $param ){
-			 $pattern = htmlspecialchars_decode( $param );}
+		if ( $param ) {
+			 $pattern = htmlspecialchars_decode( $param ); }
 		$wgOut->addHTML( $this->searchForm( $pattern, $text ) );
 		$time_start = microtime( true );
 		if ( $pattern ) {
@@ -55,7 +55,7 @@ class SpecialMathSearch extends SpecialPage {
 			// $wgOut->addHTML(var_export($this->mathResults, true));
 		}
 		$text = $wgRequest->getVal( 'text' );
-		
+
 		if ( $text == "" ) {
 			// $wgOut->addWikiText($this->searchResults($pattern));
 			$mathout = "";
@@ -75,7 +75,7 @@ class SpecialMathSearch extends SpecialPage {
 			}
 		} // *
 		$ls = self::getLucene() ;
-		if ($ls) {
+		if ( $ls ) {
 		$ls->limit = 1000000;
 		$sres = $ls->searchText( $text );
 		if ( $sres ) {
@@ -117,11 +117,11 @@ class SpecialMathSearch extends SpecialPage {
 		$inputhash = $dbr->encodeBlob( pack( 'H32', md5( $pattern ) ) );
 		$rpage = $dbr->select(
 			'mathindex',
-			array('mathindex_page_id', 'mathindex_anchor', 'mathindex_timestamp'),
-			array('mathindex_inputhash' => $inputhash )
+			array( 'mathindex_page_id', 'mathindex_anchor', 'mathindex_timestamp' ),
+			array( 'mathindex_inputhash' => $inputhash )
 		);
 		foreach ( $rpage as $row )
-			wfDebugLog("MathSearch",var_export( $row,true ));
+			wfDebugLog( "MathSearch", var_export( $row, true ) );
 		/*$wt="{{#ask:".substr($pageList,2)."
 		 | ?Dct:title
 		| ?Personname
@@ -146,35 +146,35 @@ class SpecialMathSearch extends SpecialPage {
 		wfDebugLog( "MathSearch", "Processing results for $pagename" );
 		foreach ( $page as $anchorID => $answ ) {
 			$res = $dbr->selectRow(
-					array('mathindex','math'),
+					array( 'mathindex', 'math' ),
 					array( 'math_mathml', 'mathindex_page_id', 'mathindex_anchor',
-							'mathindex_inputhash','math_inputhash' ),
-					'mathindex_page_id = "' . $pageID 
-						.'" AND mathindex_anchor= "' . $anchorID 
-						.'" AND mathindex_inputhash = math_inputhash'
+							'mathindex_inputhash', 'math_inputhash' ),
+					'mathindex_page_id = "' . $pageID
+						. '" AND mathindex_anchor= "' . $anchorID
+						. '" AND mathindex_inputhash = math_inputhash'
 					);
 			if ( $res ) {
-				$mml=utf8_decode($res->math_mathml);
+				$mml = utf8_decode( $res->math_mathml );
 				$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
 				$wgOut->addWikiText( "[[$pagename#math$anchorID|Eq: $anchorID]] ", false );
 				$wgOut->addHtml( MathLaTeXML::embedMathML( $mml ) );
 				$wgOut->addHtml( "<br />" );
-				$xpath=$answ[0]['xpath'];
-				$xmml=new SimpleXMLElement($res->math_mathml);
-				$hit=$xmml->xpath($xpath);
-				while(list( , $node) = each($hit)) {
-					//$wgOut->addHtml(var_export($node,true));
-					$wgOut->addHtml("<math>".utf8_decode($node->asXML())."</math>");
+				$xpath = $answ[0]['xpath'];
+				$xmml = new SimpleXMLElement( $res->math_mathml );
+				$hit = $xmml->xpath( $xpath );
+				while ( list( , $node ) = each( $hit ) ) {
+					// $wgOut->addHtml(var_export($node,true));
+					$wgOut->addHtml( "<math>" . utf8_decode( $node->asXML() ) . "</math>" );
 				}
 
-				
+
 				wfDebugLog( "MathSearch", "PositionInfo:" . var_export( $this->mathResults[$pageID][$anchorID], true ) );
 			}
 			else
 				wfDebugLog( "MathSearch", "Failure: Could not get entry $anchorID for page $pagename (id $pageID) :" . var_export( $this->mathResults, true ) );
 		}
-		//var_dump($answ);
-		
+		// var_dump($answ);
+
 // 		$xansw=new SimpleXMLElement($answ);
 // 		 foreach($xansw->children("mws",TRUE) as $substpair){
 // 		$substattrs=$substpair->attributes();
@@ -199,7 +199,7 @@ class SpecialMathSearch extends SpecialPage {
 		// The search text field.
 		$pattern = htmlspecialchars( $pattern );
 		$out .= "<p>Search for LaTeX pattern <input type=\"text\" name=\"pattern\"" . " value=\"$pattern\" size=\"36\" /> for example \sin(a+?b) \n";
-		if(self::getLucene()){
+		if ( self::getLucene() ) {
 			$out .= "<p>Search for Text pattern <input type=\"text\" name=\"text\"" . " value=\"$text\" size=\"36\" />\n";
 		} else {
 			$out .= "<p> LuceneSearch not found. Text search <b>disabled</b>!<br/> For details see <a href=\"http://www.mediawiki.org/wiki/Extension:MWSearch\">MWSearch</a>.</p>";
@@ -219,7 +219,7 @@ class SpecialMathSearch extends SpecialPage {
 	 */
 	function LaTeXMLRender( $URL, $texcmd ) {
 		global $wgOut;
-		//$URL="http://latexml.physikerwelt.de/convert";
+		// $URL="http://latexml.physikerwelt.de/convert";
 		// $texcmd = urlencode( "\$ $texcmd urlencode \$" );
 		$post = "profile=mwsquery&tex=$texcmd";
 		$time_start = microtime( true );
@@ -233,12 +233,12 @@ class SpecialMathSearch extends SpecialPage {
 		// $wgOut->addHTML( "Query:\n". htmlspecialchars ($result->result));
 		wfDebugLog( "MathSearch", "Latexml request: " . var_export( $post, true ) . "\n" );
 		wfDebugLog( "MathSearch", "Latexml output:\n" . var_export( $result, true ) . "\n---\n" );
-		//$wgOut->addHTML( "Query:<br />" . htmlspecialchars ( var_export( $result->result, true ) ) . "<br />" );
+		// $wgOut->addHTML( "Query:<br />" . htmlspecialchars ( var_export( $result->result, true ) ) . "<br />" );
 		if ( $result->result ) {
 			return $result->result;
 		} else {
-			 var_dump($result);
-			 var_dump($post);
+			 var_dump( $result );
+			 var_dump( $post );
 			die( "bad request $URL" );
 		}
 
