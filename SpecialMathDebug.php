@@ -28,17 +28,21 @@ class SpecialMathDebug extends SpecialPage {
 			$this->displayRestrictionError();
 			return;
 		} else {
+			$this->displayButtons( $offset, $length, $page, $action );
 			if ( $action == 'parserTest' ) {
-				$out = $this->generateLaTeXMLOutput( $offset, $length, $page );
+				$this->generateLaTeXMLOutput( $offset, $length, $page );
+				return;
+			} elseif ( $action == 'parserDiff' ) {
+				$this->compareParser( $offset, $length, $page );
 				return;
 			} else {
-				$this->displayButtons( $offset, $length, $page );
 				$this->testParser( $offset, $length, $page );
 			}
 		}
 	}
-	function displayButtons( $offset = 0, $length = 10 ) {
+	function displayButtons( $offset = 0, $length = 10, $pagaename = 'Testpage', $action = 'show' ) {
 		$out = $this->getOutput();
+		// TODO check if addHTML has to be sanitized
 		$out->addHTML( '<form method=\'get\'>'
 			. '<input value="Show :" type="submit">'
 			. ' <input name="length" size="3" value="'
@@ -46,23 +50,60 @@ class SpecialMathDebug extends SpecialPage {
 			. '" class="textfield"  onfocus="this.select()" type="text">'
 			. ' test(s) starting from test # <input name="offset" size="6" value="'
 			. ( $offset + $length )
-			. '" class="textfield" onfocus="this.select()" type="text"></form>'
+			. '" class="textfield" onfocus="this.select()" type="text"> for page'
+			. ' <input name="pagename" size="12" value="'
+			. $pagaename
+			. '" class="textfield" onfocus="this.select()" type="text">'
+			. ' <input name="action" size="12" value="'
+			. $action
+			. '" class="textfield" onfocus="this.select()" type="text"> </form>'
 			);
 	}
-	function compareParser() {
+	public function compareParser( $offset = 0, $length = 10, $page = 'Testpage' ) {
+		global $wgUseLaTeXML, $wgRequest, $wgLaTeXMLUrl;
 		$out = $this->getOutput();
-		$i = 0;
-		$ans = self::getAnswers();
-		foreach ( self::getMathTagsFromPage() as $key => $t ) {
-			if ( self::render( $t, MW_MATH_LATEXML ) == $ans[$i] ) {
-				// $out->addWikiText('Success for '.$i);
-			} else {
-				$out->addWikiText( 'Fail for ' . $i );
-			}
-			$i++;
+		if ( !$wgUseLaTeXML ) {
+			$out->addWikiText( "MahtML support must be enabled." );
+			return false;
 		}
+		$parserA = $wgRequest->getVal( 'parserA', 'http://latexml.mathweb.org/convert' );
+		$parserB = $wgRequest->getVal( 'parserB', 'http://latexml-test.instance-proxy.wmflabs.org/' );
+		$formulae = self::getMathTagsFromPage( $page );
+		$i = 0;
+		$str_out = '';
+		$renderer = new MathLaTeXML();
+		$renderer->setPurge( );
+		$diffFormatter = new DiffFormatter();
+		if ( is_array( $formulae ) ) {
+			foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
+				$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
+				$renderer->setTex( $formula );
+				$wgLaTeXMLUrl = $parserA;
+				$stringA = $renderer->render( true ) ;
+				$wgLaTeXMLUrl = $parserB;
+				$stringB = $renderer->render( true ) ;
+				$diff = new Diff( array( $stringA ), array( $stringB ) );
+				if ( $diff->isEmpty() ) {
+					$out->addWikiText( 'Output is identical' );
+				} else {
+					$out->addWikiText( '<source lang="diff">' . $diffFormatter->format( $diff ) . '</source>' );
+					$out->addWikiText( 'XML Element based:' );
+					$XMLA = explode( '>', $stringA );
+					$XMLB = explode( '>', $stringB );
+					$diff = new Diff( $XMLA, $XMLB );
+					$out->addWikiText( '<source lang="diff">' . $diffFormatter->format( $diff ) . '</source>' );
+				}
+				$i++;
+			}
+		} else {
+			$str_out = "No math elements found";
+		}
+		$out->addWikiText( $str_out );
+		return true;
+		$out = $this->getOutput();
 	}
-	function testParser( $offset = 0, $length = 10, $page = 'Testpage' ) {
+
+	public function testParser( $offset = 0, $length = 10, $page = 'Testpage' ) {
 		global $wgUseMathJax, $wgUseLaTeXML;
 		$out = $this->getOutput();
 		$out->addModules( array( 'ext.math.mathjax.enabler' ) );
@@ -90,20 +131,22 @@ class SpecialMathDebug extends SpecialPage {
 
 		$formulae = self::getMathTagsFromPage( $page );
 		$i = 0;
+		$renderer = new MathLaTeXML();
+		$renderer->setPurge( );
+		$tstring = '';
 		if ( is_array( $formulae ) ) {
-			$tstring = '<source>';
-		foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
-			$tstring .= "\n!! test\n Test #" . ( $offset + $i++ ) . ": $key \n!! input"
-				. "\n$formula\n!! output\n";
-			$tstring .=  MathRenderer::renderMath( $formula, array(), MW_MATH_LATEXML ) ;
-			$tstring .= "!! end\n";
-		}
-		$tstring .= '</source>';
+			foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
+				$tstring .= "\n!! test\n Test #" . ( $offset + $i++ ) . ": $key \n!! input"
+					. "\n<math>$formula</math>\n!! result\n";
+				$renderer->setTex( $formula );
+				$tstring .= $renderer->render( true ) ;
+				$tstring .= "\n!! end\n";
+			}
 		} else {
 			$tstring = "No math elements found";
 		}
-
-		$out->addWikiText( $tstring );
+		file_put_contents( '/home/vagrant/math/mathParserTests2.txt', $tstring );
+		$out->addWikiText( '<source>' . $tstring . '<\source>' );
 		return true;
 	}
 	private static function render( $t, $mode, $aimJax = true ) {
@@ -128,6 +171,6 @@ class SpecialMathDebug extends SpecialPage {
 		$matches = preg_match_all( "#<math>(.*?)</math>#s", $wikiText,  $math );
 		// TODO: Find a way to specify a key e.g '\nRenderTest:(.?)#<math>(.*?)</math>#s\n'
 		// leads to array('\1'->'\2') with \1 eg Bug 2345 and \2 the math content
-		return $math[0];
+		return $math[1];
 	}
 }
