@@ -40,7 +40,7 @@ class SpecialMathDebug extends SpecialPage {
 			}
 		}
 	}
-	function displayButtons( $offset = 0, $length = 10, $pagaename = 'Testpage', $action = 'show' ) {
+	function displayButtons( $offset = 0, $length = 10, $page = 'Testpage', $action = 'show' ) {
 		$out = $this->getOutput();
 		// TODO check if addHTML has to be sanitized
 		$out->addHTML( '<form method=\'get\'>'
@@ -51,8 +51,8 @@ class SpecialMathDebug extends SpecialPage {
 			. ' test(s) starting from test # <input name="offset" size="6" value="'
 			. ( $offset + $length )
 			. '" class="textfield" onfocus="this.select()" type="text"> for page'
-			. ' <input name="pagename" size="12" value="'
-			. $pagaename
+			. ' <input name="page" size="12" value="'
+			. $page
 			. '" class="textfield" onfocus="this.select()" type="text">'
 			. ' <input name="action" size="12" value="'
 			. $action
@@ -145,7 +145,6 @@ class SpecialMathDebug extends SpecialPage {
 		} else {
 			$tstring = "No math elements found";
 		}
-		file_put_contents( '/home/vagrant/math/mathParserTests2.txt', $tstring );
 		$out->addWikiText( '<source>' . $tstring . '<\source>' );
 		return true;
 	}
