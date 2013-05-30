@@ -10,7 +10,9 @@ $specialPageAliases = array();
 
 /** English (English) */
 $specialPageAliases['en'] = array(
-	'MathSearch' => array( 'MathSearch' ),
+		'MathSearch' => array( 'MathSearch', 'Math Search' ),
+		'MathDebug' => array( 'MathDebug', 'Math Debug' ),
+		'FormulaInfo' => array( 'FormulaInfo', 'Formula Info' ),
 );
 
 /** German (Deutsch) */

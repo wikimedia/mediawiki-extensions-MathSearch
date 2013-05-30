@@ -66,11 +66,11 @@ class FormulaInfo extends SpecialPage {
 		$mo = MathObject::constructformpage( $pid, $eid );
 		$wgOut->addWikiText( "Occurences on the following pages:" );
 		wfDebugLog( "MathSearch", var_export( $mo->getAllOccurences(), true ) );
-		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
+		//$wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
 		$wgOut->addWikiText( 'TeX : <code>' . $mo->getTex() . '</code>' );
 
 		$wgOut->addWikiText( 'MathML : ', false );
-		$wgOut->addHTML( $mo->mathml );
+		$wgOut->addHTML( $mo->getMathml() );
 		$wgOut->addHtml( '<a href="/wiki/Special:MathSearch?pattern=' . urlencode( $mo->getTex() ) . '&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>' );
 		# $log=htmlspecialchars( $res->math_log );
 		$wgOut->addWikiText( '==Similar pages==' );
@@ -82,7 +82,7 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addWikiText( '==MathML==' );
 
 		$wgOut->addHtml( "<br />" );
-		$wgOut->addHtml( htmlspecialchars( $mo->mathml ) );
+		$wgOut->addHtml( htmlspecialchars( $mo->getMathml() ) );
 		$wgOut->addHtml( "<br />" );
 		$wgOut->addHtml( "<br />" );
 		$wgOut->addHtml( "<br />" );
@@ -90,7 +90,7 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addWikiText( '==LOG and Debug==' );
 		$wgOut->addWikiText( 'Rendered at : <code>' . $mo->getTimestamp()
 			. '</code> an idexed at <code>' . $mo->getIndexTimestamp() . '</code>' );
-		$wgOut->addWikiText( 'validxml : <code>' . $mo->getValidXml() . '</code> recheck:', false );
+		$wgOut->addWikiText( 'validxml : <code>' . MathLaTeXML::isValidMathML($mo->getMathml()) . '</code> recheck:', false );
 		$wgOut->addHtml( MathLaTeXML::isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
 		$wgOut->addWikiText( 'status : <code>' . $mo->getStatusCode() . '</code>' );
 		$wgOut->addHtml( htmlspecialchars( $mo->getLog() ) );

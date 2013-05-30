@@ -3,6 +3,13 @@ class MathObject extends MathRenderer {
 	protected $anchorID = 0;
 	protected $pageID = 0;
 	protected $index_timestamp = null;
+	protected $inputHash = '';
+
+	private static function DebugPrint($s){
+		//$s= Sanitizer::safeEncodeAttribute($s);
+		wfDebugLog( "MathSearch", $s);
+	}	
+
 	public function getAnchorID() {
 		return $this->anchorID;
 	}
@@ -18,6 +25,15 @@ class MathObject extends MathRenderer {
 	public function getIndexTimestamp() {
 		return $this->index_timestamp;
 	}
+	public function getInputHash(){
+		wfDebugLog('MathSearch', 'Debugger dies here');
+		//die('end of debug toolbar');
+		if ($this->inputHash){
+			return $this->inputHash;
+		} else {
+			return parent::getInputHash();
+		}
+	}
 	public static function constructformpagerow( $res ) {
 		global $wgDebugMath;
 		if ( $res->mathindex_page_id > 0 ) {
@@ -28,13 +44,14 @@ class MathObject extends MathRenderer {
 			$instance->index_timestamp = $res->mathindex_timestamp;
 		}
 		$instance->inputHash = $res->mathindex_inputhash;
-		$instance->readDatabaseEntry();
-		wfDebugLog( "MathSearch", 'got' . var_export( $instance, true ) );
+		$instance->readFromDatabase();
+		self::DebugPrint( 'got' . var_export( $instance, true ) );
 		return $instance;
 		} else {
 			return false;
 		}
 	}
+
 	public static function findSimilarPages( $pid ) {
 		global $wgOut;
 		$out = "";
@@ -122,7 +139,7 @@ class MathObject extends MathRenderer {
 				'mathindex_page_id = ' . $pid
 				. ' AND mathindex_anchor= ' . $eid
 		);
-		wfDebugLog( "MathSearch", var_export( $res, true ) );
+		self::DebugPrint( var_export( $res, true ) );
 		return self::constructformpagerow( $res );
 	}
 
@@ -140,7 +157,7 @@ class MathObject extends MathRenderer {
 		);
 
 		foreach ( $res as $row ) {
-			wfDebugLog( "MathSearch", var_export( $row, true ) );
+			self::DebugPrint( var_export( $row, true ) );
 			$var = self::constructformpagerow( $row );
 			if ( $var ) {
 				$var->printLink2Page( false );
