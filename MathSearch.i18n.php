@@ -209,6 +209,18 @@ $messages['mk'] = array(
 	'mathdebug' => 'Текстоисписник',
 );
 
+/** Malay (Bahasa Melayu)
+ * @author Anakmalaysia
+ */
+$messages['ms'] = array(
+	'mathsearch' => 'Pencarian matematik',
+	'formulainfo' => 'Maklumat rumus',
+	'specialpages-group-mathsearch' => 'Pencarian matematik',
+	'mathsearch-desc' => 'Menyepadukan enjin [http://search.mathweb.org/about.html MathWeb Search]',
+	'getequationsbyquery' => 'Dapatkan persamaan dengan pertanyaan',
+	'xquerygenerator' => 'Penjana X-query',
+);
+
 /** Maltese (Malti)
  * @author Chrisportelli
  */
