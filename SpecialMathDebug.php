@@ -108,14 +108,16 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	public function testParser( $offset = 0, $length = 10, $page = 'Testpage' ) {
-		global $wgUseMathJax, $wgUseLaTeXML;
+		global $wgUseMathJax, $wgUseLaTeXML, $wgTexvc;
 		$out = $this->getOutput();
 		$out->addModules( array( 'ext.math.mathjax.enabler' ) );
+ 		//die('END');
 		$i = 0;
 		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t ) {
 			$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
 			$out->addHTML( self::render( $t, MW_MATH_SOURCE ) );
 			$out->addHTML( self::render( $t, MW_MATH_PNG ) );
+			$out->addWikiText('<source lang="latex">'.$this->getTexvcTex($t).'</source>');
 			if ( $wgUseLaTeXML ) {
 				$out->addHTML( self::render( $t, MW_MATH_LATEXML ) );
 			}
@@ -153,7 +155,11 @@ class SpecialMathDebug extends SpecialPage {
 		return true;
 	}
 	private static function render( $t, $mode, $aimJax = true ) {
-		$res = $mode . ':' . MathRenderer::renderMath( $t, array(), $mode );
+		$renderer = MathRenderer::getRenderer($t, array(), $mode);
+		$renderer->setPurge(true);
+		$fragment = $renderer->render();
+		$res = $mode . ':' . $fragment;
+		wfDebugLog('MathSearch', 'rendered:' .$res);
 		if ( $aimJax ) {
 			self::aimHTMLFromJax( $res );
 		}
@@ -175,5 +181,13 @@ class SpecialMathDebug extends SpecialPage {
 		// TODO: Find a way to specify a key e.g '\nRenderTest:(.?)#<math>(.*?)</math>#s\n'
 		// leads to array('\1'->'\2') with \1 eg Bug 2345 and \2 the math content
 		return $math[1];
+	}
+	private function getTexvcTex($tex){
+		$tmpDir = wfTempDir();
+		$renderer = MathRenderer::getRenderer($tex,array(),MW_MATH_PNG);
+		$renderer->setPurge(true);
+		$renderer->callTexvc();
+		return $renderer->getSecureTex();
+		
 	}
 }
