@@ -18,6 +18,7 @@ $specialPageAliases['en'] = array(
 /** German (Deutsch) */
 $specialPageAliases['de'] = array(
 	'MathSearch' => array( 'MathWeb-Suche' ),
+	'FormulaInfo' => array( 'Formelinformation' ),
 );
 
 /** Italian (italiano) */
@@ -33,6 +34,8 @@ $specialPageAliases['ko'] = array(
 /** Macedonian (македонски) */
 $specialPageAliases['mk'] = array(
 	'MathSearch' => array( 'МатПребарување' ),
+	'MathDebug' => array( 'МатИсправкаГрешки' ),
+	'FormulaInfo' => array( 'ФормулаИнфо' ),
 );
 
 /** Dutch (Nederlands) */
