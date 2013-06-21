@@ -219,29 +219,10 @@ class SpecialMathSearch extends SpecialPage {
 	 */
 	function LaTeXMLRender( $URL, $texcmd ) {
 		global $wgOut;
-		// $URL="http://latexml.physikerwelt.de/convert";
-		// $texcmd = urlencode( "\$ $texcmd urlencode \$" );
-		$post = "profile=mwsquery&tex=$texcmd";
-		$time_start = microtime( true );
-		$res = Http::post( $URL . "?profile=mwsquery", array( "postData" => $texcmd, "timeout" => 60 ) );
-		$time_end = microtime( true );
-		$time = $time_end - $time_start;
-		wfDebugLog( "MathSearch", "rendered in $time seconds" );
-
-		$result = json_decode( $res );
-		// var_dump($result);
-		// $wgOut->addHTML( "Query:\n". htmlspecialchars ($result->result));
-		wfDebugLog( "MathSearch", "Latexml request: " . var_export( $post, true ) . "\n" );
-		wfDebugLog( "MathSearch", "Latexml output:\n" . var_export( $result, true ) . "\n---\n" );
-		// $wgOut->addHTML( "Query:<br />" . htmlspecialchars ( var_export( $result->result, true ) ) . "<br />" );
-		if ( $result->result ) {
-			return $result->result;
-		} else {
-			 var_dump( $result );
-			 var_dump( $post );
-			die( "bad request $URL" );
-		}
-
+		$renderer = new MathLaTeXML($texcmd);
+		$renderer->setLaTeXMLSettings('profile=mwsquery');
+		$renderer->render(true);
+		return $renderer->getMathml();
 	}
 
 	/**
