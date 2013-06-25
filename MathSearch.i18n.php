@@ -219,6 +219,7 @@ $messages['ms'] = array(
 	'mathsearch-desc' => 'Menyepadukan enjin [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'Dapatkan persamaan dengan pertanyaan',
 	'xquerygenerator' => 'Penjana X-query',
+	'mathdebug' => 'Pemapar Uji',
 );
 
 /** Maltese (Malti)
