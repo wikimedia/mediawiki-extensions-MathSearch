@@ -18,6 +18,7 @@ $specialPageAliases['en'] = array(
 /** German (Deutsch) */
 $specialPageAliases['de'] = array(
 	'MathSearch' => array( 'MathWeb-Suche' ),
+	'MathDebug' => array( 'MathWeb-Fehlerprotokoll' ),
 	'FormulaInfo' => array( 'Formelinformation' ),
 );
 
