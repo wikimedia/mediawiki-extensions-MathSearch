@@ -21,7 +21,7 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
+require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
 /**
  * @author Moritz Schubotz

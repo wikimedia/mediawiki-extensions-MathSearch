@@ -19,10 +19,10 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
+require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
 class UpdateMath extends Maintenance {
-	const RTI_CHUNK_SIZE = 100000;
+	const RTI_CHUNK_SIZE = 1;
 	var $purge = false;
 	var $dbw = null;
 
@@ -50,7 +50,7 @@ class UpdateMath extends Maintenance {
 		if ( $cmax > 0 && $count > $cmax ) {
 			$count = $cmax;
 		}
-		# $this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
+		$this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
 		$fcount = 0;
 
 		while ( $n < $count ) {
@@ -59,20 +59,16 @@ class UpdateMath extends Maintenance {
 			}
 			$end = $n + self::RTI_CHUNK_SIZE - 1;
 
-			$res = $this->db->select( array( 'page', 'revision', 'text' ),
-					array( 'page_id' ),
-					array( "page_id BETWEEN $n AND $end", 'page_latest = rev_id', 'rev_text_id = old_id' ),
-					__METHOD__
-			);
-			$this->dbw->begin();
-			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
-			foreach ( $res as $s ) {
-				// $revtext = Revision::getRevisionText( $s );
-				$fcount += $this->doUpdate( $s->page_id );
+			$res = $this->db->selectField( 'mathpagestat', 'pagestat_pageid', "pagestat_pageid=$n" );
+			if ( $res ) {
+				$this->dbw->begin();
+				$fcount += self::doUpdate( $res, $this->dbw );
+			$start = microtime( true );
+			$this->dbw->commit();
+			echo " committed in " . ( microtime( true ) -$start ) . "s\n\n";
 			}
 			$n += self::RTI_CHUNK_SIZE;
 		}
-		// $this->output( "Updated {$fcount} formulae!\n" );
 	}
 	/**
 	 * @param unknown $pId
@@ -81,20 +77,17 @@ class UpdateMath extends Maintenance {
 	 * @param string $purge
 	 * @return number
 	 */
-	private function doUpdate( $pid ) {
+	private static function doUpdate( $pid  , $dbw ) {
 		// TODO: fix link id problem
-		$anchorID = 0;
-		$res = $this->db->select( array( 'mathpagestat', 'mathvarstat' ),
-					array( 'pagestat_pageid', 'pagestat_featurename', 'pagestat_featuretype', 'pagestat_featurecount', 'varstat_id', 'varstat_featurecount' ),
-					array( 'pagestat_pageid' => $pid, 'pagestat_featurename = varstat_featurename', 'pagestat_featuretype=varstat_featuretype'  ),
-					__METHOD__
-			);
-		foreach ( $res as $row ) {
-			$this->output( $pid . ',' . $row->varstat_id . ',' . $row->pagestat_featurecount
-			/// $row->varstat_featurecount
-			. "\n" );// .';'.$row->pagestat_featuretype.utf8_decode($row->pagestat_featurename)."\n");
-		}
-		return 0;
+		$sql = "INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value)\n"
+				. "SELECT DISTINCT '.$pid.',`pagestat_pageid`,\n"
+				. "CosProd('.$pid.',`pagestat_pageid`)\n"
+						. "FROM `mathpagestat` WHERE pagestat_pageid<" . $pid;
+		echo "writing entries for page $pid...";
+		$start = microtime( true );
+		$dbw->query( $sql );
+		echo 'done in ' . ( microtime( true ) -$start ) . "\n";
+		return 1;
 	}
 	/**
 	 *
@@ -103,6 +96,7 @@ class UpdateMath extends Maintenance {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
+		$this->output( "Done.\n" );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
 	}
 }

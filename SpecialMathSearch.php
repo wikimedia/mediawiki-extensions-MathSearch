@@ -214,24 +214,14 @@ class SpecialMathSearch extends SpecialPage {
 	}
 
 	/**
-	 * @param unknown $URL
-	 * @param unknown $texcmd
-	 */
-	function LaTeXMLRender( $URL, $texcmd ) {
-		global $wgOut;
-		$renderer = new MathLaTeXML($texcmd);
-		$renderer->setLaTeXMLSettings('profile=mwsquery');
-		$renderer->render(true);
-		return $renderer->getMathml();
-	}
-
-	/**
 	 * @param unknown $tex
 	 * @return string|boolean
 	 */
 	function render( $tex ) {
-		global $wgLaTeXMLUrl;
-		$contents = $this->LaTeXMLRender( $wgLaTeXMLUrl, $tex );
+		$renderer = new MathLaTeXML($texcmd);
+		$renderer->setLaTeXMLSettings('profile=mwsquery');
+		$renderer->render(true);
+		$contents = $renderer->getMathml();
 		if ( strlen( $contents ) == 0 ) {
 			return 'ERROR unknown';
 		}

@@ -19,10 +19,10 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
+require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
 class UpdateMath extends Maintenance {
-	const RTI_CHUNK_SIZE = 10;
+	const RTI_CHUNK_SIZE = 100000;
 	var $purge = false;
 	var $dbw = null;
 
@@ -50,7 +50,7 @@ class UpdateMath extends Maintenance {
 		if ( $cmax > 0 && $count > $cmax ) {
 			$count = $cmax;
 		}
-		$this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
+		# $this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
 		$fcount = 0;
 
 		while ( $n < $count ) {
@@ -60,24 +60,19 @@ class UpdateMath extends Maintenance {
 			$end = $n + self::RTI_CHUNK_SIZE - 1;
 
 			$res = $this->db->select( array( 'page', 'revision', 'text' ),
-					array( 'page_id', 'page_namespace', 'page_title', 'old_flags', 'old_text' ),
+					array( 'page_id' ),
 					array( "page_id BETWEEN $n AND $end", 'page_latest = rev_id', 'rev_text_id = old_id' ),
 					__METHOD__
 			);
 			$this->dbw->begin();
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
-				$revtext = Revision::getRevisionText( $s );
-				$fcount += self::doUpdate( $s->page_id, $revtext, $s->page_title, $this->purge, $this->dbw );
+				// $revtext = Revision::getRevisionText( $s );
+				$fcount += $this->doUpdate( $s->page_id );
 			}
-			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
-			$start = microtime( true );
-			$this->dbw->commit();
-			echo " committed in " . ( microtime( true ) -$start ) . "s\n\n";
-			// echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$n += self::RTI_CHUNK_SIZE;
 		}
-		$this->output( "Updated {$fcount} formulae!\n" );
+		// $this->output( "Updated {$fcount} formulae!\n" );
 	}
 	/**
 	 * @param unknown $pId
@@ -86,35 +81,18 @@ class UpdateMath extends Maintenance {
 	 * @param string $purge
 	 * @return number
 	 */
-	private static function doUpdate( $pid, $pText, $pTitle = "", $purge = false , $dbw ) {
+	private function doUpdate( $pid ) {
 		// TODO: fix link id problem
 		$anchorID = 0;
-		$res = "";
-		$pText = Sanitizer::removeHTMLcomments( $pText );
-		$matches = preg_match_all( "#<math>(.*?)</math>#s", $pText, $math );
-		if ( $matches ) {
-			echo( "\t processing $matches math fields for {$pTitle} page\n" );
-			foreach ( $math[1] as $formula ) {
-				$tstart = time();
-				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_LATEXML );
-				$renderer->render( $purge );
-				// Enable indexing of math formula
-				wfRunHooks( 'MathFormulaRendered', array( &$renderer , &$notused, $pid, $anchorID ) );
-				$anchorID++;
-				$tend = time();
-				if ( $tend -$tstart > 2 ) {
-					echo( "\t\t slow equation " . ( $anchorID -1 ) .
-						"beginning with" . substr( $formula, 0, 10 ) . "rendered in " . ( $tend -$tstart ) . "s. \n" );
-				}
-				if ( $renderer->getSuccess() ) {
-					$renderer->writeCache();
-				} else {
-					echo "F:\t\t equation " . ( $anchorID -1 ) .
-						"-failed beginning with" . substr( $formula, 0, 5 )
-						. "mathml:" . $renderer->mathml;
-				}
-			}
-			return $matches;
+		$res = $this->db->select( array( 'mathpagestat', 'mathvarstat' ),
+					array( 'pagestat_pageid', 'pagestat_featurename', 'pagestat_featuretype', 'pagestat_featurecount', 'varstat_id', 'varstat_featurecount' ),
+					array( 'pagestat_pageid' => $pid, 'pagestat_featurename = varstat_featurename', 'pagestat_featuretype=varstat_featuretype'  ),
+					__METHOD__
+			);
+		foreach ( $res as $row ) {
+			$this->output( $pid . ',' . $row->varstat_id . ',' . $row->pagestat_featurecount
+			/// $row->varstat_featurecount
+			. "\n" );// .';'.$row->pagestat_featuretype.utf8_decode($row->pagestat_featurename)."\n");
 		}
 		return 0;
 	}
@@ -125,7 +103,6 @@ class UpdateMath extends Maintenance {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
-		$this->output( "Done.\n" );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
 	}
 }

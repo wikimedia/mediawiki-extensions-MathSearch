@@ -19,10 +19,10 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/../../maintenance/Maintenance.php' );
+require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
 class UpdateMath extends Maintenance {
-	const RTI_CHUNK_SIZE = 100;
+	const RTI_CHUNK_SIZE = 10;
 	var $purge = false;
 	var $dbw = null;
 
@@ -77,26 +77,6 @@ class UpdateMath extends Maintenance {
 			// echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$n += self::RTI_CHUNK_SIZE;
 		}
-		$this->output( "Clear mathvarstat\n" );
-		$sql = "TRUNCATE TABLE `mathvarstat`";
-		$this->dbw->query( $sql );
-		$this->output( "Generate mathvarstat\n" );
-		$sql = "INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)\n"
-				. "SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT\n"
-				. "FROM `mathobservation`\n"
-						. "JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash\n"
-								. "GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n"
-										. "ORDER BY CNT DESC";
-		$this->dbw->query( $sql );
-		$this->output( "Clear mathpagestat\n" );
-		$sql = "TRUNCATE TABLE `mathpagestat`";
-		$this->dbw->query( $sql );
-		$this->output( "Generate mathpagestat\n" );
-		$sql = "INSERT INTO `mathpagestat`(`pagestat_featureid`,`pagestat_pageid`,`pagestat_featurecount`)\n"
-				. "SELECT varstat_id, mathindex_page_id, count(*) as CNT FROM `mathobservation` JOIN mathindex on `mathobservation_inputhash` =mathindex_inputhash\n"
-				. "JOIN mathvarstat on varstat_featurename = `mathobservation_featurename` and varstat_featuretype = `mathobservation_featuretype`\n"
-						. " GROUP by `mathobservation_featurename`, `mathobservation_featuretype`,mathindex_page_id ORDER BY CNT DESC";
-		$this->dbw->query( $sql );
 		$this->output( "Updated {$fcount} formulae!\n" );
 	}
 	/**
@@ -115,10 +95,24 @@ class UpdateMath extends Maintenance {
 		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math[1] as $formula ) {
-				$mo = new MathObject( $formula );
-				$mo->updateObservations( $dbw );
+				$tstart = time();
+				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_LATEXML );
+				$renderer->render( $purge );
 				// Enable indexing of math formula
+				wfRunHooks( 'MathFormulaRendered', array( &$renderer , &$notused, $pid, $anchorID ) );
 				$anchorID++;
+				$tend = time();
+				if ( $tend -$tstart > 2 ) {
+					echo( "\t\t slow equation " . ( $anchorID -1 ) .
+						"beginning with" . substr( $formula, 0, 10 ) . "rendered in " . ( $tend -$tstart ) . "s. \n" );
+				}
+				if ( $renderer->getSuccess() ) {
+					$renderer->writeCache();
+				} else {
+					echo "F:\t\t equation " . ( $anchorID -1 ) .
+						"-failed beginning with" . substr( $formula, 0, 5 )
+						. "mathml:" . $renderer->mathml;
+				}
 			}
 			return $matches;
 		}
