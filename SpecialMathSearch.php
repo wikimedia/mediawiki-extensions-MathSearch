@@ -77,8 +77,9 @@ class SpecialMathSearch extends SpecialPage {
 		$ls = self::getLucene() ;
 		if ( $ls ) {
 		$ls->limit = 1000000;
+		if ( $text ) {
 		$sres = $ls->searchText( $text );
-		if ( $sres ) {
+		if ( $sres && $sres->hasResults() ) {
 			$wgOut->addWikiText( "You searched for the text '$text' and the TeX-Pattern '$pattern'." );
 			$wgOut->addWikiText( "The text search results in [{{canonicalurl:search|search=$text}} " .
 					$sres->getTotalHits()
@@ -106,7 +107,7 @@ class SpecialMathSearch extends SpecialPage {
 
 			wfDebugLog( 'mathsearch', 'EOF' );
 			wfDebugLog( 'mathsearch', var_export( $this->mathResults , true ) );
-		}
+	} }
 		}
 		// $wgOut->addHtml(htmlspecialchars( $pattern) );
 		$wgOut->addWikiText( "<math> $pattern </math>" );
@@ -218,9 +219,10 @@ class SpecialMathSearch extends SpecialPage {
 	 * @return string|boolean
 	 */
 	function render( $tex ) {
-		$renderer = new MathLaTeXML($texcmd);
-		$renderer->setLaTeXMLSettings('profile=mwsquery');
-		$renderer->render(true);
+		$renderer = new MathLaTeXML( $tex );
+		$renderer->setLaTeXMLSettings( 'profile=mwsquery' );
+		$renderer->setAllowedRootElments( array( 'http://search.mathweb.org/ns:query' ) );
+		$renderer->render( true );
 		$contents = $renderer->getMathml();
 		if ( strlen( $contents ) == 0 ) {
 			return 'ERROR unknown';
@@ -236,14 +238,25 @@ class SpecialMathSearch extends SpecialPage {
 	function genSerachString( $cmml ) {
 		global $wgMWSUrl;
 
-		$out = "";	$numProcess = 30000;
-		$mwsExpr = str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"", $cmml );
-		$mwsExpr = str_replace( "m:", "", $mwsExpr );
+		$numProcess = 30000;
+		$tmp = str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"", $cmml );
+		$mwsExpr = str_replace( "m:", "", $tmp );
 		wfDebugLog( 'mathsearch', 'MWS query:' . $mwsExpr );
 		$res = Http::post( $wgMWSUrl, array( "postData" => $mwsExpr, "timeout" => 60 ) );
-
 		if ( $res == false ) {
-			wfDebugLog( "MathSearch", "Nothing retreived from $wgMWSUrl. Check if mwsd is running." );
+			if ( function_exists( 'curl_init' ) ) {
+				$handle = curl_init();
+				$options = array(
+				CURLOPT_URL => $wgMWSUrl,
+				CURLOPT_CUSTOMREQUEST => 'POST', // GET POST PUT PATCH DELETE HEAD OPTIONS
+				);
+				curl_setopt_array( $handle, $options );
+				$details = curl_exec( $handle );
+			} else {
+				$details = "curl is not installed.";
+			}
+			wfDebugLog( "MathSearch", "Nothing retreived from $wgMWSUrl. Check if mwsd is running. Error:" .
+				var_export( $details, true ) );
 			return false;
 		}
 		$xres = new SimpleXMLElement( $res );

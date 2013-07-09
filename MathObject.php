@@ -5,10 +5,10 @@ class MathObject extends MathRenderer {
 	protected $index_timestamp = null;
 	protected $inputHash = '';
 
-	private static function DebugPrint($s){
-		//$s= Sanitizer::safeEncodeAttribute($s);
-		wfDebugLog( "MathSearch", $s);
-	}	
+	private static function DebugPrint( $s ) {
+		// $s= Sanitizer::safeEncodeAttribute($s);
+		wfDebugLog( "MathSearch", $s );
+	}
 
 	public function getAnchorID() {
 		return $this->anchorID;
@@ -25,10 +25,10 @@ class MathObject extends MathRenderer {
 	public function getIndexTimestamp() {
 		return $this->index_timestamp;
 	}
-	public function getInputHash(){
-		wfDebugLog('MathSearch', 'Debugger dies here');
-		//die('end of debug toolbar');
-		if ($this->inputHash){
+	public function getInputHash() {
+		wfDebugLog( 'MathSearch', 'Debugger dies here' );
+		// die('end of debug toolbar');
+		if ( $this->inputHash ) {
 			return $this->inputHash;
 		} else {
 			return parent::getInputHash();

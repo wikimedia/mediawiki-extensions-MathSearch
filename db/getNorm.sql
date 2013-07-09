@@ -1,0 +1,15 @@
+delimiter $$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `getNorm`(pid INT) RETURNS decimal(20,10)
+    READS SQL DATA
+    DETERMINISTIC
+BEGIN
+DECLARE output DECIMAL(20,10);
+SELECT SUM(POW(LOG(CAST(`pagestat_featurecount`as decimal(20,10)))/LOG(varstat_featurecount),2)) as norm
+INTO output
+FROM `mathpagestat`
+JOIN mathvarstat on `pagestat_featureid` = varstat_id
+WHERE `pagestat_pageid` =pid order by norm desc;
+return POW(output,1/2);
+END$$
+

@@ -66,7 +66,7 @@ class FormulaInfo extends SpecialPage {
 		$mo = MathObject::constructformpage( $pid, $eid );
 		$wgOut->addWikiText( "Occurences on the following pages:" );
 		wfDebugLog( "MathSearch", var_export( $mo->getAllOccurences(), true ) );
-		//$wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
+		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
 		$wgOut->addWikiText( 'TeX : <code>' . $mo->getTex() . '</code>' );
 
 		$wgOut->addWikiText( 'MathML : ', false );
@@ -90,7 +90,7 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addWikiText( '==LOG and Debug==' );
 		$wgOut->addWikiText( 'Rendered at : <code>' . $mo->getTimestamp()
 			. '</code> an idexed at <code>' . $mo->getIndexTimestamp() . '</code>' );
-		$wgOut->addWikiText( 'validxml : <code>' . MathLaTeXML::isValidMathML($mo->getMathml()) . '</code> recheck:', false );
+		$wgOut->addWikiText( 'validxml : <code>' . MathLaTeXML::isValidMathML( $mo->getMathml() ) . '</code> recheck:', false );
 		$wgOut->addHtml( MathLaTeXML::isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
 		$wgOut->addWikiText( 'status : <code>' . $mo->getStatusCode() . '</code>' );
 		$wgOut->addHtml( htmlspecialchars( $mo->getLog() ) );

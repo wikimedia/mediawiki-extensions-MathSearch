@@ -86,10 +86,10 @@ class SpecialMathDebug extends SpecialPage {
 				if ( $diff->isEmpty() ) {
 					$out->addWikiText( 'Output is identical' );
 				} else {
-					$out->addWikiText('Requst A <source lang="bash"> curl -d \''.
-						$renderer->getPostValue().'\' '.$parserA.'</source>');
-					$out->addWikiText('Requst B <source lang="bash"> curl -d \''.
-						$renderer->getPostValue().'\' '.$parserB.'</source>');
+					$out->addWikiText( 'Requst A <source lang="bash"> curl -d \'' .
+						$renderer->getPostValue() . '\' ' . $parserA . '</source>' );
+					$out->addWikiText( 'Requst B <source lang="bash"> curl -d \'' .
+						$renderer->getPostValue() . '\' ' . $parserB . '</source>' );
 					$out->addWikiText( 'Diff: <source lang="diff">' . $diffFormatter->format( $diff ) . '</source>' );
 					$out->addWikiText( 'XML Element based:' );
 					$XMLA = explode( '>', $stringA );
@@ -111,13 +111,13 @@ class SpecialMathDebug extends SpecialPage {
 		global $wgUseMathJax, $wgUseLaTeXML, $wgTexvc;
 		$out = $this->getOutput();
 		$out->addModules( array( 'ext.math.mathjax.enabler' ) );
- 		//die('END');
+ 		// die('END');
 		$i = 0;
 		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t ) {
 			$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
 			$out->addHTML( self::render( $t, MW_MATH_SOURCE ) );
 			$out->addHTML( self::render( $t, MW_MATH_PNG ) );
-			$out->addWikiText('<source lang="latex">'.$this->getTexvcTex($t).'</source>');
+			$out->addWikiText( '<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>' );
 			if ( $wgUseLaTeXML ) {
 				$out->addHTML( self::render( $t, MW_MATH_LATEXML ) );
 			}
@@ -155,11 +155,11 @@ class SpecialMathDebug extends SpecialPage {
 		return true;
 	}
 	private static function render( $t, $mode, $aimJax = true ) {
-		$renderer = MathRenderer::getRenderer($t, array(), $mode);
-		$renderer->setPurge(true);
+		$renderer = MathRenderer::getRenderer( $t, array(), $mode );
+		$renderer->setPurge( true );
 		$fragment = $renderer->render();
 		$res = $mode . ':' . $fragment;
-		wfDebugLog('MathSearch', 'rendered:' .$res);
+		wfDebugLog( 'MathSearch', 'rendered:' . $res );
 		if ( $aimJax ) {
 			self::aimHTMLFromJax( $res );
 		}
@@ -182,12 +182,12 @@ class SpecialMathDebug extends SpecialPage {
 		// leads to array('\1'->'\2') with \1 eg Bug 2345 and \2 the math content
 		return $math[1];
 	}
-	private function getTexvcTex($tex){
+	private function getTexvcTex( $tex ) {
 		$tmpDir = wfTempDir();
-		$renderer = MathRenderer::getRenderer($tex,array(),MW_MATH_PNG);
-		$renderer->setPurge(true);
+		$renderer = MathRenderer::getRenderer( $tex, array(), MW_MATH_PNG );
+		$renderer->setPurge( true );
 		$renderer->callTexvc();
 		return $renderer->getSecureTex();
-		
+
 	}
 }
