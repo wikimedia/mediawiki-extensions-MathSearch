@@ -106,12 +106,12 @@ class UpdateMath extends Maintenance {
 					echo( "\t\t slow equation " . ( $anchorID -1 ) .
 						"beginning with" . substr( $formula, 0, 10 ) . "rendered in " . ( $tend -$tstart ) . "s. \n" );
 				}
-				if ( $renderer->getSuccess() ) {
-					$renderer->writeCache();
-				} else {
+				$renderer->writeCache();
+
+				if ( $renderer->getLastError() ) {
 					echo "F:\t\t equation " . ( $anchorID -1 ) .
 						"-failed beginning with" . substr( $formula, 0, 5 )
-						. "mathml:" . $renderer->mathml;
+						. "mathml:" . $renderer->getMathml();
 				}
 			}
 			return $matches;
