@@ -99,7 +99,6 @@ class MathObject extends MathLaTeXML {
 		} catch ( Exception $e ) {
 			return "Databaseproblem";
 		}
-		var_dump($res);
 		if ( $res ) {
 		foreach ( $res as $row ) {
 			$wgOut->addWikiText( '*' . $row->mathobservation_featuretype . ' <code>' .
