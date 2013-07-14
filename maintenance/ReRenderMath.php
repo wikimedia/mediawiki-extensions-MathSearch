@@ -111,7 +111,7 @@ class UpdateMath extends Maintenance {
 				if ( $renderer->getLastError() ) {
 					echo "F:\t\t equation " . ( $anchorID -1 ) .
 						"-failed beginning with" . substr( $formula, 0, 5 )
-						. "mathml:" . $renderer->getMathml();
+						. "mathml:" . $renderer->getMathml() ."\n";
 				}
 			}
 			return $matches;
