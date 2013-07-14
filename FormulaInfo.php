@@ -67,7 +67,7 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addWikiText( "Occurences on the following pages:" );
 		wfDebugLog( "MathSearch", var_export( $mo->getAllOccurences(), true ) );
 		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
-		$wgOut->addWikiText( 'TeX : <code>' . $mo->getTex() . '</code>' );
+		$wgOut->addWikiText( 'TeX (as stored in database): <syntaxhighlight>' . $mo->getTex(). '</syntaxhighlight>');
 
 		$wgOut->addWikiText( 'MathML : ', false );
 		$wgOut->addHTML( $mo->getMathml() );
@@ -82,17 +82,16 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addWikiText( '==MathML==' );
 
 		$wgOut->addHtml( "<br />" );
-		$wgOut->addHtml( htmlspecialchars( $mo->getMathml() ) );
-		$wgOut->addHtml( "<br />" );
+		$wgOut->addWikiText( '<syntaxhighlight lang="xml">'.( $mo->getMathml() ).'</syntaxhighlight>');
 		$wgOut->addHtml( "<br />" );
 		$wgOut->addHtml( "<br />" );
 		if ( $wgDebugMath ) {
 		$wgOut->addWikiText( '==LOG and Debug==' );
-		$wgOut->addWikiText( 'Rendered at : <code>' . $mo->getTimestamp()
-			. '</code> an idexed at <code>' . $mo->getIndexTimestamp() . '</code>' );
-		$wgOut->addWikiText( 'validxml : <code>' . MathLaTeXML::isValidMathML( $mo->getMathml() ) . '</code> recheck:', false );
-		$wgOut->addHtml( MathLaTeXML::isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
-		$wgOut->addWikiText( 'status : <code>' . $mo->getStatusCode() . '</code>' );
+		$wgOut->addWikiText( 'Rendered at : <syntaxhighlight>' . $mo->getTimestamp()
+			. '</syntaxhighlight> an idexed at <syntaxhighlight>' . $mo->getIndexTimestamp() . '</syntaxhighlight>' );
+		$wgOut->addWikiText( 'validxml : <syntaxhighlight>' . $mo->isValidMathML( $mo->getMathml() ) . '</syntaxhighlight> recheck:', false );
+		$wgOut->addHtml( $mo->isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
+		$wgOut->addWikiText( 'status : <syntaxhighlight>' . $mo->getStatusCode() . '</syntaxhighlight>' );
 		$wgOut->addHtml( htmlspecialchars( $mo->getLog() ) );
 		}
 	}
