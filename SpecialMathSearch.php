@@ -24,8 +24,11 @@ class SpecialMathSearch extends SpecialPage {
 	function __construct() {
 		parent::__construct( 'MathSearch' );
 	}
-
-	function getLucene() {
+	/**
+	 * 
+	 * @return \LuceneSearch|boolean
+	 */
+	public static function getLucene() {
 		if ( class_exists( "LuceneSearch" ) ) {
 			return new LuceneSearch();
 		} else {
@@ -195,7 +198,7 @@ class SpecialMathSearch extends SpecialPage {
 		$out = '';
 		// The form header, which links back to this page.
 		$pageID = Title::makeTitle( NS_SPECIAL, 'MathSearch' );
-		$action = $pageID->escapeLocalURL();
+		$action = $pageID->getLinkURL();
 		$out .= "<form method=\"get\" action=\"$action\">\n";
 		// The search text field.
 		$pattern = htmlspecialchars( $pattern );
