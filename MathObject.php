@@ -1,5 +1,5 @@
 <?php
-class MathObject extends MathRenderer {
+class MathObject extends MathLaTeXML {
 	protected $anchorID = 0;
 	protected $pageID = 0;
 	protected $index_timestamp = null;
@@ -97,8 +97,9 @@ class MathObject extends MathRenderer {
 						'ORDER BY' => 'varstat_featurecount' )
 				);
 		} catch ( Exception $e ) {
-			return "DatabaseProblem";
+			return "Databaseproblem";
 		}
+		var_dump($res);
 		if ( $res ) {
 		foreach ( $res as $row ) {
 			$wgOut->addWikiText( '*' . $row->mathobservation_featuretype . ' <code>' .
@@ -108,7 +109,7 @@ class MathObject extends MathRenderer {
 	}
 
 	public function updateObservations( $dbw = null ) {
-		$this->readDatabaseEntry();
+		$this->readFromDatabase();
 		preg_match_all( "#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u", $this->mathml, $rule, PREG_SET_ORDER );
 		if ( $dbw == null ) {
 			$dbgiven = false;
