@@ -29,7 +29,9 @@ $specialPageAliases['it'] = array(
 
 /** Korean (한국어) */
 $specialPageAliases['ko'] = array(
-	'MathSearch' => array( '수학찾기' ),
+	'MathSearch' => array( '수학찾기', '수학_찾기' ),
+	'MathDebug' => array( '수학디버그', '수학_디버그' ),
+	'FormulaInfo' => array( '수식정보', '수식_정보' ),
 );
 
 /** Macedonian (македонски) */
