@@ -3,7 +3,7 @@ class SpecialMathDebug extends SpecialPage {
 
 
 	function __construct() {
-		parent::__construct( 'MathDebug', 'edit', true );
+		parent::__construct( 'MathDebug', 'MathDebug', true );
 	}
 	/**
 	 * Sets headers - this should be called from the execute() method of all derived classes!
@@ -111,19 +111,24 @@ class SpecialMathDebug extends SpecialPage {
 		global $wgUseMathJax, $wgUseLaTeXML, $wgTexvc;
 		$out = $this->getOutput();
 		$out->addModules( array( 'ext.math.mathjax.enabler' ) );
+		$out->addModules( array( 'ext.math.mathjax.enabler.mml' ) );
  		// die('END');
 		$i = 0;
 		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t ) {
 			$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
 			$out->addHTML( self::render( $t, MW_MATH_SOURCE ) );
 			$out->addHTML( self::render( $t, MW_MATH_PNG ) );
-			$out->addWikiText( '<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>' );
+			$out->addWikiText( 'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>');
 			if ( $wgUseLaTeXML ) {
 				$out->addHTML( self::render( $t, MW_MATH_LATEXML ) );
 			}
 			if ( $wgUseMathJax ) {
 				$out->addHTML( self::render( $t, MW_MATH_MATHJAX, false ) );
 			}
+			if ( $wgUseMathJax && $wgUseMathJax) {
+				$out->addHTML( self::render( $t, '7+', false ) ); //TODO: Update the name
+			}
+			
 		}
 	}
 
@@ -155,11 +160,13 @@ class SpecialMathDebug extends SpecialPage {
 		return true;
 	}
 	private static function render( $t, $mode, $aimJax = true ) {
-		$renderer = MathRenderer::getRenderer( $t, array(), $mode );
+		$modeInt= (int) substr($mode, 0,1);
+		$renderer = MathRenderer::getRenderer( $t, array(), $modeInt );
 		$renderer->setPurge( true );
 		$fragment = $renderer->render();
-		$res = $mode . ':' . $fragment;
-		wfDebugLog( 'MathSearch', 'rendered:' . $res );
+		$modeStr = wfMessage('mathmode_'.$mode)->inContentLanguage();
+		$res = $modeStr . ':' . $fragment;
+		wfDebugLog( 'MathSearch', 'rendered:' . $res . ' in mode '. $modeStr . '('.$mode.')');
 		if ( $aimJax ) {
 			self::aimHTMLFromJax( $res );
 		}
@@ -172,6 +179,7 @@ class SpecialMathDebug extends SpecialPage {
 
 	private static function getMathTagsFromPage( $titleString = 'Testpage' ) {
 		$title = Title::newFromText( $titleString );
+		if ($title->exists()){
 		$article = new Article( $title );
 		// TODO: find a better way to extract math elements from a page
 		$wikiText = $article->getPage()->getContent()->getNativeData();
@@ -180,7 +188,10 @@ class SpecialMathDebug extends SpecialPage {
 		$matches = preg_match_all( "#<math>(.*?)</math>#s", $wikiText,  $math );
 		// TODO: Find a way to specify a key e.g '\nRenderTest:(.?)#<math>(.*?)</math>#s\n'
 		// leads to array('\1'->'\2') with \1 eg Bug 2345 and \2 the math content
-		return $math[1];
+		return $math[1];}
+		else {
+			return 'Page does not exist';
+		}
 	}
 	private function getTexvcTex( $tex ) {
 		$tmpDir = wfTempDir();

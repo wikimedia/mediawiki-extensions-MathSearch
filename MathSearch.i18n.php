@@ -18,6 +18,15 @@ $messages['en'] = array(
 	'getequationsbyquery' => 'Get equations by query', // Special page
 	'xquerygenerator' => 'X-query generator', // Special page
 	'mathdebug' => 'Test Renderer', // Special page
+	'mathmode_0' => 'MW_MATH_PNG',
+	'mathmode_1' => 'MW_MATH_SIMPLE',
+	'mathmode_2' => 'MW_MATH_HTML',
+	'mathmode_3' => 'MW_MATH_SOURCE',
+	'mathmode_4' => 'MW_MATH_MODERN',
+	'mathmode_5' => 'MW_MATH_MATHML',
+	'mathmode_6' => 'MW_MATH_MATHJAX',
+	'mathmode_7' => 'MW_MATH_LATEXML',
+	'mathmode_7+' => 'MW_MATH_LATEXML_JAX', //TODO: Remove that construct
 );
 
 /** Message documentation (Message documentation)
