@@ -164,6 +164,9 @@ class SpecialMathDebug extends SpecialPage {
 		$renderer = MathRenderer::getRenderer( $t, array(), $modeInt );
 		$renderer->setPurge( true );
 		$fragment = $renderer->render();
+		// Give grep a chance to find the usages:
+		// mathmode_0, mathmode_1, mathmode_2, mathmode_3, mathmode_4,
+		// mathmode_5, mathmode_6, mathmode_7, mathmode_7+
 		$modeStr = wfMessage('mathmode_'.$mode)->inContentLanguage();
 		$res = $modeStr . ':' . $fragment;
 		wfDebugLog( 'MathSearch', 'rendered:' . $res . ' in mode '. $modeStr . '('.$mode.')');
