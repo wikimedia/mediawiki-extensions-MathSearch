@@ -255,9 +255,13 @@ $messages['nl'] = array(
 
 /** Polish (polski)
  * @author Matma Rex
+ * @author Woytecr
  */
 $messages['pl'] = array(
+	'mathsearch' => 'Wyszukiwanie wzorów',
+	'specialpages-group-mathsearch' => 'Wyszukiwanie wzorów',
 	'mathsearch-desc' => 'Integruje wyszukiwarkę [http://search.mathweb.org/about.html MathWeb Search]',
+	'getequationsbyquery' => 'Pobierz równania przez zapytania',
 );
 
 /** Piedmontese (Piemontèis)
