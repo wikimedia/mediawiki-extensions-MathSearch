@@ -27,6 +27,11 @@ $specialPageAliases['it'] = array(
 	'MathSearch' => array( 'RicercaMat' ),
 );
 
+/** Japanese (日本語) */
+$specialPageAliases['ja'] = array(
+	'FormulaInfo' => array( '数式情報' ),
+);
+
 /** Korean (한국어) */
 $specialPageAliases['ko'] = array(
 	'MathSearch' => array( '수학찾기', '수학_찾기' ),
