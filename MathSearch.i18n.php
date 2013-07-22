@@ -59,7 +59,7 @@ $messages['ast'] = array(
 	'specialpages-group-mathsearch' => 'Gueta matemática',
 	'mathsearch-desc' => 'Integra el motor de gueta [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'Algamar ecuaciones por consulta',
-	'xquerygenerator' => 'Xenerador X-query',
+	'xquerygenerator' => 'Xenerador XQuery',
 	'mathdebug' => 'Probar el dibuxador',
 );
 
@@ -111,7 +111,7 @@ $messages['fr'] = array(
 	'specialpages-group-mathsearch' => 'Recherche mathématique',
 	'mathsearch-desc' => 'Intégrer le moteur [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'Obtenir les équations par requête',
-	'xquerygenerator' => 'Générateur X-query',
+	'xquerygenerator' => 'Générateur XQuery',
 	'mathdebug' => 'Rendu de test',
 );
 
@@ -124,7 +124,7 @@ $messages['gl'] = array(
 	'specialpages-group-mathsearch' => 'Procura matemática',
 	'mathsearch-desc' => 'Integra o motor [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'Obter as ecuacións por pescuda',
-	'xquerygenerator' => 'Xerador X-query',
+	'xquerygenerator' => 'Xerador XQuery',
 	'mathdebug' => 'Probar o renderizador',
 );
 
@@ -137,7 +137,7 @@ $messages['he'] = array(
 	'specialpages-group-mathsearch' => 'חיפוש מתמטיקה',
 	'mathsearch-desc' => 'הוספת תמיכה במנוע החיפוש [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'קבלת משוואות לפי שאילתה',
-	'xquerygenerator' => 'מחולל X-query',
+	'xquerygenerator' => 'מחולל XQuery',
 );
 
 /** Upper Sorbian (hornjoserbsce)
@@ -227,7 +227,7 @@ $messages['ms'] = array(
 	'specialpages-group-mathsearch' => 'Pencarian matematik',
 	'mathsearch-desc' => 'Menyepadukan enjin [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'Dapatkan persamaan dengan pertanyaan',
-	'xquerygenerator' => 'Penjana X-query',
+	'xquerygenerator' => 'Penjana XQuery',
 	'mathdebug' => 'Pemapar Uji',
 );
 
@@ -280,7 +280,7 @@ $messages['roa-tara'] = array(
 	'specialpages-group-mathsearch' => 'Math Ricerche',
 	'mathsearch-desc' => "Integre 'u motore de [http://search.mathweb.org/about.html Ricerche MathWeb]",
 	'getequationsbyquery' => "Pigghie le equaziune cu l'inderrogazione",
-	'xquerygenerator' => 'Generatore X-query',
+	'xquerygenerator' => 'Generatore XQuery',
 	'mathdebug' => "Test d'u render",
 );
 
