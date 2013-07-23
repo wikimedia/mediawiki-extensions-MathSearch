@@ -166,6 +166,7 @@ $messages['ja'] = array(
 	'specialpages-group-mathsearch' => '数式の検索',
 	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 検索]エンジンを統合する',
 	'getequationsbyquery' => 'クエリによる式の取得',
+	'xquerygenerator' => 'XQueryジェネレーター',
 );
 
 /** Korean (한국어)
