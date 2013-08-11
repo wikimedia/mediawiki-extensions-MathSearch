@@ -15,6 +15,13 @@ $specialPageAliases['en'] = array(
 	'FormulaInfo' => array( 'FormulaInfo', 'Formula Info' ),
 );
 
+/** Min Dong Chinese (Mìng-dĕ̤ng-ngṳ̄) */
+$specialPageAliases['cdo'] = array(
+	'MathSearch' => array( '數學尋討' ),
+	'MathDebug' => array( '數學調試' ),
+	'FormulaInfo' => array( '公式信息' ),
+);
+
 /** German (Deutsch) */
 $specialPageAliases['de'] = array(
 	'MathSearch' => array( 'MathWeb-Suche' ),
