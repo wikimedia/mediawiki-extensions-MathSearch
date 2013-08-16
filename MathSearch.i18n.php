@@ -286,10 +286,17 @@ $messages['roa-tara'] = array(
 );
 
 /** Ukrainian (українська)
+ * @author Andriykopanytsia
  * @author Base
  */
 $messages['uk'] = array(
+	'mathsearch' => 'Математичний пошук',
+	'formulainfo' => 'Відомості про формулу',
+	'specialpages-group-mathsearch' => 'Математичний пошук',
 	'mathsearch-desc' => 'Інтегрує рушій [http://search.mathweb.org/about.html MathWeb Search]',
+	'getequationsbyquery' => 'Отримання рівнянь за запитом',
+	'xquerygenerator' => 'XQuery генератор',
+	'mathdebug' => 'Тест візуалізатора',
 );
 
 /** Urdu (اردو)
