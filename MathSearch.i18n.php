@@ -177,6 +177,9 @@ $messages['ko'] = array(
 	'formulainfo' => '수식 정보',
 	'specialpages-group-mathsearch' => '수학 찾기',
 	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 검색] 엔진을 통합합니다',
+	'getequationsbyquery' => '쿼리로 방정식 얻기',
+	'xquerygenerator' => 'XQuery 생성기',
+	'mathdebug' => '테스트 표시기',
 );
 
 /** Colognian (Ripoarisch)
