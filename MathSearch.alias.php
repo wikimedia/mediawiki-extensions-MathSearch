@@ -71,4 +71,6 @@ $specialPageAliases['scn'] = array(
 /** Vietnamese (Tiếng Việt) */
 $specialPageAliases['vi'] = array(
 	'MathSearch' => array( 'Tìm_kiếm_toán_học' ),
+	'MathDebug' => array( 'Gỡ_lỗi_toán_học' ),
+	'FormulaInfo' => array( 'Thông_tin_công_thức' ),
 );
