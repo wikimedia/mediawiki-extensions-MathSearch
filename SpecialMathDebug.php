@@ -111,7 +111,7 @@ class SpecialMathDebug extends SpecialPage {
 		global $wgUseMathJax, $wgUseLaTeXML, $wgTexvc;
 		$out = $this->getOutput();
 		$out->addModules( array( 'ext.math.mathjax.enabler' ) );
-		$out->addModules( array( 'ext.math.mathjax.enabler.mml' ) );
+		//$out->addModules( array( 'ext.math.mathjax.enabler.mml' ) );
  		// die('END');
 		$i = 0;
 		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t ) {
@@ -128,7 +128,7 @@ class SpecialMathDebug extends SpecialPage {
 			if ( $wgUseMathJax && $wgUseMathJax) {
 				$out->addHTML( self::render( $t, '7+', false ) ); //TODO: Update the name
 			}
-			
+
 		}
 	}
 
@@ -159,7 +159,7 @@ class SpecialMathDebug extends SpecialPage {
 		$out->addWikiText( '<source>' . $tstring . '<\source>' );
 		return true;
 	}
-	private static function render( $t, $mode, $aimJax = true ) {
+	private static function		render( $t, $mode, $aimJax = true ) {
 		$modeInt= (int) substr($mode, 0,1);
 		$renderer = MathRenderer::getRenderer( $t, array(), $modeInt );
 		$renderer->setPurge( true );
@@ -177,6 +177,8 @@ class SpecialMathDebug extends SpecialPage {
 	}
 	private static function aimHTMLFromJax( &$s ) {
 		$s = str_replace( 'class="tex"', 'class="-NO-JAX-"', $s );
+		$s = str_replace( 'class="MathJax_Preview"', 'class="-NO-JAX-"', $s );
+		$s = preg_replace('|<script type="math/mml">(.*)</script>|', '', $s);
 		return $s;
 	}
 

@@ -32,7 +32,11 @@ class SpecialMathIndex extends SpecialPage {
 	}
 	function testIndex() {
 		$out = $this->getOutput();
-//		$out->addWikiText($text)
+		$out->addWikiText('This is a test.');
+		require_once dirname( __FILE__ ) .'/maintenance/UpdateMath.php';
+		$updater = new UpdateMath();
+		$updater->loadParamsAndArgs(null, array("max"=>2), null);
+		$updater->execute();
 	}
 
 
