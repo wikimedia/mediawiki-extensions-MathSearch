@@ -24,11 +24,12 @@ class SpecialMathDebug extends SpecialPage {
 		$length = $wgRequest->getVal( 'length', 10 );
 		$page = $wgRequest->getVal( 'page', 'Testpage' );
 		$action = $wgRequest->getVal( 'action', 'show' );
+		$purge = $wgRequest->getVal( 'purge', '' );
 		if (  !$this->userCanExecute( $this->getUser() )  ) {
 			$this->displayRestrictionError();
 			return;
 		} else {
-			$this->displayButtons( $offset, $length, $page, $action );
+			$this->displayButtons( $offset, $length, $page, $action, $purge );
 			if ( $action == 'parserTest' ) {
 				$this->generateLaTeXMLOutput( $offset, $length, $page );
 				return;
@@ -36,11 +37,11 @@ class SpecialMathDebug extends SpecialPage {
 				$this->compareParser( $offset, $length, $page );
 				return;
 			} else {
-				$this->testParser( $offset, $length, $page );
+				$this->testParser( $offset, $length, $page, $purge=='checked'?true:false );
 			}
 		}
 	}
-	function displayButtons( $offset = 0, $length = 10, $page = 'Testpage', $action = 'show' ) {
+	function displayButtons( $offset = 0, $length = 10, $page = 'Testpage', $action = 'show', $purge='' ) {
 		$out = $this->getOutput();
 		// TODO check if addHTML has to be sanitized
 		$out->addHTML( '<form method=\'get\'>'
@@ -56,7 +57,10 @@ class SpecialMathDebug extends SpecialPage {
 			. '" class="textfield" onfocus="this.select()" type="text">'
 			. ' <input name="action" size="12" value="'
 			. $action
-			. '" class="textfield" onfocus="this.select()" type="text"> </form>'
+			. '" class="textfield" onfocus="this.select()" type="text">'
+			. ' purge <input type="checkbox" name="purge" value="checked"'
+			. $purge
+			.'></form>'
 			);
 	}
 	public function compareParser( $offset = 0, $length = 10, $page = 'Testpage' ) {
@@ -107,7 +111,7 @@ class SpecialMathDebug extends SpecialPage {
 		$out = $this->getOutput();
 	}
 
-	public function testParser( $offset = 0, $length = 10, $page = 'Testpage' ) {
+	public function testParser( $offset = 0, $length = 10, $page = 'Testpage' , $purge = true ) {
 		global $wgUseMathJax, $wgUseLaTeXML, $wgTexvc;
 		$out = $this->getOutput();
 		$out->addModules( array( 'ext.math.mathjax.enabler' ) );
@@ -116,20 +120,21 @@ class SpecialMathDebug extends SpecialPage {
 		$i = 0;
 		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t ) {
 			$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
-			$out->addHTML( self::render( $t, MW_MATH_SOURCE ) );
-			$out->addHTML( self::render( $t, MW_MATH_PNG ) );
+			$out->addHTML( self::render( $t, MW_MATH_SOURCE , $purge) );
+			$out->addHTML( self::render( $t, MW_MATH_PNG, $purge ) );
 			$out->addWikiText( 'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>');
 			if ( $wgUseLaTeXML ) {
-				$out->addHTML( self::render( $t, MW_MATH_LATEXML ) );
+				$out->addHTML( self::render( $t, MW_MATH_LATEXML, $purge ) );
 			}
 			if ( $wgUseMathJax ) {
-				$out->addHTML( self::render( $t, MW_MATH_MATHJAX, false ) );
+				$out->addHTML( self::render( $t, MW_MATH_MATHJAX, $purge, false ) );
 			}
 			if ( $wgUseMathJax && $wgUseMathJax) {
-				$out->addHTML( self::render( $t, '7+', false ) ); //TODO: Update the name
+				$out->addHTML( self::render( $t, '7+',$purge, false ) ); //TODO: Update the name
 			}
 
 		}
+		echo $i;
 	}
 
 	function generateLaTeXMLOutput( $offset = 0, $length = 10, $page = 'Testpage' ) {
@@ -159,10 +164,10 @@ class SpecialMathDebug extends SpecialPage {
 		$out->addWikiText( '<source>' . $tstring . '<\source>' );
 		return true;
 	}
-	private static function		render( $t, $mode, $aimJax = true ) {
+	private static function render( $t, $mode, $purge = true, $aimJax = true ) {
 		$modeInt= (int) substr($mode, 0,1);
 		$renderer = MathRenderer::getRenderer( $t, array(), $modeInt );
-		$renderer->setPurge( true );
+		$renderer->setPurge( $purge );
 		$fragment = $renderer->render();
 		// Give grep a chance to find the usages:
 		// mathmode_0, mathmode_1, mathmode_2, mathmode_3, mathmode_4,
@@ -178,7 +183,7 @@ class SpecialMathDebug extends SpecialPage {
 	private static function aimHTMLFromJax( &$s ) {
 		$s = str_replace( 'class="tex"', 'class="-NO-JAX-"', $s );
 		$s = str_replace( 'class="MathJax_Preview"', 'class="-NO-JAX-"', $s );
-		$s = preg_replace('|<script type="math/mml">(.*)</script>|', '', $s);
+		$s = preg_replace('|<script type="math/mml">(.*?)</script>|', '', $s);
 		return $s;
 	}
 
