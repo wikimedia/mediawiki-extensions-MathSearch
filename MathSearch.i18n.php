@@ -275,6 +275,13 @@ $messages['pms'] = array(
 	'mathsearch-desc' => 'A ìntegra ël motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
+/** Brazilian Portuguese (português do Brasil)
+ * @author Cainamarques
+ */
+$messages['pt-br'] = array(
+	'mathsearch-desc' => 'Integra o motor de busca [http://search.mathweb.org/about.html MathWeb]',
+);
+
 /** tarandíne (tarandíne)
  * @author Joetaras
  */
