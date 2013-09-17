@@ -27,7 +27,7 @@ require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
  * @author Moritz Schubotz
  *
  */
-class CreateMath extends Maintenance {
+class CreateMathIndex extends Maintenance {
 	private static $mwsns = "mws:";
 	private static $XMLHead;
 	private static $XMLFooter;
@@ -41,7 +41,7 @@ class CreateMath extends Maintenance {
 		$this->mDescription = 'Generates harvest files for the MathWebSearch Deamon.';
 		$this->addArg( 'dir', 'The directory where the harvest files go to.' );
 		$this->addArg( 'ffmax', "The maximal number of formula per file.", false );
-		$this->addOption( 'mwsns', 'The namespace or mws normally "mws"', false );
+		$this->addOption( 'mwsns', 'The namespace or mws normally "mws:"', false );
 	}
 
 	/**
@@ -126,5 +126,5 @@ class CreateMath extends Maintenance {
 	}
 }
 
-$maintClass = "CreateMath";
+$maintClass = "CreateMathIndex";
 require_once( RUN_MAINTENANCE_IF_MAIN );

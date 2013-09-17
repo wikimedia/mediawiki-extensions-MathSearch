@@ -30,7 +30,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
  * Simple dump output filter to exclude all talk pages.
  * @ingroup Dump
  */
-class MathMLFilter extends DumpFilter {
+class MathDump extends DumpFilter {
 	public static function register( $backupDumper ) {
 		$backupDumper->registerFilter( 'mathml', 'MathMLFilter' );
 
