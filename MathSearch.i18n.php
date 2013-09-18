@@ -191,10 +191,11 @@ $messages['ksh'] = array(
 
 /** Luxembourgish (Lëtzebuergesch)
  * @author Robby
+ * @author Soued031
  */
 $messages['lb'] = array(
 	'mathsearch' => 'Math Search',
-	'formulainfo' => "Informatioun iwwert d'Formel",
+	'formulainfo' => "Informatioun iwwer d'Formel",
 	'specialpages-group-mathsearch' => 'Math Search',
 	'mathsearch-desc' => "Integréiert d'[http://search.mathweb.org/about.html MathWeb Search] Software",
 );
