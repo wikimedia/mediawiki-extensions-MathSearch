@@ -144,8 +144,12 @@ class SpecialMathSearch extends SpecialPage {
 					$dom = new DOMDocument;
 					$dom->loadXML($mml);
 					$domRes=$dom->getElementById($node["xref"][0]);
-					$domRes->setAttribute('mathcolor', '#cc0000');
-					$out->addHtml( $domRes->ownerDocument->saveXML());
+					if ($domRes){
+						$domRes->setAttribute('mathcolor', '#cc0000');
+						$out->addHtml( $domRes->ownerDocument->saveXML());
+					} else {
+						$out->addHtml(MathLaTeXML::embedMathML($mml));
+					}
 				}
 
 
