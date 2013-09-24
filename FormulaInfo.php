@@ -42,6 +42,9 @@ class FormulaInfo extends SpecialPage {
 			return false;
 		}
 		$wgOut->addWikiText( "Info for <code>" . $tex . '</code>' );
+		/**
+		 * @var MathObject Description
+		 */
 		$mo = new MathObject( $tex );
 		$allPages = $mo->getAllOccurences();
 		if ( $allPages ) {
@@ -51,48 +54,81 @@ class FormulaInfo extends SpecialPage {
 		}
 	}
 	public static function DisplayInfo( $pid, $eid ) {
-		global $wgOut, $wgMathDebug;
-		$wgOut->addWikiText( '==General==' );
-		$wgOut->addWikiText( 'Display information for equation id:' . $eid . ' on page id:' . $pid );
+		global $wgMathDebug, $wgOut;
+		/* $out Output page find out how to get that variable in a static context*/
+		$out = $wgOut;
+		$out->addWikiText( '==General==' );
+		$out->addWikiText( 'Display information for equation id:' . $eid . ' on page id:' . $pid );
 		$article = Article::newFromId( $pid );
 		if ( !$article ) {
-			$wgOut->addWikiText( 'There is no page with page id:' . $pid . ' in the database.' );
+			$out->addWikiText( 'There is no page with page id:' . $pid . ' in the database.' );
 			return false;
 		}
 
 		$pagename = (string)$article->getTitle();
-		$wgOut->addWikiText( "* Page found: [[$pagename#math$eid|$pagename]] (eq $eid)  ", false );
-		$wgOut->addHtml( '<a href="/index.php?title=' . $pagename . '&action=purge&mathpurge=true">(force rerendering)</a>' );
+		$out->addWikiText( "* Page found: [[$pagename#math$eid|$pagename]] (eq $eid)  ", false );
+		$out->addHtml( '<a href="/index.php?title=' . $pagename . '&action=purge&mathpurge=true">(force rerendering)</a>' );
+
+		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $pid, $eid );
-		$wgOut->addWikiText( "Occurences on the following pages:" );
+		$out->addWikiText( "Occurences on the following pages:" );
 		wfDebugLog( "MathSearch", var_export( $mo->getAllOccurences(), true ) );
 		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
-		$wgOut->addWikiText( 'TeX (as stored in database): <syntaxhighlight>' . $mo->getTex(). '</syntaxhighlight>');
-
-		$wgOut->addWikiText( 'MathML : ', false );
-		$wgOut->addHTML( $mo->getMathml() );
-		$wgOut->addHtml( '<a href="/wiki/Special:MathSearch?pattern=' . urlencode( $mo->getTex() ) . '&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>' );
+		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight>' . $mo->getTex(). '</syntaxhighlight>');
+		$out->addWikiText( 'MathML ('.self::getlengh($mo->getMathml()).') :', false );
+		$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $mo->getTex() ) . '&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>' );
+		$out->addHtml(  $mo->getMathml() );
 		# $log=htmlspecialchars( $res->math_log );
-		$wgOut->addWikiText( '==Similar pages==' );
-		$wgOut->addWikiText( 'Calculataed based on the variables occuring on the entire ' . $pagename . ' page' );
+		$out->addHtml( "<br />\n" );
+		$out->addWikiText( 'SVG ('.self::getlengh($mo->getSvg()).') :', false );
+		$out->addHtml( $mo->getFallbackImage( false , true, '' ));
+		$out->addHtml( "<br />\n" );
+		$out->addWikiText( 'PNG ('.self::getlengh($mo->getPng()).') :', false );
+		$out->addHtml($mo->getFallbackImage( true , true , ''));
+		$out->addHtml( "<br />\n" );
+		$out->addWikiText( 'Hash : '.$mo->getMd5(), false );
+		$out->addHtml( "<br />" );
+		$out->addWikiText( '==Similar pages==' );
+		$out->addWikiText( 'Calculataed based on the variables occuring on the entire ' . $pagename . ' page' );
 		$mo->findSimilarPages( $pid );
-		$wgOut->addWikiText( '==Variables==' );
+		$out->addWikiText( '==Variables==' );
 		$mo->getObservations();
 		// $wgOut->addWikiText( "[[$pagename#math$eid|Eq: $eid]] ", false );
-		$wgOut->addWikiText( '==MathML==' );
+		$out->addWikiText( '==MathML==' );
 
-		$wgOut->addHtml( "<br />" );
-		$wgOut->addWikiText( '<syntaxhighlight lang="xml">'.( $mo->getMathml() ).'</syntaxhighlight>');
-		$wgOut->addHtml( "<br />" );
-		$wgOut->addHtml( "<br />" );
+		$out->addHtml( "<br />" );
+		$out->addHtml('<div class="NavFrame"><div class="NavHead">mathml</div>
+<div class="NavContent">');
+		$out->addWikiText( '<syntaxhighlight lang="xml" >'.( $mo->getMathml() ).'</syntaxhighlight>');
+		$out->addHtml('</div></div>');
+		$out->addHtml( "<br />" );
+		$out->addHtml( "<br />" );
 		if ( $wgMathDebug ) {
-		$wgOut->addWikiText( '==LOG and Debug==' );
-		$wgOut->addWikiText( 'Rendered at : <syntaxhighlight>' . $mo->getTimestamp()
+		$out->addWikiText( '==LOG and Debug==' );
+		$out->addWikiText( 'Rendered at : <syntaxhighlight>' . $mo->getTimestamp()
 			. '</syntaxhighlight> an idexed at <syntaxhighlight>' . $mo->getIndexTimestamp() . '</syntaxhighlight>' );
-		$wgOut->addWikiText( 'validxml : <syntaxhighlight>' . $mo->isValidMathML( $mo->getMathml() ) . '</syntaxhighlight> recheck:', false );
-		$wgOut->addHtml( $mo->isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
-		$wgOut->addWikiText( 'status : <syntaxhighlight>' . $mo->getStatusCode() . '</syntaxhighlight>' );
-		$wgOut->addHtml( htmlspecialchars( $mo->getLog() ) );
+		$out->addWikiText( 'validxml : <syntaxhighlight>' . $mo->isValidMathML( $mo->getMathml() ) . '</syntaxhighlight> recheck:', false );
+		$out->addHtml( $mo->isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
+		$out->addWikiText( 'status : <syntaxhighlight>' . $mo->getStatusCode() . '</syntaxhighlight>' );
+		$out->addHtml( htmlspecialchars( $mo->getLog() ) );
 		}
+	}
+	private static function getlengh($binray){
+		$uncompressed = strlen( $binray );
+		$compressed = strlen(gzcompress ($binray));
+		return self::formatBytes($uncompressed). " / ".self::formatBytes($compressed) ;
+	}
+		private static function formatBytes($bytes, $precision = 3) {
+			$units = array('B', 'KB', 'MB', 'GB', 'TB');
+
+			$bytes = max($bytes, 0);
+			$pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+			$pow = min($pow, count($units) - 1);
+
+			// Uncomment one of the following alternatives
+			$bytes /= pow(1024, $pow);
+			//$bytes /= (1 << (10 * $pow));
+
+		return round($bytes, $precision) . ' ' . $units[$pow];
 	}
 }

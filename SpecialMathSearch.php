@@ -148,7 +148,9 @@ class SpecialMathSearch extends SpecialPage {
 						$domRes->setAttribute('mathcolor', '#cc0000');
 						$out->addHtml( $domRes->ownerDocument->saveXML());
 					} else {
-						$out->addHtml(MathLaTeXML::embedMathML($mml));
+						$renderer = new MathMathML();
+						$renderer->setMathml($mml);
+						$out->addHtml($renderer->getHtmlOutput());
 					}
 				}
 
@@ -270,7 +272,7 @@ class SpecialMathSearch extends SpecialPage {
 	 * @return boolean
 	 */
 	function render() {
-		$renderer = new MathLaTeXML($this->mathpattern);
+		$renderer = new MathMathML($this->mathpattern);
 		$renderer->setLaTeXMLSettings('profile=mwsquery');
 		$renderer->setAllowedRootElments(array('query'));
 		$renderer->render(true);
