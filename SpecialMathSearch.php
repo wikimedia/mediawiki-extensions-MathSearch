@@ -110,7 +110,7 @@ class SpecialMathSearch extends SpecialPage {
 	 * @return boolean
 	 */
 	function DisplayMath($pageID) {
-		global $wgDebugMath;
+		global $wgMathDebug;
 		$out = $this->getOutput();
 		$page = $this->mathResults[(string) $pageID];
 		$dbr = wfGetDB(DB_SLAVE);
@@ -134,7 +134,7 @@ class SpecialMathSearch extends SpecialPage {
 				//TODO: Remove hack and report to Prode that he fixes that
 				//$xmml->registerXPathNamespace('m', 'http://www.w3.org/1998/Math/MathML');
 				$xpath = str_replace('/m:semantics/m:annotation-xml[@encoding="MathML-Content"]','',$xpath);
-				if(!$wgDebugMath){
+				if(!$wgMathDebug){
 					$out->addWikiText("xPATH:".$xpath);
 					$out->addWikiText('MATHML:<source lang="xml">'.$xmml->asXML().'</source>');
 				}
@@ -171,7 +171,7 @@ class SpecialMathSearch extends SpecialPage {
 
 
 	public function performSearch() {
-		global $wgDebugMath;
+		global $wgMathDebug;
 		$out = $this->getOutput();
 		$time_start = microtime(true);
 		$out->addWikiText('==Results==');
@@ -179,7 +179,7 @@ class SpecialMathSearch extends SpecialPage {
 		if ($this->mathpattern) {
 			if ($this->render()) {
 				$out->addWikiText("Your mathpattern was suceessfully rendered!");
-				if ($wgDebugMath) {
+				if ($wgMathDebug) {
 					$out->addWikiText(" <source lang=\"xml\">" . $this->mathmlquery . "</source>");
 				}
 				if ($this->postQuery()) {
@@ -287,7 +287,7 @@ class SpecialMathSearch extends SpecialPage {
 	 * @return boolean
 	 */
 	function postQuery() {
-		global $wgMWSUrl, $wgDebugMath;
+		global $wgMWSUrl, $wgMathDebug;
 
 		$numProcess = 30000;
 		$tmp = str_replace("answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"", $this->mathmlquery);
@@ -312,7 +312,7 @@ class SpecialMathSearch extends SpecialPage {
 			return false;
 		}
 		$xres = new SimpleXMLElement($res);
-		if ($wgDebugMath) {
+		if ($wgMathDebug) {
 			$out = $this->getOutput();
 			$out->addWikiText('<source lang="xml">' . $res . '</source>');
 		}

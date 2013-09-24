@@ -17,10 +17,10 @@ class SpecialMathIndex extends SpecialPage {
 		$out->setPageTitle( $this->getDescription() );
 	}
 	function execute( $par ) {
-		global $wgDebugMath;
+		global $wgMathDebug;
 		$output = $this->getOutput();
 		$this->setHeaders();
-		if ( $wgDebugMath ) {
+		if ( $wgMathDebug ) {
 			if (  !$this->userCanExecute( $this->getUser() )  ) {
 				$this->displayRestrictionError();
 				return;

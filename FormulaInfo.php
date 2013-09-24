@@ -36,8 +36,8 @@ class FormulaInfo extends SpecialPage {
 		}
 	}
 	public static function InfoTex( $tex ) {
-		global $wgDebugMath, $wgOut;
-		if ( !$wgDebugMath ) {
+		global $wgMathDebug, $wgOut;
+		if ( !$wgMathDebug ) {
 			$wgOut->addWikiTex( "tex queries only supported in debug mode" );
 			return false;
 		}
@@ -51,7 +51,7 @@ class FormulaInfo extends SpecialPage {
 		}
 	}
 	public static function DisplayInfo( $pid, $eid ) {
-		global $wgOut, $wgDebugMath;
+		global $wgOut, $wgMathDebug;
 		$wgOut->addWikiText( '==General==' );
 		$wgOut->addWikiText( 'Display information for equation id:' . $eid . ' on page id:' . $pid );
 		$article = Article::newFromId( $pid );
@@ -85,7 +85,7 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addWikiText( '<syntaxhighlight lang="xml">'.( $mo->getMathml() ).'</syntaxhighlight>');
 		$wgOut->addHtml( "<br />" );
 		$wgOut->addHtml( "<br />" );
-		if ( $wgDebugMath ) {
+		if ( $wgMathDebug ) {
 		$wgOut->addWikiText( '==LOG and Debug==' );
 		$wgOut->addWikiText( 'Rendered at : <syntaxhighlight>' . $mo->getTimestamp()
 			. '</syntaxhighlight> an idexed at <syntaxhighlight>' . $mo->getIndexTimestamp() . '</syntaxhighlight>' );

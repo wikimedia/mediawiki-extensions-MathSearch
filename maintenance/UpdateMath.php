@@ -96,7 +96,7 @@ class UpdateMath extends Maintenance {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math[1] as $formula ) {
 				$tstart = time();
-				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_LATEXML );
+				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_MATHML );
 				$renderer->render( $purge );
 				// Enable indexing of math formula
 				wfRunHooks( 'MathFormulaRendered', array( &$renderer , &$notused, $pid, $anchorID ) );

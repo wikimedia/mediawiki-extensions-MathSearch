@@ -17,7 +17,7 @@ class SpecialMathDebug extends SpecialPage {
 
 
 	function execute( $par ) {
-		global $wgDebugMath, $wgRequest;
+		global $wgMathDebug, $wgRequest;
 		$output = $this->getOutput();
 		$this->setHeaders();
 		$offset = $wgRequest->getVal( 'offset', 0 );
@@ -64,9 +64,9 @@ class SpecialMathDebug extends SpecialPage {
 			);
 	}
 	public function compareParser( $offset = 0, $length = 10, $page = 'Testpage' ) {
-		global $wgUseLaTeXML, $wgRequest, $wgLaTeXMLUrl;
+		global $wgMathUseLaTeXML, $wgRequest, $wgMathLaTeXMLUrl;
 		$out = $this->getOutput();
-		if ( !$wgUseLaTeXML ) {
+		if ( !$wgMathUseLaTeXML ) {
 			$out->addWikiText( "MahtML support must be enabled." );
 			return false;
 		}
@@ -82,9 +82,9 @@ class SpecialMathDebug extends SpecialPage {
 			foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
 				$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
 				$renderer->setTex( $formula );
-				$wgLaTeXMLUrl = $parserA;
+				$wgMathLaTeXMLUrl = $parserA;
 				$stringA = $renderer->render( true ) ;
-				$wgLaTeXMLUrl = $parserB;
+				$wgMathLaTeXMLUrl = $parserB;
 				$stringB = $renderer->render( true ) ;
 				$diff = new Diff( array( $stringA ), array( $stringB ) );
 				if ( $diff->isEmpty() ) {
@@ -112,7 +112,7 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	public function testParser( $offset = 0, $length = 10, $page = 'Testpage' , $purge = true ) {
-		global $wgUseMathJax, $wgUseLaTeXML, $wgTexvc;
+		global $wgMathJax, $wgMathUseLaTeXML, $wgTexvc;
 		$out = $this->getOutput();
 		$out->addModules( array( 'ext.math.mathjax.enabler' ) );
 		//$out->addModules( array( 'ext.math.mathjax.enabler.mml' ) );
@@ -123,13 +123,13 @@ class SpecialMathDebug extends SpecialPage {
 			$out->addHTML( self::render( $t, MW_MATH_SOURCE , $purge) );
 			$out->addHTML( self::render( $t, MW_MATH_PNG, $purge ) );
 			$out->addWikiText( 'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>');
-			if ( $wgUseLaTeXML ) {
+			if ( $wgMathUseLaTeXML ) {
 				$out->addHTML( self::render( $t, MW_MATH_LATEXML, $purge ) );
 			}
-			if ( $wgUseMathJax ) {
+			if ( $wgMathJax ) {
 				$out->addHTML( self::render( $t, MW_MATH_MATHJAX, $purge, false ) );
 			}
-			if ( $wgUseMathJax && $wgUseMathJax) {
+			if ( $wgMathJax && $wgMathJax) {
 				$out->addHTML( self::render( $t, '7+',$purge, false ) ); //TODO: Update the name
 			}
 
@@ -138,9 +138,9 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	function generateLaTeXMLOutput( $offset = 0, $length = 10, $page = 'Testpage' ) {
-		global $wgUseLaTeXML;
+		global $wgMathUseLaTeXML;
 		$out = $this->getOutput();
-		if ( !$wgUseLaTeXML ) {
+		if ( !$wgMathUseLaTeXML ) {
 			$out->addWikiText( "MahtML support must be enabled." );
 			return false;
 		}

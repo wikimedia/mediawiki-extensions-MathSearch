@@ -21,8 +21,8 @@ class GetEquationsByQuery extends SpecialPage {
 	 * @param unknown $par
 	 */
 	function execute( $par ) {
-		global $wgRequest, $wgOut, $wgDebugMath;
-		if ( ! $wgDebugMath ) {
+		global $wgRequest, $wgOut, $wgMathDebug;
+		if ( ! $wgMathDebug ) {
 			$wgOut->addWikiText( "==Debug mode needed==  This function is only supported in math debug mode." );
 			return false;
 		}

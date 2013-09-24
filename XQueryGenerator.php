@@ -41,8 +41,8 @@ class XQueryGenerator extends SpecialPage {
 	 * @param unknown $par
 	 */
 	function execute( $par ) {
-		global $wgRequest, $wgOut, $wgDebugMath;
-		if ( ! $wgDebugMath ) {
+		global $wgRequest, $wgOut, $wgMathDebug;
+		if ( ! $wgMathDebug ) {
 			$wgOut->addWikiText( "==Debug mode needed==  This function is only supported in math debug mode." );
 			return false;
 		}
@@ -64,7 +64,7 @@ class XQueryGenerator extends SpecialPage {
 
 
 	public static function DisplayInfo( $tex , $type ) {
-		global $wgOut, $wgDebugMath, $wgParser;
+		global $wgOut, $wgMathDebug, $wgParser;
 		$settings = 'xhtml&' .
 			'whatsin=math&' .
 			'whatsout=math&' .

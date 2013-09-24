@@ -35,12 +35,12 @@ class MathObject extends MathLaTeXML {
 		}
 	}
 	public static function constructformpagerow( $res ) {
-		global $wgDebugMath;
+		global $wgMathDebug;
 		if ( $res->mathindex_page_id > 0 ) {
 		$instance = new self();
 		$instance->setPageID( $res->mathindex_page_id );
 		$instance->setAnchorID( $res->mathindex_anchor );
-		if ( $wgDebugMath ) {
+		if ( $wgMathDebug ) {
 			$instance->index_timestamp = $res->mathindex_timestamp;
 		}
 		$instance->inputHash = $res->mathindex_inputhash;
@@ -185,12 +185,12 @@ class MathObject extends MathLaTeXML {
 	 * @return Ambigous <multitype:, multitype:unknown number string mixed >
 	 */
 	private static function dbIndexFieldsArray() {
-		global $wgDebugMath;
+		global $wgMathDebug;
 		$in = array(
 				'mathindex_page_id',
 				'mathindex_anchor'  ,
 				'mathindex_inputhash' );
-		if ( $wgDebugMath ) {
+		if ( $wgMathDebug ) {
 			$debug_in = array(
 					'mathindex_timestamp' );
 			$in = array_merge( $in, $debug_in );
