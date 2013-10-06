@@ -318,8 +318,13 @@ $messages['ur'] = array(
 );
 
 /** Simplified Chinese (中文（简体）‎)
+ * @author Hzy980512
  * @author Yfdyh000
  */
 $messages['zh-hans'] = array(
+	'mathsearch' => '数式搜索',
+	'formulainfo' => '公式信息',
+	'specialpages-group-mathsearch' => '数式搜索',
 	'mathsearch-desc' => '整合[http://search.mathweb.org/about.html MathWeb 搜索]引擎',
+	'mathdebug' => '测试渲染器',
 );

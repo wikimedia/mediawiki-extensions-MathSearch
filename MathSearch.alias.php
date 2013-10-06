@@ -5,6 +5,7 @@
  * @file
  * @ingroup Extensions
  */
+// @codingStandardsIgnoreFile
 
 $specialPageAliases = array();
 
@@ -56,6 +57,7 @@ $specialPageAliases['mk'] = array(
 /** Dutch (Nederlands) */
 $specialPageAliases['nl'] = array(
 	'MathSearch' => array( 'Mathzoeken' ),
+	'FormulaInfo' => array( 'Formulegegevens' ),
 );
 
 /** Punjabi (ਪੰਜਾਬੀ) */
