@@ -296,6 +296,14 @@ $messages['roa-tara'] = array(
 	'mathdebug' => "Test d'u render",
 );
 
+/** Russian (русский)
+ * @author Okras
+ */
+$messages['ru'] = array(
+	'mathsearch-desc' => 'Интегрирует движок [http://search.mathweb.org/about.html  MathWeb Search]',
+	'xquerygenerator' => 'XQuery-генератор',
+);
+
 /** Ukrainian (українська)
  * @author Andriykopanytsia
  * @author Base
