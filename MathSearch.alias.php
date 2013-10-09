@@ -30,6 +30,13 @@ $specialPageAliases['de'] = array(
 	'FormulaInfo' => array( 'Formelinformation' ),
 );
 
+/** Galician (galego) */
+$specialPageAliases['gl'] = array(
+	'MathSearch' => array( 'Procura_matemática' ),
+	'MathDebug' => array( 'Depuración_matemática' ),
+	'FormulaInfo' => array( 'Información_de_fórmula' ),
+);
+
 /** Italian (italiano) */
 $specialPageAliases['it'] = array(
 	'MathSearch' => array( 'RicercaMat' ),
