@@ -300,8 +300,13 @@ $messages['roa-tara'] = array(
  * @author Okras
  */
 $messages['ru'] = array(
+	'mathsearch' => 'Математический поиск',
+	'formulainfo' => 'Информация о формуле',
+	'specialpages-group-mathsearch' => 'Математический поиск',
 	'mathsearch-desc' => 'Интегрирует движок [http://search.mathweb.org/about.html  MathWeb Search]',
+	'getequationsbyquery' => 'Получить уравнения по запросу',
 	'xquerygenerator' => 'XQuery-генератор',
+	'mathdebug' => 'Проверить средство визуализации',
 );
 
 /** Ukrainian (українська)
