@@ -83,3 +83,8 @@ $specialPageAliases['vi'] = array(
 	'MathDebug' => array( 'Gỡ_lỗi_toán_học' ),
 	'FormulaInfo' => array( 'Thông_tin_công_thức' ),
 );
+
+/** Simplified Chinese (中文（简体）‎) */
+$specialPageAliases['zh-hans'] = array(
+	'MathSearch' => array( '数学搜索' ),
+);
