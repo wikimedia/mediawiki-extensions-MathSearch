@@ -173,9 +173,9 @@ $messages['ja'] = array(
  * @author 아라
  */
 $messages['ko'] = array(
-	'mathsearch' => '수학 찾기',
+	'mathsearch' => '수학 검색',
 	'formulainfo' => '수식 정보',
-	'specialpages-group-mathsearch' => '수학 찾기',
+	'specialpages-group-mathsearch' => '수학 검색',
 	'mathsearch-desc' => '[http://search.mathweb.org/about.html MathWeb 검색] 엔진을 통합합니다',
 	'getequationsbyquery' => '쿼리로 방정식 얻기',
 	'xquerygenerator' => 'XQuery 생성기',
