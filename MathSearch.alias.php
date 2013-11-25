@@ -67,6 +67,11 @@ $specialPageAliases['nl'] = array(
 	'FormulaInfo' => array( 'Formulegegevens' ),
 );
 
+/** Norwegian Nynorsk (norsk nynorsk) */
+$specialPageAliases['nn'] = array(
+	'MathSearch' => array( 'Mattesøk' ),
+);
+
 /** Punjabi (ਪੰਜਾਬੀ) */
 $specialPageAliases['pa'] = array(
 	'MathSearch' => array( 'ਮੋਬਾਈਲ_ਖੋਜ', 'ਹਿਸਾਬ_ਖੋਜੋ' ),
