@@ -104,6 +104,10 @@ class MathObject extends MathMathML {
 			return "Databaseproblem";
 		}
 		$wgOut->addWikiText($res->numRows(). 'results');
+		if ($res->numRows() == 0){
+			$wgOut->addWikiText("no statistics present please run the maintenance script ExtractFeatures.php");
+		}
+		$wgOut->addWikiText($res->numRows(). ' results');
 		if ( $res ) {
 			foreach ( $res as $row ) {
 				$wgOut->addWikiText( '*' . $row->mathobservation_featuretype . ' <code>' .
@@ -206,7 +210,7 @@ class MathObject extends MathMathML {
 	public function render( $purge = false ) {
 
 	}
-	public function getPng() { 
+	public function getPng() {
 		$texvc = MathTexvc::newFromMd5($this->getMd5());
 		$texvc->readFromDatabase();
 		return $texvc->getPng();

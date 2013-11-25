@@ -74,7 +74,7 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiText( "Occurences on the following pages:" );
 		wfDebugLog( "MathSearch", var_export( $mo->getAllOccurences(), true ) );
 		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
-		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight>' . $mo->getTex(). '</syntaxhighlight>');
+		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex(). '</syntaxhighlight>');
 		$out->addWikiText( 'MathML ('.self::getlengh($mo->getMathml()).') :', false );
 		$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $mo->getTex() ) . '&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>' );
 		$out->addHtml(  $mo->getMathml() );
