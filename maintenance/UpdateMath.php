@@ -22,9 +22,11 @@
 require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
 class UpdateMath extends Maintenance {
-	const RTI_CHUNK_SIZE = 10;
+	const RTI_CHUNK_SIZE = 500;
 	var $purge = false;
 	var $dbw = null;
+	private $time = 0;//microtime( true );
+	private $performance = array();
 
 	/**
 	 * @var DatabaseBase
@@ -39,6 +41,15 @@ class UpdateMath extends Maintenance {
 		$this->addOption( 'purge', "If set all formulae are rendered again from strech. (Very time consuming!)", false, false, "f" );
 		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false );
 		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
+	}
+	private function time($category='default'){
+		$delta = (microtime(true) - $this->time)*1000;
+		if (isset ($this->performance[$category] ))
+			$this->performance[$category] += $delta;
+		else
+			$this->performance[$category] = $delta;
+		$this->time = microtime(true);
+		return (int) $delta;
 	}
 	/**
 	 * Populates the search index with content from all pages
@@ -66,9 +77,12 @@ class UpdateMath extends Maintenance {
 			);
 			$this->dbw->begin();
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
+			$i = $n;
 			foreach ( $res as $s ) {
+				echo "\np$i:";
 				$revtext = Revision::getRevisionText( $s );
 				$fcount += self::doUpdate( $s->page_id, $revtext, $s->page_title, $this->purge, $this->dbw );
+				$i++;
 			}
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$start = microtime( true );
@@ -95,23 +109,33 @@ class UpdateMath extends Maintenance {
 		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math[1] as $formula ) {
-				$tstart = time();
-				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_MATHML );
-				$renderer->render( $purge );
+				$tstart = microtime(true);
+				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_MATHML ); 
+				if ( $renderer->checkTex() )
+					$renderer->render( $purge );
+				else
+					continue;
+				$time = (microtime(true) - $tstart)*1000;
+				//echo ( "\n\t\t rendered in $time ms.");
+				$tstart = microtime(true);
 				// Enable indexing of math formula
-				wfRunHooks( 'MathFormulaRendered', array( &$renderer , &$notused, $pid, $anchorID ) );
+				//wfRunHooks( 'MathFormulaRendered', array( &$renderer , &$notused, $pid, $anchorID ) );
+				$time = (microtime(true) - $tstart)*1000;
+				//echo ( "\n\t\t hook run in $time ms.");
+				$tstart = microtime(true);
 				$anchorID++;
-				$tend = time();
-				if ( $tend -$tstart > 2 ) {
+				if ( $time -$tstart > 2 ) {
 					echo( "\t\t slow equation " . ( $anchorID -1 ) .
 						"beginning with" . substr( $formula, 0, 10 ) . "rendered in " . ( $tend -$tstart ) . "s. \n" );
 				}
-				$renderer->writeCache();
-
+				$renderer->writeCache($dbw);
+				$time = (microtime(true) - $tstart)*1000;
+				//echo ( "\n\t\t cache writing prepared in $time ms.");
 				if ( $renderer->getLastError() ) {
-					echo "F:\t\t equation " . ( $anchorID -1 ) .
-						"-failed beginning with" . substr( $formula, 0, 5 )
-						. "mathml:" . $renderer->getMathml() ."\n";
+					echo "\n\t\t". $renderer->getLastError() ;
+					echo "\nF:\t\t equation " . ( $anchorID -1 ) .
+						"-failed beginning with\n\t\t'" . substr( $formula, 0, 100 )
+						. "'\n\t\tmathml:" . substr($renderer->getMathml(),0,10) ."\n ";
 				}
 			}
 			return $matches;

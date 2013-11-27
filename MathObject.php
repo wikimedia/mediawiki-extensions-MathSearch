@@ -5,6 +5,7 @@ class MathObject extends MathMathML {
 	protected $anchorID = 0;
 	protected $pageID = 0;
 	protected $index_timestamp = null;
+	protected $dbLoadTime= 0;
 
 	private static function DebugPrint( $s ) {
 		// $s= Sanitizer::safeEncodeAttribute($s);
@@ -32,7 +33,7 @@ class MathObject extends MathMathML {
 	}
 
 	public function getInputHash() {
-		wfDebugLog( 'MathSearch', 'Debugger dies here' );
+		//wfDebugLog( 'MathSearch', 'Debugger dies here' );
 		// die('end of debug toolbar');
 		if ( $this->inputHash ) {
 			return $this->inputHash;
@@ -52,7 +53,7 @@ class MathObject extends MathMathML {
 			}
 			$instance->inputHash = $res->mathindex_inputhash;
 			$instance->readFromDatabase();
-			self::DebugPrint( 'got' . var_export( $instance, true ) );
+			//self::DebugPrint( 'got' . var_export( $instance, true ) );
 			return $instance;
 		} else {
 			return false;
@@ -102,6 +103,7 @@ class MathObject extends MathMathML {
 		} catch ( Exception $e ) {
 			return "Databaseproblem";
 		}
+		$wgOut->addWikiText($res->numRows(). 'results');
 		if ( $res ) {
 			foreach ( $res as $row ) {
 				$wgOut->addWikiText( '*' . $row->mathobservation_featuretype . ' <code>' .
@@ -140,8 +142,11 @@ class MathObject extends MathMathML {
 				array( 'mathindex' ), self::dbIndexFieldsArray(), 'mathindex_page_id = ' . $pid
 				. ' AND mathindex_anchor= ' . $eid
 		);
-		self::DebugPrint( var_export( $res, true ) );
-		return self::constructformpagerow( $res );
+		//self::DebugPrint( var_export( $res, true ) );
+		$start = microtime(true);
+		$o = self::constructformpagerow( $res );
+		wfDebugLog("MathSearch", "Fetched in ". (microtime(true)-$start) );
+		return $o;
 	}
 
 	/**
@@ -156,7 +161,7 @@ class MathObject extends MathMathML {
 		);
 
 		foreach ( $res as $row ) {
-			self::DebugPrint( var_export( $row, true ) );
+			//self::DebugPrint( var_export( $row, true ) );
 			$var = self::constructformpagerow( $row );
 			if ( $var ) {
 				$var->printLink2Page( false );
@@ -201,7 +206,11 @@ class MathObject extends MathMathML {
 	public function render( $purge = false ) {
 
 	}
-
+	public function getPng() { 
+		$texvc = MathTexvc::newFromMd5($this->getMd5());
+		$texvc->readFromDatabase();
+		return $texvc->getPng();
+	}
 }
 
 /*

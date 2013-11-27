@@ -168,7 +168,8 @@ class SpecialMathDebug extends SpecialPage {
 		$modeInt= (int) substr($mode, 0,1);
 		$renderer = MathRenderer::getRenderer( $t, array(), $modeInt );
 		$renderer->setPurge( $purge );
-		$fragment = $renderer->render();
+		$renderer->render();
+		$fragment = $renderer->getHtmlOutput();
 		// Give grep a chance to find the usages:
 		// mathmode_0, mathmode_1, mathmode_2, mathmode_3, mathmode_4,
 		// mathmode_5, mathmode_6, mathmode_7, mathmode_7+
@@ -204,11 +205,8 @@ class SpecialMathDebug extends SpecialPage {
 		}
 	}
 	private function getTexvcTex( $tex ) {
-		$tmpDir = wfTempDir();
-		$renderer = MathRenderer::getRenderer( $tex, array(), MW_MATH_PNG );
-		$renderer->setPurge( true );
-		$renderer->callTexvc();
-		return $renderer->getSecureTex();
-
+		$renderer = MathRenderer::getRenderer( $tex, array(), MW_MATH_SOURCE );
+		$renderer->checkTex();
+		return $renderer->getTex();
 	}
 }
