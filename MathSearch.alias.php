@@ -93,3 +93,10 @@ $specialPageAliases['vi'] = array(
 $specialPageAliases['zh-hans'] = array(
 	'MathSearch' => array( '数学搜索' ),
 );
+
+/** Traditional Chinese (中文（繁體）‎) */
+$specialPageAliases['zh-hant'] = array(
+	'MathSearch' => array( '數學搜索' ),
+	'MathDebug' => array( '數學除錯' ),
+	'FormulaInfo' => array( '方程資訊' ),
+);
