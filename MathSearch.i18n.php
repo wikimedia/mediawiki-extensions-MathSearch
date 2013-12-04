@@ -94,9 +94,12 @@ $messages['dsb'] = array(
 );
 
 /** Spanish (español)
+ * @author Fitoschido
  * @author Ralgis
  */
 $messages['es'] = array(
+	'mathsearch' => 'Búsqueda matemática',
+	'formulainfo' => 'Información de la fórmula',
 	'mathsearch-desc' => 'Integra el motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
