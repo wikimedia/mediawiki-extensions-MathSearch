@@ -191,7 +191,7 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 * @return Ambigous <multitype:, multitype:unknown number string mixed >
+	 * @return array
 	 */
 	private static function dbIndexFieldsArray() {
 		global $wgMathDebug;
