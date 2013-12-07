@@ -20,6 +20,7 @@ class XQueryGenerator extends SpecialPage {
 	}
 	private $qvar = array();
 	private $relativeXPath ="";
+	private $lengthConstraint='';
 	function searchForm( $tex, $type ) {
 
 		$out = '';
@@ -152,7 +153,7 @@ $query = 'declare default element namespace "http://www.w3.org/1998/Math/MathML"
 for $m in //*:expr return
 	for $x in $m//*:'.self::getFirstChildName($xml).'['.
 		 $fixedConstraints. '] return
-			if( '.$qvarConstraintString.') then
+			if( '.$qvarConstraintString.$this->lengthConstraint.') then
  <a href="http://demo.formulasearchengine.com/index.php?curid={$m/@url}">result</a>
 else endif';
 // <res>{$m}</res>';
@@ -206,6 +207,7 @@ private static function getFirstChildName($xml){
 
 			}
  		}}
+ 		$this->lengthConstraint .=' and fn:count($x'.$this->relativeXPath .'/*) = '. $i;
 		if ($this->relativeXPath){
 			$this->relativeXPath=  substr($this->relativeXPath, 0, strrpos($this->relativeXPath,"/"));
 		}
