@@ -85,10 +85,9 @@ class SpecialMathSearch extends SpecialPage {
 			$formDescriptor['textpattern']['disabled'] = true;
 			$formDescriptor['textpattern']['help'] = 'LuceneSearch not found. Text search <b>disabled</b>!<br/> For details see <a href=\"http://www.mediawiki.org/wiki/Extension:MWSearch\">MWSearch</a>.';
 		}
-		$htmlForm = new HTMLForm($formDescriptor); # We build the HTMLForm object
+		$htmlForm = new HTMLForm($formDescriptor, $this->getContext()); # We build the HTMLForm object
 		$htmlForm->setSubmitText('Search');
 		$htmlForm->setSubmitCallback(array(get_class($this), 'processInput'));
-		$htmlForm->setTitle($this->getTitle());
 		$htmlForm->setHeaderText("<h2>Input</h2>");
 		$htmlForm->show(); # Displaying the form
 	}

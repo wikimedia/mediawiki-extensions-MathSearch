@@ -48,10 +48,9 @@ class SpecialMathIndex extends SpecialPage {
 					)
 				)
 			);
-		$htmlForm = new HTMLForm( $formDescriptor ); # We build the HTMLForm object
+		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() ); # We build the HTMLForm object
 		$htmlForm->setSubmitText( 'Search' );
 		$htmlForm->setSubmitCallback( array( get_class($this) , 'processInput' ) );
-		$htmlForm->setTitle( $this->getTitle() );
 		$htmlForm->setHeaderText("<h2>Select script to run</h2>");
 		$htmlForm->show(); # Displaying the form
 	}
