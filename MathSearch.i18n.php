@@ -342,5 +342,7 @@ $messages['zh-hans'] = array(
 	'formulainfo' => '公式信息',
 	'specialpages-group-mathsearch' => '数式搜索',
 	'mathsearch-desc' => '整合[http://search.mathweb.org/about.html MathWeb 搜索]引擎',
+	'getequationsbyquery' => '通过查询获得方程',
+	'xquerygenerator' => 'XQuery生成器',
 	'mathdebug' => '测试渲染器',
 );
