@@ -16,6 +16,13 @@ $specialPageAliases['en'] = array(
 	'FormulaInfo' => array( 'FormulaInfo', 'Formula Info' ),
 );
 
+/** Arabic (العربية) */
+$specialPageAliases['ar'] = array(
+	'MathSearch' => array( 'بحث_رياضيات' ),
+	'MathDebug' => array( 'تصحيح_رياضيات' ),
+	'FormulaInfo' => array( 'معلومات_المعادلة' ),
+);
+
 /** Min Dong Chinese (Mìng-dĕ̤ng-ngṳ̄) */
 $specialPageAliases['cdo'] = array(
 	'MathSearch' => array( '數學尋討' ),
