@@ -70,6 +70,16 @@ $messages['br'] = array(
 	'mathsearch-desc' => 'Enframmañ al lusker [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
+/** Catalan (català)
+ * @author Alvaro Vidal-Abarca
+ */
+$messages['ca'] = array(
+	'mathsearch' => 'Math search',
+	'mathsearch-desc' => 'Integra el motor de cerca [http://search.mathweb.org/about.html MathWeb Search]',
+	'getequationsbyquery' => 'Mostra equacions per la consulta',
+	'xquerygenerator' => 'Generador XQuery',
+);
+
 /** German (Deutsch)
  * @author Metalhead64
  */
