@@ -21,13 +21,13 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
+require_once( dirname( __FILE__ ) . '/IndexBase.php' );
 
 /**
  * @author Moritz Schubotz
  *
  */
-class CreateMathIndex extends Maintenance {
+class CreateMathIndex extends IndexBase {
 	private static $mwsns = "mws:";
 	private static $XMLHead;
 	private static $XMLFooter;
@@ -39,8 +39,6 @@ class CreateMathIndex extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Generates harvest files for the MathWebSearch Deamon.';
-		$this->addArg( 'dir', 'The directory where the harvest files go to.' );
-		$this->addArg( 'ffmax', "The maximal number of formula per file.", false );
 		$this->addOption( 'mwsns', 'The namespace or mws normally "mws:"', false );
 	}
 
@@ -48,9 +46,9 @@ class CreateMathIndex extends Maintenance {
 	 * @param unknown $row
 	 * @return string
 	 */
-	private static function generateIndexString( $row ) {
+	protected function generateIndexString( $row ) {
 		$out = "";
-		$xml = simplexml_load_string( $row->math_mathml );
+		$xml = simplexml_load_string( utf8_decode($row->math_mathml) );
 		if ( !$xml ) {
 			echo "ERROR while converting:\n " . var_export( $row->math_mathml, true ) . "\n";
 			foreach ( libxml_get_errors() as $error )
@@ -71,58 +69,20 @@ class CreateMathIndex extends Maintenance {
 
 	}
 
-	/**
-	 * @param unknown $fn
-	 * @param unknown $min
-	 * @param unknown $inc
-	 * @return boolean
-	 */
-	private function wFile( $fn, $min, $inc ) {
-		$out = self::$XMLHead;
-		$max = min( $min + $inc, $this->res->numRows() -1 );
-		for ( $i = $min; $i < $max; $i++ ) {
-			$this->res->seek( $i );
-			$out .= self::generateIndexString( $this->res->fetchObject() );
-			restore_error_handler (  );
-		}
-		$out .= "\n" . self::$XMLFooter ;
-		$fh = fopen( $fn, 'w' );
-		// echo $out;
-		// die ("test");
-		fwrite( $fh, $out );
-		fclose( $fh );
-		echo "written file $fn with entries($min ... $max)\n";
-		if ( $max < $this->res->numRows() -1 )
-			return true;
-		else
-			return false;
+	protected function getHead(){
+		return self::$XMLHead;
 	}
-
+	protected function getFooter(){
+		return self::$XMLFooter;
+	}
 	/**
 	 *
 	 */
 	public function execute() {
-		libxml_use_internal_errors( true );
-		$i = 0;
-		$inc = $this->getArg( 1, 100 );
 		self::$mwsns = $this->getOption( 'mwsns', '' );
 		self::$XMLHead = "<?xml version=\"1.0\"?>\n<" . self::$mwsns . "harvest xmlns:mws=\"http://search.mathweb.org/ns\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\">";
 		self::$XMLFooter = "</" . self::$mwsns . "harvest>";
-		$db = wfGetDB( DB_SLAVE );
-		echo "getting list of all equations from the database\n";
-		$this->res = $db->select(
-			array( 'mathindex', 'math' ),
-			array( 'mathindex_page_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash', 'mathindex_inputhash' ),            // $vars (columns of the table)
-			'math_inputhash = mathindex_inputhash'
-				, __METHOD__,
-				array( 'ORDER BY' => 'mathindex_page_id' ) );
-		echo "write " . $this->res->numRows() . " results to index\n";
-		do {
-			$fn = $this->getArg( 0 ) . '/math' . sprintf( '%012d', $i ) . '.xml';
-			$res = $this->wFile( $fn, $i, $inc );
-			$i += $inc;
-		} while ( $res );
-		echo( "done" );
+		parent::execute();
 	}
 }
 

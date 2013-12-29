@@ -111,15 +111,17 @@ class UpdateMath extends Maintenance {
 			foreach ( $math[1] as $formula ) {
 				$tstart = microtime(true);
 				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_MATHML ); 
-				if ( $renderer->checkTex() )
+				if ( $renderer->checkTex() ){
 					$renderer->render( $purge );
-				else
+				}else{
+					echo "texvcheck error:" . $renderer->getLastError();
 					continue;
+				}
 				$time = (microtime(true) - $tstart)*1000;
 				//echo ( "\n\t\t rendered in $time ms.");
 				$tstart = microtime(true);
 				// Enable indexing of math formula
-				//wfRunHooks( 'MathFormulaRendered', array( &$renderer , &$notused, $pid, $anchorID ) );
+				wfRunHooks( 'MathFormulaRendered', array( &$renderer , &$notused, $pid, $anchorID ) );
 				$time = (microtime(true) - $tstart)*1000;
 				//echo ( "\n\t\t hook run in $time ms.");
 				$tstart = microtime(true);
