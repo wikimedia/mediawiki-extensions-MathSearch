@@ -26,7 +26,7 @@ class XQueryGenerator extends SpecialPage {
 		$out = '';
 		// The form header, which links back to this page.
 		$pageID = Title::makeTitle( NS_SPECIAL, 'XQueryGenerator' );
-		$action = $pageID->escapeLocalURL();
+		$action = htmlspecialchars( $pageID->getLocalURL() );
 		$out .= "<form method=\"get\" action=\"$action\">\n";
 		// The search text field.
 		$tex = htmlspecialchars( $tex );
