@@ -22,7 +22,7 @@
 require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
 class UpdateMath extends Maintenance {
-	const RTI_CHUNK_SIZE = 500;
+	const RTI_CHUNK_SIZE = 100;
 	var $purge = false;
 	var $dbw = null;
 	private $time = 0;//microtime( true );
@@ -81,13 +81,14 @@ class UpdateMath extends Maintenance {
 			foreach ( $res as $s ) {
 				echo "\np$i:";
 				$revtext = Revision::getRevisionText( $s );
-				$fcount += self::doUpdate( $s->page_id, $revtext, $s->page_title, $this->purge, $this->dbw );
+				$fcount += $this->doUpdate( $s->page_id, $revtext, $s->page_title);
 				$i++;
 			}
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$start = microtime( true );
 			$this->dbw->commit();
 			echo " committed in " . ( microtime( true ) -$start ) . "s\n\n";
+			var_export($this->performance);
 			// echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$n += self::RTI_CHUNK_SIZE;
 		}
@@ -100,7 +101,7 @@ class UpdateMath extends Maintenance {
 	 * @param string $purge
 	 * @return number
 	 */
-	private static function doUpdate( $pid, $pText, $pTitle = "", $purge = false , $dbw ) {
+	private function doUpdate( $pid, $pText, $pTitle = "") {
 		// TODO: fix link id problem
 		$anchorID = 0;
 		$res = "";
@@ -109,30 +110,21 @@ class UpdateMath extends Maintenance {
 		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math[1] as $formula ) {
-				$tstart = microtime(true);
-				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_MATHML ); 
+				$this->time("initilize");
+				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_LATEXML );
+				$this->time("load renderer");
 				if ( $renderer->checkTex() ){
-					$renderer->render( $purge );
+					$this->time("check tex");
+					$renderer->render( $this->purge );
+					$this->time("rendering");
 				}else{
 					echo "texvcheck error:" . $renderer->getLastError();
 					continue;
 				}
-				$time = (microtime(true) - $tstart)*1000;
-				//echo ( "\n\t\t rendered in $time ms.");
-				$tstart = microtime(true);
-				// Enable indexing of math formula
 				wfRunHooks( 'MathFormulaRendered', array( &$renderer , &$notused, $pid, $anchorID ) );
-				$time = (microtime(true) - $tstart)*1000;
-				//echo ( "\n\t\t hook run in $time ms.");
-				$tstart = microtime(true);
-				$anchorID++;
-				if ( $time -$tstart > 2 ) {
-					echo( "\t\t slow equation " . ( $anchorID -1 ) .
-						"beginning with" . substr( $formula, 0, 10 ) . "rendered in " . ( $tend -$tstart ) . "s. \n" );
-				}
-				$renderer->writeCache($dbw);
-				$time = (microtime(true) - $tstart)*1000;
-				//echo ( "\n\t\t cache writing prepared in $time ms.");
+				$this->time("hooks");
+				$renderer->writeCache($this->dbw);
+				$this->time("write Cache");
 				if ( $renderer->getLastError() ) {
 					echo "\n\t\t". $renderer->getLastError() ;
 					echo "\nF:\t\t equation " . ( $anchorID -1 ) .
@@ -148,10 +140,13 @@ class UpdateMath extends Maintenance {
 	 *
 	 */
 	public function execute() {
+		global $wgMathValidModes;
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
-		$this->output( "Done.\n" );
+		$wgMathValidModes[] = MW_MATH_LATEXML;
+		$this->output( "Loaded.\n" );
+		$this->time = microtime( true );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
 	}
 }

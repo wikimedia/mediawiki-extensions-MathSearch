@@ -38,6 +38,7 @@ abstract class IndexBase extends Maintenance {
 		$this->mDescription = 'Exports data';
 		$this->addArg( 'dir', 'The directory where the harvest files go to.' );
 		$this->addArg( 'ffmax', "The maximal number of formula per file.", false );
+		$this->addOption( 'limit', 'The maximal number of database entries to be considered', false );
 	}
 
 	/**
@@ -86,8 +87,11 @@ abstract class IndexBase extends Maintenance {
 			array( 'mathindex', 'mathoid' ),
 			array( 'mathindex_page_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash', 'mathindex_inputhash' ),            // $vars (columns of the table)
 			'math_inputhash = mathindex_inputhash'
-				, __METHOD__,
-				array( 'ORDER BY' => 'mathindex_page_id' ) );
+				, __METHOD__
+				,array( 
+					'LIMIT'    =>  $this->getOption( 'limit',100000000 ) ,
+					'ORDER BY' => 'mathindex_page_id' )
+ );
 		echo "write " . $this->res->numRows() . " results to index\n";
 		do {
 			$fn = $this->getArg( 0 ) . '/math' . sprintf( '%012d', $i ) . '.xml';

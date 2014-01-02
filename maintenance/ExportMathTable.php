@@ -28,12 +28,16 @@ require_once( dirname( __FILE__ ) . '/IndexBase.php' );
  *
  */
 class ExportMathTable extends IndexBase {
+	private $db2Pass;
+	private $statment;
 	/**
 	 *
 	 */
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Exports a db2 compatible math index table.';
+		$this->addArg( 'passw', "If set, the data is directly imported to db2", false );
+		$this->addArg( 'truncate', "If true, db2 math table is deleted before import", false );
 	}
 
 	/**
@@ -44,9 +48,12 @@ class ExportMathTable extends IndexBase {
 		$mo = MathObject::constructformpagerow($row);
 		$out = '"'. $mo->getMd5().'"';
 		$out .= ',"'. $mo->getTex().'"';
-		$out .= ',"'. $row->mathindex_page_id .'"';
-		$out .= ',"'. $row->mathindex_anchor.'"';
-		$out .= ',"'.str_replace(array('"',"\n"),array('""',' '), $mo->getMathml()).'"';
+		$out .= ','. $row->mathindex_page_id .'';
+		$out .= ','. $row->mathindex_anchor.'';
+		$out .= ',"'.str_replace(array('"',"\n"),array('"',' '), $mo->getMathml()).'"';
+		if( $this->db2Pass ) {
+			$this->statment->execute(array($mo->getMd5(),$mo->getTex(),$row->mathindex_page_id,$row->mathindex_anchor,$mo->getMathml()));
+}
 		return $out."\n";
 
 	}
@@ -55,6 +62,22 @@ class ExportMathTable extends IndexBase {
 	 *
 	 */
 	public function execute() {
+		$this->db2Pass = $this->getOption( 'passw',false );
+		if ( $this->db2Pass ){
+			try { 
+  				$connection = new PDO("ibm:MATH", "db2inst1", $this->db2Pass, array(
+    					PDO::ATTR_PERSISTENT => TRUE, 
+    					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+  				); 
+			} catch (Exception $e) {
+			  echo($e->getMessage());
+			}
+			if ( $this->getOption('truncate' , false ) ){
+				 $connection->query('TRUNCATE TABLE "wiki"."math" IMMEDIATE');
+			}
+			$this->statment = $connection->prepare('insert into "wiki"."math" ("math_md5", "math_tex", "mathindex_pageid", "mathindex_anchord", "math_mathml") values(?, ?, ?, ?, ?)');
+			
+		}
 		parent::execute();
 	}
 }
