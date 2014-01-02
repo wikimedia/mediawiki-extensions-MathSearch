@@ -53,7 +53,7 @@ abstract class IndexBase extends Maintenance {
 	 * @param unknown $inc
 	 * @return boolean
 	 */
-	private function wFile( $fn, $min, $inc ) {
+	protected function wFile( $fn, $min, $inc ) {
 		$out = $this->getHead();
 		$max = min( $min + $inc, $this->res->numRows() -1 );
 		for ( $i = $min; $i < $max; $i++ ) {

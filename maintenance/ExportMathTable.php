@@ -30,6 +30,7 @@ require_once( dirname( __FILE__ ) . '/IndexBase.php' );
 class ExportMathTable extends IndexBase {
 	private $db2Pass;
 	private $statment;
+	private $dbh;
 	/**
 	 *
 	 */
@@ -52,11 +53,27 @@ class ExportMathTable extends IndexBase {
 		$out .= ','. $row->mathindex_anchor.'';
 		$out .= ',"'.str_replace(array('"',"\n"),array('"',' '), $mo->getMathml()).'"';
 		if( $this->db2Pass ) {
-			$this->statment->execute(array($mo->getMd5(),$mo->getTex(),$row->mathindex_page_id,$row->mathindex_anchor,$mo->getMathml()));
+			try { 
+				$this->statment->execute(array($mo->getMd5(),$mo->getTex(),$row->mathindex_page_id,$row->mathindex_anchor,$mo->getMathml()));
+			} catch (Exception $e) {
+			  echo($e->getMessage());
+			}
+
 }
 		return $out."\n";
 
 	}
+protected function wFile( $fn, $min, $inc ) {
+	if( $this->db2Pass ) {
+		try{
+		$this->dbh->commit();
+		} catch (Exception $e) {
+			  echo($e->getMessage());
+		}
+		$this->dbh->beginTransaction();
+	}
+	return parent::wFile( $fn, $min, $inc );
+}
 
 	/**
 	 *
@@ -65,7 +82,7 @@ class ExportMathTable extends IndexBase {
 		$this->db2Pass = $this->getOption( 'passw',false );
 		if ( $this->db2Pass ){
 			try { 
-  				$connection = new PDO("ibm:MATH", "db2inst1", $this->db2Pass, array(
+  				$this->dbh = new PDO("ibm:MATH", "db2inst1", $this->db2Pass, array(
     					PDO::ATTR_PERSISTENT => TRUE, 
     					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
   				); 
@@ -73,9 +90,10 @@ class ExportMathTable extends IndexBase {
 			  echo($e->getMessage());
 			}
 			if ( $this->getOption('truncate' , false ) ){
-				 $connection->query('TRUNCATE TABLE "wiki"."math" IMMEDIATE');
+				 $this->dbh->query('TRUNCATE TABLE "wiki"."math" IMMEDIATE');
 			}
-			$this->statment = $connection->prepare('insert into "wiki"."math" ("math_md5", "math_tex", "mathindex_pageid", "mathindex_anchord", "math_mathml") values(?, ?, ?, ?, ?)');
+			$this->dbh->beginTransaction();
+			$this->statment = $this->dbh->prepare('insert into "wiki"."math" ("math_md5", "math_tex", "mathindex_pageid", "mathindex_anchord", "math_mathml") values(?, ?, ?, ?, ?)');
 			
 		}
 		parent::execute();
