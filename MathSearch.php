@@ -35,6 +35,7 @@ $wgAutoloadClasses['MathSearchHooks'] = $dir . 'MathSearch.hooks.php';
 $wgAutoloadClasses['SpecialMathSearch'] = $dir . 'SpecialMathSearch.php';
 $wgAutoloadClasses['FormulaInfo'] = $dir . 'FormulaInfo.php';
 $wgAutoloadClasses['MathObject'] = $dir . 'MathObject.php';
+$wgAutoloadClasses['MathQueryObject'] = $dir . 'MathQueryObject.php';
 $wgAutoloadClasses['XQueryGenerator'] = $dir . 'XQueryGenerator.php';
 $wgAutoloadClasses['GetEquationsByQuery'] = $dir . 'GetEquationsByQuery.php';
 $wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';

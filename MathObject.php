@@ -42,10 +42,17 @@ class MathObject extends MathMathML {
 		}
 	}
 
+	/**
+	 *
+	 * @global type $wgMathDebug
+	 * @param type $res
+	 * @return boolean|\self
+	 */
 	public static function constructformpagerow( $res ) {
 		global $wgMathDebug;
 		if ( $res->mathindex_page_id > 0 ) {
-			$instance = new self();
+			$class = get_called_class();
+			$instance = new $class;
 			$instance->setPageID( $res->mathindex_page_id );
 			$instance->setAnchorID( $res->mathindex_anchor );
 			if ( $wgMathDebug ) {
@@ -53,7 +60,6 @@ class MathObject extends MathMathML {
 			}
 			$instance->inputHash = $res->mathindex_inputhash;
 			$instance->readFromDatabase();
-			//self::DebugPrint( 'got' . var_export( $instance, true ) );
 			return $instance;
 		} else {
 			return false;
@@ -215,16 +221,5 @@ class MathObject extends MathMathML {
 		$texvc->readFromDatabase();
 		return $texvc->getPng();
 	}
+
 }
-
-/*
- * $sql = "INSERT INTO varstat (\n"
-    . "`varstat_featurename` ,\n"
-    . "` varstat_featuretype` ,\n"
-    . "`varstat_featurecount`\n"
-    . ") SELECT `mathobservation_featurename`,`mathobservation_featuretype`, count(*) as CNT FROM `mathobservation` JOIN mathindex on `mathobservation_inputhash` =mathindex_inputhash GROUP by `mathobservation_featurename`, `mathobservation_featuretype` ORDER BY CNT DESC";
-
-
-    $sql = "INSERT INTO mathpagestat(`pagestat_featurename`,`pagestat_featuretype`,`pagestat_pageid`,`pagestat_featurecount`)\n"
-    . "SELECT `mathobservation_featurename`,`mathobservation_featuretype`,mathindex_page_id, count(*) as CNT FROM `mathobservation` JOIN mathindex on `mathobservation_inputhash` =mathindex_inputhash GROUP by `mathobservation_featurename`, `mathobservation_featuretype`,mathindex_page_id ORDER BY CNT DESC";
- */

@@ -271,7 +271,7 @@ class SpecialMathSearch extends SpecialPage {
 	 * @return boolean
 	 */
 	function render() {
-		$renderer = new MathMathML($this->mathpattern);
+		$renderer = new MathLaTeXMLML($this->mathpattern);
 		$renderer->setLaTeXMLSettings('profile=mwsquery');
 		$renderer->setAllowedRootElments(array('query'));
 		$renderer->render(true);

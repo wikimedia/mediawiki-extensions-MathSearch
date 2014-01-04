@@ -28,7 +28,7 @@ require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
  *
  */
 abstract class IndexBase extends Maintenance {
-	private $res;
+	protected $res;
 
 	/**
 	 *
@@ -38,6 +38,8 @@ abstract class IndexBase extends Maintenance {
 		$this->mDescription = 'Exports data';
 		$this->addArg( 'dir', 'The directory where the harvest files go to.' );
 		$this->addArg( 'ffmax', "The maximal number of formula per file.", false );
+		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false );
+		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
 		$this->addOption( 'limit', 'The maximal number of database entries to be considered', false );
 	}
 
@@ -85,11 +87,13 @@ abstract class IndexBase extends Maintenance {
 		echo "getting list of all equations from the database\n";
 		$this->res = $db->select(
 			array( 'mathindex', 'mathoid' ),
-			array( 'mathindex_page_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash', 'mathindex_inputhash' ),            // $vars (columns of the table)
-			'math_inputhash = mathindex_inputhash'
+			array( 'mathindex_page_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash', 'mathindex_inputhash' ),
+			array( 'math_inputhash = mathindex_inputhash',
+				'mathindex_page_id >= '. $this->getArg( 2, 0),
+				'mathindex_page_id <= '. $this->getArg( 3, PHP_INT_MAX))
 				, __METHOD__
 				,array( 
-					'LIMIT'    =>  $this->getOption( 'limit',100000000 ) ,
+					'LIMIT'    => $this->getOption( 'limit', PHP_INT_MAX ) ,
 					'ORDER BY' => 'mathindex_page_id' )
  );
 		echo "write " . $this->res->numRows() . " results to index\n";

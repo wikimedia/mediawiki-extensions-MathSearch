@@ -31,9 +31,8 @@ class ExportMathTable extends IndexBase {
 	private $db2Pass;
 	private $statment;
 	private $dbh;
-	/**
-	 *
-	 */
+	private $time;
+
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Exports a db2 compatible math index table.';
@@ -56,14 +55,13 @@ class ExportMathTable extends IndexBase {
 			try { 
 				$this->statment->execute(array($mo->getMd5(),$mo->getTex(),$row->mathindex_page_id,$row->mathindex_anchor,$mo->getMathml()));
 			} catch (Exception $e) {
-			  echo($e->getMessage());
+				echo($e->getMessage());
 			}
-
-}
+		}
 		return $out."\n";
-
 	}
-protected function wFile( $fn, $min, $inc ) {
+
+	protected function wFile( $fn, $min, $inc ) {
 	if( $this->db2Pass ) {
 		try{
 		$this->dbh->commit();
@@ -72,20 +70,21 @@ protected function wFile( $fn, $min, $inc ) {
 		}
 		$this->dbh->beginTransaction();
 	}
+	$delta = microtime(true) - $this->time ;
+	$this->time = microtime(true);
+	echo 'took '. number_format($delta ,1) ."s \n";
 	return parent::wFile( $fn, $min, $inc );
 }
 
-	/**
-	 *
-	 */
 	public function execute() {
+		$this->time = microtime(true);
 		$this->db2Pass = $this->getOption( 'passw',false );
 		if ( $this->db2Pass ){
-			try { 
-  				$this->dbh = new PDO("ibm:MATH", "db2inst1", $this->db2Pass, array(
-    					PDO::ATTR_PERSISTENT => TRUE, 
-    					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-  				); 
+			try {
+				$this->dbh = new PDO("ibm:MATH", "db2inst1", $this->db2Pass, array(
+					PDO::ATTR_PERSISTENT => TRUE,
+					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+				);
 			} catch (Exception $e) {
 			  echo($e->getMessage());
 			}
