@@ -7,7 +7,26 @@ class MathQueryObject extends MathObject {
 	private $queryID = false;
 	private $texquery = false;
 	private $cquery = false;
-
+	private $pquery = false;
+	private $pmmlSettings = array('format' => 'xml',
+	'whatsin' => 'math',
+	'whatsout' => 'math',
+	'pmml',
+	'nodefaultresources',
+	'preload' => array(
+		'LaTeX.pool',
+		'article.cls',
+		'amsmath.sty',
+		'amsthm.sty',
+		'amstext.sty',
+		'amssymb.sty',
+		'eucal.sty',
+		'[dvipsnames]xcolor.sty',
+		'url.sty',
+		'hyperref.sty',
+		'mws.sty',
+		'texvc'),
+	);
 	/**
 	 * Set the query id
 	 * @param int $id
@@ -57,21 +76,36 @@ class MathQueryObject extends MathObject {
 	 */
 	public function getCQuery(){
 		if ($this->cquery === false ){
-			$this->generateQueryString();
+			$this->generateContentQueryString();
 		}
 		return $this->cquery;
 	}
 
+	/**
+	 * Returns the PresentationMathML expression.
+	 * If not set a random query id will be generated based on the TeXQuery.
+	 * @return string
+	 */
+	public function getPQuery(){
+		if ($this->pquery === false ){
+			$this->generatePresentationQueryString();
+		}
+		return $this->pquery;
+	}
 	public function serlializeToXML(  ){
 		$cx = simplexml_load_string($this->getCQuery());
 		$xCore = preg_replace("/\\n/","\n\t\t", $cx->children('mws',TRUE)->children('m',TRUE)->asXML());
-
+		$px = simplexml_load_string($this->getPQuery());
+		$pmml = preg_replace('#<mi (.*) mathcolor="red">(.*)</mi>#',
+			'<mws:qvar xmlns:mws="http://www.mathweb.org/mws/ns" name="$2"/>',
+			$px->children()->asXML())."\n";
 		$out = '<topic xmlns="http://ntcir-math.nii.ac.jp/">';
 		$out .= "\n\t<num>FSE-GC-". $this->getQueryId() ."</num>";
 		$out .= "\n\t<type>Content-Query</type>";
 		$out .= "\n\t<title>Query ".$this->getQueryId()." (".$this->getPageTitle().")<title>";
 		$out .= "\n\t<query>";
 		$out.= "\n\t\t<TeXquery>{$this->getTeXQuery()}</TeXquery>";
+		$out.= "\n\t\t<cquery><m:math>{$pmml}</m:math></cquery>";
 		$out.= "\n\t\t<cquery><m:math>{$xCore}</m:math></cquery>";
 		$out .= "\n\t</query>";
 		$out .= "\n\t<relevance>find result similar to "
@@ -121,12 +155,26 @@ class MathQueryObject extends MathObject {
 		return $out;
 	}
 
-	public function generateQueryString(){
+	public function generateContentQueryString(){
 		$renderer = new MathLaTeXML($this->getTexQuery());
 		$renderer->setLaTeXMLSettings('profile=mwsquery');
 		$renderer->setAllowedRootElments(array('query'));
 		$renderer->render(true);
 		$this->cquery = $renderer->getMathml();
 		return $this->cquery;
+	}
+
+	public function generatePresentationQueryString(){
+		$renderer = new MathLaTeXML($this->getTexQuery());
+		$renderer->setXMLValidaton(false);
+		//$renderer->setAllowedRootElments(array('query'));
+		$renderer->setLaTeXMLSettings($this->pmmlSettings);
+		if ($renderer->render(true) ) {
+			$this->pquery = $renderer->getMathml();
+			return $this->pquery;
+		} else {
+			echo $renderer->getLastError();
+			return $renderer->getLastError();
+		}
 	}
 }
