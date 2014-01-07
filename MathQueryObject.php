@@ -25,6 +25,7 @@ class MathQueryObject extends MathObject {
 		'url.sty',
 		'hyperref.sty',
 		'mws.sty',
+//		'[ids]latexml.sty',
 		'texvc'),
 	);
 	/**
@@ -99,16 +100,16 @@ class MathQueryObject extends MathObject {
 			return false;
 		}
 		$xCore = preg_replace("/\\n/","\n\t\t", $cx->children('mws',TRUE)->children('m',TRUE)->asXML());
-		$pmml = preg_replace('#<mi (.*) mathcolor="red">(.*)</mi>#',
-			'<mws:qvar xmlns:mws="http://www.mathweb.org/mws/ns" name="$2"/>',
-			$px->children()->asXML())."\n";
+		$pmml = preg_replace(array( '#<mi (.*) mathcolor="red">(.*)</mi>#' , "/\\n/" ),
+			array( '<mws:qvar xmlns:mws="http://www.mathweb.org/mws/ns" name="$2"/>', "\n\t\t" ),
+			$px->children()->asXML());
 		$out = '<topic xmlns="http://ntcir-math.nii.ac.jp/">';
 		$out .= "\n\t<num>FSE-GC-". $this->getQueryId() ."</num>";
 		$out .= "\n\t<type>Content-Query</type>";
 		$out .= "\n\t<title>Query ".$this->getQueryId()." (".$this->getPageTitle().")<title>";
 		$out .= "\n\t<query>";
 		$out.= "\n\t\t<TeXquery>{$this->getTeXQuery()}</TeXquery>";
-		$out.= "\n\t\t<cquery><m:math>{$pmml}</m:math></cquery>";
+		$out.= "\n\t\t<pquery>{$pmml}</pquery>";
 		$out.= "\n\t\t<cquery><m:math>{$xCore}</m:math></cquery>";
 		$out .= "\n\t</query>";
 		$out .= "\n\t<relevance>find result similar to "
