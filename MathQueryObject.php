@@ -37,7 +37,7 @@ class MathQueryObject extends MathObject {
 
 	/**
 	 * 
-	 * @param type $rpage
+	 * @param ResultWrapper $rpage
 	 * @param int $queryID
 	 * @return \self
 	 */
@@ -94,8 +94,11 @@ class MathQueryObject extends MathObject {
 	}
 	public function serlializeToXML(  ){
 		$cx = simplexml_load_string($this->getCQuery());
-		$xCore = preg_replace("/\\n/","\n\t\t", $cx->children('mws',TRUE)->children('m',TRUE)->asXML());
 		$px = simplexml_load_string($this->getPQuery());
+		if ( $cx == false || $px == false ){
+			return false;
+		}
+		$xCore = preg_replace("/\\n/","\n\t\t", $cx->children('mws',TRUE)->children('m',TRUE)->asXML());
 		$pmml = preg_replace('#<mi (.*) mathcolor="red">(.*)</mi>#',
 			'<mws:qvar xmlns:mws="http://www.mathweb.org/mws/ns" name="$2"/>',
 			$px->children()->asXML())."\n";

@@ -37,6 +37,10 @@ class GenerateWorkload extends IndexBase {
 	protected function generateIndexString( $row ){
 		$q = MathQueryObject::newQueryFromEquationRow($row, ++$this->id );
 		$out = $q->serlializeToXML();
+		if( $out == false ){
+			echo 'problem with '.var_export($q,true)."\n";
+			$out = '';
+		}
 		return $out;
 	}
 

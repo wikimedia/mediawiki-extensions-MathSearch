@@ -44,7 +44,7 @@ class MathObject extends MathMathML {
 
 	/**
 	 *
-	 * @global type $wgMathDebug
+	 * @global ResultWrapper $wgMathDebug
 	 * @param type $res
 	 * @return boolean|\self
 	 */
@@ -55,7 +55,7 @@ class MathObject extends MathMathML {
 			$instance = new $class;
 			$instance->setPageID( $res->mathindex_page_id );
 			$instance->setAnchorID( $res->mathindex_anchor );
-			if ( $wgMathDebug ) {
+			if ( $wgMathDebug && isset($res->mathindex_timestamp) ) {
 				$instance->index_timestamp = $res->mathindex_timestamp;
 			}
 			$instance->inputHash = $res->mathindex_inputhash;
