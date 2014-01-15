@@ -113,6 +113,19 @@ $messages['es'] = array(
 	'mathsearch-desc' => 'Integra el motor [http://search.mathweb.org/about.html MathWeb Search]',
 );
 
+/** Persian (فارسی)
+ * @author Armin1392
+ */
+$messages['fa'] = array(
+	'mathsearch' => 'جستجوی داده‌ها',
+	'formulainfo' => 'اطلاعات فرمول',
+	'specialpages-group-mathsearch' => 'جستجوی داده‌ها',
+	'mathsearch-desc' => 'ادغام [http://search.mathweb.org/about.html MathWeb Search] موتور',
+	'getequationsbyquery' => 'پرس‌وجو شدن با سوال',
+	'xquerygenerator' => 'ژنراتور ایکس‌کوِری',
+	'mathdebug' => 'آزمون ترجمه',
+);
+
 /** French (français)
  * @author Crochet.david
  * @author Gomoko
