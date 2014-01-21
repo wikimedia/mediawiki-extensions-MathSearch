@@ -35,7 +35,7 @@ class FormulaInfo extends SpecialPage {
 			self::DisplayInfo( $pid, $eid );
 		}
 	}
-	public static function InfoTex( $tex ) {
+	public function InfoTex( $tex ) {
 		global $wgMathDebug, $wgOut;
 		if ( !$wgMathDebug ) {
 			$wgOut->addWikiTex( "tex queries only supported in debug mode" );
@@ -48,15 +48,15 @@ class FormulaInfo extends SpecialPage {
 		$mo = new MathObject( $tex );
 		$allPages = $mo->getAllOccurences();
 		if ( $allPages ) {
-			self::DisplayInfo( $allPages[0]->getPageID(), $allPages[0]->getAnchorID() );
+			$this->DisplayInfo( $allPages[0]->getPageID(), $allPages[0]->getAnchorID() );
 		} else {
 			$wgOut->addWikiText( "No occurences found clean up the database to remove unused formulae" );
 		}
 	}
-	public static function DisplayInfo( $pid, $eid ) {
+	public function DisplayInfo( $pid, $eid ) {
 		global $wgMathDebug, $wgOut;
 		/* $out Output page find out how to get that variable in a static context*/
-		$out = $wgOut;
+		$out = $this->getOutput();
 		$out->addWikiText( '==General==' );
 		$out->addWikiText( 'Display information for equation id:' . $eid . ' on page id:' . $pid );
 		$article = Article::newFromId( $pid );
@@ -74,19 +74,19 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiText( "Occurences on the following pages:" );
 		wfDebugLog( "MathSearch", var_export( $mo->getAllOccurences(), true ) );
 		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
-		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex(). '</syntaxhighlight>');
-		$out->addWikiText( 'MathML ('.self::getlengh($mo->getMathml()).') :', false );
+		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex() . '</syntaxhighlight>' );
+		$out->addWikiText( 'MathML (' . self::getlengh( $mo->getMathml() ) . ') :', false );
 		$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $mo->getTex() ) . '&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>' );
 		$out->addHtml(  $mo->getMathml() );
 		# $log=htmlspecialchars( $res->math_log );
 		$out->addHtml( "<br />\n" );
-		$out->addWikiText( 'SVG ('.self::getlengh($mo->getSvg()).') :', false );
-		$out->addHtml( $mo->getFallbackImage( false , true, '' ));
+		$out->addWikiText( 'SVG (' . self::getlengh( $mo->getSvg() ) . ') :', false );
+		$out->addHtml( $mo->getFallbackImage( false , true, '' ) );
 		$out->addHtml( "<br />\n" );
-		$out->addWikiText( 'PNG ('.self::getlengh($mo->getPng()).') :', false );
-		$out->addHtml($mo->getFallbackImage( true , true , ''));
+		$out->addWikiText( 'PNG (' . self::getlengh( $mo->getPng() ) . ') :', false );
+		$out->addHtml( $mo->getFallbackImage( true , true , '' ) );
 		$out->addHtml( "<br />\n" );
-		$out->addWikiText( 'Hash : '.$mo->getMd5(), false );
+		$out->addWikiText( 'Hash : ' . $mo->getMd5(), false );
 		$out->addHtml( "<br />" );
 		$out->addWikiText( '==Similar pages==' );
 		$out->addWikiText( 'Calculataed based on the variables occuring on the entire ' . $pagename . ' page' );
@@ -97,38 +97,38 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiText( '==MathML==' );
 
 		$out->addHtml( "<br />" );
-		$out->addHtml('<div class="NavFrame"><div class="NavHead">mathml</div>
-<div class="NavContent">');
-		$out->addWikiText( '<syntaxhighlight lang="xml" >'.( $mo->getMathml() ).'</syntaxhighlight>');
-		$out->addHtml('</div></div>');
+		$out->addHtml( '<div class="NavFrame"><div class="NavHead">mathml</div>
+<div class="NavContent">' );
+		$out->addWikiText( '<syntaxhighlight lang="xml">' . ( $mo->getMathml() ) . '</syntaxhighlight>' );
+		$out->addHtml( '</div></div>' );
 		$out->addHtml( "<br />" );
 		$out->addHtml( "<br />" );
 		if ( $wgMathDebug ) {
 		$out->addWikiText( '==LOG and Debug==' );
-		$out->addWikiText( 'Rendered at : <syntaxhighlight>' . $mo->getTimestamp()
-			. '</syntaxhighlight> an idexed at <syntaxhighlight>' . $mo->getIndexTimestamp() . '</syntaxhighlight>' );
-		$out->addWikiText( 'validxml : <syntaxhighlight>' . $mo->isValidMathML( $mo->getMathml() ) . '</syntaxhighlight> recheck:', false );
+		$out->addWikiText( 'Rendered at : <syntaxhighlight lang="text">' . $mo->getTimestamp()
+			. '</syntaxhighlight> an idexed at <syntaxhighlight lang="text">' . $mo->getIndexTimestamp() . '</syntaxhighlight>' );
+		$out->addWikiText( 'validxml : <syntaxhighlight lang="text">' . $mo->isValidMathML( $mo->getMathml() ) . '</syntaxhighlight> recheck:', false );
 		$out->addHtml( $mo->isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
-		$out->addWikiText( 'status : <syntaxhighlight>' . $mo->getStatusCode() . '</syntaxhighlight>' );
+		$out->addWikiText( 'status : <syntaxhighlight lang="text">' . $mo->getStatusCode() . '</syntaxhighlight>' );
 		$out->addHtml( htmlspecialchars( $mo->getLog() ) );
 		}
 	}
-	private static function getlengh($binray){
+	private static function getlengh( $binray ) {
 		$uncompressed = strlen( $binray );
-		$compressed = strlen(gzcompress ($binray));
-		return self::formatBytes($uncompressed). " / ".self::formatBytes($compressed) ;
+		$compressed = strlen( gzcompress ( $binray ) );
+		return self::formatBytes( $uncompressed ) . " / " . self::formatBytes( $compressed ) ;
 	}
-		private static function formatBytes($bytes, $precision = 3) {
-			$units = array('B', 'KB', 'MB', 'GB', 'TB');
+		private static function formatBytes( $bytes, $precision = 3 ) {
+			$units = array( 'B', 'KB', 'MB', 'GB', 'TB' );
 
-			$bytes = max($bytes, 0);
-			$pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-			$pow = min($pow, count($units) - 1);
+			$bytes = max( $bytes, 0 );
+			$pow = floor( ( $bytes ? log( $bytes ) : 0 ) / log( 1024 ) );
+			$pow = min( $pow, count( $units ) - 1 );
 
 			// Uncomment one of the following alternatives
-			$bytes /= pow(1024, $pow);
-			//$bytes /= (1 << (10 * $pow));
+			$bytes /= pow( 1024, $pow );
+			// $bytes /= (1 << (10 * $pow));
 
-		return round($bytes, $precision) . ' ' . $units[$pow];
+		return round( $bytes, $precision ) . ' ' . $units[$pow];
 	}
 }
