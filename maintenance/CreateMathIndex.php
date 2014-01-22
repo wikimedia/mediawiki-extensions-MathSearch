@@ -31,7 +31,6 @@ class CreateMathIndex extends IndexBase {
 	private static $mwsns = "mws:";
 	private static $XMLHead;
 	private static $XMLFooter;
-	private $res;
 
 	/**
 	 *
