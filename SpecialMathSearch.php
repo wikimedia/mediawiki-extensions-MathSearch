@@ -33,11 +33,11 @@ class SpecialMathSearch extends SpecialPage {
 
 	/**
 	 *
-	 * @return \CirrusSearch|boolean
+	 * @return SearchEngine|boolean
 	 */
 	public static function getCirrusSearch() {
 		if ( class_exists( 'CirrusSearch' ) ) {
-			return new CirrusSearch();
+			return SearchEngine::create();
 		} else {
 			wfDebugLog( 'MathSearch', 'Text search not possible. Class CirrusSearch is missing.' );
 			return false;
@@ -216,16 +216,25 @@ class SpecialMathSearch extends SpecialPage {
 			}
 		}
 		$ls = self::getCirrusSearch();
+		$ls = new CirrusSearch();
 		if ( $ls ) {
-			$ls->limit = 1000000;
+			//$ls->limit = 1000000;
 			if ( $this->textpattern ) {
 				$textpattern = $this->textpattern;
-				$sres = $ls->searchText( $textpattern );
-				if ( $sres && $sres->hasResults() ) {
-					$out->addWikiText( "You searched for the text '$textpattern' and the TeX-Pattern '$pattern'." );
+						$search = SearchEngine::create();
+						$ns = SearchEngine::userNamespaces( $this->getUser() );
+		$search->setLimitOffset( 1000, 0 );
+		$search->setNamespaces( $ns );
+		$term = $search->transformSearchTerm( $textpattern );
+				$sres = $search->searchText( $term );
+				if ( $sres ) {
+					if ( !$sres->numRows() ){
+						$out->addWikiText('No results found.');
+					} else {
+					$out->addWikiText( "You searched for the text '$textpattern' and the TeX-Pattern '{$this->mathpattern}'." );
 					$out->addWikiText( "The text search results in [{{canonicalurl:search|search=$textpattern}} " .
 							$sres->getTotalHits()
-							. "] hits and the math pattern matched $this->numMathResults times on [{{canonicalurl:{{FULLPAGENAMEE}}|pattern=$pattern}} " .
+							. "] hits and the math pattern matched $this->numMathResults times on [{{canonicalurl:{{FULLPAGENAMEE}}|pattern={$this->mathpattern}}} " .
 							sizeof( $this->relevantMathMap ) .
 							"] pages." );
 					//// var_dump($sres);
@@ -249,7 +258,7 @@ class SpecialMathSearch extends SpecialPage {
 
 					wfDebugLog( 'mathsearch', 'EOF' );
 					wfDebugLog( 'mathsearch', var_export( $this->mathResults, true ) );
-				}
+				}}
 			}
 		}
 		// $out->addHtml(htmlspecialchars( $pattern) );
@@ -272,7 +281,7 @@ class SpecialMathSearch extends SpecialPage {
 	 * @return boolean
 	 */
 	function render() {
-		$renderer = new MathLaTeXMLML( $this->mathpattern );
+		$renderer = new MathLaTeXML( $this->mathpattern );
 		$renderer->setLaTeXMLSettings( 'profile=mwsquery' );
 		$renderer->setAllowedRootElments( array( 'query' ) );
 		$renderer->render( true );
