@@ -31,18 +31,6 @@ class SpecialMathSearch extends SpecialPage {
 		parent::__construct( 'MathSearch' );
 	}
 
-	/**
-	 *
-	 * @return SearchEngine|boolean
-	 */
-	public static function getCirrusSearch() {
-		if ( class_exists( 'CirrusSearch' ) ) {
-			return SearchEngine::create();
-		} else {
-			wfDebugLog( 'MathSearch', 'Text search not possible. Class CirrusSearch is missing.' );
-			return false;
-		}
-	}
 
 	/**
 	 * The main function
@@ -81,10 +69,6 @@ class SpecialMathSearch extends SpecialPage {
 				'default' => $this->textpattern,
 			)
 		);
-		if ( !self::getCirrusSearch() ) {
-			$formDescriptor['textpattern']['disabled'] = true;
-			$formDescriptor['textpattern']['help'] = 'CirrusSearch not found. Text search <b>disabled</b>!<br/> For details see <a href=\"http://www.mediawiki.org/wiki/Extension:MWSearch\">MWSearch</a>.';
-		}
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() ); # We build the HTMLForm object
 		$htmlForm->setSubmitText( 'Search' );
 		$htmlForm->setSubmitCallback( array( get_class( $this ), 'processInput' ) );
@@ -215,50 +199,42 @@ class SpecialMathSearch extends SpecialPage {
 				}
 			}
 		}
-		$ls = self::getCirrusSearch();
-		$ls = new CirrusSearch();
-		if ( $ls ) {
-			//$ls->limit = 1000000;
-			if ( $this->textpattern ) {
-				$textpattern = $this->textpattern;
-						$search = SearchEngine::create();
-						$ns = SearchEngine::userNamespaces( $this->getUser() );
-		$search->setLimitOffset( 1000, 0 );
-		$search->setNamespaces( $ns );
-		$term = $search->transformSearchTerm( $textpattern );
-				$sres = $search->searchText( $term );
-				if ( $sres ) {
-					if ( !$sres->numRows() ){
-						$out->addWikiText('No results found.');
-					} else {
-					$out->addWikiText( "You searched for the text '$textpattern' and the TeX-Pattern '{$this->mathpattern}'." );
-					$out->addWikiText( "The text search results in [{{canonicalurl:search|search=$textpattern}} " .
-							$sres->getTotalHits()
-							. "] hits and the math pattern matched $this->numMathResults times on [{{canonicalurl:{{FULLPAGENAMEE}}|pattern={$this->mathpattern}}} " .
-							sizeof( $this->relevantMathMap ) .
-							"] pages." );
-					//// var_dump($sres);
-					wfDebugLog( 'mathsearch', 'BOF' );
-					// $out->addWikiText(var_export($this->relevantMathMap,true));
-					$pageList = "";
-					while ( $tres = $sres->next() ) {
-						$pageID = $tres->getTitle()->getArticleID();
-						// $out->addWikiText($pageID);
+		if ( $this->textpattern ) {
+			$textpattern = $this->textpattern;
+			$search = SearchEngine::create( "CirrusSearch");
+			$search->setLimitOffset( 10000 );
+			$sres = $search->searchText( $textpattern );
+			if ( $sres ) {
+				if ( !$sres->numRows() ){
+					$out->addWikiText('No results found.');
+				} else {
+				$out->addWikiText( "You searched for the text '$textpattern' and the TeX-Pattern '{$this->mathpattern}'." );
+				$out->addWikiText( "The text search results in [{{canonicalurl:search|search=$textpattern}} " .
+						$sres->getTotalHits()
+						. "] hits and the math pattern matched $this->numMathResults times on [{{canonicalurl:{{FULLPAGENAMEE}}|pattern={$this->mathpattern}}} " .
+						sizeof( $this->relevantMathMap ) .
+						"] pages." );
+				//// var_dump($sres);
+				wfDebugLog( 'mathsearch', 'BOF' );
+				// $out->addWikiText(var_export($this->relevantMathMap,true));
+				$pageList = "";
+				while ( $tres = $sres->next() ) {
+					$pageID = $tres->getTitle()->getArticleID();
+					// $out->addWikiText($pageID);
+					if ( isset( $this->relevantMathMap[$pageID] ) ) {
+						$out->addWikiText( "[[" . $tres->getTitle() . "]]" );
+						$out->addHtml( $tres->getTextSnippet( $textpattern ) );
+						$pageList .= "OR [[" . $pageID . "]]";
+						// $out->addHtml($this->showHit($tres),$textpattern);
+						$this->DisplayMath( $pageID );
+					} /* else {
+					  $out->addWikiText(":NO MATH");
+					  }// */
+				} // $tres->mHighlightTitle)}
 
-						if ( isset( $this->relevantMathMap[$pageID] ) ) {
-							$out->addWikiText( "[[" . $tres->getTitle() . "]]" );
-							$out->addHtml( $tres->getTextSnippet( $textpattern ) );
-							$pageList .= "OR [[" . $pageID . "]]";
-							// $out->addHtml($this->showHit($tres),$textpattern);
-							$this->DisplayMath( $pageID );
-						} /* else {
-						  $out->addWikiText(":NO MATH");
-						  }// */
-					} // $tres->mHighlightTitle)}
-
-					wfDebugLog( 'mathsearch', 'EOF' );
-					wfDebugLog( 'mathsearch', var_export( $this->mathResults, true ) );
-				}}
+				wfDebugLog( 'mathsearch', 'EOF' );
+				wfDebugLog( 'mathsearch', var_export( $this->mathResults, true ) );
+				}
 			}
 		}
 		// $out->addHtml(htmlspecialchars( $pattern) );
