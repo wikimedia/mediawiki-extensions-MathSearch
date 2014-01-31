@@ -8,6 +8,9 @@ class MathQueryObject extends MathObject {
 	private $texquery = false;
 	private $cquery = false;
 	private $pquery = false;
+	/** @var XQueryGenerator current instance of xQueryGenerator  */
+	private $xQuery = false;
+	private $xQueryDialect = false;
 	private $pmmlSettings = array('format' => 'xml',
 	'whatsin' => 'math',
 	'whatsout' => 'math',
@@ -28,6 +31,11 @@ class MathQueryObject extends MathObject {
 //		'[ids]latexml.sty',
 		'texvc'),
 	);
+
+	public function __construct( $texquery='' , $xQueryDialect = 'DB2' ) {
+		$this->texquery = $texquery;
+		$this->xQueryDialect = $xQueryDialect;
+	}
 	/**
 	 * Set the query id
 	 * @param int $id
@@ -181,4 +189,37 @@ class MathQueryObject extends MathObject {
 			return $renderer->getLastError();
 		}
 	}
+
+	/**
+	 * 
+	 * @param String ("DB2"|"BaseX") $dialect the name of the xQueryGenerator 
+	 * @return XQueryGenerator
+	 * @throws Exception
+	 */
+	public function setXQueryGenerator( $dialect = false ){
+		if ($dialect === false){
+			$dialect = $this->xQueryDialect;
+		}
+		switch ($dialect) {
+			case 'DB2':
+				$this->xQuery = new XQueryGeneratorDB2( $this->getCQuery() );
+				break;
+			case 'BaseX':
+				$this->xQuery = new XQueryGeneratorBaseX( $this->getCQuery() );
+				break;
+			default:
+				throw new Exception($dialect . 'is not a valid XQueryDialect');
+		}
+		return $this->xQuery;
+	}
+
+	/**
+	 * @see XQueryGenerator::getXQuery()
+	 * @return String
+	 */
+	public function getXQuery(){
+		$xQueryGenertor = $this->setXQueryGenerator();
+		return $xQueryGenertor->getXQuery();
+	}
+	
 }

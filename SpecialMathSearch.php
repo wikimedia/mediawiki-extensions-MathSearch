@@ -22,7 +22,11 @@ class SpecialMathSearch extends SpecialPage {
 	var $mathpattern;
 	var $textpattern;
 	var $mathmlquery;
+	var $mathEngine;
+	var $displayQuery;
+	private $mathBackend;
 	private $resultID = 0;
+	private $xQueryEngines = array ('DB2', 'BaseX');
 
 	/**
 	 *
@@ -67,6 +71,21 @@ class SpecialMathSearch extends SpecialPage {
 				'class' => 'HTMLTextField', # What's the input type
 				'help' => 'a term like: algebra',
 				'default' => $this->textpattern,
+			),
+			'mathEngine' => array(
+				'label' => 'Math engine',
+				'class' => 'HTMLSelectField',
+				'options' => array(
+					'mws' => 'MathWebSearch',
+					'db2' => 'DB2',
+					'basex' => 'BaseX'
+				),
+				'default' => $this->mathEngine,
+			),
+			'displayQuery' => array(
+				'label' => 'Display search query',
+				'type' => 'check',
+				'default' => $this->displayQuery,
 			)
 		);
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() ); # We build the HTMLForm object
@@ -84,6 +103,8 @@ class SpecialMathSearch extends SpecialPage {
 		$instance = new SpecialMathSearch();
 		$instance->mathpattern = $formData['mathpattern'];
 		$instance->textpattern = $formData['textpattern'];
+		$instance->mathEngine = $formData['mathEngine'];
+		$instance->displayQuery = $formData['displayQuery'];
 		$instance->performSearch();
 	}
 
@@ -153,7 +174,15 @@ class SpecialMathSearch extends SpecialPage {
 		// foreach($page as $anchor=>$eq){//$out.=var_export($eq, true);	}
 		return true;
 	}
-
+	/**
+	 * 
+	 * @param String $src
+	 * @param String $lang the language of the source snippet
+	 */
+	private function printSource($src,$lang="xml"){
+		$out = $this->getOutput();
+		$out->addWikiText('<source lang="' . $lang . '">' . $src . '</source>');
+	}
 
 	public function performSearch() {
 		global $wgMathDebug;
@@ -162,10 +191,23 @@ class SpecialMathSearch extends SpecialPage {
 		$out->addWikiText( '==Results==' );
 		$out->addWikiText( 'You serached for the LaTeX pattern "' . $this->mathpattern . '" and the text pattern "' . $this->textpattern . '".' );
 		if ( $this->mathpattern ) {
-			if ( $this->render() ) {
+			$query = new MathQueryObject( $this->mathpattern );
+			switch ($this->mathEngine){
+				case 'DB2':
+					$query->setXQueryGenerator( 'DB2' );
+					break;
+				case 'BaseX':
+					$query->setXQueryGenerator( 'BaseX' );
+			}
+			$cQuery = $query->getCQuery();
+			if ( $cQuery ) {
 				$out->addWikiText( "Your mathpattern was suceessfully rendered!" );
-				if ( $wgMathDebug ) {
-					$out->addWikiText( " <source lang=\"xml\">" . $this->mathmlquery . "</source>" );
+				if ( $this->displayQuery === true){
+					if (in_array( $this->mathEngine, $this->xQueryEngines )){
+						$this->printSource($query->getXQuery());
+					} else {
+						$this->printSource( $query->getCQuery() );
+					}
 				}
 				if ( $this->postQuery() ) {
 					$out->addWikiText( "Your mathquery was sucessfully submitted and " . $this->numMathResults . " hits were obtained." );
