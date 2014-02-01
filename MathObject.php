@@ -146,6 +146,12 @@ class MathObject extends MathMathML {
 		}
 	}
 
+	/**
+	 * 
+	 * @param int $pid
+	 * @param int $eid
+	 * @return self instance
+	 */
 	public static function constructformpage( $pid, $eid ) {
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->selectRow(

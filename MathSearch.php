@@ -42,7 +42,7 @@ $wgAutoloadClasses['XQueryGeneratorBaseX'] = $dir . 'XQueryGeneratorBaseX.php';
 $wgAutoloadClasses['GetEquationsByQuery'] = $dir . 'GetEquationsByQuery.php';
 $wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';
 $wgAutoloadClasses['SpecialMathIndex'] = $dir . 'SpecialMathIndex.php';
-
+$wgAutoloadClasses['MathEngineMws'] = $dir . 'MathEngineMws.php';
 
 $wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php';
 $wgExtensionMessagesFiles['MathSearchAlias'] = $dir . 'MathSearch.alias.php';

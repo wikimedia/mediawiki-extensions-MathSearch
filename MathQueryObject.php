@@ -167,9 +167,24 @@ class MathQueryObject extends MathObject {
 		return $out;
 	}
 
+	public function getLaTeXMLCMMLSettings(){
+		global $wgMathDefaultLaTeXMLSetting;
+		$cSettings = $wgMathDefaultLaTeXMLSetting;
+		$cSettings['preload'][] = 'mws.sty';
+		$cSettings['stylesheet'] = 'MWSquery.xsl';
+		return $cSettings;
+	}
+
+	public function getLaTeXMLPMLSettings(){
+		global $wgMathDefaultLaTeXMLSetting;
+		$cSettings = array_diff($wgMathDefaultLaTeXMLSetting, array('cmml'));
+		$cSettings['preload'][] = 'mws.sty';
+		$cSettings['stylesheet'] = 'MWSquery.xsl';
+		return $cSettings;
+	}
 	public function generateContentQueryString(){
 		$renderer = new MathLaTeXML($this->getTexQuery());
-		$renderer->setLaTeXMLSettings('profile=mwsquery');
+		$renderer->setLaTeXMLSettings($this->getLaTeXMLCMMLSettings());
 		$renderer->setAllowedRootElments(array('query'));
 		$renderer->render(true);
 		$this->cquery = $renderer->getMathml();
@@ -221,5 +236,63 @@ class MathQueryObject extends MathObject {
 		$xQueryGenertor = $this->setXQueryGenerator();
 		return $xQueryGenertor->getXQuery();
 	}
-	
+
+		/**
+	 * Posts the query to mwsd and evaluates the result data
+	 * @return boolean
+	 */
+	function postQuery() {
+		global $wgMWSUrl, $wgMathDebug;
+
+		$numProcess = 30000;
+		$tmp = str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"", $this->getCQuery() );
+		$mwsExpr = str_replace( "m:", "", $tmp );
+		wfDebugLog( 'mathsearch', 'MWS query:' . $mwsExpr );
+		$res = Http::post( $wgMWSUrl, array( "postData" => $mwsExpr, "timeout" => 60 ) );
+		if ( $res == false ) {
+			if ( function_exists( 'curl_init' ) ) {
+				$handle = curl_init();
+				$options = array(
+					CURLOPT_URL => $wgMWSUrl,
+					CURLOPT_CUSTOMREQUEST => 'POST', // GET POST PUT PATCH DELETE HEAD OPTIONS
+				);
+				// TODO: Figure out how not to write the error in a message and not in top of the output page
+				curl_setopt_array( $handle, $options );
+				$details = curl_exec( $handle );
+			} else {
+				$details = "curl is not installed.";
+			}
+			wfDebugLog( "MathSearch", "Nothing retreived from $wgMWSUrl. Check if mwsd is running. Error:" .
+					var_export( $details, true ) );
+			return false;
+		}
+		$xres = new SimpleXMLElement( $res );
+		if ( $wgMathDebug ) {
+			$out = $this->getOutput();
+			$out->addWikiText( '<source lang="xml">' . $res . '</source>' );
+		}
+		$this->numMathResults = (int) $xres["total"];
+		wfDebugLog( "MathSearch", $this->numMathResults . " results retreived from $wgMWSUrl." );
+		if ( $this->numMathResults == 0 )
+			return true;
+		$this->relevantMathMap = array();
+		$this->mathResults = array();
+		$this->processMathResults( $xres );
+		if ( $this->numMathResults >= $numProcess ) {
+			ini_set( 'memory_limit', '256M' );
+			for ( $i = $numProcess; $i <= $this->numMathResults; $i += $numProcess ) {
+				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $mwsExpr );
+				$res = Http::post( $wgMWSUrl, array( "postData" => $query, "timeout" => 60 ) );
+				wfDebugLog( 'mathsearch', 'MWS query:' . $query );
+				if ( $res == false ) {
+					wfDebugLog( "MathSearch", "Nothing retreived from $wgMWSUrl. check if mwsd is running there" );
+					return false;
+				}
+				$xres = new SimpleXMLElement( $res );
+				$this->processMathResults( $xres );
+			}
+		}
+		return true;
+	}
+
 }
