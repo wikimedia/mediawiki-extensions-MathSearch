@@ -253,8 +253,8 @@ class SpecialMathSearch extends SpecialPage {
 				$out->addWikiText( "You searched for the text '$textpattern' and the TeX-Pattern '{$this->mathpattern}'." );
 				$out->addWikiText( "The text search results in [{{canonicalurl:search|search=$textpattern}} " .
 						$sres->getTotalHits()
-						. "] hits and the math pattern matched $this->numMathResults times on [{{canonicalurl:{{FULLPAGENAMEE}}|pattern={$this->mathpattern}}} " .
-						sizeof( $this->relevantMathMap ) .
+						. "] hits and the math pattern matched {$this->mathBackend->getSize()} times on [{{canonicalurl:{{FULLPAGENAMEE}}|pattern={$this->mathpattern}}} " .
+						sizeof( $this->mathBackend->getRelevanceMap() ) .
 						"] pages." );
 				//// var_dump($sres);
 				wfDebugLog( 'mathsearch', 'BOF' );
@@ -263,7 +263,8 @@ class SpecialMathSearch extends SpecialPage {
 				while ( $tres = $sres->next() ) {
 					$pageID = $tres->getTitle()->getArticleID();
 					// $out->addWikiText($pageID);
-					if ( isset( $this->relevantMathMap[$pageID] ) ) {
+					$rMap= $this->mathBackend->getRelevanceMap();
+					if ( isset( $rMap[$pageID] ) ) {
 						$out->addWikiText( "[[" . $tres->getTitle() . "]]" );
 						$out->addHtml( $tres->getTextSnippet( $textpattern ) );
 						$pageList .= "OR [[" . $pageID . "]]";
