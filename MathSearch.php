@@ -27,8 +27,10 @@ $wgExtensionCredits['specialpage'][] = array(
 	'descriptionmsg' => 'mathsearch-desc',
 	'version' => '0.1.0',
 );
-
-$wgMWSUrl = 'http://localhost:9090/';
+/** @var String the IBM DB connection string*/
+$wgMathSearchDB2ConnStr = false;
+/** @var String URL of MathWebSearch instance */
+$wgMathSearchMWSUrl = 'http://localhost:9090/';
 $dir = dirname( __FILE__ ) . '/';
 
 $wgAutoloadClasses['MathSearchHooks'] = $dir . 'MathSearch.hooks.php';

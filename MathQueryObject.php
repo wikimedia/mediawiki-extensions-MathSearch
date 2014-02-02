@@ -242,18 +242,18 @@ class MathQueryObject extends MathObject {
 	 * @return boolean
 	 */
 	function postQuery() {
-		global $wgMWSUrl, $wgMathDebug;
+		global $wgMathSearchMWSUrl, $wgMathDebug;
 
 		$numProcess = 30000;
 		$tmp = str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"", $this->getCQuery() );
 		$mwsExpr = str_replace( "m:", "", $tmp );
 		wfDebugLog( 'mathsearch', 'MWS query:' . $mwsExpr );
-		$res = Http::post( $wgMWSUrl, array( "postData" => $mwsExpr, "timeout" => 60 ) );
+		$res = Http::post( $wgMathSearchMWSUrl, array( "postData" => $mwsExpr, "timeout" => 60 ) );
 		if ( $res == false ) {
 			if ( function_exists( 'curl_init' ) ) {
 				$handle = curl_init();
 				$options = array(
-					CURLOPT_URL => $wgMWSUrl,
+					CURLOPT_URL => $wgMathSearchMWSUrl,
 					CURLOPT_CUSTOMREQUEST => 'POST', // GET POST PUT PATCH DELETE HEAD OPTIONS
 				);
 				// TODO: Figure out how not to write the error in a message and not in top of the output page
@@ -262,7 +262,7 @@ class MathQueryObject extends MathObject {
 			} else {
 				$details = "curl is not installed.";
 			}
-			wfDebugLog( "MathSearch", "Nothing retreived from $wgMWSUrl. Check if mwsd is running. Error:" .
+			wfDebugLog( "MathSearch", "Nothing retreived from $wgMathSearchMWSUrl. Check if mwsd is running. Error:" .
 					var_export( $details, true ) );
 			return false;
 		}
@@ -272,7 +272,7 @@ class MathQueryObject extends MathObject {
 			$out->addWikiText( '<source lang="xml">' . $res . '</source>' );
 		}
 		$this->numMathResults = (int) $xres["total"];
-		wfDebugLog( "MathSearch", $this->numMathResults . " results retreived from $wgMWSUrl." );
+		wfDebugLog( "MathSearch", $this->numMathResults . " results retreived from $wgMathSearchMWSUrl." );
 		if ( $this->numMathResults == 0 )
 			return true;
 		$this->relevantMathMap = array();
@@ -282,10 +282,10 @@ class MathQueryObject extends MathObject {
 			ini_set( 'memory_limit', '256M' );
 			for ( $i = $numProcess; $i <= $this->numMathResults; $i += $numProcess ) {
 				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $mwsExpr );
-				$res = Http::post( $wgMWSUrl, array( "postData" => $query, "timeout" => 60 ) );
+				$res = Http::post( $wgMathSearchMWSUrl, array( "postData" => $query, "timeout" => 60 ) );
 				wfDebugLog( 'mathsearch', 'MWS query:' . $query );
 				if ( $res == false ) {
-					wfDebugLog( "MathSearch", "Nothing retreived from $wgMWSUrl. check if mwsd is running there" );
+					wfDebugLog( "MathSearch", "Nothing retreived from $wgMathSearchMWSUrl. check if mwsd is running there" );
 					return false;
 				}
 				$xres = new SimpleXMLElement( $res );

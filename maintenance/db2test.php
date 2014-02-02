@@ -1,22 +1,37 @@
 <?php
-echo "basic test if db2 is setup correctly and the sample database is installed! \n";
-echo "enter db2 (db2inst1)-password\n";
-$f = fopen( 'php://stdin', 'r' );
-$passwd = fgets( $f ) ;
-try { 
-  $connection = new PDO("ibm:SAMPLE", "db2inst1", $passwd, array(
-    PDO::ATTR_PERSISTENT => TRUE, 
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-  ); 
-}
-catch (Exception $e) {
-  echo($e->getMessage());
-}
-$result = $connection->query('SELECT firstnme, lastname FROM employee');
-if (!$result) {
-  print "<p>Could not retrieve employee list: " . $connection->errorMsg(). "</p>";
-}
-while ($row = $result->fetch()) {
-  print "<p>Name:". $row[0]. $row[1]."</p>";
+
+require_once( dirname(__FILE__) . '/../../../maintenance/Maintenance.php' );
+
+class db2Test extends Maintenance {
+
+	public function execute() {
+
+		global $wgMathSearchDB2ConnStr;
+		if ($wgMathSearchDB2ConnStr !== false) {
+			$conn = db2_connect($wgMathSearchDB2ConnStr, '', '');
+
+			if ($conn) {
+				echo "Connection succeeded.";
+				db2_close($conn);
+			} else {
+				echo "Connection failed.";
+			}
+		} else {
+			$message = <<<'EOT'
+Add something like that to LocalSettings.php
+$database = 'SAMPLE';
+$user = 'db2inst1';
+$password = 'ibmdb2';
+$hostname = 'localhost';
+$port = 50000;
+$wgMathSearchDB2ConnStr = "DRIVER={IBM DB2 ODBC DRIVER};DATABASE=$database;" .
+  "HOSTNAME=$hostname;PORT=$port;PROTOCOL=TCPIP;UID=$user;PWD=$password;";
+EOT;
+			echo $message;
+		}
+	}
+
 }
 
+$maintClass = "db2Test";
+require_once( RUN_MAINTENANCE_IF_MAIN );
