@@ -40,6 +40,18 @@ class MathSearchHooks {
 	}
 
 	/**
+	 * Checks if the db2 php client is installed
+	 * @return boolean
+	 */
+	public static function isDB2Supported(){
+		if ( function_exists('db2_connect') ){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Callback function that is called after a formula was rendered
 	 *
 	 * @param $content
