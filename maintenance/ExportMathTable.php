@@ -28,15 +28,13 @@ require_once( dirname( __FILE__ ) . '/IndexBase.php' );
  *
  */
 class ExportMathTable extends IndexBase {
-	private $db2Pass;
 	private $statment;
-	private $dbh;
+	private $conn;
 	private $time;
 
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Exports a db2 compatible math index table.';
-		$this->addArg( 'passw', "If set, the data is directly imported to db2", false );
 		$this->addArg( 'truncate', "If true, db2 math table is deleted before import", false );
 	}
 
@@ -51,24 +49,17 @@ class ExportMathTable extends IndexBase {
 		$out .= ','. $row->mathindex_page_id .'';
 		$out .= ','. $row->mathindex_anchor.'';
 		$out .= ',"'.str_replace(array('"',"\n"),array('"',' '), $mo->getMathml()).'"';
-		if( $this->db2Pass ) {
-			try { 
-				$this->statment->execute(array($mo->getMd5(),$mo->getTex(),$row->mathindex_page_id,$row->mathindex_anchor,$mo->getMathml()));
-			} catch (Exception $e) {
-				echo($e->getMessage());
-			}
+		$res = db2_execute($this->statment, array($mo->getMd5(),$mo->getTex(),$row->mathindex_page_id,$row->mathindex_anchor,$mo->getMathml()));
+		if ( $res ){
+			echo db2_stmt_errormsg();
 		}
 		return $out."\n";
 	}
 
 	protected function wFile( $fn, $min, $inc ) {
-	if( $this->db2Pass ) {
-		try{
-		$this->dbh->commit();
-		} catch (Exception $e) {
-			  echo($e->getMessage());
-		}
-		$this->dbh->beginTransaction();
+	$res = db2_commit($this->conn);
+	if ( $res ){
+		echo db2_stmt_errormsg();
 	}
 	$delta = microtime(true) - $this->time ;
 	$this->time = microtime(true);
@@ -77,23 +68,17 @@ class ExportMathTable extends IndexBase {
 }
 
 	public function execute() {
+		global $wgMathSearchDB2ConnStr;
 		$this->time = microtime(true);
-		$this->db2Pass = $this->getOption( 'passw',false );
-		if ( $this->db2Pass ){
-			try {
-				$this->dbh = new PDO("ibm:MATH", "db2inst1", $this->db2Pass, array(
-					PDO::ATTR_PERSISTENT => TRUE,
-					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-				);
-			} catch (Exception $e) {
-			  echo($e->getMessage());
-			}
+		$this->conn = db2_connect($wgMathSearchDB2ConnStr, '', '');
+		if ( $this->conn ){
 			if ( $this->getOption('truncate' , false ) ){
-				 $this->dbh->query('TRUNCATE TABLE "wiki"."math" IMMEDIATE');
+				db2_exec($this->conn,'DROP TABLE "math"');
+				db2_exec( $this->conn , 'CREATE TABLE "math" ("math_md5" CHAR(32), "math_tex" VARCHAR(1000), "mathindex_pageid" INTEGER, "mathindex_anchord" INTEGER, "math_mathml" XML)');
+				
 			}
-			$this->dbh->beginTransaction();
-			$this->statment = $this->dbh->prepare('insert into "wiki"."math" ("math_md5", "math_tex", "mathindex_pageid", "mathindex_anchord", "math_mathml") values(?, ?, ?, ?, ?)');
-			
+			$this->statment = db2_prepare( $this->conn ,'insert into "math" ("math_md5", "math_tex", "mathindex_pageid", "mathindex_anchord", "math_mathml") values(?, ?, ?, ?, ?)');
+			//db2_autocommit($this->conn , DB2_AUTOCOMMIT_OFF);
 		}
 		parent::execute();
 	}
