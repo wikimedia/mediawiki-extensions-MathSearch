@@ -57,7 +57,7 @@ abstract class IndexBase extends Maintenance {
 	 */
 	protected function wFile( $fn, $min, $inc ) {
 		$out = $this->getHead();
-		$max = min( $min + $inc, $this->res->numRows() -1 );
+		$max = min( $min + $inc, $this->res->numRows() );
 		for ( $i = $min; $i < $max; $i++ ) {
 			$this->res->seek( $i );
 			$out .= $this->generateIndexString( $this->res->fetchObject() );

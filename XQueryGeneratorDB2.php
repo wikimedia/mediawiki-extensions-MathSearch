@@ -17,7 +17,7 @@ class XQueryGeneratorDB2 extends XQueryGenerator {
 	protected function getHeader(){
 		global $wgMathSearchDB2Table;
 		return 'xquery declare default element namespace "http://www.w3.org/1998/Math/MathML";'.
-			"\n for \$m in db2-fn:xmlcolumn(\"$wgMathSearchDB2Table.math_mathml\") return \n";
+			"\n for \$m in db2-fn:xmlcolumn(\"$wgMathSearchDB2Table.math_mathml\") return\n";
 	}
 
 	/**
@@ -25,8 +25,6 @@ class XQueryGeneratorDB2 extends XQueryGenerator {
 	 * @return string
 	 */
 	protected function getFooter(){
-		return 'then
-data($m/*[1]/@alttext)
- else \'\' ';
+		return 'data($m/*[1]/@alttext)';
 	}
 }

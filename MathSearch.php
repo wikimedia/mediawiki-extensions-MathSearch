@@ -66,4 +66,4 @@ $wgHooks['MathFormulaRendered'][] = 'MathSearchHooks::onMathFormulaRendered';
 
 $wgGroupPermissions['user']['MathDebug'] = true;
 
-$wgMathSearchDB2Table = 'wiki.math';
+$wgMathSearchDB2Table = 'math';

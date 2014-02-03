@@ -185,10 +185,13 @@ class MathQueryObject extends MathObject {
 	public function generateContentQueryString(){
 		$renderer = new MathLaTeXML($this->getTexQuery());
 		$renderer->setLaTeXMLSettings($this->getLaTeXMLCMMLSettings());
-		$renderer->setAllowedRootElments(array('query'));
-		$renderer->render(true);
-		$this->cquery = $renderer->getMathml();
-		return $this->cquery;
+		$renderer->setAllowedRootElements(array('query'));
+		if ( $renderer->render(true) ){
+			$this->cquery = $renderer->getMathml();
+			return $this->cquery;
+		} else {
+			wfDebugLog('math', 'error during geration of query string'. $renderer->getLastError());
+		}
 	}
 
 	public function generatePresentationQueryString(){

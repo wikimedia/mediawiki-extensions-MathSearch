@@ -50,7 +50,7 @@ class ExportMathTable extends IndexBase {
 		$out .= ','. $row->mathindex_anchor.'';
 		$out .= ',"'.str_replace(array('"',"\n"),array('"',' '), $mo->getMathml()).'"';
 		$res = db2_execute($this->statment, array($mo->getMd5(),$mo->getTex(),$row->mathindex_page_id,$row->mathindex_anchor,$mo->getMathml()));
-		if ( $res ){
+		if (  ! $res  ){   
 			echo db2_stmt_errormsg();
 		}
 		return $out."\n";
@@ -73,9 +73,8 @@ class ExportMathTable extends IndexBase {
 		$this->conn = db2_connect($wgMathSearchDB2ConnStr, '', '');
 		if ( $this->conn ){
 			if ( $this->getOption('truncate' , false ) ){
-				db2_exec($this->conn,'DROP TABLE "math"');
+				db2_exec( $this->conn , 'DROP TABLE "math"');
 				db2_exec( $this->conn , 'CREATE TABLE "math" ("math_md5" CHAR(32), "math_tex" VARCHAR(1000), "mathindex_pageid" INTEGER, "mathindex_anchord" INTEGER, "math_mathml" XML)');
-				
 			}
 			$this->statment = db2_prepare( $this->conn ,'insert into "math" ("math_md5", "math_tex", "mathindex_pageid", "mathindex_anchord", "math_mathml") values(?, ?, ?, ?, ?)');
 			//db2_autocommit($this->conn , DB2_AUTOCOMMIT_OFF);
