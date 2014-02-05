@@ -77,7 +77,7 @@ class SpecialMathDebug extends SpecialPage {
 		$str_out = '';
 		$renderer = new MathLaTeXML();
 		$renderer->setPurge( );
-		$diffFormatter = new DiffFormatter();
+		$diffFormatter = new TableDiffFormatter();
 		if ( is_array( $formulae ) ) {
 			foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
 				$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
