@@ -14,7 +14,6 @@ class XQueryGeneratorBaseX extends XQueryGenerator {
 	 * @return string
 	 */
 	protected function getHeader(){
-		global $wgMathSearchDB2Table;
 		return 'declare default element namespace "http://www.w3.org/1998/Math/MathML";
 for $m in //*:expr return';
 	}

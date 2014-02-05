@@ -24,7 +24,7 @@ class SpecialMathSearch extends SpecialPage {
 	var $displayQuery;
 	private $mathBackend;
 	private $resultID = 0;
-	private $xQueryEngines = array ('DB2', 'BaseX');
+	private $xQueryEngines = array ('db2', 'basex');
 
 	/**
 	 *
@@ -74,9 +74,9 @@ class SpecialMathSearch extends SpecialPage {
 				'label' => 'Math engine',
 				'class' => 'HTMLSelectField',
 				'options' => array(
-					'mws' => 'MathWebSearch',
-					'db2' => 'DB2',
-					'basex' => 'BaseX'
+                    'MathWebSearch'=>'mws',
+                    'DB2' => 'db2',
+                    'BaseX' => 'basex'
 				),
 				'default' => $this->mathEngine,
 			),
@@ -187,19 +187,19 @@ class SpecialMathSearch extends SpecialPage {
 		$out = $this->getOutput();
 		$time_start = microtime( true );
 		$out->addWikiText( '==Results==' );
-		$out->addWikiText( 'You serached for the LaTeX pattern "' . $this->mathpattern . '" and the text pattern "' . $this->textpattern . '".' );
+		$out->addWikiText( 'You searched for the LaTeX pattern "' . $this->mathpattern . '" and the text pattern "' . $this->textpattern . '".' );
 		if ( $this->mathpattern ) {
 			$query = new MathQueryObject( $this->mathpattern );
 			switch ($this->mathEngine){
-				case 'DB2':
-					$query->setXQueryGenerator( 'DB2' );
+				case 'db2':
+					$query->setXQueryGenerator( 'db2' );
 					break;
-				case 'BaseX':
-					$query->setXQueryGenerator( 'BaseX' );
+				case 'basex':
+					$query->setXQueryGenerator( 'basex' );
 			}
 			$cQuery = $query->getCQuery();
 			if ( $cQuery ) {
-				$out->addWikiText( "Your mathpattern was suceessfully rendered!" );
+				$out->addWikiText( "Your mathpattern was successfully rendered!" );
 				if ( $this->displayQuery === true){
 					if (in_array( $this->mathEngine, $this->xQueryEngines )){
 						$this->printSource($query->getXQuery());
@@ -209,7 +209,7 @@ class SpecialMathSearch extends SpecialPage {
 				}
 				$this->mathBackend = new MathEngineMws($query);
 				if ( $this->mathBackend->postQuery() ) {
-					$out->addWikiText( "Your mathquery was sucessfully submitted and " . $this->mathBackend->getSize() . " hits were obtained." );
+					$out->addWikiText( "Your mathquery was successfully submitted and " . $this->mathBackend->getSize() . " hits were obtained." );
 				} else {
 					$out->addWikiText( "Failed to post query." );
 				}
@@ -217,7 +217,7 @@ class SpecialMathSearch extends SpecialPage {
 				$time = $time_end - $time_start;
 				wfDebugLog( "MathSearch", "math searched in $time seconds" );
 			} else {
-				$out->addWikiText( "Your query could not be renderded see the DebugLog for details." );
+				$out->addWikiText( "Your query could not be rendered see the DebugLog for details." );
 			}
 			// $out->addHTML(var_export($this->mathResults, true));
 		} else {
@@ -225,7 +225,7 @@ class SpecialMathSearch extends SpecialPage {
 			$out->addWikiText( "To view the text results click [{{canonicalurl:search|search=$this->textpattern}} Text-only search]." );
 		}
 
-		if ( $this->textpattern == "" ) {
+		if ( $this->mathBackend && $this->textpattern == "" ) {
 			$mathout = "";
 			$results = $this->mathBackend->getResultSet();
 			if ( $results ) {

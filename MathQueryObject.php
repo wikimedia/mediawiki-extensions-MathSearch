@@ -32,7 +32,7 @@ class MathQueryObject extends MathObject {
 		'texvc'),
 	);
 
-	public function __construct( $texquery='' , $xQueryDialect = 'DB2' ) {
+	public function __construct( $texquery='' , $xQueryDialect = 'db2' ) {
 		$this->texquery = $texquery;
 		$this->xQueryDialect = $xQueryDialect;
 	}
@@ -216,14 +216,21 @@ class MathQueryObject extends MathObject {
 			$dialect = $this->xQueryDialect;
 		}
 		switch ($dialect) {
-			case 'DB2':
+			case 'db2':
 				$this->xQuery = new XQueryGeneratorDB2( $this->getCQuery() );
 				break;
-			case 'BaseX':
+			case 'basex':
 				$this->xQuery = new XQueryGeneratorBaseX( $this->getCQuery() );
 				break;
 			default:
 				throw new Exception($dialect . 'is not a valid XQueryDialect');
+		}
+		return $this->xQuery;
+	}
+
+	public function getXQueryGenerator(){
+		if ($this->xQuery === false){
+			$this->setXQueryGenerator();
 		}
 		return $this->xQuery;
 	}
@@ -233,8 +240,7 @@ class MathQueryObject extends MathObject {
 	 * @return String
 	 */
 	public function getXQuery(){
-		$xQueryGenertor = $this->setXQueryGenerator();
-		return $xQueryGenertor->getXQuery();
+		return $this->getXQueryGenerator()->getXQuery();
 	}
 
 		/**
