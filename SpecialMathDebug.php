@@ -18,8 +18,6 @@ class SpecialMathDebug extends SpecialPage {
 
 	function execute( $par ) {
 		global $wgMathDebug, $wgRequest;
-		$output = $this->getOutput();
-		$this->setHeaders();
 		$offset = $wgRequest->getVal( 'offset', 0 );
 		$length = $wgRequest->getVal( 'length', 10 );
 		$page = $wgRequest->getVal( 'page', 'Testpage' );
@@ -27,19 +25,26 @@ class SpecialMathDebug extends SpecialPage {
 		$purge = $wgRequest->getVal( 'purge', '' );
 		if (  !$this->userCanExecute( $this->getUser() )  ) {
 			$this->displayRestrictionError();
-			return;
 		} else {
-			$this->displayButtons( $offset, $length, $page, $action, $purge );
-			if ( $action == 'parserTest' ) {
-				$this->generateLaTeXMLOutput( $offset, $length, $page );
-				return;
-			} elseif ( $action == 'parserDiff' ) {
-				$this->compareParser( $offset, $length, $page );
-				return;
-			} else {
-				$this->testParser( $offset, $length, $page, $purge=='checked'?true:false );
+			if ( $action != 'generateParserTests'  ){
+				$this->setHeaders();
+				$this->displayButtons( $offset, $length, $page, $action, $purge );
+				}
+			switch ( $action ){
+				case 'parserTest':
+					$this->generateLaTeXMLOutput( $offset, $length, $page );
+					break;
+				case 'parserDiff':
+					$this->compareParser( $offset, $length, $page );
+					break;
+				case 'generateParserTests':
+					$this->generateParserTests( $offset, $length, $page );
+					break;
+				default:
+					$this->testParser( $offset, $length, $page, $purge=='checked'?true:false );
 			}
 		}
+		return;
 	}
 	function displayButtons( $offset = 0, $length = 10, $page = 'Testpage', $action = 'show', $purge='' ) {
 		$out = $this->getOutput();
@@ -135,6 +140,22 @@ class SpecialMathDebug extends SpecialPage {
 
 		}
 		echo $i;
+	}
+
+	public function generateParserTests( $offset = 0, $length = 10, $page = 'Testpage' , $purge = true ) {
+		$res = $this->getRequest()->response();
+		$res->header('Content-Type: application/octet-stream');
+		$res->header('charset=utf-8');
+		$res->header('Content-Disposition: attachment;filename=ParserTest.data');
+
+		$out = $this->getOutput();
+		$out->setArticleBodyOnly( true );
+		$parserTests= array();
+		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $input ) {
+			$output = MathRenderer::renderMath( $input, array(), MW_MATH_PNG );
+			$parserTests[(string) $input ]= $output;
+		}
+		$out->addHTML( serialize($parserTests) );
 	}
 
 	function generateLaTeXMLOutput( $offset = 0, $length = 10, $page = 'Testpage' ) {
