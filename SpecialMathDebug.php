@@ -153,7 +153,7 @@ class SpecialMathDebug extends SpecialPage {
 		$parserTests= array();
 		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $input ) {
 			$output = MathRenderer::renderMath( $input, array(), MW_MATH_PNG );
-			$parserTests[(string) $input ]= $output;
+			$parserTests[ ]= array( (string) $input , $output);
 		}
 		$out->addHTML( serialize($parserTests) );
 	}
