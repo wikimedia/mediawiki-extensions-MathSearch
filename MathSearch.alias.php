@@ -23,6 +23,13 @@ $specialPageAliases['ar'] = array(
 	'FormulaInfo' => array( 'معلومات_المعادلة' ),
 );
 
+/** Egyptian Spoken Arabic (مصرى) */
+$specialPageAliases['arz'] = array(
+	'MathSearch' => array( 'بحث-رياضه' ),
+	'MathDebug' => array( 'ديبج_رياضه' ),
+	'FormulaInfo' => array( 'معلومات_المعادله' ),
+);
+
 /** Min Dong Chinese (Mìng-dĕ̤ng-ngṳ̄) */
 $specialPageAliases['cdo'] = array(
 	'MathSearch' => array( '數學尋討' ),
@@ -35,6 +42,13 @@ $specialPageAliases['de'] = array(
 	'MathSearch' => array( 'MathWeb-Suche' ),
 	'MathDebug' => array( 'MathWeb-Fehlerprotokoll' ),
 	'FormulaInfo' => array( 'Formelinformation' ),
+);
+
+/** Persian (فارسی) */
+$specialPageAliases['fa'] = array(
+	'MathSearch' => array( 'جستجوی_ریاضیات' ),
+	'MathDebug' => array( 'اشکال‌زدایی_ریاضیات' ),
+	'FormulaInfo' => array( 'اطلاعات_فرمول' ),
 );
 
 /** Galician (galego) */
@@ -99,7 +113,7 @@ $specialPageAliases['vi'] = array(
 /** Simplified Chinese (中文（简体）‎) */
 $specialPageAliases['zh-hans'] = array(
 	'MathSearch' => array( '数学搜索' ),
-	'MathDebug' => array( 'Math调试' ),
+	'MathDebug' => array( '数学除错' ),
 	'FormulaInfo' => array( '公式信息' ),
 );
 
