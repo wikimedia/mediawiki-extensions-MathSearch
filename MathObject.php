@@ -72,7 +72,7 @@ class MathObject extends MathMathML {
 		$dbr = wfGetDB( DB_SLAVE );
 		try {
 			$res = $dbr->select( 'mathpagesimilarity', array( 'pagesimilarity_A as A', 'pagesimilarity_B as B', 'pagesimilarity_Value as V' ), "pagesimilarity_A=$pid OR pagesimilarity_B=$pid", __METHOD__, array(
-				"ORDER BY" => 'V DESC', "LIMIT" => 10 )
+					"ORDER BY" => 'V DESC', "LIMIT" => 10 )
 			);
 			foreach ( $res as $row ) {
 				if ( $row->A == $pid ) {
@@ -82,7 +82,7 @@ class MathObject extends MathMathML {
 				}
 				$article = WikiPage::newFromId( $other );
 				$out .= '# [[' . $article->getTitle() . ']] similarity ' .
-						$row->V * 100 . "%\n";
+					$row->V * 100 . "%\n";
 				// .' ( pageid'.$other.'/'.$row->A.')' );
 			}
 			$wgOut->addWikiText( $out );
@@ -96,18 +96,18 @@ class MathObject extends MathMathML {
 		$dbr = wfGetDB( DB_SLAVE );
 		try {
 			$res = $dbr->select( array( "mathobservation", "mathvarstat", 'mathpagestat' )
-					, array( "mathobservation_featurename", "mathobservation_featuretype", 'varstat_featurecount',
-				'pagestat_featurecount', "count(*) as localcnt" ), array( "mathobservation_inputhash" => $this->getInputHash(),
-				'varstat_featurename = mathobservation_featurename',
-				'varstat_featuretype = mathobservation_featuretype',
-				'pagestat_pageid' => $this->getPageID(),
-				'pagestat_featureid = varstat_id'
-					)
-					, __METHOD__, array( 'GROUP BY' => 'mathobservation_featurename',
-				'ORDER BY' => 'varstat_featurecount' )
+				, array( "mathobservation_featurename", "mathobservation_featuretype", 'varstat_featurecount',
+					'pagestat_featurecount', "count(*) as localcnt" ), array( "mathobservation_inputhash" => $this->getInputHash(),
+					'varstat_featurename = mathobservation_featurename',
+					'varstat_featuretype = mathobservation_featuretype',
+					'pagestat_pageid' => $this->getPageID(),
+					'pagestat_featureid = varstat_id'
+				)
+				, __METHOD__, array( 'GROUP BY' => 'mathobservation_featurename',
+					'ORDER BY' => 'varstat_featurecount' )
 			);
 		} catch ( Exception $e ) {
-			return "Databaseproblem";
+			return "Database problem";
 		}
 		$wgOut->addWikiText($res->numRows(). 'results');
 		if ($res->numRows() == 0){
@@ -117,10 +117,31 @@ class MathObject extends MathMathML {
 		if ( $res ) {
 			foreach ( $res as $row ) {
 				$wgOut->addWikiText( '*' . $row->mathobservation_featuretype . ' <code>' .
-						utf8_decode( $row->mathobservation_featurename ) . '</code> (' . $row->localcnt . '/'
-						. $row->pagestat_featurecount . "/" . $row->varstat_featurecount . ')' );
+					utf8_decode( $row->mathobservation_featurename ) . '</code> (' . $row->localcnt . '/'
+					. $row->pagestat_featurecount . "/" . $row->varstat_featurecount . ')' );
+				$identifiers = $this->getNouns(utf8_decode( $row->mathobservation_featurename )) ;
+				if ( $identifiers ){
+					foreach($identifiers as $identifier){
+						$wgOut->addWikiText('**'.$identifier->noun .'('.$identifier->evidence.')');
+					}
+				} else {
+					$wgOut->addWikiText('** not found');
+				}
 			}
 		}
+	}
+	public function getNouns($identifier){
+		$dbr = wfGetDB( DB_SLAVE );
+		$article = Article::newFromId( $this->pageID );
+		$pagename = (string)$article->getTitle();;
+		$identifiers = $dbr->select('math_identifier',
+			array( 'noun', 'evidence', 'sentence' ),
+			array(  'pageTitle' => $pagename, 'identifier' => $identifier),
+			__METHOD__ ,
+			array('ORDER BY' => 'evidence DESC', 'LIMIT' => 5)
+		);
+
+
 	}
 
 	public function updateObservations( $dbw = null ) {
@@ -147,7 +168,7 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param int $pid
 	 * @param int $eid
 	 * @return self instance
@@ -155,8 +176,8 @@ class MathObject extends MathMathML {
 	public static function constructformpage( $pid, $eid ) {
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->selectRow(
-				array( 'mathindex' ), self::dbIndexFieldsArray(), 'mathindex_page_id = ' . $pid
-				. ' AND mathindex_anchor= ' . $eid
+			array( 'mathindex' ), self::dbIndexFieldsArray(), 'mathindex_page_id = ' . $pid
+			. ' AND mathindex_anchor= ' . $eid
 		);
 		//self::DebugPrint( var_export( $res, true ) );
 		$start = microtime(true);
@@ -173,7 +194,7 @@ class MathObject extends MathMathML {
 		$out = array( );
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
-				'mathindex', self::dbIndexFieldsArray(), array( 'mathindex_inputhash' => $this->getInputHash() )
+			'mathindex', self::dbIndexFieldsArray(), array( 'mathindex_inputhash' => $this->getInputHash() )
 		);
 
 		foreach ( $res as $row ) {
@@ -197,7 +218,7 @@ class MathObject extends MathMathML {
 		$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
 		$pageString = $hidePage ? "" : $this->getPageTitle() . " ";
 		$wgOut->addWikiText( "[[" . $this->getPageTitle() . "#math" . $this->getAnchorID()
-				. "|" . $pageString . "Eq: " . $this->getAnchorID() . "]] ", false );
+			. "|" . $pageString . "Eq: " . $this->getAnchorID() . "]] ", false );
 		// $wgOut->addHtml( MathLaTeXML::embedMathML( $this->mathml ) );
 		$wgOut->addHtml( "<br />" );
 	}

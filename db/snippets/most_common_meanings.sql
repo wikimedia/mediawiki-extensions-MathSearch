@@ -1,0 +1,1 @@
+select identifier, noun, count(*) FROM wikienmath.math_identifier group by identifier, noun order by count(noun) DESC;
