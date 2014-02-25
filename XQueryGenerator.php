@@ -64,6 +64,7 @@ abstract class XQueryGenerator {
 			$fixedConstraints . PHP_EOL .
 			' where' . PHP_EOL .
 			$this->lengthConstraint .
+			((( $qvarConstraintString && $this->lengthConstraint) ? ' and '  : '')) .
 			$qvarConstraintString . PHP_EOL .
 			' return' . PHP_EOL;
 		return $this->getHeader() . $query . $this->getFooter();

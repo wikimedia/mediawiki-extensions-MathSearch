@@ -126,12 +126,13 @@ EOT;
 xquery declare default element namespace "http://www.w3.org/1998/Math/MathML";
  for $m in db2-fn:xmlcolumn("math.math_mathml") return
 for $x in $m//*:apply
-[*[1]/name() ='csymbol' and *[1][./text() = 'superscript'] and *[3]/name() ='cn' and *[3][./text() = '2']]
+[*[1]/name() ='plus' and *[2]/name() ='apply' and *[2][*[1]/name() ='csymbol' and *[1][./text() = 'superscript'] and *[3]/name() ='cn' and *[3][./text() = '2']]]
  where
-fn:count($x/*[1]/*) = 0
- and fn:count($x/*[3]/*) = 0
+fn:count($x/*[2]/*[1]/*) = 0
+ and fn:count($x/*[2]/*[3]/*) = 0
+ and fn:count($x/*[2]/*) = 3
  and fn:count($x/*) = 3
-
+ and $x/*[2]/*[2] = $x/*[3]
  return
 data($m/*[1]/@alttext)
 EOT;
@@ -181,18 +182,7 @@ EOT;
 			printf("$row->math_tex\n");
 		}
 	}
-    public  function testBasicXQuery(){
-        global $wgMathSearchDB2ConnStr;
-        $conn = db2_connect($wgMathSearchDB2ConnStr, '', '');
-        $stmt = db2_exec($conn,'xquery declare default element namespace "http://www.w3.org/1998/Math/MathML";
- for $m in db2-fn:xmlcolumn("math.math_mathml") return
-for $x in $m//*:\'apply\'[*[1]/name() = \'eq\'] return
-data($m/*[1]/@alttext)');
-        while($row = db2_fetch_row($stmt)){
-            echo db2_result($stmt,0);
 
-        }
-    }
 
 
 

@@ -63,6 +63,7 @@ $wgSpecialPages['MathIndex'] = 'SpecialMathIndex';
 
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['MathFormulaRendered'][] = 'MathSearchHooks::onMathFormulaRendered';
+$wgHooks['UnitTestsList'][] = 'MathSearchHooks::onRegisterUnitTests';
 
 $wgGroupPermissions['user']['MathDebug'] = true;
 
