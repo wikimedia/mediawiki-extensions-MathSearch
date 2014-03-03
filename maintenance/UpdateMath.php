@@ -24,7 +24,12 @@ require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 class UpdateMath extends Maintenance {
 	const RTI_CHUNK_SIZE = 100;
 	var $purge = false;
+	/** @var boolean */
+	private $verbose;
+	/** @var DatabaseBase */
 	var $dbw = null;
+	/** @var MathRenderer  */
+	private $current;
 	private $time = 0;//microtime( true );
 	private $performance = array();
 
@@ -36,19 +41,31 @@ class UpdateMath extends Maintenance {
 	 *
 	 */
 	public function __construct() {
+		$this->verbose = $this->verbose;
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
-		$this->addOption( 'purge', "If set all formulae are rendered again from strech. (Very time consuming!)", false, false, "f" );
+		$this->addOption( 'purge', "If set all formulae are rendered again without using caches. (Very time consuming!)", false, false, "f" );
 		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false );
 		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
+		$this->addOption( 'verbose', "If set output for successful rendering will produced",false,false,'v' );
 	}
 	private function time($category='default'){
+		global $wgMathDebug;
 		$delta = (microtime(true) - $this->time)*1000;
 		if (isset ($this->performance[$category] ))
 			$this->performance[$category] += $delta;
 		else
 			$this->performance[$category] = $delta;
+		if($wgMathDebug){
+			$this->db->insert('mathperformance',array(
+				'math_inputhash' => $this->current->getInputHash(),
+				'mathperformance_name' => substr($category,0,10),
+				'mathperformance_time' =>$delta,
+			));
+
+		}
 		$this->time = microtime(true);
+
 		return (int) $delta;
 	}
 	/**
@@ -103,22 +120,36 @@ class UpdateMath extends Maintenance {
 	 */
 	private function doUpdate( $pid, $pText, $pTitle = "") {
 		// TODO: fix link id problem
+		$notused = null;
 		$anchorID = 0;
-		$res = "";
 		$pText = Sanitizer::removeHTMLcomments( $pText );
+		$pText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $pText );
 		$matches = preg_match_all( "#<math>(.*?)</math>#s", $pText, $math );
 		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math[1] as $formula ) {
-				$this->time("initilize");
+				$this->time = microtime(true);
 				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_LATEXML );
-				$this->time("load renderer");
+				$this->current = $renderer;
+				$this->time("loadClass");
 				if ( $renderer->checkTex() ){
-					$this->time("check tex");
+					$this->time("checkTex");
 					$renderer->render( $this->purge );
-					$this->time("rendering");
+					if( $renderer->getMathml() ){
+						$this->time("LaTeXML-Rendering");
+					} else {
+						$this->time("LaTeXML-Fail");
+					}
+					$svg = $renderer->getSvg();
+					if( $svg ){
+						$this->time("SVG-Rendering");
+					} else {
+						$this->time("SVG-Fail");
+					}
+
 				}else{
-					echo "texvcheck error:" . $renderer->getLastError();
+					$this->time("checkTex-Fail");
+					echo "\nF:\t\t".$renderer->getMd5()." texvccheck error:" . $renderer->getLastError();
 					continue;
 				}
 				wfRunHooks( 'MathFormulaRendered', array( &$renderer , &$notused, $pid, $anchorID ) );
@@ -127,9 +158,13 @@ class UpdateMath extends Maintenance {
 				$this->time("write Cache");
 				if ( $renderer->getLastError() ) {
 					echo "\n\t\t". $renderer->getLastError() ;
-					echo "\nF:\t\t equation " . ( $anchorID -1 ) .
+					echo "\nF:\t\t".$renderer->getMd5()." equation " . ( $anchorID -1 ) .
 						"-failed beginning with\n\t\t'" . substr( $formula, 0, 100 )
 						. "'\n\t\tmathml:" . substr($renderer->getMathml(),0,10) ."\n ";
+				} else{
+					if($this->verbose){
+						echo "\nS:\t\t".$renderer->getMd5();
+					}
 				}
 			}
 			return $matches;
@@ -143,6 +178,7 @@ class UpdateMath extends Maintenance {
 		global $wgMathValidModes;
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );
+		$this->verbose = $this->getOption("verbose",false);
 		$this->db = wfGetDB( DB_MASTER );
 		$wgMathValidModes[] = MW_MATH_LATEXML;
 		$this->output( "Loaded.\n" );

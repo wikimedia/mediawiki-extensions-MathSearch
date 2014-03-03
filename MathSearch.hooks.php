@@ -34,6 +34,7 @@ class MathSearchHooks {
 			$updater->addExtensionTable( 'mathvarstat', $dir . 'mathvarstat.sql' );
 			$updater->addExtensionTable( 'mathpagestat', $dir . 'mathpagestat.sql' );
 		    $updater->addExtensionTable( 'mathsemantics', $dir . 'mathsemantics.sql' );
+		    $updater->addExtensionTable( 'mathperformance', $dir . 'mathperformance.sql' );
  		} else {
  			//throw new MWException( "Math extension does not currently support $type database." );
  		}
