@@ -1,4 +1,4 @@
-CREATE TABLE `wiki`.`mathperformance` (
+CREATE TABLE `mathperformance` (
   `math_inputhash` VARBINARY(16) NOT NULL,
   `mathperformance_name` CHAR(10) NOT NULL,
   `mathperformance_time` DOUBLE NOT NULL,
