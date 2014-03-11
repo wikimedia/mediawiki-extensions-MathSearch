@@ -35,6 +35,7 @@ class MathSearchHooks {
 			$updater->addExtensionTable( 'mathpagestat', $dir . 'mathpagestat.sql' );
 		    $updater->addExtensionTable( 'mathsemantics', $dir . 'mathsemantics.sql' );
 		    $updater->addExtensionTable( 'mathperformance', $dir . 'mathperformance.sql' );
+		    $updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
  		} else {
  			//throw new MWException( "Math extension does not currently support $type database." );
  		}
@@ -61,7 +62,7 @@ class MathSearchHooks {
 	 * @param $parser Parser
 	 * @return boolean (true)
 	 */
-	static function onMathFormulaRendered( $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
+	static function onMathFormulaRendered( MathRenderer $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
 		if ( $pid > 0 ) { // Only store something if a pageid was set.
 			try {
 			$dbr = wfGetDB( DB_SLAVE );
@@ -98,6 +99,10 @@ class MathSearchHooks {
 			}
 		}
 		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( array( 'pid' => $pid, 'eid' => $eid ) );
+		$mo = MathObject::cloneFromRenderer($Renderer);
+		$mo->setPageID($pid);
+		$mo->setID($eid);
+		$Result = preg_replace_callback("#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u", array( $mo , 'addIdentifierTitle' ), $Result);
 		$Result = '<a href="' . $url . '" id="math' . $eid . '" style="color:inherit;">' . $Result . '</a>';
 		return true;
 	}

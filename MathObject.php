@@ -134,13 +134,13 @@ class MathObject extends MathMathML {
 		$dbr = wfGetDB( DB_SLAVE );
 		$article = Article::newFromId( $this->pageID );
 		$pagename = (string)$article->getTitle();;
-		$identifiers = $dbr->select('math_identifier',
-			array( 'noun', 'evidence', 'sentence' ),
+		$identifiers = $dbr->select('mathidentifier',
+			array( 'noun', 'evidence' ),
 			array(  'pageTitle' => $pagename, 'identifier' => $identifier),
 			__METHOD__ ,
 			array('ORDER BY' => 'evidence DESC', 'LIMIT' => 5)
 		);
-
+		return $identifiers;
 
 	}
 
@@ -165,6 +165,15 @@ class MathObject extends MathMathML {
 				$dbw->commit();
 			}
 		}
+	}
+	public static function cloneFromRenderer(MathRenderer $renderer){
+		$instance = new MathObject( $renderer->getTex() );
+		$instance->setMathml( $renderer->getMathml() );
+		$instance->setSvg( $renderer->getSvg() );
+		$instance->setSvg( $renderer->getSvg());
+		$instance->setMode( $renderer->getMode() );
+		$instance->setDisplayStyle( $renderer->getDisplayStyle() );
+		return $instance;
 	}
 
 	/**
@@ -249,4 +258,19 @@ class MathObject extends MathMathML {
 		return $texvc->getPng();
 	}
 
+	public function addIdentifierTitle($arg){
+		//return '<mi>X</mi>';
+		$attribs = preg_replace('/title\s*=\s*"(.*)"/','',$arg[2]);
+		$content = $arg[4];
+		$nouns=$this->getNouns(utf8_decode($content));
+		$title ='not set';
+		if ( $nouns ){
+			foreach($nouns as $identifier){
+				$title .= '**'.$identifier->noun .'('.$identifier->evidence.')';
+			}
+		} else {
+			$title = '** not found';
+		}
+		return '<'.$arg[1]." title=\"$title\"".$attribs.'>'.$arg[4].'</'.$arg[1].'>';
+	}
 }
