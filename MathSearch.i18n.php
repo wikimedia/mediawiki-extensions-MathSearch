@@ -156,6 +156,7 @@ $messages['gl'] = array(
 
 /** Hebrew (עברית)
  * @author Amire80
+ * @author Yona b
  */
 $messages['he'] = array(
 	'mathsearch' => 'חיפוש מתמטיקה',
@@ -164,6 +165,7 @@ $messages['he'] = array(
 	'mathsearch-desc' => 'הוספת תמיכה במנוע החיפוש [http://search.mathweb.org/about.html MathWeb Search]',
 	'getequationsbyquery' => 'קבלת משוואות לפי שאילתה',
 	'xquerygenerator' => 'מחולל XQuery',
+	'mathdebug' => 'תוצאה הניסיון',
 );
 
 /** Upper Sorbian (hornjoserbsce)
