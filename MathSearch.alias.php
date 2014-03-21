@@ -44,6 +44,13 @@ $specialPageAliases['de'] = array(
 	'FormulaInfo' => array( 'Formelinformation' ),
 );
 
+/** Zazaki (Zazaki) */
+$specialPageAliases['diq'] = array(
+	'MathSearch' => array( 'CebirCıgeyren', 'Cebir_Cıgeyren' ),
+	'MathDebug' => array( 'CebirWeçinen', 'Cebir_Weçinen' ),
+	'FormulaInfo' => array( 'MalumataFormuler', 'Malumata_Formuler' ),
+);
+
 /** Persian (فارسی) */
 $specialPageAliases['fa'] = array(
 	'MathSearch' => array( 'جستجوی_ریاضیات' ),
