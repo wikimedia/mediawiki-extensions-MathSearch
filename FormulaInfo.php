@@ -50,7 +50,7 @@ class FormulaInfo extends SpecialPage {
 		if ( $allPages ) {
 			$this->DisplayInfo( $allPages[0]->getPageID(), $allPages[0]->getAnchorID() );
 		} else {
-			$wgOut->addWikiText( "No occurences found clean up the database to remove unused formulae" );
+			$wgOut->addWikiText( "No occurrences found clean up the database to remove unused formulae" );
 		}
 	}
 	public function DisplayInfo( $pid, $eid ) {
@@ -71,7 +71,7 @@ class FormulaInfo extends SpecialPage {
 
 		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $pid, $eid );
-		$out->addWikiText( "Occurences on the following pages:" );
+		$out->addWikiText( "Occurrences on the following pages:" );
 		wfDebugLog( "MathSearch", var_export( $mo->getAllOccurences(), true ) );
 		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
 		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex() . '</syntaxhighlight>' );
@@ -89,7 +89,7 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiText( 'Hash : ' . $mo->getMd5(), false );
 		$out->addHtml( "<br />" );
 		$out->addWikiText( '==Similar pages==' );
-		$out->addWikiText( 'Calculataed based on the variables occuring on the entire ' . $pagename . ' page' );
+		$out->addWikiText( 'Calculated based on the variables occurring on the entire ' . $pagename . ' page' );
 		$mo->findSimilarPages( $pid );
 		$out->addWikiText( '==Variables==' );
 		$mo->getObservations();

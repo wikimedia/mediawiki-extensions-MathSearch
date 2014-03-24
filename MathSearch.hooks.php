@@ -55,48 +55,59 @@ class MathSearchHooks {
 	}
 
 	/**
-	 * Callback function that is called after a formula was rendered
+	 * Updates the formula index in the database
 	 *
-	 * @param $content
-	 * @param $attributes
-	 * @param $parser Parser
-	 * @return boolean (true)
+	 * @param int $pid Page-ID
+	 * @param int $eid Equation-ID (get updated incrementally for every math element on the page)
+	 * @param string $inputHash hash of tex string (used as database entry)
+	 * @param string $tex the user input hash
 	 */
-	static function onMathFormulaRendered( MathRenderer $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
-		if ( $pid > 0 ) { // Only store something if a pageid was set.
-			try {
+	private static function updateIndex($pid, $eid, $inputHash, $tex){
+		try {
 			$dbr = wfGetDB( DB_SLAVE );
 			$exists = $dbr->selectRow( 'mathindex',
 				array( 'mathindex_page_id', 'mathindex_anchor', 'mathindex_inputhash' ),
 				array(
 					'mathindex_page_id' => $pid,
 					'mathindex_anchor' => $eid,
-					'mathindex_inputhash' => $Renderer->getInputHash() )
-					) ;
+					'mathindex_inputhash' => $inputHash)
+			) ;
 			if ( $exists ) {
-				wfDebugLog( "MathSearch", 'Index $' . $Renderer->getTex() . '$ already in database.' );
+				wfDebugLog( "MathSearch", 'Index $' . $tex . '$ already in database.' );
 			} else {
-				wfDebugLog( "MathSearch", 'Store index for $' . $Renderer->getTex() . '$ in database' );
+				wfDebugLog( "MathSearch", 'Store index for $' . $tex . '$ in database' );
 				$dbw = wfGetDB( DB_MASTER );
-				$inputhash = $Renderer->getInputHash();
 				$dbw->onTransactionIdle(
-						function () use ( $pid, $eid, $inputhash, $dbw ) {
-							$dbw->replace( 'mathindex',
+					function () use ( $pid, $eid, $inputHash, $dbw ) {
+						$dbw->replace( 'mathindex',
 							array( 'mathindex_page_id', 'mathindex_anchor' ),
 							array(
 								'mathindex_page_id' => $pid,
 								'mathindex_anchor' =>  $eid ,
-								'mathindex_inputhash' => $inputhash
+								'mathindex_inputhash' => $inputHash
 							) );
-						}
+					}
 				);
-				}
-			} catch ( Exception $e ) {
-				wfDebugLog( "MathSearch", 'Problem writing to math index!'
-					. ' You might want the rebuild the index by running:'
-					. '"php extensions/MathSearch/ReRenderMath.php". The error is'
-					. $e->getMessage() );
 			}
+		} catch ( Exception $e ) {
+			wfDebugLog( "MathSearch", 'Problem writing to math index!'
+				. ' You might want the rebuild the index by running:'
+				. '"php extensions/MathSearch/ReRenderMath.php". The error is'
+				. $e->getMessage() );
+		}
+	}
+
+	/**
+	 * Callback function that is called after a formula was rendered
+	 * @param MathRenderer $Renderer
+	 * @param string|null $Result reference to the rendering result
+	 * @param int $pid
+	 * @param int $eid
+	 * @return bool
+	 */
+	static function onMathFormulaRendered( MathRenderer $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
+		if ( $pid > 0 ) { // Only store something if a pageid was set.
+			self::updateIndex( $pid , $eid , $Renderer->getInputHash() , $Renderer->getTex() );
 		}
 		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( array( 'pid' => $pid, 'eid' => $eid ) );
 		$mo = MathObject::cloneFromRenderer($Renderer);
@@ -104,6 +115,34 @@ class MathSearchHooks {
 		$mo->setID($eid);
 		$Result = preg_replace_callback("#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u", array( $mo , 'addIdentifierTitle' ), $Result);
 		$Result = '<a href="' . $url . '" id="math' . $eid . '" style="color:inherit;">' . $Result . '</a>';
+		return true;
+	}
+
+	/**
+	 * Alternative Callback function that is called after a formula was rendered
+	 * used for test corpus generation for NTCIR11 Math-2
+	 * You can enable this alternative hook via setting
+	 * <code>$wgHooks['MathFormulaRendered'] = array('MathSearchHooks::onMathFormulaRenderedNoLink');</code>
+	 * in your local settings
+	 *
+	 * @param MathRenderer $Renderer
+	 * @param null $Result
+	 * @param int $pid
+	 * @param int $eid
+	 * @internal param $content
+	 * @internal param $attributes
+	 * @internal param \Parser $parser
+	 * @return boolean (true)
+	 */
+	static function onMathFormulaRenderedNoLink( $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
+		if ( $pid > 0 ) { // Only store something if a pageid was set.
+			self::updateIndex( $pid, $eid, $Renderer->getInputHash(), $Renderer->getTex() );
+		}
+		if ( preg_match( '#<math(.*)?\sid="(?P<id>[\w\.]+)"#', $Result, $matches ) ) {
+			$oldId = $matches['id'];
+			$newID = "math.$pid.$eid";
+			$Result = str_replace( $oldId, $newID, $Result );
+		}
 		return true;
 	}
 

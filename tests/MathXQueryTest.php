@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Test the db2 access of  MathSearch.
-*
-* @group MathSearch
-* @group Database
-*/
+ *
+ * @group MathSearch
+ * @group Database
+ */
 class MathXQueryTest extends MediaWikiTestCase {
 
 	private $q1 = <<<'EOT'
@@ -136,43 +137,45 @@ fn:count($x/*[2]/*[1]/*) = 0
  return
 data($m/*[1]/@alttext)
 EOT;
+
 	/**
 	 * Searches for $E$
 	 */
-	public function testE(){
-		$xQuery = new XQueryGeneratorDB2($this->q1);
-		$this->assertEquals($this->r1,$xQuery->getXQuery());
+	public function testE() {
+		$xQuery = new XQueryGeneratorDB2( $this->q1 );
+		$this->assertEquals( $this->r1, $xQuery->getXQuery() );
 	}
 
 	/*
 	 * Searches for $c^2$
 	 */
-	public function testc2(){
-		$xQuery = new XQueryGeneratorDB2($this->q2);
-		$this->assertEquals($this->r2,$xQuery->getXQuery());
+	public function testc2() {
+		$xQuery = new XQueryGeneratorDB2( $this->q2 );
+		$this->assertEquals( $this->r2, $xQuery->getXQuery() );
 	}
 
 	/*
 	 * Searches for $\sin x$
 	 */
-	public function testsinx(){
-		$xQuery = new XQueryGeneratorDB2($this->q3);
-		$this->assertEquals($this->r3,$xQuery->getXQuery());
+	public function testsinx() {
+		$xQuery = new XQueryGeneratorDB2( $this->q3 );
+		$this->assertEquals( $this->r3, $xQuery->getXQuery() );
 	}
 
 	/*
 	 * Searches for $?x^2$
 	 */
-	public function testx2(){
-		$xQuery = new XQueryGeneratorDB2($this->qqx2);
-		$this->assertEquals($this->rqx2,$xQuery->getXQuery());
+	public function testx2() {
+		$xQuery = new XQueryGeneratorDB2( $this->qqx2 );
+		$this->assertEquals( $this->rqx2, $xQuery->getXQuery() );
 	}
+
 	/*
 	 * Searches for $?x^2+?x$
 	 */
-	public function testx2x(){
-		$xQuery = new XQueryGeneratorDB2($this->qqx2x);
-		$this->assertEquals($this->rqx2x,$xQuery->getXQuery());
+	public function testx2x() {
+		$xQuery = new XQueryGeneratorDB2( $this->qqx2x );
+		$this->assertEquals( $this->rqx2x, $xQuery->getXQuery() );
 	}
 	/*public function testBasicSQL(){
 		global $wgMathSearchDB2ConnStr;
