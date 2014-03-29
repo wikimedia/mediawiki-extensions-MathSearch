@@ -140,13 +140,12 @@ class UpdateMath extends Maintenance {
 					} else {
 						$this->time("LaTeXML-Fail");
 					}
-					$svg = $renderer->getSvg();
-					if( $svg ){
-						$this->time("SVG-Rendering");
-					} else {
-						$this->time("SVG-Fail");
-					}
-
+//					$svg = $renderer->getSvg();
+//					if( $svg ){
+//						$this->time("SVG-Rendering");
+//					} else {
+//						$this->time("SVG-Fail");
+//					}
 				}else{
 					$this->time("checkTex-Fail");
 					echo "\nF:\t\t".$renderer->getMd5()." texvccheck error:" . $renderer->getLastError();
