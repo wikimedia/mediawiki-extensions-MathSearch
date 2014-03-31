@@ -43,6 +43,7 @@ $specialPageAliases['de'] = array(
 	'MathSearch' => array( 'MathWeb-Suche' ),
 	'MathDebug' => array( 'MathWeb-Fehlerprotokoll' ),
 	'FormulaInfo' => array( 'Formelinformation' ),
+	'GetEquationsByQuery' => array( 'Gleichungen_durch_Abfrage' ),
 );
 
 /** Zazaki (Zazaki) */
