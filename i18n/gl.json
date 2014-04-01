@@ -1,0 +1,14 @@
+{
+    "@metadata": {
+        "authors": [
+            "Toliño"
+        ]
+    },
+    "mathsearch": "Procura matemática",
+    "formulainfo": "Información sobre a fórmula",
+    "specialpages-group-mathsearch": "Procura matemática",
+    "mathsearch-desc": "Integra o motor [http://search.mathweb.org/about.html MathWeb Search]",
+    "getequationsbyquery": "Obter as ecuacións por pescuda",
+    "xquerygenerator": "Xerador XQuery",
+    "mathdebug": "Probar o renderizador"
+}

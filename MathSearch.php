@@ -4,7 +4,6 @@
  *
  * @file
  * @ingroup Extensions
- * @version 0.1
  * @author Moritz Schubotz
  * @author Brion Vibber
  * @copyright © 2002-2012 various MediaWiki contributors
@@ -25,7 +24,7 @@ $wgExtensionCredits['specialpage'][] = array(
 	'author' => 'Moritz Schubotz',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:MathSearch',
 	'descriptionmsg' => 'mathsearch-desc',
-	'version' => '0.1.0',
+	'version' => '0.2.0',
 );
 /** @var String the IBM DB connection string*/
 $wgMathSearchDB2ConnStr = false;
@@ -46,6 +45,7 @@ $wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';
 $wgAutoloadClasses['SpecialMathIndex'] = $dir . 'SpecialMathIndex.php';
 $wgAutoloadClasses['MathEngineMws'] = $dir . 'MathEngineMws.php';
 
+$wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php';
 $wgExtensionMessagesFiles['MathSearchAlias'] = $dir . 'MathSearch.alias.php';
 

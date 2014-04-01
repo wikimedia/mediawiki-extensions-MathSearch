@@ -1,0 +1,14 @@
+{
+    "@metadata": {
+        "authors": [
+            "Metalhead64"
+        ]
+    },
+    "mathsearch": "Math-Suche",
+    "formulainfo": "Formelinformation",
+    "specialpages-group-mathsearch": "Math-Suche",
+    "mathsearch-desc": "Ermöglicht die Integration der [http://search.mathweb.org/about.html MathWeb-Suchmaschine]",
+    "getequationsbyquery": "Gleichungen von Abfrage erhalten",
+    "xquerygenerator": "XQuery-Generator",
+    "mathdebug": "Testrenderer"
+}

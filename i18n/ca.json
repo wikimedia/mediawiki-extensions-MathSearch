@@ -1,0 +1,11 @@
+{
+    "@metadata": {
+        "authors": [
+            "Alvaro Vidal-Abarca"
+        ]
+    },
+    "mathsearch": "Math search",
+    "mathsearch-desc": "Integra el motor de cerca [http://search.mathweb.org/about.html MathWeb Search]",
+    "getequationsbyquery": "Mostra equacions per la consulta",
+    "xquerygenerator": "Generador XQuery"
+}
