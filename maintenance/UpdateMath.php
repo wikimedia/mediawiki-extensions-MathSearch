@@ -48,6 +48,9 @@ class UpdateMath extends Maintenance {
 		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false );
 		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
 		$this->addOption( 'verbose', "If set output for successful rendering will produced",false,false,'v' );
+		$this->addOption( 'SVG', "If set SVG images will be produced", false, false );
+		$this->addOption( 'hoooks', "If set hooks will be skipped", false, false );
+		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
 	}
 	private function time($category='default'){
 		global $wgMathDebug;
@@ -111,6 +114,7 @@ class UpdateMath extends Maintenance {
 		}
 		$this->output( "Updated {$fcount} formulae!\n" );
 	}
+
 	/**
 	 * @param unknown $pId
 	 * @param unknown $pText
@@ -119,40 +123,48 @@ class UpdateMath extends Maintenance {
 	 * @return number
 	 */
 	private function doUpdate( $pid, $pText, $pTitle = "") {
+		$notused = '';
 		// TODO: fix link id problem
-		$notused = null;
 		$anchorID = 0;
-		$pText = Sanitizer::removeHTMLcomments( $pText );
-		$pText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $pText );
-		$matches = preg_match_all( "#<math>(.*?)</math>#s", $pText, $math );
+		$math = MathObject::extractMathTagsFromWikiText( $pText );
+		$matches = sizeof( $math );
 		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
-			foreach ( $math[1] as $formula ) {
+			foreach ( $math as $formula ) {
 				$this->time = microtime(true);
-				$renderer = MathRenderer::getRenderer( $formula, array(), MW_MATH_LATEXML );
+				$renderer = MathRenderer::getRenderer( $formula[1], $formula[2], MW_MATH_LATEXML );
 				$this->current = $renderer;
 				$this->time("loadClass");
-				if ( $renderer->checkTex() ){
+				if ( $this->getOption( "texvccheck", false ) ) {
+					$checked = true;
+				} else {
+					$checked = $renderer->checkTex();
 					$this->time("checkTex");
+				}
+				if ( $checked ) {
 					$renderer->render( $this->purge );
 					if( $renderer->getMathml() ){
 						$this->time("LaTeXML-Rendering");
 					} else {
 						$this->time("LaTeXML-Fail");
 					}
-//					$svg = $renderer->getSvg();
-//					if( $svg ){
-//						$this->time("SVG-Rendering");
-//					} else {
-//						$this->time("SVG-Fail");
-//					}
+					if ( $this->getOption( "SVG", false ) ) {
+						$svg = $renderer->getSvg();
+						if ( $svg ) {
+							$this->time( "SVG-Rendering" );
+						} else {
+							$this->time( "SVG-Fail" );
+						}
+					}
 				}else{
 					$this->time("checkTex-Fail");
 					echo "\nF:\t\t".$renderer->getMd5()." texvccheck error:" . $renderer->getLastError();
 					continue;
 				}
-				wfRunHooks( 'MathFormulaRendered', array( &$renderer , &$notused, $pid, $anchorID ) );
-				$this->time("hooks");
+				if ( $this->getOption( "hooks", true ) ) {
+					wfRunHooks( 'MathFormulaRendered', array( &$renderer, &$notused, $pid, $anchorID ) );
+					$this->time( "hooks" );
+				}
 				$renderer->writeCache($this->dbw);
 				$this->time("write Cache");
 				if ( $renderer->getLastError() ) {

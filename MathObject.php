@@ -273,4 +273,16 @@ class MathObject extends MathMathML {
 		}
 		return '<'.$arg[1]." title=\"$title\"".$attribs.'>'.$arg[4].'</'.$arg[1].'>';
 	}
+
+	/**
+	 * @param $wikiText
+	 * @return mixed
+	 */
+	public static function extractMathTagsFromWikiText( $wikiText ) {
+		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
+		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
+		$matches = array();
+		Parser::extractTagsAndParams( array( 'math' ), $wikiText, $matches );
+		return $matches;
+	}
 }
