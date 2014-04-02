@@ -32,6 +32,10 @@ class MathQueryObject extends MathObject {
 		'texvc'),
 	);
 
+	/**
+	 * @param string $texquery the TeX-like search input
+	 * @param string $xQueryDialect e.g. db2 or basex
+	 */
 	public function __construct( $texquery='' , $xQueryDialect = 'db2' ) {
 		$this->texquery = $texquery;
 		$this->xQueryDialect = $xQueryDialect;
@@ -214,7 +218,7 @@ class MathQueryObject extends MathObject {
 	 * @return XQueryGenerator
 	 * @throws Exception
 	 */
-	public function setXQueryGenerator( $dialect = false ){
+	public function setXQueryDialect( $dialect = false ){
 		if ($dialect === false){
 			$dialect = $this->xQueryDialect;
 		}
@@ -230,10 +234,12 @@ class MathQueryObject extends MathObject {
 		}
 		return $this->xQuery;
 	}
-
+	public function setXQueryGenerator($xQueryGenerator){
+		$this->xQuery = $xQueryGenerator;
+	}
 	public function getXQueryGenerator(){
 		if ($this->xQuery === false){
-			$this->setXQueryGenerator();
+			$this->setXQueryDialect();
 		}
 		return $this->xQuery;
 	}

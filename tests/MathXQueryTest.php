@@ -177,44 +177,4 @@ EOT;
 		$xQuery = new XQueryGeneratorDB2( $this->qqx2x );
 		$this->assertEquals( $this->rqx2x, $xQuery->getXQuery() );
 	}
-	/*public function testBasicSQL(){
-		global $wgMathSearchDB2ConnStr;
-		$conn = db2_connect($wgMathSearchDB2ConnStr, '', '');
-		$stmt = db2_exec($conn,'select "math_tex" from "math"');
-		while($row = db2_fetch_object($stmt)){
-			printf("$row->math_tex\n");
-		}
-	}
-
-
-
-
-
-
-
-	private function testBasic() {
-            $cmmlQueryString = <<<'XML'
-<?xml version="1.0"?>
-<mws:query xmlns:mws="http://search.mathweb.org/ns" xmlns:m="http://www.w3.org/1998/Math/MathML" limitmin="0" answsize="30">
-  <mws:expr>
-    <m:apply xml:id="p1.1.m1.1.6.cmml" xref="p1.1.m1.1.6">
-      <m:eq xml:id="p1.1.m1.1.2.cmml" xref="p1.1.m1.1.2"/>
-      <m:ci xml:id="p1.1.m1.1.1.cmml" xref="p1.1.m1.1.1">E</m:ci>
-      <m:apply xml:id="p1.1.m1.1.6.1.cmml" xref="p1.1.m1.1.6.1">
-        <m:times xml:id="p1.1.m1.1.6.1.1.cmml" xref="p1.1.m1.1.6.1.1"/>
-        <m:ci xml:id="p1.1.m1.1.3.cmml" xref="p1.1.m1.1.3">m</m:ci>
-        <m:apply xml:id="p1.1.m1.1.6.1.2.cmml" xref="p1.1.m1.1.6.1.2">
-          <m:csymbol cd="ambiguous" xml:id="p1.1.m1.1.6.1.2.1.cmml">superscript</m:csymbol>
-          <m:ci xml:id="p1.1.m1.1.4.cmml" xref="p1.1.m1.1.4">c</m:ci>
-          <m:cn type="integer" xml:id="p1.1.m1.1.5.1.cmml" xref="p1.1.m1.1.5.1">2</m:cn>
-        </m:apply>
-      </m:apply>
-    </m:apply>
-  </mws:expr>
-</mws:query>
-XML;
-            //TODO: fix test
-            $xqueryTest = new XQueryGeneratorDB2($cmmlQueryString);
-            echo $xqueryTest->getXQuery();
-	}*/
 }

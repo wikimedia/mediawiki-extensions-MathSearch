@@ -192,10 +192,10 @@ class SpecialMathSearch extends SpecialPage {
 			$query = new MathQueryObject( $this->mathpattern );
 			switch ($this->mathEngine){
 				case 'db2':
-					$query->setXQueryGenerator( 'db2' );
+					$query->setXQueryDialect( 'db2' );
 					break;
 				case 'basex':
-					$query->setXQueryGenerator( 'basex' );
+					$query->setXQueryDialect( 'basex' );
 			}
 			$cQuery = $query->getCQuery();
 			if ( $cQuery ) {
@@ -207,7 +207,12 @@ class SpecialMathSearch extends SpecialPage {
 						$this->printSource( $query->getCQuery() );
 					}
 				}
-				$this->mathBackend = new MathEngineMws($query);
+				if( $this->mathEngine == 'db2'){
+					$this->mathBackend = new MathEngineDB2($query);
+				} else {
+					$this->mathBackend = new MathEngineMws($query);
+				}
+
 				if ( $this->mathBackend->postQuery() ) {
 					$out->addWikiText( "Your mathquery was successfully submitted and " . $this->mathBackend->getSize() . " hits were obtained." );
 				} else {

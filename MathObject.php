@@ -1,6 +1,6 @@
 <?php
 
-class MathObject extends MathMathML {
+class MathObject extends MathLaTeXML {
 
 	protected $anchorID = 0;
 	protected $pageID = 0;
@@ -199,7 +199,7 @@ class MathObject extends MathMathML {
 	 * Gets all occurences of the tex.
 	 * @return array(MathObject)
 	 */
-	public function getAllOccurences() {
+	public function getAllOccurences($printOutput = true) {
 		$out = array( );
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
@@ -210,7 +210,7 @@ class MathObject extends MathMathML {
 			//self::DebugPrint( var_export( $row, true ) );
 			$var = self::constructformpagerow( $row );
 			if ( $var ) {
-				$var->printLink2Page( false );
+				if ($printOutput) $var->printLink2Page( false );
 				array_push( $out, $var );
 			}
 		}

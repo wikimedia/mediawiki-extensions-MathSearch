@@ -44,6 +44,7 @@ $wgAutoloadClasses['GetEquationsByQuery'] = $dir . 'GetEquationsByQuery.php';
 $wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';
 $wgAutoloadClasses['SpecialMathIndex'] = $dir . 'SpecialMathIndex.php';
 $wgAutoloadClasses['MathEngineMws'] = $dir . 'MathEngineMws.php';
+$wgAutoloadClasses['MathEngineDB2'] = $dir . 'MathEngineDB2.php';
 
 $wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php';
