@@ -21,7 +21,7 @@
 
 require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
-class UpdateMath extends Maintenance {
+class ExtractFeatures extends Maintenance {
 	const RTI_CHUNK_SIZE = 100;
 	var $purge = false;
 	var $dbw = null;
@@ -110,12 +110,12 @@ class UpdateMath extends Maintenance {
 		// TODO: fix link id problem
 		$anchorID = 0;
 		$res = "";
-		$pText = Sanitizer::removeHTMLcomments( $pText );
-		$matches = preg_match_all( "#<math>(.*?)</math>#s", $pText, $math );
+		$math = MathObject::extractMathTagsFromWikiText( $pText );
+		$matches = sizeof( $math );
 		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
-			foreach ( $math[1] as $formula ) {
-				$mo = new MathObject( $formula );
+			foreach ( $math as $formula ) {
+				$mo = new MathObject( $formula[1] );
 				$mo->updateObservations( $dbw );
 				// Enable indexing of math formula
 				$anchorID++;
@@ -136,5 +136,5 @@ class UpdateMath extends Maintenance {
 	}
 }
 
-$maintClass = "UpdateMath";
+$maintClass = "ExtractFeatures";
 require_once( RUN_MAINTENANCE_IF_MAIN );
