@@ -1,14 +1,14 @@
 {
-    "@metadata": {
-        "authors": [
-            "Anakmalaysia"
-        ]
-    },
-    "mathsearch": "Pencarian matematik",
-    "formulainfo": "Maklumat rumus",
-    "specialpages-group-mathsearch": "Pencarian matematik",
-    "mathsearch-desc": "Menyepadukan enjin [http://search.mathweb.org/about.html MathWeb Search]",
-    "getequationsbyquery": "Dapatkan persamaan dengan pertanyaan",
-    "xquerygenerator": "Penjana XQuery",
-    "mathdebug": "Pemapar Uji"
+	"@metadata": {
+		"authors": [
+			"Anakmalaysia"
+		]
+	},
+	"mathsearch": "Pencarian matematik",
+	"formulainfo": "Maklumat rumus",
+	"specialpages-group-mathsearch": "Pencarian matematik",
+	"mathsearch-desc": "Menyepadukan enjin [http://search.mathweb.org/about.html MathWeb Search]",
+	"getequationsbyquery": "Dapatkan persamaan dengan pertanyaan",
+	"xquerygenerator": "Penjana XQuery",
+	"mathdebug": "Pemapar Uji"
 }

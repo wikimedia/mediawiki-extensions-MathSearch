@@ -1,14 +1,14 @@
 {
-    "@metadata": {
-        "authors": [
-            "Xuacu"
-        ]
-    },
-    "mathsearch": "Gueta matemática",
-    "formulainfo": "Información de la fórmula",
-    "specialpages-group-mathsearch": "Gueta matemática",
-    "mathsearch-desc": "Integra el motor de gueta [http://search.mathweb.org/about.html MathWeb Search]",
-    "getequationsbyquery": "Algamar ecuaciones por consulta",
-    "xquerygenerator": "Xenerador XQuery",
-    "mathdebug": "Probar el dibuxador"
+	"@metadata": {
+		"authors": [
+			"Xuacu"
+		]
+	},
+	"mathsearch": "Gueta matemática",
+	"formulainfo": "Información de la fórmula",
+	"specialpages-group-mathsearch": "Gueta matemática",
+	"mathsearch-desc": "Integra el motor de gueta [http://search.mathweb.org/about.html MathWeb Search]",
+	"getequationsbyquery": "Algamar ecuaciones por consulta",
+	"xquerygenerator": "Xenerador XQuery",
+	"mathdebug": "Probar el dibuxador"
 }

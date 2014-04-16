@@ -1,11 +1,11 @@
 {
-    "@metadata": {
-        "authors": [
-            "Beta16"
-        ]
-    },
-    "formulainfo": "Informazioni formula",
-    "mathsearch-desc": "Integra il motore di ricerca [http://search.mathweb.org/about.html MathWeb Search]",
-    "getequationsbyquery": "Ottieni equazioni da interrogazioni",
-    "xquerygenerator": "Generatore XQuery"
+	"@metadata": {
+		"authors": [
+			"Beta16"
+		]
+	},
+	"formulainfo": "Informazioni formula",
+	"mathsearch-desc": "Integra il motore di ricerca [http://search.mathweb.org/about.html MathWeb Search]",
+	"getequationsbyquery": "Ottieni equazioni da interrogazioni",
+	"xquerygenerator": "Generatore XQuery"
 }

@@ -1,15 +1,15 @@
 {
-    "@metadata": {
-        "authors": [
-            "Andriykopanytsia",
-            "Base"
-        ]
-    },
-    "mathsearch": "Математичний пошук",
-    "formulainfo": "Відомості про формулу",
-    "specialpages-group-mathsearch": "Математичний пошук",
-    "mathsearch-desc": "Інтегрує рушій [http://search.mathweb.org/about.html MathWeb Search]",
-    "getequationsbyquery": "Отримання рівнянь за запитом",
-    "xquerygenerator": "XQuery генератор",
-    "mathdebug": "Тест візуалізатора"
+	"@metadata": {
+		"authors": [
+			"Andriykopanytsia",
+			"Base"
+		]
+	},
+	"mathsearch": "Математичний пошук",
+	"formulainfo": "Відомості про формулу",
+	"specialpages-group-mathsearch": "Математичний пошук",
+	"mathsearch-desc": "Інтегрує рушій [http://search.mathweb.org/about.html MathWeb Search]",
+	"getequationsbyquery": "Отримання рівнянь за запитом",
+	"xquerygenerator": "XQuery генератор",
+	"mathdebug": "Тест візуалізатора"
 }

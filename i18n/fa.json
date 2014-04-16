@@ -1,14 +1,14 @@
 {
-    "@metadata": {
-        "authors": [
-            "Armin1392"
-        ]
-    },
-    "mathsearch": "جستجوی داده‌ها",
-    "formulainfo": "اطلاعات فرمول",
-    "specialpages-group-mathsearch": "جستجوی داده‌ها",
-    "mathsearch-desc": "ادغام [http://search.mathweb.org/about.html MathWeb Search] موتور",
-    "getequationsbyquery": "پرس‌وجو شدن با سوال",
-    "xquerygenerator": "ژنراتور ایکس‌کوِری",
-    "mathdebug": "آزمون ترجمه"
+	"@metadata": {
+		"authors": [
+			"Armin1392"
+		]
+	},
+	"mathsearch": "جستجوی داده‌ها",
+	"formulainfo": "اطلاعات فرمول",
+	"specialpages-group-mathsearch": "جستجوی داده‌ها",
+	"mathsearch-desc": "ادغام [http://search.mathweb.org/about.html MathWeb Search] موتور",
+	"getequationsbyquery": "پرس‌وجو شدن با سوال",
+	"xquerygenerator": "ژنراتور ایکس‌کوِری",
+	"mathdebug": "آزمون ترجمه"
 }

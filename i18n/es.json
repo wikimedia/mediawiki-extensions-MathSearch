@@ -1,14 +1,14 @@
 {
-    "@metadata": {
-        "authors": [
-            "Fitoschido",
-            "Ralgis"
-        ]
-    },
-    "mathsearch": "Búsqueda matemática",
-    "formulainfo": "Información de la fórmula",
-    "specialpages-group-mathsearch": "Búsqueda matemática",
-    "mathsearch-desc": "Integra el motor [http://search.mathweb.org/about.html MathWeb Search]",
-    "getequationsbyquery": "Obtener ecuaciones por consulta",
-    "xquerygenerator": "Generador XQuery"
+	"@metadata": {
+		"authors": [
+			"Fitoschido",
+			"Ralgis"
+		]
+	},
+	"mathsearch": "Búsqueda matemática",
+	"formulainfo": "Información de la fórmula",
+	"specialpages-group-mathsearch": "Búsqueda matemática",
+	"mathsearch-desc": "Integra el motor [http://search.mathweb.org/about.html MathWeb Search]",
+	"getequationsbyquery": "Obtener ecuaciones por consulta",
+	"xquerygenerator": "Generador XQuery"
 }

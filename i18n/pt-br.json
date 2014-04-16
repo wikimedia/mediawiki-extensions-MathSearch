@@ -1,8 +1,8 @@
 {
-    "@metadata": {
-        "authors": [
-            "Cainamarques"
-        ]
-    },
-    "mathsearch-desc": "Integra o motor de busca [http://search.mathweb.org/about.html MathWeb]"
+	"@metadata": {
+		"authors": [
+			"Cainamarques"
+		]
+	},
+	"mathsearch-desc": "Integra o motor de busca [http://search.mathweb.org/about.html MathWeb]"
 }

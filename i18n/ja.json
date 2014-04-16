@@ -1,13 +1,13 @@
 {
-    "@metadata": {
-        "authors": [
-            "Shirayuki"
-        ]
-    },
-    "mathsearch": "数式の検索",
-    "formulainfo": "数式の情報",
-    "specialpages-group-mathsearch": "数式の検索",
-    "mathsearch-desc": "[http://search.mathweb.org/about.html MathWeb 検索]エンジンを統合する",
-    "getequationsbyquery": "クエリによる式の取得",
-    "xquerygenerator": "XQueryジェネレーター"
+	"@metadata": {
+		"authors": [
+			"Shirayuki"
+		]
+	},
+	"mathsearch": "数式の検索",
+	"formulainfo": "数式の情報",
+	"specialpages-group-mathsearch": "数式の検索",
+	"mathsearch-desc": "[http://search.mathweb.org/about.html MathWeb 検索]エンジンを統合する",
+	"getequationsbyquery": "クエリによる式の取得",
+	"xquerygenerator": "XQueryジェネレーター"
 }

@@ -1,12 +1,12 @@
 {
-    "@metadata": {
-        "authors": [
-            "Robby",
-            "Soued031"
-        ]
-    },
-    "mathsearch": "Math Search",
-    "formulainfo": "Informatioun iwwer d'Formel",
-    "specialpages-group-mathsearch": "Math Search",
-    "mathsearch-desc": "Integréiert d'[http://search.mathweb.org/about.html MathWeb Search] Software"
+	"@metadata": {
+		"authors": [
+			"Robby",
+			"Soued031"
+		]
+	},
+	"mathsearch": "Math Search",
+	"formulainfo": "Informatioun iwwer d'Formel",
+	"specialpages-group-mathsearch": "Math Search",
+	"mathsearch-desc": "Integréiert d'[http://search.mathweb.org/about.html MathWeb Search] Software"
 }

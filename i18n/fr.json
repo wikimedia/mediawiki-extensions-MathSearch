@@ -1,16 +1,16 @@
 {
-    "@metadata": {
-        "authors": [
-            "Crochet.david",
-            "Gomoko",
-            "Metroitendo"
-        ]
-    },
-    "mathsearch": "Recherche mathématique",
-    "formulainfo": "Information sur la formule",
-    "specialpages-group-mathsearch": "Recherche mathématique",
-    "mathsearch-desc": "Intégrer le moteur [http://search.mathweb.org/about.html MathWeb Search]",
-    "getequationsbyquery": "Obtenir les équations par requête",
-    "xquerygenerator": "Générateur XQuery",
-    "mathdebug": "Rendu de test"
+	"@metadata": {
+		"authors": [
+			"Crochet.david",
+			"Gomoko",
+			"Metroitendo"
+		]
+	},
+	"mathsearch": "Recherche mathématique",
+	"formulainfo": "Information sur la formule",
+	"specialpages-group-mathsearch": "Recherche mathématique",
+	"mathsearch-desc": "Intégrer le moteur [http://search.mathweb.org/about.html MathWeb Search]",
+	"getequationsbyquery": "Obtenir les équations par requête",
+	"xquerygenerator": "Générateur XQuery",
+	"mathdebug": "Rendu de test"
 }
