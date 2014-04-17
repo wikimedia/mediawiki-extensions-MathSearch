@@ -51,6 +51,7 @@ $specialPageAliases['diq'] = array(
 	'MathSearch' => array( 'CebirCıgeyren', 'Cebir_Cıgeyren' ),
 	'MathDebug' => array( 'CebirWeçinen', 'Cebir_Weçinen' ),
 	'FormulaInfo' => array( 'MalumataFormuler', 'Malumata_Formuler' ),
+	'GetEquationsByQuery' => array( 'NeticeyaDenklemerBıgi', 'Neticeya_Denklemer_Bıgi' ),
 );
 
 /** Persian (فارسی) */
