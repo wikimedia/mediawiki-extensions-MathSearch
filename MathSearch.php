@@ -30,6 +30,8 @@ $wgExtensionCredits['specialpage'][] = array(
 $wgMathSearchDB2ConnStr = false;
 /** @var String URL of MathWebSearch instance */
 $wgMathSearchMWSUrl = 'http://localhost:9090/';
+/** @var boolean if true the observation is updated everytime the SpecialPage formulainfo is shown. */
+$wgMathUpdateObservations = false;
 $dir = dirname( __FILE__ ) . '/';
 
 $wgAutoloadClasses['MathSearchHooks'] = $dir . 'MathSearch.hooks.php';

@@ -1,6 +1,6 @@
 <?php
 
-class MathObject extends MathLaTeXML {
+class MathObject extends MathMathML {
 
 	protected $anchorID = 0;
 	protected $pageID = 0;
@@ -145,8 +145,10 @@ class MathObject extends MathLaTeXML {
 	}
 
 	public function updateObservations( $dbw = null ) {
+		global $wgMathUpdateObservations;
+		if ( $wgMathUpdateObservations ) $this->updateObservations();
 		$this->readFromDatabase();
-		preg_match_all( "#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u", $this->mathml, $rule, PREG_SET_ORDER );
+		preg_match_all( "#<(mi|mo|mtext)( ([^>].*?))?>(.*?)</\\1>#u", $this->getMathml(), $rule, PREG_SET_ORDER );
 		if ( $dbw == null ) {
 			$dbgiven = false;
 			$dbw = wfGetDB( DB_MASTER );
@@ -158,12 +160,12 @@ class MathObject extends MathLaTeXML {
 		foreach ( $rule as $feature ) {
 			$dbw->insert( "mathobservation", array(
 				"mathobservation_inputhash" => $this->getInputHash(),
-				"mathobservation_featurename" => utf8_encode( $feature[ 4 ] ),
+				"mathobservation_featurename" => utf8_encode( trim( $feature[ 4 ] ) ),
 				"mathobservation_featuretype" => utf8_encode( $feature[ 1 ] ),
 			) );
-			if ( !$dbgiven ) {
-				$dbw->commit();
-			}
+		}
+		if ( !$dbgiven ) {
+			$dbw->commit();
 		}
 	}
 	public static function cloneFromRenderer(MathRenderer $renderer){
@@ -284,5 +286,22 @@ class MathObject extends MathLaTeXML {
 		$matches = array();
 		Parser::extractTagsAndParams( array( 'math' ), $wikiText, $matches );
 		return $matches;
+	}
+
+	public static function updateStatistics(){
+		$dbw = wfGetDB( DB_MASTER );
+		$dbw->query( 'TRUNCATE TABLE `mathvarstat`' );
+		$dbw->query("INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)\n"
+			. "SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT\n"
+			. "FROM `mathobservation`\n"
+			. "JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash\n"
+			. "GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n"
+			. "ORDER BY CNT DESC");
+		$dbw->query( 'TRUNCATE TABLE `mathpagestat`' );
+		$dbw->query( 'INSERT INTO `mathpagestat`(`pagestat_featureid`,`pagestat_pageid`,`pagestat_featurecount`) '
+			. 'SELECT varstat_id, mathindex_page_id, count(*) as CNT FROM `mathobservation` '
+			. 'JOIN mathindex on `mathobservation_inputhash` = mathindex_inputhash '
+			. 'JOIN mathvarstat on varstat_featurename = `mathobservation_featurename` and varstat_featuretype = `mathobservation_featuretype` '
+			. 'GROUP by `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_page_id ORDER BY CNT DESC' );
 	}
 }
