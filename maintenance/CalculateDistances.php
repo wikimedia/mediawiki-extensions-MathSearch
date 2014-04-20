@@ -21,9 +21,8 @@
 
 require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
-class UpdateMath extends Maintenance {
+class CalculateDistances extends Maintenance {
 	const RTI_CHUNK_SIZE = 1;
-	var $purge = false;
 	var $dbw = null;
 
 	/**
@@ -36,7 +35,7 @@ class UpdateMath extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
-		$this->addOption( 'purge', "If set all formulae are rendered again from strech. (Very time consuming!)", false, false, "f" );
+		$this->addOption( 'limit', 'Only the pages with the most features are used. Default 2000', false, true, "l" );
 		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false );
 		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
 	}
@@ -62,7 +61,7 @@ class UpdateMath extends Maintenance {
 			$res = $this->db->selectField( 'mathpagestat', 'pagestat_pageid', "pagestat_pageid=$n" );
 			if ( $res ) {
 				$this->dbw->begin();
-				$fcount += self::doUpdate( $res, $this->dbw );
+				$fcount += self::doUpdate( $res, $this->dbw , $this->getOption( 'limit', 2000 ) );
 			$start = microtime( true );
 			$this->dbw->commit();
 			echo " committed in " . ( microtime( true ) -$start ) . "s\n\n";
@@ -77,12 +76,15 @@ class UpdateMath extends Maintenance {
 	 * @param string $purge
 	 * @return number
 	 */
-	private static function doUpdate( $pid  , $dbw ) {
+	private static function doUpdate( $pid  , $dbw, $limit ) {
 		// TODO: fix link id problem
 		$sql = "INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value)\n"
 				. "SELECT DISTINCT '.$pid.',`pagestat_pageid`,\n"
 				. "CosProd('.$pid.',`pagestat_pageid`)\n"
-						. "FROM `mathpagestat` WHERE pagestat_pageid<" . $pid;
+				. "FROM `mathpagestat` m JOIN "
+				. "(SELECT `pagestat_pageid` as pageid FROM `mathpagestat` GROUP BY `pagestat_pageid` "
+				. "ORDER BY sum(`pagestat_featurecount`) DESC LIMIT $limit ) as r WHERE m.pagestat_pageid < $pid"
+		 		. " AND m.pagestat_pageid=r.pageid";
 		echo "writing entries for page $pid...";
 		$start = microtime( true );
 		$dbw->query( $sql );
@@ -94,12 +96,11 @@ class UpdateMath extends Maintenance {
 	 */
 	public function execute() {
 		$this->dbw = wfGetDB( DB_MASTER );
-		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
 		$this->output( "Done.\n" );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
 	}
 }
 
-$maintClass = "UpdateMath";
+$maintClass = "CalculateDistances";
 require_once( RUN_MAINTENANCE_IF_MAIN );
