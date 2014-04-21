@@ -10,5 +10,6 @@
 	"specialpages-group-mathsearch": "Búsqueda matemática",
 	"mathsearch-desc": "Integra el motor [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Obtener ecuaciones por consulta",
-	"xquerygenerator": "Generador XQuery"
+	"xquerygenerator": "Generador XQuery",
+	"mathdebug": "Renderizador de pruebas"
 }
