@@ -32,6 +32,9 @@ $wgMathSearchDB2ConnStr = false;
 $wgMathSearchMWSUrl = 'http://localhost:9090/';
 /** @var boolean if true the observation is updated everytime the SpecialPage formulainfo is shown. */
 $wgMathUpdateObservations = false;
+/** @var string $wgMathAnalysisTableName mathoid or mathlatexml */
+$wgMathAnalysisTableName = 'mathlatexml';
+
 $dir = dirname( __FILE__ ) . '/';
 
 $wgAutoloadClasses['MathSearchHooks'] = $dir . 'MathSearch.hooks.php';

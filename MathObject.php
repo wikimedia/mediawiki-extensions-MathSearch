@@ -6,6 +6,7 @@ class MathObject extends MathMathML {
 	protected $pageID = 0;
 	protected $index_timestamp = null;
 	protected $dbLoadTime= 0;
+	protected $mathTableName = null;
 
 	private static function DebugPrint( $s ) {
 		// $s= Sanitizer::safeEncodeAttribute($s);
@@ -130,9 +131,15 @@ class MathObject extends MathMathML {
 			}
 		}
 	}
+
+	/**
+	 * @param $identifier
+	 * @return bool|ResultWrapper
+	 */
 	public function getNouns($identifier){
 		$dbr = wfGetDB( DB_SLAVE );
 		$article = Article::newFromId( $this->pageID );
+		if( ! $article ) return false;
 		$pagename = (string)$article->getTitle();;
 		$identifiers = $dbr->select('mathidentifier',
 			array( 'noun', 'evidence' ),
@@ -275,7 +282,21 @@ class MathObject extends MathMathML {
 		}
 		return '<'.$arg[1]." title=\"$title\"".$attribs.'>'.$arg[4].'</'.$arg[1].'>';
 	}
+	protected function getMathTableName() {
+		global $wgMathAnalysisTableName;
+		if ( is_null( $this->mathTableName ) ){
+			return $wgMathAnalysisTableName;
+		} else {
+			return $this->mathTableName;
+		}
+	}
 
+	/**
+	 * @param string $tableName mathoid or mathlatexml
+	 */
+	public function setMathTableName( $tableName ) {
+		$this->mathTableName = $tableName;
+	}
 	/**
 	 * @param $wikiText
 	 * @return mixed

@@ -22,83 +22,87 @@
 require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
 class CalculateDistances extends Maintenance {
-	const RTI_CHUNK_SIZE = 1;
+	const RTI_CHUNK_SIZE = 100;
+	/**@var DatabaseBase $dbw */
 	var $dbw = null;
 
 	/**
 	 * @var DatabaseBase
 	 */
 	private $db;
+	private $pagelist = array();
+
 	/**
 	 *
 	 */
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
-		$this->addOption( 'limit', 'Only the pages with the most features are used. Default 2000', false, true, "l" );
-		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false );
-		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
+		$this->addOption( 'page9', 'Ignore pages with only 9 equations or less.', false, false, "9" );
+		$this->addArg( 'min', "If set processing is started at the page with curid>min", false );
+		$this->addArg( 'max', "If set processing is stopped at the page with curid<=max", false );
 	}
-	/**
-	 * Populates the search index with content from all pages
-	 */
-	protected function populateSearchIndex( $n = 0, $cmax = -1 ) {
-		$res = $this->db->select( 'page', 'MAX(page_id) AS count' );
-		$s = $this->db->fetchObject( $res );
-		$count = $s->count;
-		if ( $cmax > 0 && $count > $cmax ) {
-			$count = $cmax;
-		}
-		$this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
-		$fcount = 0;
 
-		while ( $n < $count ) {
-			if ( $n ) {
-				$this->output( $n . " of $count \n" );
-			}
-			$end = $n + self::RTI_CHUNK_SIZE - 1;
-
-			$res = $this->db->selectField( 'mathpagestat', 'pagestat_pageid', "pagestat_pageid=$n" );
-			if ( $res ) {
-				$this->dbw->begin();
-				$fcount += self::doUpdate( $res, $this->dbw , $this->getOption( 'limit', 2000 ) );
-			$start = microtime( true );
-			$this->dbw->commit();
-			echo " committed in " . ( microtime( true ) -$start ) . "s\n\n";
-			}
-			$n += self::RTI_CHUNK_SIZE;
-		}
-	}
-	/**
-	 * @param unknown $pId
-	 * @param unknown $pText
-	 * @param string $pTitle
-	 * @param string $purge
-	 * @return number
-	 */
-	private static function doUpdate( $pid  , $dbw, $limit ) {
-		// TODO: fix link id problem
-		$sql = "INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value)\n"
-				. "SELECT DISTINCT '.$pid.',`pagestat_pageid`,\n"
-				. "CosProd('.$pid.',`pagestat_pageid`)\n"
-				. "FROM `mathpagestat` m JOIN "
-				. "(SELECT `pagestat_pageid` as pageid FROM `mathpagestat` GROUP BY `pagestat_pageid` "
-				. "ORDER BY sum(`pagestat_featurecount`) DESC LIMIT $limit ) as r WHERE m.pagestat_pageid < $pid"
-		 		. " AND m.pagestat_pageid=r.pageid";
-		echo "writing entries for page $pid...";
-		$start = microtime( true );
-		$dbw->query( $sql );
-		echo 'done in ' . ( microtime( true ) -$start ) . "\n";
-		return 1;
-	}
 	/**
 	 *
 	 */
 	public function execute() {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->db = wfGetDB( DB_MASTER );
+		$this->pagelist = array();
+		$min = $this->getArg( 0, 0 );
+		$max = $this->getArg( 1, PHP_INT_MAX );
+		$conds = "pagestat_pageid >= $min";
+		if ( $max < PHP_INT_MAX ) {
+			$conds .= " AND pagestat_pageid <= $max";
+		}
+		if ( $this->getOption( 'page9', false ) ) {
+			$res = $this->db->select( array( 'mathpage9' , 'mathpagestat'), array( 'page_id' ,'pagestat_pageid') ,
+				$conds . ' AND pagestat_pageid = page_id',  __METHOD__, array( 'DISTINCT' ) );
+		} else {
+			$res = $this->db->select( 'mathpagestat', 'pagestat_pageid', $conds, __METHOD__, array( 'DISTINCT' ) );
+		}
+		foreach ( $res as $row ) {
+			array_push( $this->pagelist, $row->pagestat_pageid );
+		}
+		$this->populateSearchIndex();
 		$this->output( "Done.\n" );
-		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
+	}
+
+	/**
+	 * Populates the search index with content from all pages
+	 */
+	protected function populateSearchIndex( ) {
+		$n = 0;
+		$count = sizeof($this->pagelist);
+		$this->output( "Rebuilding index fields for $count pages...\n" );
+		while ( $n < $count ) {
+			if ( $n ) {
+				$this->output( $n . " of $count \n" );
+			}
+				$this->dbw->begin();
+			for($j=0;$j<self::RTI_CHUNK_SIZE;$j++){
+				//TODO: USE PREPARED STATEMENTS
+				$pid = $this->pagelist[$n];
+				$sql = "INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value)\n"
+					. "SELECT DISTINCT $pid,`pagestat_pageid`,\n"
+					. "CosProd( $pid,`pagestat_pageid`) FROM `mathpagestat` m ";
+				if ( $this->getOption( 'page9', false ) ){
+					$sql .= " JOIN (SELECT page_id from mathpage9) as r WHERE m.pagestat_pageid=r.page_id AND ";
+				} else {
+					$sql .= " WHERE ";
+				}
+				$sql .= "m.pagestat_pageid < $pid ";
+				echo "writing entries for page $pid...";
+				$start = microtime( true );
+				$this->dbw->query( $sql );
+				echo 'done in ' . ( microtime( true ) - $start ) . "\n";
+				$n++;
+			}
+			$start = microtime( true );
+			$this->dbw->commit();
+			echo " committed in " . ( microtime( true ) - $start ) . "s\n\n";
+		}
 	}
 }
 
