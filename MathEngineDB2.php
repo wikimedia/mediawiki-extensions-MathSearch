@@ -72,7 +72,7 @@ class MathEngineDB2 {
         global $wgMathSearchMWSUrl, $wgMathDebug;
 		global $wgMathSearchDB2ConnStr;
 		if ( ! MathSearchHooks::isDB2Supported() ) {
-			throw new error( 'DB2 php client is not installed.' );
+			throw new MWException( 'DB2 php client is not installed.' );
 		}
 		$conn = db2_connect($wgMathSearchDB2ConnStr, '', '');
 		$stmt = db2_exec($conn, $this->query->getXQuery() );

@@ -50,6 +50,7 @@ $wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';
 $wgAutoloadClasses['SpecialMathIndex'] = $dir . 'SpecialMathIndex.php';
 $wgAutoloadClasses['MathEngineMws'] = $dir . 'MathEngineMws.php';
 $wgAutoloadClasses['MathEngineDB2'] = $dir . 'MathEngineDB2.php';
+$wgAutoloadClasses['MathSearchApi'] = $dir . 'MathSearchApi.php';
 
 $wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php';
@@ -66,6 +67,7 @@ $wgSpecialPages['FormulaInfo'] = 'FormulaInfo';
 $wgSpecialPages['GetEquationsByQuery'] = 'GetEquationsByQuery';
 $wgSpecialPages['MathDebug'] = 'SpecialMathDebug';
 $wgSpecialPages['MathIndex'] = 'SpecialMathIndex';
+$wgAPIModules['mathquery'] = 'MathSearchApi';
 
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['MathFormulaRendered'][] = 'MathSearchHooks::onMathFormulaRendered';
