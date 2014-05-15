@@ -11,6 +11,16 @@ class MathQueryObject extends MathObject {
 	/** @var XQueryGenerator current instance of xQueryGenerator  */
 	private $xQuery = false;
 	private $xQueryDialect = false;
+/* ToDo: Update to new format
+<code>
+ 	latexmlc --whatsin=fragment --path=$(LLIB) \
+--preamble=$(LLIB)/pre.tex --postamble=$(LLIB)/post.tex \
+--format=xml --cmml --pmml --preload=[ids]latexml.sty \
+--stylesheet=$(LLIB)/ntcir11-topic.xsl \
+--destination=$@ --log=$(basename $<).ltxlog $<
+</code> see http://kwarc.info/kohlhase/event/NTCIR11/
+*/
+
 	private $pmmlSettings = array('format' => 'xml',
 	'whatsin' => 'math',
 	'whatsout' => 'math',
@@ -48,6 +58,28 @@ class MathQueryObject extends MathObject {
 		$this->queryID = $id;
 	}
 
+	public function exportTexDocument(){
+		$texInput = htmlspecialchars( $this->getUserInputTex());
+		$title = Title::newFromId( $this->getPageID() );
+		$absUrl  = $title->getFullURL(array("oldid"=>$title->getLatestRevID()))."#math{$this->getAnchorID()}";
+		return <<<TeX
+\begin{topic}{{$this->getPageTitle()}-{$this->getAnchorID()}}
+  \begin{fquery}\${$this->getTeXQuery()}\$\end{fquery}
+\begin{private}
+    \begin{relevance}
+		find result similar to
+		<a href="$absUrl">
+		$texInput
+		</a>
+    \end{relevance}
+    \examplehit{{$absUrl}}
+    \contributor{Moritz Schubotz}
+\end{private}
+\end{topic}
+TeX;
+
+	}
+
 	/**
 	 * 
 	 * @param ResultWrapper $rpage
@@ -76,7 +108,7 @@ class MathQueryObject extends MathObject {
 	 * @return string
 	 */
 	public function getTeXQuery(){
-		if ($this->texquery === false ){
+		if ($this->texquery == false ){
 			$this->injectQvar();
 		}
 		return $this->texquery;
@@ -105,6 +137,10 @@ class MathQueryObject extends MathObject {
 		}
 		return $this->pquery;
 	}
+
+	/**
+	 * @return bool|string
+	 */
 	public function serlializeToXML(  ){
 		$cx = simplexml_load_string($this->getCQuery());
 		$px = simplexml_load_string($this->getPQuery());
@@ -130,7 +166,7 @@ class MathQueryObject extends MathObject {
 			. htmlspecialchars( $this->getUserInputTex()) ."</a></relevance>";
 		$out.="\n</topic>\n";
 		return $out;
-		}
+		            }
 
 	public function injectQvar() {
 		$out = "";
