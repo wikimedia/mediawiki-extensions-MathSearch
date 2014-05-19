@@ -60,22 +60,22 @@ class MathQueryObject extends MathObject {
 
 	public function exportTexDocument(){
 		$texInput = htmlspecialchars( $this->getUserInputTex());
+		$texInputComment = preg_replace("/[\n\r]/","\n%",$texInput);
 		$title = Title::newFromId( $this->getPageID() );
 		$absUrl  = $title->getFullURL(array("oldid"=>$title->getLatestRevID()))."#math{$this->getAnchorID()}";
 		return <<<TeX
 \begin{topic}{{$this->getPageTitle()}-{$this->getAnchorID()}}
   \begin{fquery}\${$this->getTeXQuery()}\$\end{fquery}
-\begin{private}
-    \begin{relevance}
-		find result similar to
-		<a href="$absUrl">
-		$texInput
-		</a>
-    \end{relevance}
-    \examplehit{{$absUrl}}
-    \contributor{Moritz Schubotz}
-\end{private}
+	\begin{private}
+	    \begin{relevance}
+			find result similar to Formula {$this->getAnchorID()} on page {$this->getPageTitle()}:
+			%\href{{$absUrl}}{\${$texInputComment}\$}
+	    \end{relevance}
+	    \examplehit{{$absUrl}}
+	    \contributor{Moritz Schubotz}
+	\end{private}
 \end{topic}
+
 TeX;
 
 	}
