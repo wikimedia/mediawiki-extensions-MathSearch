@@ -23,8 +23,6 @@ for $m in //*:expr return';
 	 * @return string
 	 */
 	protected function getFooter(){
-		return 'then
- <a href="http://demo.formulasearchengine.com/index.php?curid={$m/@url}">result</a>
-else endif';
+		return ' <a href="http://demo.formulasearchengine.com/index.php?curid={$m/@url}">result</a>';
 	}
 }
