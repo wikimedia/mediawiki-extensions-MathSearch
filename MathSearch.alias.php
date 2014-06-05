@@ -84,6 +84,7 @@ $specialPageAliases['ko'] = array(
 	'MathSearch' => array( '수학검색', '수학_검색', '수학찾기', '수학_찾기' ),
 	'MathDebug' => array( '수학디버그', '수학_디버그' ),
 	'FormulaInfo' => array( '수식정보', '수식_정보' ),
+	'GetEquationsByQuery' => array( '쿼리별수식얻기' ),
 );
 
 /** Macedonian (македонски) */
