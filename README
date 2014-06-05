@@ -8,3 +8,7 @@ http://zorbawebsite2.my28msec.com/html/documentation/2.8.0/zorba/php_ubuntu_tuto
 so that XQueryProcessor.php is located in the subdirectory
 'modules/Zorba/XQueryProcessor.php'
 
+To install baseX run
+
+sudo apt-get install basex
+

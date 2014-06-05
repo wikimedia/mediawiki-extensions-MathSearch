@@ -15,7 +15,8 @@ class XQueryGeneratorBaseX extends XQueryGenerator {
 	 */
 	protected function getHeader(){
 		return 'declare default element namespace "http://www.w3.org/1998/Math/MathML";
-for $m in //*:expr return';
+for $m in //*:expr return
+';
 	}
 
 	/**

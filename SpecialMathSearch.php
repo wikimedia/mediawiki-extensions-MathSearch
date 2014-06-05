@@ -141,14 +141,15 @@ class SpecialMathSearch extends SpecialPage {
 				//$hit = $xmml->xpath( $xpath );
 				if (!is_null($hits)) {
 					foreach ($hits as $node) {
-						/* @var $node */
+						/* @var DOMDocument $node */
 						//$node->item($index)->attributes->getNamedItem($name)->nodeValue
 						// $out->addHtml(var_export($node["xref"][0],true));
+						if( $node->hasAttributes() ){
 						$domRes = $dom->getElementById( $node->attributes->getNamedItem('xref')->nodeValue );
 						if ( $domRes ) {
 							$domRes->setAttribute( 'mathcolor', '#cc0000' );
 							$out->addHtml( $domRes->ownerDocument->saveXML() );
-						} else {
+						}} else {
 							$renderer = new MathMathML();
 							$renderer->setMathml( $mml );
 							$out->addHtml( $renderer->getHtmlOutput() );
@@ -207,9 +208,14 @@ class SpecialMathSearch extends SpecialPage {
 						$this->printSource( $query->getCQuery() );
 					}
 				}
-				if( $this->mathEngine == 'db2'){
-					$this->mathBackend = new MathEngineDB2($query);
-				} else {
+				switch( $this->mathEngine ){
+					case 'db2':
+						$this->mathBackend = new MathEngineDB2($query);
+						break;
+					case 'basex':
+						$this->mathBackend = new MathEngineBaseX($query);
+						break;
+					default:
 					$this->mathBackend = new MathEngineMws($query);
 				}
 

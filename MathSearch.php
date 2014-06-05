@@ -50,7 +50,11 @@ $wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';
 $wgAutoloadClasses['SpecialMathIndex'] = $dir . 'SpecialMathIndex.php';
 $wgAutoloadClasses['MathEngineMws'] = $dir . 'MathEngineMws.php';
 $wgAutoloadClasses['MathEngineDB2'] = $dir . 'MathEngineDB2.php';
+$wgAutoloadClasses['MathEngineBaseX'] = $dir . 'MathEngineBaseX.php';
 $wgAutoloadClasses['MathSearchApi'] = $dir . 'MathSearchApi.php';
+$wgAutoloadClasses['BaseXSession'] = $dir . 'BaseXSession.php';
+$wgAutoloadClasses['BaseXQuery'] = $dir . 'BaseXQuery.php';
+$wgAutoloadClasses['BaseXError'] = $dir . 'BaseXError.php';
 
 $wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php';
@@ -76,3 +80,10 @@ $wgHooks['UnitTestsList'][] = 'MathSearchHooks::onRegisterUnitTests';
 $wgGroupPermissions['user']['MathDebug'] = true;
 
 $wgMathSearchDB2Table = 'math';
+
+$wgMathSearchBaseXSupport = false;
+$wgMathSearchBaseXServer = 'localhost';
+$wgMathSearchBaseXUser = 'admin';
+$wgMathSearchBaseXPassword = 'admin';
+$wgMathSearchBaseXPort = 1984;
+$wgMathSearchBaseXDatabaseName = 'mathsearch';
