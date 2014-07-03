@@ -92,6 +92,7 @@ $specialPageAliases['mk'] = array(
 	'MathSearch' => array( 'МатПребарување' ),
 	'MathDebug' => array( 'МатИсправкаГрешки' ),
 	'FormulaInfo' => array( 'ФормулаИнфо' ),
+	'GetEquationsByQuery' => array( 'ДајРавенкиПоБарање' ),
 );
 
 /** Dutch (Nederlands) */
