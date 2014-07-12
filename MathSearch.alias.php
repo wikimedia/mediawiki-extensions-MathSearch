@@ -69,6 +69,14 @@ $specialPageAliases['gl'] = array(
 	'FormulaInfo' => array( 'Información_de_fórmula' ),
 );
 
+/** Hebrew (עברית) */
+$specialPageAliases['he'] = array(
+	'MathSearch' => array( 'חיפוש_נוסחה' ),
+	'MathDebug' => array( 'בדיקת_נוסחה' ),
+	'FormulaInfo' => array( 'מידע_על_נוסחה' ),
+	'GetEquationsByQuery' => array( 'קבלת_נוסחה_לפי_שאילתה' ),
+);
+
 /** Italian (italiano) */
 $specialPageAliases['it'] = array(
 	'MathSearch' => array( 'RicercaMat' ),
