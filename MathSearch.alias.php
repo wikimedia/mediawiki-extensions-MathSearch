@@ -29,6 +29,7 @@ $specialPageAliases['arz'] = array(
 	'MathSearch' => array( 'بحث-رياضه' ),
 	'MathDebug' => array( 'ديبج_رياضه' ),
 	'FormulaInfo' => array( 'معلومات_المعادله' ),
+	'GetEquationsByQuery' => array( 'هات_المعادلات_عن_طريق_الكويرى' ),
 );
 
 /** Min Dong Chinese (Mìng-dĕ̤ng-ngṳ̄) */
