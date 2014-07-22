@@ -179,9 +179,8 @@ class MathObject extends MathMathML {
 		$instance = new MathObject( $renderer->getTex() );
 		$instance->setMathml( $renderer->getMathml() );
 		$instance->setSvg( $renderer->getSvg() );
-		$instance->setSvg( $renderer->getSvg());
 		$instance->setMode( $renderer->getMode() );
-		$instance->setDisplayStyle( $renderer->getDisplayStyle() );
+		$instance->setMathStyle( $renderer->getMathStyle() );
 		return $instance;
 	}
 
