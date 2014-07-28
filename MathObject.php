@@ -194,8 +194,7 @@ class MathObject extends MathMathML {
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->selectRow(
 			array( 'mathindex' ), self::dbIndexFieldsArray(), 'mathindex_page_id = ' . $pid
-			. ' AND mathindex_anchor= ' . $eid
-		);
+			. ' AND mathindex_anchor= "' . $eid . '"' );
 		//self::DebugPrint( var_export( $res, true ) );
 		$start = microtime(true);
 		$o = self::constructformpagerow( $res );

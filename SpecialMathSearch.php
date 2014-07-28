@@ -245,15 +245,14 @@
 			$out = $this->getOutput();
 			$resultes = $this->mathBackend->getResultSet();
 			$page = $resultes[ (string)$pageID ];
-			$dbr = wfGetDB( DB_SLAVE );
 			$article = Article::newFromId( $pageID );
 			$pagename = (string)$article->getTitle();
 			wfDebugLog( "MathSearch", "Processing results for $pagename" );
 			foreach ( $page as $anchorID => $answ ) {
 				$res = MathObject::constructformpage( $pageID, $anchorID );
-				$mml = $res->getMathml();
-				if ( $mml ) {
-					$out->addWikiText( "====[[$pagename#math$anchorID|Eq: $anchorID (Result " . $this->resultID++ . ")]]====", false );
+				if( $res ){
+					$mml = $res->getMathml();
+					$out->addWikiText( "====[[$pagename#$anchorID|Eq: $anchorID (Result " . $this->resultID++ . ")]]====", false );
 					$out->addHtml( "<br />" );
 					$xpath = $answ[ 0 ][ 'xpath' ];
 					// TODO: Remove hack and report to Prode that he fixes that
@@ -284,8 +283,6 @@
 							}
 						}
 					}
-
-
 					wfDebugLog( "MathSearch", "PositionInfo:" . var_export( $this->mathResults[ $pageID ][ $anchorID ], true ) );
 				} else
 					wfDebugLog( "MathSearch", "Failure: Could not get entry $anchorID for page $pagename (id $pageID) :" . var_export( $this->mathResults, true ) );

@@ -109,7 +109,7 @@ class MathEngineMws {
 			$attrs = $page->attributes();
 			$uri = explode( "#", $attrs["uri"] );
 			$pageID = $uri[0];
-			$AnchorID = substr( $uri[1], 4 );
+			$AnchorID = $uri[1];
 			$this->relevanceMap[$pageID] = true;
 			$substarr = array();
 			// $this->mathResults[(string) $pageID][(string) $AnchorID][]=$page->asXML();

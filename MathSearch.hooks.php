@@ -107,8 +107,28 @@ class MathSearchHooks {
 	 */
 	static function onMathFormulaRendered( MathRenderer $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
 		if ( $pid > 0 ) { // Only store something if a pageid was set.
-			self::updateIndex( $pid , $eid , $Renderer->getInputHash() , $Renderer->getTex() );
+			// Use manually assigned IDs whenever possible
+			// and fallback to automatic IDs otherwise.
+			if ( $Renderer->getID() ){
+				$id = $Renderer->getID();
+			} else {
+				$id = 'math'.$eid;
+				$Result = preg_replace( '/(class="mwe-math-mathml-(inline|display))/', "id=\"$id\" \\1", $Result );
+			}
+			self::updateIndex( $pid , $id , $Renderer->getInputHash() , $Renderer->getTex() );
 		}
+		return true;
+	}
+
+	/**
+	 * Callback function that is called after a formula was rendered
+	 * @param MathRenderer $Renderer
+	 * @param string|null $Result reference to the rendering result
+	 * @param int $pid
+	 * @param int $eid
+	 * @return bool
+	 */
+	static function addIdentifierAndSpecialPageLink( MathRenderer $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
 		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( array( 'pid' => $pid, 'eid' => $eid ) );
 		$mo = MathObject::cloneFromRenderer($Renderer);
 		$mo->setPageID($pid);
@@ -117,7 +137,6 @@ class MathSearchHooks {
 		$Result = '<a href="' . $url . '" id="math' . $eid . '" style="color:inherit;">' . $Result . '</a>';
 		return true;
 	}
-
 	/**
 	 * Alternative Callback function that is called after a formula was rendered
 	 * used for test corpus generation for NTCIR11 Math-2

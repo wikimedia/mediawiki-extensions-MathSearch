@@ -8,8 +8,9 @@ CREATE TABLE /*_*/mathindex (
   mathindex_page_id int(10) unsigned NOT NULL,
 
   -- Position of the equation on the page
-  -- Starting from 0 at the top of the page
-  mathindex_anchor int(6) unsigned NOT NULL,
+  -- Starting from math0 at the top of the page
+  -- or manually speficied by the id field
+  mathindex_anchor varchar(50) NOT NULL,
 
   -- Reference to
   -- Binary MD5 hash of the latex fragment, used as an identifier key.

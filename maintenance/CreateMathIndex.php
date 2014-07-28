@@ -57,7 +57,7 @@ class CreateMathIndex extends IndexBase {
 		}
 		// if ( $xml->math ) {
 			// $smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
-			$out .= "\n<" . self::$mwsns . "expr url=\"" . $row->mathindex_page_id . "#math" . $row->mathindex_anchor . "\">\n\t";
+			$out .= "\n<" . self::$mwsns . "expr url=\"" . $row->mathindex_page_id . "#" . $row->mathindex_anchor . "\">\n\t";
 			$out .=  utf8_decode( $row->math_mathml );// $xml->math->children()->asXML();
 			$out .= "\n</" . self::$mwsns . "expr>\n";
 			return $out;
