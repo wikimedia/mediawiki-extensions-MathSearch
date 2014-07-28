@@ -142,14 +142,18 @@ class SpecialMathSearch extends SpecialPage {
 				if (!is_null($hits)) {
 					foreach ($hits as $node) {
 						/* @var DOMDocument $node */
-						//$node->item($index)->attributes->getNamedItem($name)->nodeValue
+						// $node->item($index)->attributes->getNamedItem($name)->nodeValue
 						// $out->addHtml(var_export($node["xref"][0],true));
 						if( $node->hasAttributes() ){
-						$domRes = $dom->getElementById( $node->attributes->getNamedItem('xref')->nodeValue );
-						if ( $domRes ) {
-							$domRes->setAttribute( 'mathcolor', '#cc0000' );
-							$out->addHtml( $domRes->ownerDocument->saveXML() );
-						}} else {
+
+							$domRes = $dom->getElementById( $node->attributes->getNamedItem('xref')->nodeValue );
+							if ( $domRes ) {
+								$domRes->setAttribute( 'mathcolor', '#cc0000' );
+								$out->addHtml( $domRes->ownerDocument->saveXML() );
+							} else {
+								$out->addHTML( $node->ownerDocument->saveXML() );
+							}
+						} else {
 							$renderer = new MathMathML();
 							$renderer->setMathml( $mml );
 							$out->addHtml( $renderer->getHtmlOutput() );
