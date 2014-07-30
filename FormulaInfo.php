@@ -55,7 +55,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public function DisplayInfo( $pid, $eid ) {
-		global $wgMathDebug, $wgOut;
+		global $wgMathDebug, $wgExtensionAssetsPath;
 		/* $out Output page find out how to get that variable in a static context*/
 		$out = $this->getOutput();
 		$out->addWikiText( '==General==' );
@@ -81,8 +81,10 @@ class FormulaInfo extends SpecialPage {
 		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
 		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex() . '</syntaxhighlight>' );
 		$out->addWikiText( 'MathML (' . self::getlengh( $mo->getMathml() ) . ') :', false );
-		// TODO: Add logo
-		$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $mo->getTex() ) . '&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>' );
+
+		$imgUrl = $wgExtensionAssetsPath . "/MathSearch/images/math_search_logo.png";
+		$mathSearchImg = Html::element( 'img', array( 'src' => $imgUrl, 'width' => 15, 'height' => 15 ) );
+		$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $mo->getTex() ) . '&searchx=Search">' . $mathSearchImg . '</a>' );
 		$out->addHtml(  $mo->getMathml() );
 		# $log=htmlspecialchars( $res->math_log );
 		$out->addHtml( "<br />\n" );
