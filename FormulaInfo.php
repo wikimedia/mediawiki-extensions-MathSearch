@@ -53,6 +53,7 @@ class FormulaInfo extends SpecialPage {
 			$wgOut->addWikiText( "No occurrences found clean up the database to remove unused formulae" );
 		}
 	}
+
 	public function DisplayInfo( $pid, $eid ) {
 		global $wgMathDebug, $wgOut;
 		/* $out Output page find out how to get that variable in a static context*/
@@ -66,16 +67,21 @@ class FormulaInfo extends SpecialPage {
 		}
 
 		$pagename = (string)$article->getTitle();
-		$out->addWikiText( "* Page found: [[$pagename#math$eid|$pagename]] (eq $eid)  ", false );
+		$out->addWikiText( "* Page found: [[$pagename#$eid|$pagename]] (eq $eid)  ", false );
 		$out->addHtml( '<a href="/index.php?title=' . $pagename . '&action=purge&mathpurge=true">(force rerendering)</a>' );
 
 		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $pid, $eid );
+		if ( !$mo ) {
+			$out->addWikiText( 'Cannot find the equation data in the database.' );
+			return false;
+		}
 		$out->addWikiText( "Occurrences on the following pages:" );
 		wfDebugLog( "MathSearch", var_export( $mo->getAllOccurences(), true ) );
 		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
 		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex() . '</syntaxhighlight>' );
 		$out->addWikiText( 'MathML (' . self::getlengh( $mo->getMathml() ) . ') :', false );
+		// TODO: Add logo
 		$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $mo->getTex() ) . '&searchx=Search"><img src="http://wikidemo.formulasearchengine.com/images/FSE-PIC.png" width="15" height="15"></a>' );
 		$out->addHtml(  $mo->getMathml() );
 		# $log=htmlspecialchars( $res->math_log );

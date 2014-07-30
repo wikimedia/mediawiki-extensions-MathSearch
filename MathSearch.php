@@ -74,7 +74,8 @@ $wgSpecialPages['MathIndex'] = 'SpecialMathIndex';
 $wgAPIModules['mathquery'] = 'MathSearchApi';
 
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
-$wgHooks['MathFormulaRendered'][] = 'MathSearchHooks::onMathFormulaRendered';
+$wgHooks['MathFormulaRendered']['updateIndex'] = 'MathSearchHooks::updateMathIndex';
+$wgHooks['MathFormulaRendered']['addLink'] = 'MathSearchHooks::addLinkToFormulaInfoPage';
 $wgHooks['UnitTestsList'][] = 'MathSearchHooks::onRegisterUnitTests';
 
 $wgGroupPermissions['user']['MathDebug'] = true;
