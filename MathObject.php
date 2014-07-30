@@ -51,7 +51,7 @@ class MathObject extends MathMathML {
 	 */
 	public static function constructformpagerow( $res ) {
 		global $wgMathDebug;
-		if ( $res->mathindex_page_id > 0 ) {
+		if ( $res && $res->mathindex_page_id > 0 ) {
 			$class = get_called_class();
 			$instance = new $class;
 			$instance->setPageID( $res->mathindex_page_id );
