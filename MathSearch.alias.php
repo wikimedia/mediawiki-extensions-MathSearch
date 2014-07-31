@@ -142,7 +142,7 @@ $specialPageAliases['zh-hans'] = array(
 
 /** Traditional Chinese (中文（繁體）‎) */
 $specialPageAliases['zh-hant'] = array(
-	'MathSearch' => array( '數學搜索' ),
+	'MathSearch' => array( '數學搜尋' ),
 	'MathDebug' => array( '數學除錯' ),
 	'FormulaInfo' => array( '方程資訊' ),
 	'GetEquationsByQuery' => array( '經由查詢獲得方程' ),
