@@ -13,8 +13,8 @@ class MathEngineMws {
 	/** @var MathQueryObject the query to be answered*/
 	protected $query;
 	protected $size = false;
-	protected $resultSet;
-	protected $relevanceMap;
+	protected $resultSet = false;
+	protected $relevanceMap = false;
 	/**
 	 * 
 	 * @return MathQueryObject
@@ -101,10 +101,12 @@ class MathEngineMws {
 		}
 		return true;
 	}
+
 	/**
 	 * @param unknown $xmlRoot
 	 */
 	function processMathResults( $xmlRoot ) {
+		wfProfileIn( __METHOD__ );
 		foreach ( $xmlRoot->children( "mws", TRUE ) as $page ) {
 			$attrs = $page->attributes();
 			$uri = explode( "#", $attrs["uri"] );
@@ -119,5 +121,6 @@ class MathEngineMws {
 			}
 			$this->resultSet[(string) $pageID][(string) $AnchorID][] = array( "xpath" => (string) $attrs["xpath"], "mappings" => $substarr ); // ,"original"=>$page->asXML()
 		}
+		wfProfileOut( __METHOD__ );
 	}
 }

@@ -164,12 +164,14 @@
 			}
 
 			if ( $this->mathBackend && $this->textpattern == "" ) {
+				wfDebugLog( "MathSearch", "Starting output (notext mode)" );
 				$results = $this->mathBackend->getResultSet();
 				if ( $results ) {
 					foreach ( $results as $pageID => $page ) {
-						$article = Article::newFromId( $pageID );
-						if ( $article ) {
-							$pagename = (string)$article->getTitle();
+						$revision = Revision::newFromId( $pageID );
+						if ( $revision ) {
+							wfDebugLog( "MathSearch", "Found revision " . $revision->getTitle()->getText() );
+							$pagename = (string)$revision->getTitle();
 							$out->addWikiText( "==[[$pagename]]==" );
 							$this->DisplayMath( $pageID );
 						} else
@@ -195,7 +197,7 @@
 						wfDebugLog( 'mathsearch', 'BOF' );
 						$pageList = "";
 						while ( $tres = $sres->next() ) {
-							$pageID = $tres->getTitle()->getArticleID();
+							$pageID = $tres->getTitle()->getLatestRevID();
 							$rMap = $this->mathBackend->getRelevanceMap();
 							if ( isset( $rMap[ $pageID ] ) ) {
 								$out->addWikiText( "[[" . $tres->getTitle() . "]]" );
@@ -245,8 +247,12 @@
 			$out = $this->getOutput();
 			$resultes = $this->mathBackend->getResultSet();
 			$page = $resultes[ (string)$pageID ];
-			$article = Article::newFromId( $pageID );
-			$pagename = (string)$article->getTitle();
+			$revision = Revision::newFromId( $pageID );
+			if ( $revision === false ) {
+				wfDebugLog( "MathSearch", "invalid revision number" );
+				return false;
+			}
+			$pagename = (string)$revision->getTitle();
 			wfDebugLog( "MathSearch", "Processing results for $pagename" );
 			foreach ( $page as $anchorID => $answ ) {
 				$res = MathObject::constructformpage( $pageID, $anchorID );

@@ -81,8 +81,7 @@ class MathObject extends MathMathML {
 				} else {
 					$other = $row->A;
 				}
-				$article = WikiPage::newFromId( $other );
-				$out .= '# [[' . $article->getTitle() . ']] similarity ' .
+				$out .= '# [[' . Revision::newFromId( $other )->getTitle() . ']] similarity ' .
 					$row->V * 100 . "%\n";
 				// .' ( pageid'.$other.'/'.$row->A.')' );
 			}
@@ -138,12 +137,11 @@ class MathObject extends MathMathML {
 	 */
 	public function getNouns($identifier){
 		$dbr = wfGetDB( DB_SLAVE );
-		$article = Article::newFromId( $this->pageID );
-		if( ! $article ) return false;
-		$pagename = (string)$article->getTitle();;
+		$pageName = $this->getPageTitle();
+		if( $pageName === false ) return false;
 		$identifiers = $dbr->select('mathidentifier',
 			array( 'noun', 'evidence' ),
-			array(  'pageTitle' => $pagename, 'identifier' => $identifier),
+			array(  'pageTitle' => $pageName, 'identifier' => $identifier),
 			__METHOD__ ,
 			array('ORDER BY' => 'evidence DESC', 'LIMIT' => 5)
 		);
@@ -225,8 +223,12 @@ class MathObject extends MathMathML {
 	}
 
 	public function getPageTitle() {
-		$article = Article::newFromId( $this->getPageID() );
-		return (string) $article->getTitle();
+		$revision = Revision::newFromId( $this->getPageID() );
+		if ( $revision ) {
+			return (string) $revision->getTitle();
+		} else {
+			return false;
+		}
 	}
 
 	public function printLink2Page( $hidePage = true ) {

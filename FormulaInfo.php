@@ -54,21 +54,20 @@ class FormulaInfo extends SpecialPage {
 		}
 	}
 
-	public function DisplayInfo( $pid, $eid ) {
+	public function DisplayInfo( $oldID, $eid ) {
 		global $wgMathDebug, $wgExtensionAssetsPath;
-		/* $out Output page find out how to get that variable in a static context*/
 		$out = $this->getOutput();
 		$out->addWikiText( '==General==' );
-		$out->addWikiText( 'Display information for equation id:' . $eid . ' on page id:' . $pid );
-		$article = Article::newFromId( $pid );
-		if ( !$article ) {
-			$out->addWikiText( 'There is no page with page id:' . $pid . ' in the database.' );
+		$out->addWikiText( 'Display information for equation id:' . $eid . ' on revision:' . $oldID );
+		$revision = Revision::newFromId( $oldID );
+		if ( !$revision ) {
+			$out->addWikiText( 'There is no revision with id:' . $oldID . ' in the database.' );
 			return false;
 		}
 
-		$pagename = (string)$article->getTitle();
-		$out->addWikiText( "* Page found: [[$pagename#$eid|$pagename]] (eq $eid)  ", false );
-		$out->addHtml( '<a href="/index.php?title=' . $pagename . '&action=purge&mathpurge=true">(force rerendering)</a>' );
+		$pageName = (string)$revision->getTitle();
+		$out->addWikiText( "* Page found: [[$pageName#$eid|$pageName]] (eq $eid)  ", false );
+		$out->addHtml( '<a href="/index.php?title=' . $pageName . '&action=purge&mathpurge=true">(force rerendering)</a>' );
 
 		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $pid, $eid );
@@ -97,7 +96,7 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiText( 'Hash : ' . $mo->getMd5(), false );
 		$out->addHtml( "<br />" );
 		$out->addWikiText( '==Similar pages==' );
-		$out->addWikiText( 'Calculated based on the variables occurring on the entire ' . $pagename . ' page' );
+		$out->addWikiText( 'Calculated based on the variables occurring on the entire ' . $pageName . ' page' );
 		$mo->findSimilarPages( $pid );
 		$out->addWikiText( '==Variables==' );
 		$mo->getObservations();

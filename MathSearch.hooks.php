@@ -64,11 +64,12 @@ class MathSearchHooks {
 	 */
 	private static function updateIndex($pid, $eid, $inputHash, $tex){
 		try {
+			$oldID = Title::newFromID( $pid )->getLatestRevID();
 			$dbr = wfGetDB( DB_SLAVE );
 			$exists = $dbr->selectRow( 'mathindex',
 				array( 'mathindex_page_id', 'mathindex_anchor', 'mathindex_inputhash' ),
 				array(
-					'mathindex_page_id' => $pid,
+					'mathindex_page_id' => $oldID,
 					'mathindex_anchor' => $eid,
 					'mathindex_inputhash' => $inputHash)
 			) ;
@@ -78,11 +79,11 @@ class MathSearchHooks {
 				wfDebugLog( "MathSearch", 'Store index for $' . $tex . '$ in database' );
 				$dbw = wfGetDB( DB_MASTER );
 				$dbw->onTransactionIdle(
-					function () use ( $pid, $eid, $inputHash, $dbw ) {
+					function () use ( $oldID, $eid, $inputHash, $dbw ) {
 						$dbw->replace( 'mathindex',
 							array( 'mathindex_page_id', 'mathindex_anchor' ),
 							array(
-								'mathindex_page_id' => $pid,
+								'mathindex_page_id' => $oldID,
 								'mathindex_anchor' =>  $eid ,
 								'mathindex_inputhash' => $inputHash
 							) );
