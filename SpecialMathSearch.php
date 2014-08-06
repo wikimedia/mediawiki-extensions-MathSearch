@@ -164,7 +164,6 @@
 			}
 
 			if ( $this->mathBackend && $this->textpattern == "" ) {
-				wfDebugLog( "MathSearch", "Starting output (notext mode)" );
 				$results = $this->mathBackend->getResultSet();
 				if ( $results ) {
 					foreach ( $results as $pageID => $page ) {

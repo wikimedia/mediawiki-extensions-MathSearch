@@ -54,6 +54,9 @@ class MathSearchHooks {
 		}
 	}
 
+	private static function curId2OldId( $curId ){
+		return Title::newFromID( $curId )->getLatestRevID();
+	}
 	/**
 	 * Updates the formula index in the database
 	 *
@@ -64,7 +67,7 @@ class MathSearchHooks {
 	 */
 	private static function updateIndex($pid, $eid, $inputHash, $tex){
 		try {
-			$oldID = Title::newFromID( $pid )->getLatestRevID();
+			$oldID = self::curId2OldId( $pid );
 			$dbr = wfGetDB( DB_SLAVE );
 			$exists = $dbr->selectRow( 'mathindex',
 				array( 'mathindex_page_id', 'mathindex_anchor', 'mathindex_inputhash' ),
@@ -192,9 +195,10 @@ class MathSearchHooks {
 			self::updateIndex( $pid, $eid, $Renderer->getInputHash(), $Renderer->getTex() );
 		}
 		if ( preg_match( '#<math(.*)?\sid="(?P<id>[\w\.]+)"#', $Result, $matches ) ) {
-			$oldId = $matches['id'];
-			$newID = "math.$pid.$eid";
-			$Result = str_replace( $oldId, $newID, $Result );
+			$rendererId = $matches['id'];
+			$oldId = self::curId2OldId( $pid );
+			$newID = "math.${oldId}.${eid}";
+			$Result = str_replace( $rendererId, $newID, $Result );
 		}
 		return true;
 	}
