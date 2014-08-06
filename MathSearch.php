@@ -88,3 +88,13 @@ $wgMathSearchBaseXUser = 'admin';
 $wgMathSearchBaseXPassword = 'admin';
 $wgMathSearchBaseXPort = 1984;
 $wgMathSearchBaseXDatabaseName = 'mathsearch';
+
+/* Optional stuff for math search competetion server */
+$wgMathWmcServer = false;
+$wgGroupPermissions['sysop']['mathwmcsubmit'] = true;
+$wgAvailableRights[] = 'mathwmcsubmit';
+/** @var boolean $MathSearchWmcServer set true if you offer a math search competition server */
+$wgMathWmcMaxResults = 10000;
+$wgAutoloadClasses['SpecialUploadResult'] = $dir . 'SpecialUploadResult.php';
+$wgSpecialPages['MathUpload'] = 'SpecialUploadResult';
+$wgSpecialPageGroups['MathUpload'] = 'mathsearch';

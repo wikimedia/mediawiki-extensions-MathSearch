@@ -43,6 +43,12 @@ class MathObject extends MathMathML {
 		}
 	}
 
+	public static function hash2md5( $hash ){
+		//TODO: make MathRenderer::dbHash2md5 public
+		$dbr = wfGetDB( DB_SLAVE );
+		$xhash = unpack( 'H32md5', $dbr->decodeBlob( $hash ) . "                " );
+		return $xhash['md5'];
+	}
 	/**
 	 *
 	 * @global ResultWrapper $wgMathDebug

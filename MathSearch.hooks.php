@@ -15,6 +15,7 @@ class MathSearchHooks {
 	 * @return bool
 	 */
 	static function onLoadExtensionSchemaUpdates( $updater = null ) {
+		global $wgMathWmcServer;
 		if ( is_null( $updater ) ) {
 			throw new MWException( "Mathsearch extension requires Mediawiki 1.18 or above" );
 		}
@@ -35,6 +36,9 @@ class MathSearchHooks {
 			$updater->addExtensionTable( 'mathpagestat', $dir . 'mathpagestat.sql' );
 		    $updater->addExtensionTable( 'mathsemantics', $dir . 'mathsemantics.sql' );
 		    $updater->addExtensionTable( 'mathperformance', $dir . 'mathperformance.sql' );
+			if ( $wgMathWmcServer ){
+				$updater->addExtensionTable( 'math_wmc_ref', $dir . "math_wmc_ref.sql");
+			}
 		    $updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
  		} else {
  			//throw new MWException( "Math extension does not currently support $type database." );
