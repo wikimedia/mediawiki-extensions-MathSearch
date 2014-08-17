@@ -10,7 +10,7 @@
  */
 
 class BaseXQuery {
-	var $session, $id, $open, $cache;
+	public $session, $id, $open, $cache;
 
 	public function __construct($s, $q) {
 		$this->session = $s;

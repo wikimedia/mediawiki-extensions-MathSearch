@@ -24,7 +24,7 @@ require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 class CalculateDistances extends Maintenance {
 	const RTI_CHUNK_SIZE = 100;
 	/**@var DatabaseBase $dbw */
-	var $dbw = null;
+	public $dbw = null;
 
 	/**
 	 * @var DatabaseBase

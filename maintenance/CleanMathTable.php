@@ -23,7 +23,7 @@ require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
 class UpdateMath extends Maintenance {
 	const RTI_CHUNK_SIZE = 10;
-	var $purge = false;
+	public $purge = false;
 
 	/**
 	 * @var DatabaseBase

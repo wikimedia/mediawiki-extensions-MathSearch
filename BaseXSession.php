@@ -10,7 +10,7 @@
  */
 class BaseXSession {
 	// class variables.
-	var $socket, $info, $buffer, $bpos, $bsize;
+	public $socket, $info, $buffer, $bpos, $bsize;
 
 	function __construct($h=false, $p=false, $user=false, $pw=false) {
 		global $wgMathSearchBaseXPassword, $wgMathSearchBaseXServer, $wgMathSearchBaseXPort, $wgMathSearchBaseXUser;

@@ -12,16 +12,16 @@
 	class SpecialMathSearch extends SpecialPage
 	{
 
-		var $qs;
-		var $math_result;
-		var $mathSearchExpr;
-		var $numTextResults;
-		var $mathResults;
-		var $mathpattern;
-		var $textpattern;
-		var $mathmlquery;
-		var $mathEngine;
-		var $displayQuery;
+		public $qs;
+		public $math_result;
+		public $mathSearchExpr;
+		public $numTextResults;
+		public $mathResults;
+		public $mathpattern;
+		public $textpattern;
+		public $mathmlquery;
+		public $mathEngine;
+		public $displayQuery;
 		private $mathBackend;
 		private $resultID = 0;
 		private $xQueryEngines = array( 'db2', 'basex' );

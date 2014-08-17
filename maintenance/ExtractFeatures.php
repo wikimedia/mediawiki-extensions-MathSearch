@@ -23,8 +23,8 @@ require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
 class ExtractFeatures extends Maintenance {
 	const RTI_CHUNK_SIZE = 100;
-	var $purge = false;
-	var $dbw = null;
+	public $purge = false;
+	public $dbw = null;
 
 	/**
 	 * @var DatabaseBase
