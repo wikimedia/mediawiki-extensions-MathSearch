@@ -15,6 +15,7 @@ $specialPageAliases['en'] = array(
 	'MathDebug' => array( 'MathDebug', 'Math Debug' ),
 	'FormulaInfo' => array( 'FormulaInfo', 'Formula Info' ),
 	'GetEquationsByQuery' => array( 'GetEquationsByQuery', 'Get Formulae by Query' ),
+	'MathIndex' => array( 'MathIndex', 'Math Index' ),
 );
 
 /** Arabic (العربية) */
