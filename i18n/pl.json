@@ -2,10 +2,12 @@
 	"@metadata": {
 		"authors": [
 			"Matma Rex",
-			"Woytecr"
+			"Woytecr",
+			"Chrumps"
 		]
 	},
 	"mathsearch": "Wyszukiwanie wzorów",
+	"mathindex": "Indeks matematyczny",
 	"specialpages-group-mathsearch": "Wyszukiwanie wzorów",
 	"mathsearch-desc": "Integruje wyszukiwarkę [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Pobierz równania przez zapytania"

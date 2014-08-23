@@ -139,6 +139,7 @@ $specialPageAliases['zh-hans'] = array(
 	'MathDebug' => array( '数学除错' ),
 	'FormulaInfo' => array( '公式信息' ),
 	'GetEquationsByQuery' => array( '通过查询获取方程' ),
+	'MathIndex' => array( '数学公式索引' ),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */

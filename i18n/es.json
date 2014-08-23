@@ -2,11 +2,13 @@
 	"@metadata": {
 		"authors": [
 			"Fitoschido",
-			"Ralgis"
+			"Ralgis",
+			"Macofe"
 		]
 	},
 	"mathsearch": "Búsqueda matemática",
 	"formulainfo": "Información de la fórmula",
+	"mathindex": "Índice de matemáticas",
 	"specialpages-group-mathsearch": "Búsqueda matemática",
 	"mathsearch-desc": "Integra el motor [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Obtener ecuaciones por consulta",

@@ -6,6 +6,7 @@
 	},
 	"mathsearch": "Математический поиск",
 	"formulainfo": "Информация о формуле",
+	"mathindex": "Математический индекс",
 	"specialpages-group-mathsearch": "Математический поиск",
 	"mathsearch-desc": "Интегрирует движок [http://search.mathweb.org/about.html  MathWeb Search]",
 	"getequationsbyquery": "Получить уравнения по запросу",
