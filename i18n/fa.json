@@ -1,11 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
-			"Armin1392"
+			"Armin1392",
+			"Alirezaaa"
 		]
 	},
 	"mathsearch": "جستجوی داده‌ها",
 	"formulainfo": "اطلاعات فرمول",
+	"mathindex": "نمایه ریاضی",
 	"specialpages-group-mathsearch": "جستجوی داده‌ها",
 	"mathsearch-desc": "ادغام [http://search.mathweb.org/about.html MathWeb Search] موتور",
 	"getequationsbyquery": "پرس‌وجو شدن با سوال",
