@@ -146,6 +146,7 @@ $specialPageAliases['zh-hans'] = array(
 $specialPageAliases['zh-hant'] = array(
 	'MathSearch' => array( '數學搜尋' ),
 	'MathDebug' => array( '數學除錯' ),
-	'FormulaInfo' => array( '方程資訊' ),
-	'GetEquationsByQuery' => array( '經由查詢獲得方程' ),
+	'FormulaInfo' => array( '公式資訊' ),
+	'GetEquationsByQuery' => array( '查詢取得方程式' ),
+	'MathIndex' => array( '數學索引' ),
 );
