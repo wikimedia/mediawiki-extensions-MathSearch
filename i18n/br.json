@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Y-M D"
+			"Y-M D",
+			"Fohanno"
 		]
 	},
+	"formulainfo": "Titouroù diwar-benn ar formulenn",
 	"mathsearch-desc": "Enframmañ al lusker [http://search.mathweb.org/about.html MathWeb Search]"
 }
