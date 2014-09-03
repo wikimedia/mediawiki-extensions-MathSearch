@@ -55,7 +55,12 @@ class MathSearchHooks {
 	}
 
 	private static function curId2OldId( $curId ){
-		return Title::newFromID( $curId )->getLatestRevID();
+		$title = Title::newFromID( $curId );
+		if ( $title ){
+			return Title::newFromID( $curId )->getLatestRevID();
+		} else {
+			return 0;
+		}
 	}
 	/**
 	 * Updates the formula index in the database
