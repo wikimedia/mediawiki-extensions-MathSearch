@@ -17,7 +17,7 @@ class SpecialUploadResult extends SpecialPage {
 	}
 
 	private static function formatErrors( $errors ) {
-		return wfMessage( 'wmcWarnings' )->text() . ' ' . implode( "<br />", $errors );
+		return wfMessage( 'math-wmc-Warnings' )->text() . ' ' . implode( "<br />", $errors );
 	}
 
 	function execute( $query ) {
@@ -26,10 +26,10 @@ class SpecialUploadResult extends SpecialPage {
 			throw new PermissionsError( 'mathwmcsubmit' );
 		}
 
-		$this->getOutput()->addWikiText( wfMessage( 'wmcIntroduction' )->text() );
+		$this->getOutput()->addWikiText( wfMessage( 'math-wmc-Introduction' )->text() );
 		$formDescriptor = $this->printRunSelector();
-		$formDescriptor['File'] = array( 'label-message' => 'wmcFileLabel',
-			'help-message' => 'wmcFileHelp',
+		$formDescriptor['File'] = array( 'label-message' => 'math-wmc-FileLabel',
+			'help-message' => 'math-wmc-FileHelp',
 			'class' => 'HTMLTextField',
 			'type' => 'file',
 			'required' => true,
@@ -54,10 +54,10 @@ class SpecialUploadResult extends SpecialPage {
 		}
 		//Probably we want to add more field in the future
 		$formFields['run'] = array( 'type' => 'selectorother',
-			'label-message' => 'wmcSelectRun',
+			'label-message' => 'math-wmc-SelectRun',
 			'options' => $options,
 			'required' => true,
-			'help-message' => 'wmcSelectRunHelp',
+			'help-message' => 'math-wmc-SelectRunHelp',
 			'filter-callback' => array( $this, 'runSelectorFilter' ),
 			'validation-callback' => array( $this, 'runValidatorFilter' ),
 			 //'section' => 'wmcSectionRun'
@@ -81,13 +81,13 @@ class SpecialUploadResult extends SpecialPage {
 					array( 'isDraft' => true, 'userID' => $uID, 'runName' => $run ) );
 				if ( $success ) {
 					$this->runID = $dbw->insertId();
-					$this->getOutput()->addWikiMsg( 'wmcRunAdded', $run, $this->runID );
+					$this->getOutput()->addWikiMsg( 'math-wmc-RunAdded', $run, $this->runID );
 				} else {
 					$this->runID = false;
-					$this->getOutput()->addWikiMsg( 'wmcRunAddError', $run );
+					$this->getOutput()->addWikiMsg( 'math-wmc-RunAddError', $run );
 				}
 			} else {
-				$this->getOutput()->addWikiMsg( 'wmcRunAddExist', $run, $exists );
+				$this->getOutput()->addWikiMsg( 'math-wmc-RunAddExist', $run, $exists );
 				$this->runID = false;
 			}
 		} else {
@@ -102,7 +102,7 @@ class SpecialUploadResult extends SpecialPage {
 		$res = $dbr->selectField( 'math_wmc_runs', 'runName',
 			array( 'isDraft' => true, 'userID' => $uID, 'runId' => $this->runID ) );
 		if ( ! $res ) {
-			return wfMessage( 'wmcSelectRunHelp' )->text();
+			return wfMessage( 'math-wmc-SelectRunHelp' )->text();
 		} else {
 			return true;
 		}
@@ -140,7 +140,7 @@ class SpecialUploadResult extends SpecialPage {
 	}
 
 	function processInput(  ) {
-		$this->getOutput()->addWikiMsg( "wmcSubmissionSuccess" );
+		$this->getOutput()->addWikiMsg( "math-wmc-SubmissionSuccess" );
 		self::deleteRun( $this->runID );
 		$dbw = wfGetDB( DB_MASTER );
 		//TODO: Find adequate API call
@@ -224,7 +224,7 @@ class SpecialUploadResult extends SpecialPage {
 		// check header line
 		$uploadedHeaders = $table[0];
 		if ( $uploadedHeaders != $this->columnHeaders ) {
-			$error_msg = wfMessage( 'importcsv_badheader' )->text();
+			$error_msg = wfMessage( 'math-wmc-bad-header' )->text();
 			return $error_msg;
 		}
 		$rank = 0;
@@ -239,17 +239,17 @@ class SpecialUploadResult extends SpecialPage {
 			$fId = trim( $line[1] );
 			$qValid = $this->isValidQId( $qId );
 			if ( $qValid == false ) {
-				$this->warnings[] = wfMessage( 'wrong_query_reference', $i, $qId )->text();
+				$this->warnings[] = wfMessage( 'math-wmc-wrong-query-reference', $i, $qId )->text();
 			}
 			if ( preg_match( ImportPattern, $fId, $m ) ) {
 				$pId = (int)$m[1];
 				$eId = (int)$m[2];
 				$fHash = $this->getInputHash( $pId, $eId );
 				if ( $fHash == false ) {
-					$this->warnings[] = wfMessage( 'wrong_formula_reference', $i, $pId, $eId )->text();
+					$this->warnings[] = wfMessage( 'math-wmc-wrong-formula-reference', $i, $pId, $eId )->text();
 				}
 			} else {
-				$this->warnings[] = wfMessage( 'malformatted_forumla_reference', $i, $fId, ImportPattern )->text();
+				$this->warnings[] = wfMessage( 'math-wmc-malformed-formula-reference', $i, $fId, ImportPattern )->text();
 			}
 			if ( $qValid === true && $fHash !== false ) {
 				// a valid result has been submitted
@@ -262,7 +262,7 @@ class SpecialUploadResult extends SpecialPage {
 				if ( $rank <= $wgMathWmcMaxResults ) {
 					$this->addValidatedResult( $qId, $pId, $eId, $fHash, $rank );
 				} else {
-					$this->warnings[] = wfMessage( 'too_manny_results', $i, $qId, $fId, $rank, $wgMathWmcMaxResults )->text();
+					$this->warnings[] = wfMessage( 'math-wmc-too-many-results', $i, $qId, $fId, $rank, $wgMathWmcMaxResults )->text();
 				}
 			}
 		}
