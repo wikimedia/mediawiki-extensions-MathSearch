@@ -141,6 +141,7 @@ $specialPageAliases['zh-hans'] = array(
 	'FormulaInfo' => array( '公式信息' ),
 	'GetEquationsByQuery' => array( '通过查询获取方程' ),
 	'MathIndex' => array( '数学公式索引' ),
+	'MathUpload' => array( '数学上传' ),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */

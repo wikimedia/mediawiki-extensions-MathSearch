@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Moritz Schubotz",
-			"Shirayuki"
+			"Shirayuki",
+			"Robby"
 		]
 	},
 	"mathsearch": "{{doc-special|MathSearch}}\n\"Math Search\" is the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.\n\nMath Search is used to search for a formula based on their MathML representation.\n{{Identical|Math search}}",
@@ -15,7 +16,7 @@
 	"mathdebug": "{{doc-special|MathDebug}}",
 	"math-wmc-Introduction": "Used as introduction for the upload form",
 	"math-wmc-SectionRun": "Form group name",
-	"math-wmc-SelectRun": "Form label",
+	"math-wmc-SelectRun": "Form label\n{{Identical|Name}}",
 	"math-wmc-SelectRunHelp": "Form label help text",
 	"math-wmc-FileLabel": "Form label",
 	"math-wmc-FileHelp": "Form label help text",

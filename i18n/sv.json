@@ -12,5 +12,6 @@
 	"mathsearch-desc": "Integrerar [http://search.mathweb.org/about.html MathWeb-sökmotorn]",
 	"getequationsbyquery": "Få ekvationer genom att fråga",
 	"xquerygenerator": "XQuery-generatorn",
-	"mathdebug": "Testrenderare"
+	"mathdebug": "Testrenderare",
+	"math-wmc-Warnings": "Följande rader i indatafilerna ignorerades:"
 }

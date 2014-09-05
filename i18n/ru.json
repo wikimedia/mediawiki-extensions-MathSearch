@@ -1,15 +1,31 @@
 {
 	"@metadata": {
 		"authors": [
-			"Okras"
+			"Okras",
+			"Kopcap94"
 		]
 	},
 	"mathsearch": "Математический поиск",
 	"formulainfo": "Информация о формуле",
 	"mathindex": "Математический индекс",
+	"mathupload": "Показать похожие результаты поиска",
 	"specialpages-group-mathsearch": "Математический поиск",
 	"mathsearch-desc": "Интегрирует движок [http://search.mathweb.org/about.html  MathWeb Search]",
 	"getequationsbyquery": "Получить уравнения по запросу",
 	"xquerygenerator": "XQuery-генератор",
-	"mathdebug": "Проверить средство визуализации"
+	"mathdebug": "Проверить средство визуализации",
+	"math-wmc-Introduction": "Загрузите ваше представление в текущий поисковик NTCIR Википедии здесь:",
+	"math-wmc-SectionRun": "Представление информации",
+	"math-wmc-FileLabel": "CSV Файл",
+	"math-wmc-CreateRun": "или запустите заново",
+	"math-wmc-CreateRunHelp": "Если поле пустое",
+	"math-wmc-RunAdded": "Добавлено представление для \"$1: с ID \"$2\"",
+	"math-wmc-RunAddExist": "Представление с именем \"$1\" уже существует вместе с Id \"$2\"",
+	"math-wmc-Warnings": "Были проигнорированы следующие строки из входных файлов:",
+	"math-wmc-SubmissionSuccess": "Успешно представлено.",
+	"math-wmc-bad-header": "Ошибка: Заголовок столбца должен быть queryid,formulaid. Запрещены дополнительные столбцы.",
+	"math-wmc-RightSubmit": "Показать похожие результаты поиска",
+	"math-wmc-too-many-results": "Строка $1: Причина: слишком много результатов для $2. Рассчитанный ранг для формулы \"$3\" равен \"$4\". Это выше, чем максимально допустимое значение ($wgMathWmcMaxResults=$5).",
+	"math-wmc-malformed-formula-reference": "Строка $1: значение формулы \"$2\" не соответствует шаблону \"$3\".",
+	"math-wmc-wrong-query-reference": "Строка $1: Неправильный запрос ссылки \"$2\"."
 }

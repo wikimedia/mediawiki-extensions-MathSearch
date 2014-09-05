@@ -8,5 +8,7 @@
 	"mathsearch": "Math Search",
 	"formulainfo": "Informatioun iwwer d'Formel",
 	"specialpages-group-mathsearch": "Math Search",
-	"mathsearch-desc": "Integréiert d'[http://search.mathweb.org/about.html MathWeb Search] Software"
+	"mathsearch-desc": "Integréiert d'[http://search.mathweb.org/about.html MathWeb Search] Software",
+	"math-wmc-SelectRun": "Numm",
+	"math-wmc-FileLabel": "CSV Fichier"
 }

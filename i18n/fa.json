@@ -8,9 +8,21 @@
 	"mathsearch": "جستجوی داده‌ها",
 	"formulainfo": "اطلاعات فرمول",
 	"mathindex": "نمایه ریاضی",
+	"mathupload": "ارسال نتایج جستجوی ریاضی",
 	"specialpages-group-mathsearch": "جستجوی داده‌ها",
 	"mathsearch-desc": "ادغام [http://search.mathweb.org/about.html MathWeb Search] موتور",
 	"getequationsbyquery": "پرس‌وجو شدن با سوال",
 	"xquerygenerator": "ژنراتور ایکس‌کوِری",
-	"mathdebug": "آزمون ترجمه"
+	"mathdebug": "آزمون ترجمه",
+	"math-wmc-SectionRun": "اطلاعات ارسال",
+	"math-wmc-SelectRun": "نام",
+	"math-wmc-SelectRunHelp": "یک نام منحصر به فرد برای ارسال‌تان تعیین کنید، یا یک پیش‌نویس موجود را بازنویسی کنید.",
+	"math-wmc-FileLabel": "پرونده سی‌اس‌وی",
+	"math-wmc-CreateRun": "یا یک اجرای تازه بساز.",
+	"math-wmc-CreateRunHelp": "اگر زمینه خالی است",
+	"math-wmc-RunAdded": "ارسال افزوده‌شده «$1» با شناسه «$2»",
+	"math-wmc-Warnings": "خطوط زیر از پرونده‌های ورودی نادیده گرفته شدند:",
+	"math-wmc-SubmissionSuccess": "ارسال به پایان رسید.",
+	"math-wmc-bad-header": "خطا: عنوان ستون باید شناسه کوئری، شناسه فرمول باشد. ستون‌های اضافی مجاز نیست.",
+	"math-wmc-malformed-formula-reference": "خطا $1: مرجع فرمول «$2» الگوی «$3» را تطبیق نمی‌دهد."
 }

@@ -10,5 +10,9 @@
 	"mathindex": "Indeks matematyczny",
 	"specialpages-group-mathsearch": "Wyszukiwanie wzorów",
 	"mathsearch-desc": "Integruje wyszukiwarkę [http://search.mathweb.org/about.html MathWeb Search]",
-	"getequationsbyquery": "Pobierz równania przez zapytania"
+	"getequationsbyquery": "Pobierz równania przez zapytania",
+	"math-wmc-SectionRun": "Informacje o zgłoszeniu",
+	"math-wmc-SelectRun": "Nazwa",
+	"math-wmc-FileLabel": "Plik CSV",
+	"math-wmc-Warnings": "Następujące linie plików wejściowych zostały zignorowane:"
 }

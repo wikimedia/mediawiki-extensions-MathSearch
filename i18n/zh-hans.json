@@ -9,9 +9,22 @@
 	"mathsearch": "数式搜索",
 	"formulainfo": "公式信息",
 	"mathindex": "数学公式索引",
+	"mathupload": "提交数学搜索结果",
 	"specialpages-group-mathsearch": "数式搜索",
 	"mathsearch-desc": "整合[http://search.mathweb.org/about.html MathWeb 搜索]引擎",
 	"getequationsbyquery": "通过查询获得方程",
 	"xquerygenerator": "XQuery生成器",
-	"mathdebug": "测试渲染器"
+	"mathdebug": "测试渲染器",
+	"math-wmc-SectionRun": "提交信息",
+	"math-wmc-SelectRun": "名称",
+	"math-wmc-FileLabel": "CSV文件",
+	"math-wmc-CreateRun": "或创建一个新的程序运行。",
+	"math-wmc-CreateRunHelp": "如果字段为空",
+	"math-wmc-RunAdded": "添加提交“$1”带ID“$2”",
+	"math-wmc-RunAddError": "错误：不能添加提交“$1”。",
+	"math-wmc-RunAddExist": "名为“$1”的提交已存在，带有ID“$2”",
+	"math-wmc-Warnings": "输入文件的以下几行字被忽略：",
+	"math-wmc-SubmissionSuccess": "提交成功。",
+	"math-wmc-RightSubmit": "提交数学搜索结果",
+	"math-wmc-wrong-query-reference": "第$1行：查询参考“$2”无效。"
 }
