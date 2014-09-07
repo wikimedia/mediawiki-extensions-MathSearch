@@ -3,7 +3,8 @@
 		"authors": [
 			"Konovalov",
 			"Rcdeboer",
-			"Siebrand"
+			"Siebrand",
+			"Sjoerddebruin"
 		]
 	},
 	"mathsearch": "Wiskundig zoeken",
@@ -12,5 +13,7 @@
 	"mathsearch-desc": "Integreert de [http://search.mathweb.org/about.html MathWeb Zoekmachine]",
 	"getequationsbyquery": "Vergelijkingen zoeken",
 	"xquerygenerator": "XQuerygenerator",
-	"mathdebug": "Verwerking testen"
+	"mathdebug": "Verwerking testen",
+	"math-wmc-SelectRun": "Naam",
+	"math-wmc-FileLabel": "CSV-bestand"
 }

@@ -13,5 +13,7 @@
 	"mathsearch-desc": "Integra el motor [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Obtener ecuaciones por consulta",
 	"xquerygenerator": "Generador XQuery",
-	"mathdebug": "Renderizador de pruebas"
+	"mathdebug": "Renderizador de pruebas",
+	"math-wmc-SelectRun": "Nombre",
+	"math-wmc-FileLabel": "Archivo CSV"
 }

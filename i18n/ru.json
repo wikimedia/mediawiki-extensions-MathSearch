@@ -16,6 +16,7 @@
 	"mathdebug": "Проверить средство визуализации",
 	"math-wmc-Introduction": "Загрузите ваше представление в текущий поисковик NTCIR Википедии здесь:",
 	"math-wmc-SectionRun": "Представление информации",
+	"math-wmc-SelectRun": "Название",
 	"math-wmc-FileLabel": "CSV Файл",
 	"math-wmc-CreateRun": "или запустите заново",
 	"math-wmc-CreateRunHelp": "Если поле пустое",

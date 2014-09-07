@@ -2,14 +2,33 @@
 	"@metadata": {
 		"authors": [
 			"Amire80",
-			"Yona b"
+			"Yona b",
+			"Guycn2"
 		]
 	},
 	"mathsearch": "חיפוש מתמטיקה",
 	"formulainfo": "מידע על הנוסחה",
+	"mathupload": "שליחת תוצאות חיפוש במתמטיקה",
 	"specialpages-group-mathsearch": "חיפוש מתמטיקה",
 	"mathsearch-desc": "הוספת תמיכה במנוע החיפוש [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "קבלת משוואות לפי שאילתה",
 	"xquerygenerator": "מחולל XQuery",
-	"mathdebug": "תוצאה הניסיון"
+	"mathdebug": "תוצאה הניסיון",
+	"math-wmc-SectionRun": "שליחת מידע",
+	"math-wmc-SelectRun": "שם",
+	"math-wmc-SelectRunHelp": "נא לציין שם ייחודי עבור ההגשה שלך, או להחליף טיוטה קיימת.",
+	"math-wmc-FileLabel": "קובץ CSV",
+	"math-wmc-CreateRun": "או יצירת רצף חדש.",
+	"math-wmc-CreateRunHelp": "אם השדה ריק",
+	"math-wmc-RunAdded": "נוספה שליחת \"$1\" עם המזהה \"$2\"",
+	"math-wmc-RunAddError": "שגיאה: לא ניתן להוסיף את ההגשה \"$1\".",
+	"math-wmc-RunAddExist": "הגשה בשם \"$1\" כבר קיימת עם המזהה \"$2\"",
+	"math-wmc-Warnings": "המערכת התעלמה מהשורות הבאות של קבצי הקלט:",
+	"math-wmc-SubmissionSuccess": "השליחה הצליחה.",
+	"math-wmc-bad-header": "שגיאה: כותרת העמודה חייבת להיות queryId,formulaId. עמודות נוספות אסורות.",
+	"math-wmc-RightSubmit": "שליחת תוצאות חיפוש במתמטיקה",
+	"math-wmc-too-many-results": "שורה $1: יותר מדי תוצאות תבונה עבור $2.\n חישוב הדרגה עבור נוסחה \"$3\" היה \"$4\". זה גדול יותר מהמספר המרבי המותר לשליחה ($wgMathWmcMaxResults=$5).",
+	"math-wmc-malformed-formula-reference": "שורה $1: ההפניה בנוסחה \"$2\" אינה תואמת את התבנית \"$3\".",
+	"math-wmc-wrong-formula-reference": "שורה $1: הפניה בנוסחה (גרסה \"$2\", נוסחה \"$3\") אינה חוקית.",
+	"math-wmc-wrong-query-reference": "שורה $1: ההפניה בשאילתה \"$2\" אינה חוקית."
 }
