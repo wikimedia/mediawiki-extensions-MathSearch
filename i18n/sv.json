@@ -2,7 +2,9 @@
 	"@metadata": {
 		"authors": [
 			"Jopparn",
-			"Lokal Profil"
+			"Lokal Profil",
+			"Freked",
+			"Platinawolf"
 		]
 	},
 	"mathsearch": "Matematiksökning",
@@ -13,5 +15,9 @@
 	"getequationsbyquery": "Få ekvationer genom att fråga",
 	"xquerygenerator": "XQuery-generatorn",
 	"mathdebug": "Testrenderare",
-	"math-wmc-Warnings": "Följande rader i indatafilerna ignorerades:"
+	"math-wmc-SectionRun": "Inlämningsinformation",
+	"math-wmc-SelectRun": "Namn",
+	"math-wmc-FileLabel": "CSV-fil",
+	"math-wmc-Warnings": "Följande rader i indatafilerna ignorerades:",
+	"math-wmc-SubmissionSuccess": "Inlämningen lyckades."
 }
