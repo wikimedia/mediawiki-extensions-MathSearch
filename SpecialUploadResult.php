@@ -17,7 +17,7 @@ class SpecialUploadResult extends SpecialPage {
 	}
 
 	private static function formatErrors( $errors ) {
-		return wfMessage( 'math-wmc-Warnings' )->text() . ' ' . implode( "<br />", $errors );
+		return wfMessage( 'math-wmc-Warnings' )->text() . "<br />" . implode( "<br />", $errors );
 	}
 
 	function execute( $query ) {
@@ -28,12 +28,18 @@ class SpecialUploadResult extends SpecialPage {
 
 		$this->getOutput()->addWikiText( wfMessage( 'math-wmc-Introduction' )->text() );
 		$formDescriptor = $this->printRunSelector();
-		$formDescriptor['File'] = array( 'label-message' => 'math-wmc-FileLabel',
+		$formDescriptor['File'] = array(
+			'label-message' => 'math-wmc-FileLabel',
 			'help-message' => 'math-wmc-FileHelp',
 			'class' => 'HTMLTextField',
 			'type' => 'file',
 			'required' => true,
 			'validation-callback' => array( $this, 'runFileCheck' ),
+		);
+		$formDescriptor['displayFormulae'] = array(
+			'label-message' => 'math-wmc-display-formulae-label',
+			'help-message' => 'math-wmc-display-formulae-help',
+			'type' => 'check',
 		);
 
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
@@ -111,7 +117,7 @@ class SpecialUploadResult extends SpecialPage {
 	function runFileCheck( ) {
 		$out = $this->getOutput();
 
-		$out->addWikiMsg( 'dt_import_importing' );
+
 		$uploadResult = ImportStreamSource::newFromUpload( 'wpFile' );
 
 		if ( ! $uploadResult->isOK() ) {
@@ -121,7 +127,7 @@ class SpecialUploadResult extends SpecialPage {
 		$source = $uploadResult->value;
 
 		$this->results = array();
-
+		$out->addWikiMsg( 'math-wmc-importing' );
 		$error_msg = $this->importFromFile( $source->mHandle );
 
 		if ( ! is_null( $error_msg ) ) {
@@ -157,14 +163,20 @@ class SpecialUploadResult extends SpecialPage {
 			$this->printResultRow( $result );
 		}
 		$this->getOutput()->addHTML('</table>');
+		$this->displayFeedback();
 		return true;
 	}
 
 	private function printResultRow( $row ){
 		$md5 = MathObject::hash2md5( $row['math_inputhash'] );
-		$renderer = MathRenderer::newFromMd5($md5);
-		if ( $renderer->render() ){
-			$renderedMath = $renderer->getHtmlOutput();
+		if( $this->getRequest()->getBool( "wpdisplayFormulae" ) ){
+			$this->getOutput()->addModuleStyles( array( 'ext.math.styles' ) );
+			$renderer = MathLaTeXML::newFromMd5($md5);
+			if ( $renderer->render() ){
+				$renderedMath = $renderer->getHtmlOutput();
+			} else {
+				$renderedMath = $md5;
+			}
 		} else {
 			$renderedMath = $md5;
 		}
@@ -277,5 +289,45 @@ class SpecialUploadResult extends SpecialPage {
 			'fId'   => $eId,
 			'rank' => $rank,
 			'math_inputhash' => $fHash );
+	}
+
+	private function displayFeedback(){
+		$runId=$this->runID;
+		$dbr=wfGetDB(DB_SLAVE);
+		$res = $dbr->select(
+			array('l'=>'math_wmc_rank_levels','r'=>'math_wmc_ref','math_wmc_results'),
+			array( 'count(DISTINCT `r`.`qId`)  AS `c`',
+				'`l`.`level`                AS `level`'),
+			array( "(`math_wmc_results`.`rank` <= `l`.`level`)" ,
+				'runId'=>$runId,
+				'`math_wmc_results`.`oldId` = `r`.`oldId`',
+				'`math_wmc_results`.`qId` = `r`.`qId`'
+			),
+			__METHOD__,
+			array( 'GROUP BY' => '`l`.`level`',
+				'ORDER BY' => 'count(DISTINCT `r`.`qId`) DESC')
+		);
+		if ( ! $res || $res->numRows() == 0 ){
+			$this->getOutput()->addWikiText( "Score is 0. Check your submission");
+			return ;
+		} else {
+			$this->getOutput()->addWikiText( "'''Scored in " . $res->numRows() . " evaluation levels'''");
+		}
+
+		$this->getOutput()->addHTML('<table border="1" style="width:100%">
+  <tr>
+    <th>number of correct results</th>
+    <th>rank cutoff</th>
+  </tr>');
+		foreach ( $res as $result ) {
+			$c=$result->c;
+			$l=$result->level;
+			$this->getOutput()->addHTML("
+  <tr>
+    <td>$c</td>
+    <td>$l</td>
+  </tr>");
+		}
+		$this->getOutput()->addHTML('</table>');
 	}
 }

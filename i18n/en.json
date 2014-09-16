@@ -40,5 +40,9 @@
     "math-wmc-too-many-results": "Line $1: Reason too many results for $2. \n Calculated rank for formulae \"$3\" was \"$4\". This is higher than the maximal allowed number of submission ($wgMathWmcMaxResults=$5).",
     "math-wmc-malformed-formula-reference":"Line $1: Formula reference \"$2\" does not match the pattern \"$3\".",
     "math-wmc-wrong-formula-reference": "Line $1: Formula reference (revision \"$2\", formula \"$3\") is invalid.",
-    "math-wmc-wrong-query-reference": "Line $1: Query reference \"$2\" is invalid."
+    "math-wmc-wrong-query-reference": "Line $1: Query reference \"$2\" is invalid.",
+    "math-wmc-importing": "Importing...",
+    "math-wmc-display-formulae-label": "Display rendering of submitted formulae",
+    "math-wmc-display-formulae-help": "Not recommended for large input files.",
+    "action-mathwmcsubmit": "submit results to the NTCIR Wikipedia Math Search Task"
 }
