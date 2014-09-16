@@ -164,6 +164,7 @@ class UpdateMath extends Maintenance {
 				if ( $this->getOption( "hooks", true ) ) {
 					wfRunHooks( 'MathFormulaRendered', array( &$renderer, &$notused, $pid, $anchorID ) );
 					$this->time( "hooks" );
+					$anchorID++;
 				}
 				$renderer->writeCache($this->dbw);
 				$this->time("write Cache");
