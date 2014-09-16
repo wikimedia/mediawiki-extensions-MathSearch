@@ -31,5 +31,9 @@
 	"math-wmc-too-many-results": "Zeile $1: Zu viele Ergebnisse für $2. \nDer berechnete Rang für die Formel „$3“ war „$4“. Er ist höher als die maximal erlaubte Anzahl der Einreichung ($wgMathWmcMaxResults=$5).",
 	"math-wmc-malformed-formula-reference": "Zeile $1: Die Formel-Referenz „$2“ stimmt nicht mit dem Muster „$3“ überein.",
 	"math-wmc-wrong-formula-reference": "Zeile $1: Die Formel-Referenz (Version „$2“, Formel „$3“) ist ungültig.",
-	"math-wmc-wrong-query-reference": "Zeile $1: Die Abfragereferenz „$2“ ist ungültig."
+	"math-wmc-wrong-query-reference": "Zeile $1: Die Abfragereferenz „$2“ ist ungültig.",
+	"math-wmc-importing": "Importiere …",
+	"math-wmc-display-formulae-label": "Rendering für übermittelte Formeln anzeigen",
+	"math-wmc-display-formulae-help": "Nicht empfohlen für große Eingabedateien.",
+	"action-mathwmcsubmit": "Ergebnisse des NTCIR-Wikipedia-Math-Suchauftrags zu übermitteln"
 }
