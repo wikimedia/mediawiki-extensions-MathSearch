@@ -4,7 +4,8 @@
 			"Jopparn",
 			"Lokal Profil",
 			"Freked",
-			"Platinawolf"
+			"Platinawolf",
+			"WikiPhoenix"
 		]
 	},
 	"mathsearch": "Matematiksökning",
@@ -19,5 +20,6 @@
 	"math-wmc-SelectRun": "Namn",
 	"math-wmc-FileLabel": "CSV-fil",
 	"math-wmc-Warnings": "Följande rader i indatafilerna ignorerades:",
-	"math-wmc-SubmissionSuccess": "Inlämningen lyckades."
+	"math-wmc-SubmissionSuccess": "Inlämningen lyckades.",
+	"math-wmc-importing": "Importerar..."
 }

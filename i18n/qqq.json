@@ -3,7 +3,8 @@
 		"authors": [
 			"Moritz Schubotz",
 			"Shirayuki",
-			"Robby"
+			"Robby",
+			"Liuxinyu970226"
 		]
 	},
 	"mathsearch": "{{doc-special|MathSearch}}\n\"Math Search\" is the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.\n\nMath Search is used to search for a formula based on their MathML representation.\n{{Identical|Math search}}",
@@ -31,7 +32,7 @@
 	"math-wmc-malformed-formula-reference": "Details of an error in one specific line of submitted file. Follows {{msg-mw|math-wmc-Warnings}}",
 	"math-wmc-wrong-formula-reference": "Details of an error in one specific line of submitted file. Follows {{msg-mw|math-wmc-Warnings}}",
 	"math-wmc-wrong-query-reference": "Details of an error in one specific line of submitted file. Follows {{msg-mw|math-wmc-Warnings}}",
-	"math-wmc-importing": "User feedback printed as WikiText.",
+	"math-wmc-importing": "User feedback printed as WikiText.\n{{Identical|Importing}}",
 	"math-wmc-display-formulae-label": "Checkbox label",
 	"math-wmc-display-formulae-help": "Checkbox help",
 	"action-mathwmcsubmit": "{{doc-action|mathwmcsubmit}}"
