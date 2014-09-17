@@ -66,7 +66,7 @@ class SpecialUploadResult extends SpecialPage {
 			'help-message' => 'math-wmc-SelectRunHelp',
 			'filter-callback' => array( $this, 'runSelectorFilter' ),
 			'validation-callback' => array( $this, 'runValidatorFilter' ),
-			 //'section' => 'wmcSectionRun'
+			 //'section' => 'math-wmc-SectionRun'
 		);
 		return $formFields;
 	}
