@@ -104,6 +104,8 @@ $specialPageAliases['mk'] = array(
 	'MathDebug' => array( 'МатИсправкаГрешки' ),
 	'FormulaInfo' => array( 'ФормулаИнфо' ),
 	'GetEquationsByQuery' => array( 'ДајРавенкиПоБарање' ),
+	'MathIndex' => array( 'МатИндекс' ),
+	'MathUpload' => array( 'МатПодигање' ),
 );
 
 /** Dutch (Nederlands) */
