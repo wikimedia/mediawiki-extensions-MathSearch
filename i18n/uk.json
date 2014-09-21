@@ -7,9 +7,14 @@
 	},
 	"mathsearch": "Математичний пошук",
 	"formulainfo": "Відомості про формулу",
+	"mathindex": "Математичний індекс",
 	"specialpages-group-mathsearch": "Математичний пошук",
 	"mathsearch-desc": "Інтегрує рушій [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Отримання рівнянь за запитом",
 	"xquerygenerator": "XQuery генератор",
-	"mathdebug": "Тест візуалізатора"
+	"mathdebug": "Тест візуалізатора",
+	"math-wmc-SelectRun": "Назва",
+	"math-wmc-FileLabel": "Файл CSV",
+	"math-wmc-importing": "Імпорт...",
+	"math-wmc-display-formulae-label": "Відображення поданих формул"
 }
