@@ -30,5 +30,9 @@
 	"math-wmc-too-many-results": "Ligne $1 : Motif trop de résultats pour $2. \n Le rang calculé pour la formule « $3 » est « $4 ». Il dépasse le nombre maximal autorisé de participations ($wgMathWmcMaxResults=$5).",
 	"math-wmc-malformed-formula-reference": "Ligne $1 : La référence de formule « $2 » ne correspond pas au modèle « $3 ».",
 	"math-wmc-wrong-formula-reference": "Ligne $1 : La référence de formule (révision « $2 », formule « $3 ») n’est pas valide.",
-	"math-wmc-wrong-query-reference": "Ligne $1: La référence de requête « $2 » n’est pas valide."
+	"math-wmc-wrong-query-reference": "Ligne $1: La référence de requête « $2 » n’est pas valide.",
+	"math-wmc-importing": "Import en cours...",
+	"math-wmc-display-formulae-label": "Afficher un rendu des formulaires envoyés",
+	"math-wmc-display-formulae-help": "Non recommandé pour les gros fichiers d’entrée.",
+	"action-mathwmcsubmit": "envoyer les résultats à la Tâche de recherche mathématique de Wikipédia NTCIR"
 }

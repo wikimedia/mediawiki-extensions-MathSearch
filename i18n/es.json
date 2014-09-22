@@ -14,6 +14,12 @@
 	"getequationsbyquery": "Obtener ecuaciones por consulta",
 	"xquerygenerator": "Generador XQuery",
 	"mathdebug": "Renderizador de pruebas",
+	"math-wmc-SectionRun": "Información del envío",
 	"math-wmc-SelectRun": "Nombre",
-	"math-wmc-FileLabel": "Archivo CSV"
+	"math-wmc-FileLabel": "Archivo CSV",
+	"math-wmc-RunAddError": "Error: no se puede añadir el envío «$1».",
+	"math-wmc-RunAddExist": "El envío «$1» ya existe con el identificador «$2»",
+	"math-wmc-SubmissionSuccess": "Se realizó el envío correctamente.",
+	"math-wmc-wrong-query-reference": "Línea $1: la referencia de consulta «$2» no es válida.",
+	"math-wmc-importing": "Importando…"
 }
