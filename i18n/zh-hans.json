@@ -33,5 +33,6 @@
 	"math-wmc-wrong-formula-reference": "第$1行：公式引用（修订“$2”，公式“$3”）无效。",
 	"math-wmc-wrong-query-reference": "第$1行：查询参考“$2”无效。",
 	"math-wmc-importing": "正在导入……",
+	"math-wmc-display-formulae-help": "不建议用于较大的输入文件。",
 	"action-mathwmcsubmit": "提交结果至NTCIR维基百科数学搜索任务"
 }
