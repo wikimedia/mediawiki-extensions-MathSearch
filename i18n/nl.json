@@ -15,5 +15,6 @@
 	"xquerygenerator": "XQuerygenerator",
 	"mathdebug": "Verwerking testen",
 	"math-wmc-SelectRun": "Naam",
-	"math-wmc-FileLabel": "CSV-bestand"
+	"math-wmc-FileLabel": "CSV-bestand",
+	"math-wmc-importing": "Importeren..."
 }
