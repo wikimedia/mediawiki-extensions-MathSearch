@@ -65,6 +65,8 @@ $specialPageAliases['fa'] = array(
 	'MathDebug' => array( 'اشکال‌زدایی_ریاضیات' ),
 	'FormulaInfo' => array( 'اطلاعات_فرمول' ),
 	'GetEquationsByQuery' => array( 'گرفتن_معادل_با_درخواست' ),
+	'MathIndex' => array( 'نمایهٔ_ریاضی' ),
+	'MathUpload' => array( 'بارگذاری_ریاضی' ),
 );
 
 /** Galician (galego) */
