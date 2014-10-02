@@ -10,5 +10,7 @@
 	"mathsearch-desc": "Menyepadukan enjin [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Dapatkan persamaan dengan pertanyaan",
 	"xquerygenerator": "Penjana XQuery",
-	"mathdebug": "Pemapar Uji"
+	"mathdebug": "Pemapar Uji",
+	"math-wmc-SelectRun": "Nama",
+	"math-wmc-FileLabel": "Fail CSV"
 }
