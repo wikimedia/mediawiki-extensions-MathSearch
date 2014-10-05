@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Beta16"
+			"Beta16",
+			"Baffo"
 		]
 	},
 	"formulainfo": "Informazioni formula",
@@ -10,5 +11,7 @@
 	"xquerygenerator": "Generatore XQuery",
 	"math-wmc-SelectRun": "Nome",
 	"math-wmc-FileLabel": "File CSV",
-	"math-wmc-Warnings": "Le seguenti righe del file di input sono state ignorate:"
+	"math-wmc-FileHelp": "Caricare i risultati classificato, elenco di (queryId, formulaId) separati da virgola-coppie. Un'intestazione di colonna della forma <code>queryID,formulaId</code> è richiesto.",
+	"math-wmc-Warnings": "Le seguenti righe del file di input sono state ignorate:",
+	"math-wmc-display-formulae-help": "Non consigliato per grandi file di input."
 }

@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Violetanka"
+		]
+	},
+	"math-wmc-SelectRun": "İsim",
+	"math-wmc-SelectRunHelp": "Gönderiniz için benzersiz bir ad belirtin ya da var olan bir taslak üzerine yazın.",
+	"math-wmc-FileLabel": "CSV Dosyası",
+	"math-wmc-importing": "İçe aktarılıyor..."
+}

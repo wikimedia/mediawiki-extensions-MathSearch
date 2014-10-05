@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Okras",
-			"Kopcap94"
+			"Kopcap94",
+			"Striking Blue"
 		]
 	},
 	"mathsearch": "Математический поиск",
@@ -17,16 +18,21 @@
 	"math-wmc-Introduction": "Загрузите ваше представление в текущий поисковик NTCIR Википедии здесь:",
 	"math-wmc-SectionRun": "Представление информации",
 	"math-wmc-SelectRun": "Название",
+	"math-wmc-SelectRunHelp": "Укажите уникальное имя для вашего представления, или перепишите существующий проект.",
 	"math-wmc-FileLabel": "CSV Файл",
-	"math-wmc-CreateRun": "или запустите заново",
-	"math-wmc-CreateRunHelp": "Если поле пустое",
+	"math-wmc-FileHelp": "Загрузите ваши результаты в форме ранжированного, разделённого запятыми списка (queryId,formulaId) пар. Заголовок столбца формы <code>queryID,formulaId</code> необходим.",
 	"math-wmc-RunAdded": "Добавлено представление для \"$1: с ID \"$2\"",
+	"math-wmc-RunAddError": "Ошибка: Невозможно добавить представление \"$1\".",
 	"math-wmc-RunAddExist": "Представление с именем \"$1\" уже существует вместе с Id \"$2\"",
 	"math-wmc-Warnings": "Были проигнорированы следующие строки из входных файлов:",
 	"math-wmc-SubmissionSuccess": "Успешно представлено.",
 	"math-wmc-bad-header": "Ошибка: Заголовок столбца должен быть queryid,formulaid. Запрещены дополнительные столбцы.",
-	"math-wmc-RightSubmit": "Показать похожие результаты поиска",
 	"math-wmc-too-many-results": "Строка $1: Причина: слишком много результатов для $2. Рассчитанный ранг для формулы \"$3\" равен \"$4\". Это выше, чем максимально допустимое значение ($wgMathWmcMaxResults=$5).",
 	"math-wmc-malformed-formula-reference": "Строка $1: значение формулы \"$2\" не соответствует шаблону \"$3\".",
-	"math-wmc-wrong-query-reference": "Строка $1: Неправильный запрос ссылки \"$2\"."
+	"math-wmc-wrong-formula-reference": "Строка $1: ссылка формулы (редакция \"$2\", формула \"$3\") неверна.",
+	"math-wmc-wrong-query-reference": "Строка $1: Неправильный запрос ссылки \"$2\".",
+	"math-wmc-importing": "Импортирование...",
+	"math-wmc-display-formulae-label": "Отобразить рендеринг представленной формулы",
+	"math-wmc-display-formulae-help": "Не рекомендуется для больших входных файлов.",
+	"action-mathwmcsubmit": "представить результаты в NTCIR Wikipedia Math Search Task"
 }
