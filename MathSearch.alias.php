@@ -99,7 +99,9 @@ $specialPageAliases['ko'] = array(
 	'MathSearch' => array( '수학검색', '수학_검색', '수학찾기', '수학_찾기' ),
 	'MathDebug' => array( '수학디버그', '수학_디버그' ),
 	'FormulaInfo' => array( '수식정보', '수식_정보' ),
-	'GetEquationsByQuery' => array( '쿼리별수식얻기' ),
+	'GetEquationsByQuery' => array( '쿼리별수식얻기', '퀴리별_수식_얻기' ),
+	'MathIndex' => array( '수학색인', '수학_색인' ),
+	'MathUpload' => array( '수학올리기', '수학_올리기' ),
 );
 
 /** Macedonian (македонски) */
