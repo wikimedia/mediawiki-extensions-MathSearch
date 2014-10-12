@@ -179,7 +179,7 @@ class MathSearchHooks {
 	static function addLinkToFormulaInfoPage( MathRenderer $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
 		self::setMathId( $eid , $Renderer );
 		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( array( 'pid' => $pid, 'eid' => $eid ) );
-		$Result = "<a href=\"$url\" id=\"$eid\" style=\"color:inherit;\">$Result</a>";
+		$Result = "<div><a href=\"$url\" id=\"$eid\" style=\"color:inherit;\">$Result</a></div>";
 		return true;
 	}
 
