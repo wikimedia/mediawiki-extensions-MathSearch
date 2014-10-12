@@ -29,7 +29,7 @@ class SpecialMathIndex extends SpecialPage {
 			}
 		} else {
 			$output->addWikiText( '\'\'\'This page is avaliblible in math debug mode only.\'\'\'' . "\n\n" .
-				'Enable the math debug mode by setting <code> $wgDebugMath = true</code> .' );
+				'Enable the math debug mode by setting <code> $wgMathDebug = true</code> .' );
 		}
 	}
 	function testIndex() {
