@@ -12,5 +12,6 @@
 	"xquerygenerator": "XQueryジェネレーター",
 	"math-wmc-SelectRun": "名前",
 	"math-wmc-FileLabel": "CSV ファイル",
+	"math-wmc-Warnings": "入力ファイルの以下の行は無視されます:",
 	"math-wmc-importing": "取り込み中..."
 }
