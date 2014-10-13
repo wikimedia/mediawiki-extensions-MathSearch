@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Chrisportelli"
+			"Chrisportelli",
+			"Leli Forte"
 		]
 	},
-	"mathsearch-desc": "Tintegra l-mutur ta' tfittxija[http://search.mathweb.org/about.html MathWeb]"
+	"mathsearch-desc": "Tintegra l-mutur ta' tfittxija[http://search.mathweb.org/about.html MathWeb]",
+	"math-wmc-RunAddError": "Żball: Ma tistax iżżid s-sottomissjoni \"$1\"."
 }
