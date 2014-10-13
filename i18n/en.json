@@ -29,7 +29,7 @@
     "math-wmc-FileLabel" : "CSV File",
     "math-wmc-FileHelp" : "Upload your results as ranked, comma separated list of (queryId,formulaId)-pairs. A column header of the form <code>queryID,formulaId</code> is required.",
     "math-wmc-RunAdded": "Added submission \"$1\" with Id \"$2\"",
-    "math-wmc-RunAddError": "Error: Can not add submission \"$1\".",
+    "math-wmc-RunAddError": "Error: Cannot add submission \"$1\".",
     "math-wmc-RunAddExist": "Submission named \"$1\" already exists with Id \"$2\"",
     "math-wmc-Warnings" : "The following lines of the input files were ignored:",
     "math-wmc-SubmissionSuccess" : "Submission succeeded.",
