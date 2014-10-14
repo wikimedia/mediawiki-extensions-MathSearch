@@ -12,5 +12,6 @@
 	"xquerygenerator": "Penjana XQuery",
 	"mathdebug": "Pemapar Uji",
 	"math-wmc-SelectRun": "Nama",
-	"math-wmc-FileLabel": "Fail CSV"
+	"math-wmc-FileLabel": "Fail CSV",
+	"action-mathwmcsubmit": "menyerahkan hasil-hasil kepada NTCIR Wikipedia Math Search Task"
 }
