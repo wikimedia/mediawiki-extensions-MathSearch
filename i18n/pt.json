@@ -6,5 +6,6 @@
 	},
 	"math-wmc-SelectRun": "Nome",
 	"math-wmc-FileLabel": "Ficheiro CSV",
+	"math-wmc-RunAddError": "Erro: Não foi possível adicionar a submissão \"$1\".",
 	"math-wmc-importing": "A importar..."
 }
