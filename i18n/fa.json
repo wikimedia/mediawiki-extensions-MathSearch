@@ -18,8 +18,6 @@
 	"math-wmc-SelectRun": "نام",
 	"math-wmc-SelectRunHelp": "یک نام منحصر به فرد برای ارسال‌تان تعیین کنید، یا یک پیش‌نویس موجود را بازنویسی کنید.",
 	"math-wmc-FileLabel": "پرونده سی‌اس‌وی",
-	"math-wmc-CreateRun": "یا یک اجرای تازه بساز.",
-	"math-wmc-CreateRunHelp": "اگر زمینه خالی است",
 	"math-wmc-RunAdded": "ارسال افزوده‌شده «$1» با شناسه «$2»",
 	"math-wmc-Warnings": "خطوط زیر از پرونده‌های ورودی نادیده گرفته شدند:",
 	"math-wmc-SubmissionSuccess": "ارسال به پایان رسید.",
