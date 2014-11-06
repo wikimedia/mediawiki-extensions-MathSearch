@@ -1,7 +1,5 @@
 <?php
 /**
- * Generates harvest files for the MathWebSearch Deamon.
- * Example: php CreateMathIndex.php ~/mws_harvest_files
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +25,7 @@ require_once( dirname( __FILE__ ) . '/IndexBase.php' );
  * @author Moritz Schubotz
  *
  */
-class ExportMathTable extends IndexBase {
+class CreateDB2MathTable extends IndexBase {
 	private $statment;
 	private $conn;
 	private $time;
@@ -83,5 +81,5 @@ class ExportMathTable extends IndexBase {
 	}
 }
 
-$maintClass = "ExportMathTable";
+$maintClass = "CreateDB2MathTable";
 require_once( RUN_MAINTENANCE_IF_MAIN );
