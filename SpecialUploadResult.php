@@ -330,4 +330,45 @@ class SpecialUploadResult extends SpecialPage {
 		}
 		$this->getOutput()->addHTML('</table>');
 	}
+
+	private function displayFormulaFeedback(){
+		$runId=$this->runID;
+		$dbr=wfGetDB(DB_SLAVE);
+		$res = $dbr->select(
+			array('l'=>'math_wmc_rank_levels','r'=>'math_wmc_ref','math_wmc_results'),
+			array( 'count(DISTINCT `r`.`qId`)  AS `c`',
+				'`l`.`level`                AS `level`'),
+			array( "(`math_wmc_results`.`rank` <= `l`.`level`)" ,
+				'runId'=>$runId,
+				'`math_wmc_results`.`oldId` = `r`.`oldId`',
+				'`math_wmc_results`.`qId` = `r`.`qId`',
+				'`math_wmc_results`.`fId` = `r`.`fId`',
+			),
+			__METHOD__,
+			array( 'GROUP BY' => '`l`.`level`',
+				'ORDER BY' => 'count(DISTINCT `r`.`qId`) DESC')
+		);
+		if ( ! $res || $res->numRows() == 0 ){
+			$this->getOutput()->addWikiText( "Score is 0. Check your submission");
+			return ;
+		} else {
+			$this->getOutput()->addWikiText( "'''Scored in " . $res->numRows() . " evaluation levels'''");
+		}
+
+		$this->getOutput()->addHTML('<table border="1" style="width:100%">
+  <tr>
+    <th>number of correct results</th>
+    <th>rank cutoff</th>
+  </tr>');
+		foreach ( $res as $result ) {
+			$c=$result->c;
+			$l=$result->level;
+			$this->getOutput()->addHTML("
+  <tr>
+    <td>$c</td>
+    <td>$l</td>
+  </tr>");
+		}
+		$this->getOutput()->addHTML('</table>');
+	}
 }
