@@ -12,6 +12,7 @@ class MathSearchHooks {
 	 * LoadExtensionSchemaUpdates handler; set up math table on install/upgrade.
 	 *
 	 * @param $updater DatabaseUpdater
+	 * @throws MWException
 	 * @return bool
 	 */
 	static function onLoadExtensionSchemaUpdates( $updater = null ) {
@@ -206,7 +207,7 @@ class MathSearchHooks {
 		if ( preg_match( '#<math(.*)?\sid="(?P<id>[\w\.]+)"#', $Result, $matches ) ) {
 			$rendererId = $matches['id'];
 			$oldId = self::curId2OldId( $pid );
-			$newID = "math.${oldId}.${eid}";
+			$newID = self::generateMathAnchorString($oldId,$eid);
 			$Result = str_replace( $rendererId, $newID, $Result );
 		}
 		return true;
@@ -222,5 +223,9 @@ class MathSearchHooks {
 		$testDir = __DIR__ . '/tests/';
 		$files = array_merge( $files, glob( "$testDir/*Test.php" ) );
 		return true;
+	}
+
+	static function generateMathAnchorString($pageID, $anchorID){
+		return "#math.$pageID.$anchorID";
 	}
 }

@@ -180,11 +180,16 @@ class SpecialUploadResult extends SpecialPage {
 		} else {
 			$renderedMath = $md5;
 		}
-		$formulaId = "math.{$row['oldId']}.{$row['fId']}";
+		$formulaId = MathSearchHooks::generateMathAnchorString( $row['oldId'], $row['fId'] );
 		$link=Revision::newFromId( $row['oldId'] )->getTitle()->getCanonicalURL()."#$formulaId";
 		$this->getOutput()->addHTML("<tr><td>${row['qId']}</td><td><a href=\"${link}\">$formulaId</a></td>
 			<td>${row['rank']}</td><td>$renderedMath</td></tr>");
 	}
+
+	/**
+	 * @param $csv_file
+	 * @return null
+	 */
 	protected function importFromFile( $csv_file ) {
 		if ( is_null( $csv_file ) ) {
 			return wfMessage( 'emptyfile' )->text();

@@ -65,6 +65,7 @@ class MathEngineBaseX {
 		$this->relevanceMap = array();
 		$this->resultSet = array();
 		if( $res ){
+			//TODO: ReEvaluate the regexp.
 			$baseXRegExp = "/<a .*? href=\"http.*?curid=(\d+)#math(\d?)\"/";
 			preg_match_all( $baseXRegExp , $res, $matches,PREG_SET_ORDER);
 			foreach($matches as $match){

@@ -100,7 +100,6 @@ class FormulaInfo extends SpecialPage {
 		$mo->findSimilarPages( $pid );
 		$out->addWikiText( '==Variables==' );
 		$mo->getObservations();
-		// $wgOut->addWikiText( "[[$pagename#math$eid|Eq: $eid]] ", false );
 		$out->addWikiText( '==MathML==' );
 
 		$out->addHtml( "<br />" );

@@ -58,11 +58,12 @@ class MathQueryObject extends MathObject {
 		$this->queryID = $id;
 	}
 
-	public function exportTexDocument(){
-		$texInput = htmlspecialchars( $this->getUserInputTex());
-		$texInputComment = preg_replace("/[\n\r]/","\n%",$texInput);
+	public function exportTexDocument() {
+		$texInput = htmlspecialchars( $this->getUserInputTex() );
+		$texInputComment = preg_replace( "/[\n\r]/", "\n%", $texInput );
 		$title = Title::newFromId( $this->getPageID() );
-		$absUrl  = $title->getFullURL(array("oldid"=>$title->getLatestRevID()))."#math{$this->getAnchorID()}";
+		$absUrl = $title->getFullURL( array( "oldid" => $title->getLatestRevID() ) ) .
+			MathSearchHooks::generateMathAnchorString( $title->getLatestRevID(), $this->getAnchorID() );
 		return <<<TeX
 \begin{topic}{{$this->getPageTitle()}-{$this->getAnchorID()}}
   \begin{fquery}\${$this->getTeXQuery()}\$\end{fquery}
