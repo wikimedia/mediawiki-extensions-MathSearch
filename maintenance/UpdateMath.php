@@ -32,6 +32,7 @@ class UpdateMath extends Maintenance {
 	private $current;
 	private $time = 0;//microtime( true );
 	private $performance = array();
+	private $renderingMode =  MW_MATH_LATEXML;
 
 	/**
 	 * @var DatabaseBase
@@ -43,7 +44,7 @@ class UpdateMath extends Maintenance {
 	public function __construct() {
 		$this->verbose = $this->verbose;
 		parent::__construct();
-		$this->mDescription = 'Outputs page text to stdout';
+		$this->mDescription = 'Updates the index of Mathematical formulae.';
 		$this->addOption( 'purge', "If set all formulae are rendered again without using caches. (Very time consuming!)", false, false, "f" );
 		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false );
 		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
@@ -51,6 +52,7 @@ class UpdateMath extends Maintenance {
 		$this->addOption( 'SVG', "If set SVG images will be produced", false, false );
 		$this->addOption( 'hoooks', "If set hooks will be skipped", false, false );
 		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
+		$this->addOption( 'mode' , 'Rendering mode to be used (0 = PNG, 5= MathML, 7=MathML)',false,true,'m');
 	}
 	private function time($category='default'){
 		global $wgMathDebug;
@@ -63,7 +65,8 @@ class UpdateMath extends Maintenance {
 			$this->db->insert('mathperformance',array(
 				'math_inputhash' => $this->current->getInputHash(),
 				'mathperformance_name' => substr($category,0,10),
-				'mathperformance_time' =>$delta,
+				'mathperformance_time' => $delta,
+			    'mathperformance_mode' => $this->renderingMode
 			));
 
 		}
@@ -116,10 +119,11 @@ class UpdateMath extends Maintenance {
 	}
 
 	/**
-	 * @param unknown $pId
+	 * @param $pid
 	 * @param unknown $pText
 	 * @param string $pTitle
-	 * @param string $purge
+	 * @internal param unknown $pId
+	 * @internal param string $purge
 	 * @return number
 	 */
 	private function doUpdate( $pid, $pText, $pTitle = "") {
@@ -132,7 +136,7 @@ class UpdateMath extends Maintenance {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math as $formula ) {
 				$this->time = microtime(true);
-				$renderer = MathRenderer::getRenderer( $formula[1], $formula[2], MW_MATH_LATEXML );
+				$renderer = MathRenderer::getRenderer( $formula[1], $formula[2], $this->renderingMode );
 				$this->current = $renderer;
 				$this->time("loadClass");
 				if ( $this->getOption( "texvccheck", false ) ) {
@@ -144,9 +148,9 @@ class UpdateMath extends Maintenance {
 				if ( $checked ) {
 					$renderer->render( $this->purge );
 					if( $renderer->getMathml() ){
-						$this->time("LaTeXML-Rendering");
+						$this->time("Rendering");
 					} else {
-						$this->time("LaTeXML-Fail");
+						$this->time("Failing");
 					}
 					if ( $this->getOption( "SVG", false ) ) {
 						$svg = $renderer->getSvg();
@@ -156,7 +160,7 @@ class UpdateMath extends Maintenance {
 							$this->time( "SVG-Fail" );
 						}
 					}
-				}else{
+				} else {
 					$this->time("checkTex-Fail");
 					echo "\nF:\t\t".$renderer->getMd5()." texvccheck error:" . $renderer->getLastError();
 					continue;
@@ -191,8 +195,9 @@ class UpdateMath extends Maintenance {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );
 		$this->verbose = $this->getOption("verbose",false);
+		$this->renderingMode = $this->getOption( "mode" , 7);
 		$this->db = wfGetDB( DB_MASTER );
-		$wgMathValidModes[] = MW_MATH_LATEXML;
+		$wgMathValidModes[] = $this->renderingMode;
 		$this->output( "Loaded.\n" );
 		$this->time = microtime( true );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
