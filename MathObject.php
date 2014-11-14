@@ -309,6 +309,7 @@ class MathObject extends MathMathML {
 	 */
 	public static function extractMathTagsFromWikiText( $wikiText ) {
 		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
+		//TODO:Check if this is necessary?
 		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
 		$matches = array();
 		Parser::extractTagsAndParams( array( 'math' ), $wikiText, $matches );
