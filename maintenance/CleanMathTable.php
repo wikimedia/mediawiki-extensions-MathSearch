@@ -21,7 +21,7 @@
 
 require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
-class UpdateMath extends Maintenance {
+class CleanMathTable extends Maintenance {
 	const RTI_CHUNK_SIZE = 10;
 	public $purge = false;
 
@@ -51,5 +51,5 @@ class UpdateMath extends Maintenance {
 	}
 }
 
-$maintClass = "UpdateMath";
+$maintClass = "CleanMathTable";
 require_once( RUN_MAINTENANCE_IF_MAIN );
