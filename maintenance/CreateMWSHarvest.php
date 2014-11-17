@@ -57,7 +57,9 @@ class CreateMWSHarvest extends IndexBase {
 		}
 		// if ( $xml->math ) {
 			// $smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
-			$out .= "\n<" . self::$mwsns . "expr url=\"math." . $row->mathindex_page_id . "." . $row->mathindex_anchor . "\">\n\t";
+		$out .= "\n<" . self::$mwsns . "expr url=\"" .
+		        MathSearchHooks::generateMathAnchorString( $row->mathindex_page_id, $row->mathindex_anchor ) .
+		        "\">\n\t";
 			$out .=  utf8_decode( $row->math_mathml );// $xml->math->children()->asXML();
 			$out .= "\n</" . self::$mwsns . "expr>\n";
 			return $out;
