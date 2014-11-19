@@ -165,7 +165,7 @@ class UpdateMath extends Maintenance {
 					echo "\nF:\t\t".$renderer->getMd5()." texvccheck error:" . $renderer->getLastError();
 					continue;
 				}
-				if ( $this->getOption( "hooks", true ) ) {
+				if ( ! $this->getOption( "hooks", false ) ) {
 					wfRunHooks( 'MathFormulaRendered', array( &$renderer, &$notused, $pid, $anchorID ) );
 					$this->time( "hooks" );
 					$anchorID++;
