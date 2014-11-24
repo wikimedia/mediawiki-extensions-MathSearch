@@ -11,6 +11,7 @@ class SpecialUploadResult extends SpecialPage {
 	private $warnings = array();
 	private $results = array();
 	private $runID = false;
+	private $validQIds = array();
 
 	public function __construct( $name = 'MathUpload' ) {
 		parent::__construct( $name );
@@ -41,7 +42,11 @@ class SpecialUploadResult extends SpecialPage {
 			'help-message' => 'math-wmc-display-formulae-help',
 			'type' => 'check',
 		);
-
+		$formDescriptor['attachResults'] = array(
+			'label-message' => 'math-wmc-attach-results-label',
+			'help-message' => 'math-wmc-attach-results-help',
+			'type' => 'check',
+		);
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitCallback( array( $this, 'processInput' ) );
 		$htmlForm->show();
@@ -140,14 +145,16 @@ class SpecialUploadResult extends SpecialPage {
 		return true;
 	}
 
-	public static function deleteRun( $runID ) {
-		$dbw = wfGetDB( DB_MASTER );
-		$dbw->delete( 'math_wmc_results', array( 'runId' => $runID ) );
+	public function deleteRun( $runID ) {
+		if ( !$this->getRequest()->getBool( "wpattachResults" ) ) {
+			$dbw = wfGetDB( DB_MASTER );
+			$dbw->delete( 'math_wmc_results', array( 'runId' => $runID ) );
+		}
 	}
 
 	function processInput(  ) {
 		$this->getOutput()->addWikiMsg( "math-wmc-SubmissionSuccess" );
-		self::deleteRun( $this->runID );
+		$this->deleteRun( $this->runID );
 		$dbw = wfGetDB( DB_MASTER );
 		//TODO: Find adequate API call
 		$this->getOutput()->addHTML('<table border="1" style="width:100%">
@@ -220,10 +227,15 @@ class SpecialUploadResult extends SpecialPage {
 	}
 
 	private function isValidQId( $qId ) {
+		if( array_key_exists( $qId, $this->validQIds) ){
+			return $this->validQIds[$qId];
+		}
 		$dbr = wfGetDB( DB_SLAVE );
 		if ( $dbr->selectField( 'math_wmc_ref', 'qId', array( 'qId' => $qId ) ) ) {
+			$this->validQIds[$qId] = true;
 			return true;
 		} else {
+			$this->validQIds[$qId] = false;
 			return false;
 		}
 	}

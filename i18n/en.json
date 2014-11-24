@@ -22,6 +22,8 @@
     "mathmode_6": "MW_MATH_MATHJAX",
     "mathmode_7": "MW_MATH_LATEXML",
     "mathmode_7+": "MW_MATH_LATEXML_JAX",
+	"math-wmc-attach-results-help": "Sometimes a single run contains to many results for one file upload. In that case the upload has to be split into several files.",
+	"math-wmc-attach-results-label":"Attach more results to existing run",
     "math-wmc-Introduction":"Upload your submission to the current NTCIR Wikipedia Math Search Task here:",
     "math-wmc-SectionRun" : "Submission information",
     "math-wmc-SelectRun": "Name",
