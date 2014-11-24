@@ -27,7 +27,7 @@
     "math-wmc-SelectRun": "Name",
     "math-wmc-SelectRunHelp" : "Specify a unique name for your submission, or overwrite an existing draft.",
     "math-wmc-FileLabel" : "CSV File",
-    "math-wmc-FileHelp" : "Upload your results as ranked, comma separated list of (queryId,formulaId)-pairs. A column header of the form <code>queryID,formulaId</code> is required.",
+    "math-wmc-FileHelp" : "Upload your results as ranked, comma separated list of (queryId,formulaId)-pairs. A column header of the form <code>queryId,formulaId</code> is required.",
     "math-wmc-RunAdded": "Added submission \"$1\" with Id \"$2\"",
     "math-wmc-RunAddError": "Error: Cannot add submission \"$1\".",
     "math-wmc-RunAddExist": "Submission named \"$1\" already exists with Id \"$2\"",
