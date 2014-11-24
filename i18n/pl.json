@@ -15,7 +15,7 @@
 	"math-wmc-SectionRun": "Informacje o zgłoszeniu",
 	"math-wmc-SelectRun": "Nazwa",
 	"math-wmc-FileLabel": "Plik CSV",
-	"math-wmc-FileHelp": "Prześlij swoje wyniki w rankingu, oddzieloną przecinkami listę (queryId, formulaId)-par. Nagłówek kolumny formularza <code>queryID,formulaId</code> jest wymagany.",
+	"math-wmc-FileHelp": "Prześlij swoje wyniki w rankingu, oddzieloną przecinkami listę (queryId, formulaId)-par. Nagłówek kolumny formularza <code>queryId,formulaId</code> jest wymagany.",
 	"math-wmc-Warnings": "Następujące linie plików wejściowych zostały zignorowane:",
 	"math-wmc-bad-header": "Błąd: Nagłówkiem kolumny musi być queryId,formulaId. Dodatkowe kolumny nie są dozwolone.",
 	"math-wmc-importing": "Importowanie...",

@@ -11,7 +11,7 @@
 	"xquerygenerator": "Generatore XQuery",
 	"math-wmc-SelectRun": "Nome",
 	"math-wmc-FileLabel": "File CSV",
-	"math-wmc-FileHelp": "Carica i risultati classificati, elenco di coppie (queryId, formulaId) separati da virgola. Un'intestazione di colonna del modulo <code>queryID,formulaId</code> è richiesta.",
+	"math-wmc-FileHelp": "Carica i risultati classificati, elenco di coppie (queryId, formulaId) separati da virgola. Un'intestazione di colonna del modulo <code>queryId,formulaId</code> è richiesta.",
 	"math-wmc-Warnings": "Le seguenti righe del file di input sono state ignorate:",
 	"math-wmc-display-formulae-help": "Non consigliato per grandi file di input."
 }

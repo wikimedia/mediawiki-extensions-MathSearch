@@ -16,7 +16,7 @@
 	"xquerygenerator": "{{doc-special|XQueryGenerator}}",
 	"mathdebug": "{{doc-special|MathDebug}}",
 	"math-wmc-attach-results-help": "Form label help text",
-	"math-wmc-attach-results-label":"Form label",
+	"math-wmc-attach-results-label": "Form label",
 	"math-wmc-Introduction": "Used as introduction for the upload form",
 	"math-wmc-SectionRun": "Form group name",
 	"math-wmc-SelectRun": "Form label\n{{Identical|Name}}",
