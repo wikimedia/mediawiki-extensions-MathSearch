@@ -24,6 +24,9 @@ $specialPageAliases['ar'] = array(
 	'MathSearch' => array( 'بحث_رياضيات' ),
 	'MathDebug' => array( 'تصحيح_رياضيات' ),
 	'FormulaInfo' => array( 'معلومات_المعادلة' ),
+	'GetEquationsByQuery' => array( 'المعادلات_بواسطة_الاستعلام', 'الصيغ_بواسطة_الاستعلام' ),
+	'MathIndex' => array( 'فهرس_الرياضيات' ),
+	'MathUpload' => array( 'رفع_الرياضيات' ),
 );
 
 /** Egyptian Spoken Arabic (مصرى) */
