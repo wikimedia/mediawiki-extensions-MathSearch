@@ -59,7 +59,7 @@ class CreateBaseXMathTable extends IndexBase {
 			return "";
 		}
 		$out .= "\n<" . self::$mwsns . "expr url=\"" .
-	        MathSearchHooks::generateMathAnchorString( $row->mathindex_page_id, $row->mathindex_anchor ) . "\">\n\t";
+	        MathSearchHooks::generateMathAnchorString( $row->mathindex_page_id, $row->mathindex_anchor, '' ) . "\">\n\t";
 		$out .=  utf8_decode( $row->math_mathml );// $xml->math->children()->asXML();
 		$out .= "\n</" . self::$mwsns . "expr>\n";
 		// TODO: This does not work yet.
