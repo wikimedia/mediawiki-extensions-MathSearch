@@ -207,7 +207,7 @@ class MathSearchHooks {
 		if ( preg_match( '#<math(.*)?\sid="(?P<id>[\w\.]+)"#', $Result, $matches ) ) {
 			$rendererId = $matches['id'];
 			$oldId = self::curId2OldId( $pid );
-			$newID = self::generateMathAnchorString($oldId,$eid);
+			$newID = self::generateMathAnchorString( $oldId, $eid, '' );
 			$Result = str_replace( $rendererId, $newID, $Result );
 		}
 		return true;
@@ -225,7 +225,7 @@ class MathSearchHooks {
 		return true;
 	}
 
-	static function generateMathAnchorString($pageID, $anchorID){
-		return "#math.$pageID.$anchorID";
+	static function generateMathAnchorString($pageID, $anchorID, $prefix = "#"){
+		return "{$prefix}math.$pageID.$anchorID";
 	}
 }

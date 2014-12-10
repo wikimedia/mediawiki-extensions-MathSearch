@@ -187,8 +187,8 @@ class SpecialUploadResult extends SpecialPage {
 		} else {
 			$renderedMath = $md5;
 		}
-		$formulaId = MathSearchHooks::generateMathAnchorString( $row['oldId'], $row['fId'] );
-		$link=Revision::newFromId( $row['oldId'] )->getTitle()->getCanonicalURL()."#$formulaId";
+		$formulaId = MathSearchHooks::generateMathAnchorString( $row['oldId'], $row['fId']  );
+		$link=Revision::newFromId( $row['oldId'] )->getTitle()->getCanonicalURL().$formulaId;
 		$this->getOutput()->addHTML("<tr><td>${row['qId']}</td><td><a href=\"${link}\">$formulaId</a></td>
 			<td>${row['rank']}</td><td>$renderedMath</td></tr>");
 	}

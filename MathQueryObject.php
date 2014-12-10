@@ -67,7 +67,7 @@ class MathQueryObject extends MathObject {
 		$title = Title::newFromId( $this->getPageID() );
 		$absUrl =
 			$title->getFullURL( array( "oldid" => $title->getLatestRevID() ) ) .
-			MathSearchHooks::generateMathAnchorString( $title->getLatestRevID(), $this->getAnchorID() );
+			MathSearchHooks::generateMathAnchorString( $title->getLatestRevID(), $this->getAnchorID(), '' );
 		return <<<TeX
 \begin{topic}{{$this->getPageTitle()}-{$this->getAnchorID()}}
   \begin{fquery}\${$this->getTeXQuery()}\$\end{fquery}
