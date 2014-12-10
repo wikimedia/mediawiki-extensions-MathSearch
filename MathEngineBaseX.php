@@ -70,8 +70,16 @@ class MathEngineBaseX {
 			preg_match_all( $baseXRegExp , $res, $matches,PREG_SET_ORDER);
 			foreach($matches as $match){
 				$mo = MathObject::constructformpage($match[1],$match[2]);
-				$this->relevanceMap[(string) $mo->getPageID()]=true;
-				$this->resultSet[(string) $mo->getPageID()][(string) $mo->getAnchorID()][] = array( "xpath" => '/', "mappings" => array() ); // ,"original"=>$page->asXML()
+				if ( $mo ) {
+					$this->relevanceMap[(string)$mo->getPageID()] = true;
+					$this->resultSet[(string)$mo->getPageID()][(string)$mo->getAnchorID()][] =
+						array(
+							"xpath" => '/',
+							"mappings" => array()
+						); // ,"original"=>$page->asXML()
+				} else {
+					wfDebugLog( 'MathSearch', "Warning: Entry ${match[1]}, ${match[2]} not fund in database. Index might be out of date." );
+				}
 			}
 		} else {
 			$this->size = 0;
