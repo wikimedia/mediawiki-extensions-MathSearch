@@ -68,7 +68,7 @@ class FormulaInfo extends SpecialPage {
 		$pageName = (string)$revision->getTitle();
 		$out->addWikiText( "* Page found: [[$pageName#$eid|$pageName]] (eq $eid)  ", false );
 		$out->addHtml( '<a href="/index.php?title=' . $pageName . '&action=purge&mathpurge=true">(force rerendering)</a>' );
-
+		$pid = Revision::newFromId($oldID)->getTitle()->getArticleID();
 		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $pid, $eid );
 		if ( !$mo ) {

@@ -52,6 +52,8 @@ class MathEngineBaseX {
 
 	/**
 	 * Posts the query to BaseX and evaluates the results
+	 * @throws BaseXError
+	 * @throws MWException
 	 * @return boolean
 	 */
 	function postQuery() {
@@ -64,26 +66,27 @@ class MathEngineBaseX {
 		$res = $session->execute( "xquery ".$this->query->getXQuery() );
 		$this->relevanceMap = array();
 		$this->resultSet = array();
+		$size = 0;
 		if( $res ){
 			//TODO: ReEvaluate the regexp.
-			$baseXRegExp = "/<a .*? href=\"http.*?curid=(\d+)#math(\d?)\"/";
+			$baseXRegExp = "/<a .*? href=\"http.*?curid=math.(\d+).math(\d+)\"/";
 			preg_match_all( $baseXRegExp , $res, $matches,PREG_SET_ORDER);
 			foreach($matches as $match){
 				$mo = MathObject::constructformpage($match[1],$match[2]);
 				if ( $mo ) {
+					$size++;
 					$this->relevanceMap[(string)$mo->getPageID()] = true;
 					$this->resultSet[(string)$mo->getPageID()][(string)$mo->getAnchorID()][] =
 						array(
 							"xpath" => '/',
 							"mappings" => array()
-						); // ,"original"=>$page->asXML()
+						);
 				} else {
 					wfDebugLog( 'MathSearch', "Warning: Entry ${match[1]}, ${match[2]} not fund in database. Index might be out of date." );
 				}
 			}
-		} else {
-			$this->size = 0;
 		}
+		$this->size = $size;
 		return true;
 	}
 }
