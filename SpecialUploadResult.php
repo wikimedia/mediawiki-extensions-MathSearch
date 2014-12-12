@@ -22,8 +22,9 @@ class SpecialUploadResult extends SpecialPage {
 	}
 
 	function execute( $query ) {
+		global $wgMathUploadEnabled;
 		$this->setHeaders();
-		if ( ! $this->getUser()->isAllowed( 'mathwmcsubmit' ) ) {
+		if ( ! ( $this->getUser()->isAllowed( 'mathwmcsubmit' ) && $wgMathUploadEnabled === true ) ) {
 			throw new PermissionsError( 'mathwmcsubmit' );
 		}
 

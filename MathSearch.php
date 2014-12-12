@@ -98,3 +98,4 @@ $wgMathWmcMaxResults = 10000;
 $wgAutoloadClasses['SpecialUploadResult'] = $dir . 'SpecialUploadResult.php';
 $wgSpecialPages['MathUpload'] = 'SpecialUploadResult';
 $wgSpecialPageGroups['MathUpload'] = 'mathsearch';
+$wgMathUploadEnabled = false;
