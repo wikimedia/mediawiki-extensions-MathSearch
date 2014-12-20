@@ -99,3 +99,6 @@ $wgAutoloadClasses['SpecialUploadResult'] = $dir . 'SpecialUploadResult.php';
 $wgSpecialPages['MathUpload'] = 'SpecialUploadResult';
 $wgSpecialPageGroups['MathUpload'] = 'mathsearch';
 $wgMathUploadEnabled = false;
+$wgAutoloadClasses['SpecialMathDownloadResult'] = $dir . 'SpecialMathDownloadResult.php';
+$wgSpecialPages['MathDownload'] = 'SpecialMathDownloadResult';
+$wgSpecialPageGroups['MathDownload'] = 'mathsearch';

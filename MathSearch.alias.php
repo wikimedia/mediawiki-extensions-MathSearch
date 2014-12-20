@@ -17,6 +17,7 @@ $specialPageAliases['en'] = array(
 	'GetEquationsByQuery' => array( 'GetEquationsByQuery', 'Get Formulae by Query' ),
 	'MathIndex' => array( 'MathIndex', 'Math Index' ),
 	'MathUpload' => array( 'MathUpload', 'Math Upload' ),
+	'MathDownload' => array( 'MathDownload', 'Math Download' ),
 );
 
 /** Arabic (العربية) */

@@ -39,6 +39,8 @@ class MathSearchHooks {
 		    $updater->addExtensionTable( 'mathperformance', $dir . 'mathperformance.sql' );
 			if ( $wgMathWmcServer ){
 				$updater->addExtensionTable( 'math_wmc_ref', $dir . "math_wmc_ref.sql");
+				$updater->addExtensionTable( 'math_wmc_runs', $dir . "math_wmc_runs.sql");
+				$updater->addExtensionTable( 'math_wmc_results', $dir . "math_wmc_results.sql");
 			}
 		    $updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
  		} else {

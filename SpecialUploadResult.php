@@ -7,12 +7,15 @@
  * @author Yaron Koren (This class is baaed on DT_ImportCSV from the DataTransfer extension)
  */
 class SpecialUploadResult extends SpecialPage {
-	private $columnHeaders = array( 'queryId', 'formulaId' );
+	private static $columnHeaders = array( 'queryId', 'formulaId' );
 	private $warnings = array();
 	private $results = array();
-	private $runID = false;
+	protected $runId = false;
 	private $validQIds = array();
 
+	public static function getCsvColumnHeader(){
+		return implode( ',', self::$columnHeaders );
+	}
 	public function __construct( $name = 'MathUpload' ) {
 		parent::__construct( $name );
 	}
@@ -54,7 +57,7 @@ class SpecialUploadResult extends SpecialPage {
 
 	}
 
-	protected function printRunSelector() {
+	protected function printRunSelector( $type = 'selectorother' ) {
 		$dbr = wfGetDB( DB_SLAVE );
 		$formFields = array();
 		$options = array();
@@ -64,8 +67,8 @@ class SpecialUploadResult extends SpecialPage {
 		foreach ( $res as $row ) {
 			$options[ $row->runName . " (" . $row->runId . ")" ] = $row->runId;
 		}
-		//Probably we want to add more field in the future
-		$formFields['run'] = array( 'type' => 'selectorother',
+		//Probably we want to add more fields in the future
+		$formFields['run'] = array( 'type' => $type,
 			'label-message' => 'math-wmc-SelectRun',
 			'options' => $options,
 			'required' => true,
@@ -92,18 +95,18 @@ class SpecialUploadResult extends SpecialPage {
 				$success = $dbw->insert( 'math_wmc_runs',
 					array( 'isDraft' => true, 'userID' => $uID, 'runName' => $run ) );
 				if ( $success ) {
-					$this->runID = $dbw->insertId();
-					$this->getOutput()->addWikiMsg( 'math-wmc-RunAdded', $run, $this->runID );
+					$this->runId = $dbw->insertId();
+					$this->getOutput()->addWikiMsg( 'math-wmc-RunAdded', $run, $this->runId );
 				} else {
-					$this->runID = false;
+					$this->runId = false;
 					$this->getOutput()->addWikiMsg( 'math-wmc-RunAddError', $run );
 				}
 			} else {
 				$this->getOutput()->addWikiMsg( 'math-wmc-RunAddExist', $run, $exists );
-				$this->runID = false;
+				$this->runId = false;
 			}
 		} else {
-			$this->runID = $run;
+			$this->runId = $run;
 		}
 		return $run;
 	}
@@ -112,7 +115,7 @@ class SpecialUploadResult extends SpecialPage {
 		$dbr = wfGetDB( DB_SLAVE );
 		$uID = $this->getUser()->getId();
 		$res = $dbr->selectField( 'math_wmc_runs', 'runName',
-			array( 'isDraft' => true, 'userID' => $uID, 'runId' => $this->runID ) );
+			array( 'isDraft' => true, 'userID' => $uID, 'runId' => $this->runId ) );
 		if ( ! $res ) {
 			return wfMessage( 'math-wmc-SelectRunHelp' )->text();
 		} else {
@@ -155,7 +158,7 @@ class SpecialUploadResult extends SpecialPage {
 
 	function processInput(  ) {
 		$this->getOutput()->addWikiMsg( "math-wmc-SubmissionSuccess" );
-		$this->deleteRun( $this->runID );
+		$this->deleteRun( $this->runId );
 		$dbw = wfGetDB( DB_MASTER );
 		//TODO: Find adequate API call
 		$this->getOutput()->addHTML('<table border="1" style="width:100%">
@@ -166,7 +169,7 @@ class SpecialUploadResult extends SpecialPage {
     <th>rendering</th>
   </tr>');
 		foreach ( $this->results as $result ) {
-			$result['runId'] = $this->runID; //make sure that runId is correct
+			$result['runId'] = $this->runId; //make sure that runId is correct
 			$dbw->insert( 'math_wmc_results', $result );
 			$this->printResultRow( $result );
 		}
@@ -190,7 +193,7 @@ class SpecialUploadResult extends SpecialPage {
 		}
 		$formulaId = MathSearchHooks::generateMathAnchorString( $row['oldId'], $row['fId']  );
 		$link=Revision::newFromId( $row['oldId'] )->getTitle()->getCanonicalURL().$formulaId;
-		$this->getOutput()->addHTML("<tr><td>${row['qId']}</td><td><a href=\"${link}\">$formulaId</a></td>
+		$this->getOutput()->addHTML("<tr><td>${row['qId']}</td><td><a href=\"${link}\" >$formulaId</a></td>
 			<td>${row['rank']}</td><td>$renderedMath</td></tr>");
 	}
 
@@ -253,7 +256,7 @@ class SpecialUploadResult extends SpecialPage {
 
 		// check header line
 		$uploadedHeaders = $table[0];
-		if ( $uploadedHeaders != $this->columnHeaders ) {
+		if ( $uploadedHeaders != self::columnHeaders ) {
 			$error_msg = wfMessage( 'math-wmc-bad-header' )->text();
 			return $error_msg;
 		}
@@ -301,7 +304,7 @@ class SpecialUploadResult extends SpecialPage {
 
 	private function addValidatedResult( $qId, $pId, $eId, $fHash, $rank ) {
 		$this->results[] = array(
-			'runId' => $this->runID,
+			'runId' => $this->runId,
 			'qId'   => $qId,
 			'oldId' => $pId,
 			'fId'   => $eId,
@@ -310,7 +313,7 @@ class SpecialUploadResult extends SpecialPage {
 	}
 
 	private function displayFeedback(){
-		$runId=$this->runID;
+		$runId=$this->runId;
 		$dbr=wfGetDB(DB_SLAVE);
 		$res = $dbr->select(
 			array('l'=>'math_wmc_rank_levels','r'=>'math_wmc_ref','math_wmc_results'),
@@ -349,8 +352,11 @@ class SpecialUploadResult extends SpecialPage {
 		$this->getOutput()->addHTML('</table>');
 	}
 
+	/**
+	 * @throws MWException
+	 */
 	private function displayFormulaFeedback(){
-		$runId=$this->runID;
+		$runId=$this->runId;
 		$dbr=wfGetDB(DB_SLAVE);
 		$res = $dbr->select(
 			array('l'=>'math_wmc_rank_levels','r'=>'math_wmc_ref','math_wmc_results'),
