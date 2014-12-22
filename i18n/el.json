@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Geraki"
+			"Geraki",
+			"Evropi"
 		]
 	},
+	"math-wmc-download-button": "Λήψη",
 	"math-wmc-importing": "Εισαγωγή...",
 	"math-wmc-display-formulae-label": "Προβολή της απόδοσης των υποβληθέντων τύπων"
 }

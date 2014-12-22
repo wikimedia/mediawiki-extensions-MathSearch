@@ -1,9 +1,12 @@
 {
 	"@metadata": {
 		"authors": [
-			"Vitorvicentevalente"
+			"Vitorvicentevalente",
+			"Macofe"
 		]
 	},
+	"mathdownload": "Descarregar resultados da pesquisa matemática",
+	"math-wmc-download-button": "Descarregar",
 	"math-wmc-SelectRun": "Nome",
 	"math-wmc-FileLabel": "Ficheiro CSV",
 	"math-wmc-RunAddError": "Erro: Não foi possível adicionar a submissão \"$1\".",

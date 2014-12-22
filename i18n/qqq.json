@@ -19,7 +19,7 @@
 	"math-wmc-attach-results-help": "Form label help text",
 	"math-wmc-attach-results-label": "Form label",
 	"math-wmc-download-intro": "Introductory text for MathDownload special page.",
-	"math-wmc-download-button": "Button label for submit button.",
+	"math-wmc-download-button": "Button label for submit button.\n{{Identical|Download}}",
 	"math-wmc-Introduction": "Used as introduction for the upload form",
 	"math-wmc-SectionRun": "Form group name",
 	"math-wmc-SelectRun": "Form label\n{{Identical|Name}}",

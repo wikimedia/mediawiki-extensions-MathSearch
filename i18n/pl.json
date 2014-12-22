@@ -12,6 +12,7 @@
 	"specialpages-group-mathsearch": "Wyszukiwanie wzorów",
 	"mathsearch-desc": "Integruje wyszukiwarkę [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Pobierz równania przez zapytania",
+	"math-wmc-download-button": "Pobierz",
 	"math-wmc-SectionRun": "Informacje o zgłoszeniu",
 	"math-wmc-SelectRun": "Nazwa",
 	"math-wmc-FileLabel": "Plik CSV",
