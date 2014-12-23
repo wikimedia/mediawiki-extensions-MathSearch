@@ -1,0 +1,34 @@
+{
+	"@metadata": {
+		"authors": [
+			"Dinhxuanduyet"
+		]
+	},
+	"mathsearch": "Math search",
+	"formulainfo": "Thông tin về công thức",
+	"mathdownload": "Download kết quả tìm kiếm toán học",
+	"mathindex": "Chỉ số toán học",
+	"mathupload": "Trình bày kết quả tìm kiếm toán học",
+	"specialpages-group-mathsearch": "Tìm kiếm toán học",
+	"mathsearch-desc": "Tích hợp engine [http://search.mathweb.org/about.html MathWeb Search]",
+	"getequationsbyquery": "Lấy các phương trình bằng truy vấn",
+	"xquerygenerator": "bộ tạo XQuery",
+	"mathdebug": "Kiểm tra bộ dàn trang",
+	"math-wmc-attach-results-label": "Gửi kèm thêm các kết quả cho chương trình đã có",
+	"math-wmc-download-intro": "Download các chương trình mà bạn đã thông qua trước đây. File này chỉ chứa các liên kết hợp lệ. Tất cả các liên kết không hợp lệ sẽ bị gỡ bỏ",
+	"math-wmc-download-button": "Tải về",
+	"math-wmc-Introduction": "Tải lên đệ trình của bạn đối với NTCIR Wikipedia Math Search Task hiện tại tại đây:",
+	"math-wmc-SectionRun": "Thông tin đệ trình",
+	"math-wmc-SelectRun": "Tên",
+	"math-wmc-FileLabel": "File CSV",
+	"math-wmc-FileHelp": "Tải lên các kết quả của bạn theo phân loại, sử dụng dấu phẩy theo các cặp (queryId,formulaId). Cần phải có một cột header của form <code>queryId,formulaId</code>",
+	"math-wmc-RunAdded": "Thêm đệ trình \"$1\" với Id \"$2\"",
+	"math-wmc-RunAddError": "Lỗi: Không thể thêm đệ trình \"$1\".",
+	"math-wmc-RunAddExist": "Đệ trình tên \"$1\" đã tồn tại với Id \"$2\"",
+	"math-wmc-Warnings": "Những dòng sau của file nhập vào đã bị từ chối:",
+	"math-wmc-SubmissionSuccess": "Đệ trình đã thành công",
+	"math-wmc-bad-header": "Lỗi: Cột header phải là queryId,formulaId. Các cột thêm vào không được cho phép.",
+	"math-wmc-importing": "Đang nhập...",
+	"math-wmc-display-formulae-help": "Không khuyến khích nhập vào các file có kích thước lớn",
+	"action-mathwmcsubmit": "trình bày các kết quả với NTCIR Wikipedia Math Search Task"
+}

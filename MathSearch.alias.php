@@ -53,6 +53,7 @@ $specialPageAliases['de'] = array(
 	'GetEquationsByQuery' => array( 'Gleichungen_durch_Abfrage' ),
 	'MathIndex' => array( 'Math-Index' ),
 	'MathUpload' => array( 'Math_hochladen' ),
+	'MathDownload' => array( 'Math_herunterladen' ),
 );
 
 /** Zazaki (Zazaki) */

@@ -14,6 +14,7 @@
 	"getequationsbyquery": "Vergelijkingen zoeken",
 	"xquerygenerator": "XQuerygenerator",
 	"mathdebug": "Verwerking testen",
+	"math-wmc-download-button": "Download",
 	"math-wmc-SelectRun": "Naam",
 	"math-wmc-FileLabel": "CSV-bestand",
 	"math-wmc-importing": "Importeren..."
