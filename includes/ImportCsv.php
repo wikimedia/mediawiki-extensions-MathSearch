@@ -12,7 +12,7 @@ class ImportCsv {
 	 */
 	private static $columnHeaders = array( 'queryId', 'formulaId' );
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $runId = false;
 	/**
@@ -44,15 +44,19 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param $csvFile
-	 * @param null $runId
+	 * @param      $csvFile
+	 * @param int  $runId
 	 * @param bool $overwrite
+	 *
+	 * @return string|boolean
 	 */
 	public function execute( $csvFile, $runId = null, $overwrite = false ) {
 		$this->overwrite = $overwrite;
 		$runId = $this->validateRunId( $runId );
 		if ( $runId !== false ) {
-			$this->importFromFile( $csvFile );
+			return $this->importFromFile( $csvFile );
+		} else {
+			return "Error: Invalid runId.";
 		}
 	}
 
@@ -66,21 +70,22 @@ class ImportCsv {
 		}
 		$dbw = wfGetDB( DB_MASTER );
 		$uID = $this->getUser()->getId();
-		$res =
-			$dbw->selectField( 'math_wmc_runs', 'runName',
+		if ( is_int($run) ){
+			$runId = $dbw->selectField( 'math_wmc_runs', 'runId',
 				array( 'isDraft' => true, 'userID' => $uID, 'runId' => $run ) );
-		if ( !$res ) {
-			$exists =
-				$dbw->selectField( 'math_wmc_runs', 'runId',
+		} else {
+			$runId = $dbw->selectField( 'math_wmc_runs', 'runId',
+				array( 'isDraft' => true, 'userID' => $uID, 'runName' => $run ) );
+		}
+		if ( !$runId ) {
+			$exists = $dbw->selectField( 'math_wmc_runs', 'runId',
 					array( 'userID' => $uID, 'runName' => $run ) );
 			if ( !$exists ) {
-				$success =
-					$dbw->insert( 'math_wmc_runs',
+				$success = $dbw->insert( 'math_wmc_runs',
 						array( 'isDraft' => true, 'userID' => $uID, 'runName' => $run ) );
 				if ( $success ) {
 					$this->runId = $dbw->insertId();
-					$this->warnings[] =
-						wfMessage( 'math-wmc-RunAdded', $run, $this->runId )->text();
+					$this->warnings[] = wfMessage( 'math-wmc-RunAdded', $run, $this->runId )->text();
 				} else {
 					$this->runId = false;
 					$this->warnings[] = wfMessage( 'math-wmc-RunAddError', $run )->text();
@@ -90,7 +95,7 @@ class ImportCsv {
 				$this->runId = false;
 			}
 		} else {
-			$this->runId = $run;
+			$this->runId = $runId;
 		}
 		return $this->runId;
 	}
@@ -137,7 +142,6 @@ class ImportCsv {
 			// they didn't get removed, so remove them now.
 			$table[0][0] = trim( $table[0][0], '"' );
 		}
-
 		return $this->importFromArray( $table );
 
 	}
@@ -176,13 +180,11 @@ class ImportCsv {
 				$eId = (int)$m[2];
 				$fHash = $this->getInputHash( $pId, $eId );
 				if ( $fHash == false ) {
-					$this->warnings[] =
-						wfMessage( 'math-wmc-wrong-formula-reference', $i, $pId, $eId )->text();
+					$this->warnings[] = wfMessage( 'math-wmc-wrong-formula-reference', $i, $pId, $eId )->text();
 				}
 			} else {
-				$this->warnings[] =
-					wfMessage( 'math-wmc-malformed-formula-reference', $i, $fId,
-						ImportPattern )->text();
+				$this->warnings[] = wfMessage( 'math-wmc-malformed-formula-reference', $i, $fId,
+					ImportPattern )->text();
 			}
 			if ( $qValid === true && $fHash !== false ) {
 				// a valid result has been submitted
@@ -195,13 +197,12 @@ class ImportCsv {
 				if ( $rank <= $wgMathWmcMaxResults ) {
 					$this->addValidatedResult( $qId, $pId, $eId, $fHash, $rank );
 				} else {
-					$this->warnings[] =
-						wfMessage( 'math-wmc-too-many-results', $i, $qId, $fId, $rank,
-							$wgMathWmcMaxResults )->text();
+					$this->warnings[] = wfMessage( 'math-wmc-too-many-results', $i, $qId, $fId, $rank,
+						$wgMathWmcMaxResults )->text();
 				}
 			}
 		}
-		return null;
+		return true;
 	}
 
 	/**
@@ -310,6 +311,13 @@ class ImportCsv {
 	 */
 	public function getResults() {
 		return $this->results;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getRunId() {
+		return $this->runId;
 	}
 
 }
