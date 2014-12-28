@@ -113,7 +113,7 @@ class ImportCsv {
 	 * @param $csv_file
 	 * @return null
 	 */
-	protected function importFromFile( $csv_file ) {
+	public function importFromFile( $csv_file ) {
 		if ( is_null( $csv_file ) ) {
 			return wfMessage( 'emptyfile' )->text();
 		}
@@ -146,13 +146,13 @@ class ImportCsv {
 	 * @param $table
 	 * @return null|string
 	 */
-	protected function importFromArray( $table ) {
+	public function importFromArray( $table ) {
 		global $wgMathWmcMaxResults;
 		define( 'ImportPattern', '/math\.(\d+)\.(\d+)/' );
 
 		// check header line
 		$uploadedHeaders = $table[0];
-		if ( $uploadedHeaders != self::columnHeaders ) {
+		if ( $uploadedHeaders != self::$columnHeaders ) {
 			$error_msg = wfMessage( 'math-wmc-bad-header' )->text();
 			return $error_msg;
 		}
@@ -282,6 +282,34 @@ class ImportCsv {
 			$dbw = wfGetDB( DB_MASTER );
 			$dbw->delete( 'math_wmc_results', array( 'runId' => $runID ) );
 		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getWarnings() {
+		return $this->warnings;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isOverwrite() {
+		return $this->overwrite;
+	}
+
+	/**
+	 * @param boolean $overwrite
+	 */
+	public function setOverwrite( $overwrite ) {
+		$this->overwrite = $overwrite;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getResults() {
+		return $this->results;
 	}
 
 }

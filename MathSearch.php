@@ -55,6 +55,7 @@ $wgAutoloadClasses['MathSearchApi'] = $dir . 'MathSearchApi.php';
 $wgAutoloadClasses['BaseXSession'] = $dir . 'BaseXSession.php';
 $wgAutoloadClasses['BaseXQuery'] = $dir . 'BaseXQuery.php';
 $wgAutoloadClasses['BaseXError'] = $dir . 'BaseXError.php';
+$wgAutoloadClasses['ImportCsv'] = $dir . 'includes/ImportCsv.php';
 
 $wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php';

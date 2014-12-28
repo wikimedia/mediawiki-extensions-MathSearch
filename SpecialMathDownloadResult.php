@@ -10,7 +10,7 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 	}
 
 	public static function run2CSV( $runId ){
-		$out = SpecialUploadResult::getCsvColumnHeader() . "\n";
+		$out = ImportCsv::getCsvColumnHeader() . "\n";
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select( 'math_wmc_results',
 			array( 'qId' , 'oldId' , 'fId' ),
