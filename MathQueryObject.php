@@ -144,37 +144,6 @@ TeX;
 		return $this->pquery;
 	}
 
-	/**
-	 * @return bool|string
-	 */
-	public function serlializeToXML() {
-		$cx = simplexml_load_string( $this->getCQuery() );
-		$px = simplexml_load_string( $this->getPQuery() );
-		if ( $cx == false || $px == false ) {
-			return false;
-		}
-		$xCore =
-			preg_replace( "/\\n/", "\n\t\t", $cx->children( 'mws', TRUE )->children( 'm', TRUE )->asXML() );
-		$pmml =
-			preg_replace( array( '#<mi (.*) mathcolor="red">(.*)</mi>#', "/\\n/" ),
-				array( '<mws:qvar xmlns:mws="http://www.mathweb.org/mws/ns" name="$2"/>', "\n\t\t" ),
-				$px->children()->asXML() );
-		$out = '<topic xmlns="http://ntcir-math.nii.ac.jp/">';
-		$out .= "\n\t<num>FSE-GC-" . $this->getQueryId() . "</num>";
-		$out .= "\n\t<type>Content-Query</type>";
-		$out .= "\n\t<title>Query " . $this->getQueryId() . " (" . $this->getPageTitle() . ")<title>";
-		$out .= "\n\t<query>";
-		$out .= "\n\t\t<TeXquery>{$this->getTeXQuery()}</TeXquery>";
-		$out .= "\n\t\t<pquery>{$pmml}</pquery>";
-		$out .= "\n\t\t<cquery><m:math>{$xCore}</m:math></cquery>";
-		$out .= "\n\t</query>";
-		$out .= "\n\t<relevance>find result similar to " .
-		        "<a href=\"http://demo.formulasearchengine.com/index.php?" .
-		        "curid={$this->getPageID()}#math{$this->getAnchorID()}\">" .
-		        htmlspecialchars( $this->getUserInputTex() ) . "</a></relevance>";
-		$out .= "\n</topic>\n";
-		return $out;
-	}
 
 	public function injectQvar() {
 		$out = "";
