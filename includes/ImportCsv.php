@@ -54,7 +54,10 @@ class ImportCsv {
 		$this->overwrite = $overwrite;
 		$runId = $this->validateRunId( $runId );
 		if ( $runId !== false ) {
-			return $this->importFromFile( $csvFile );
+			$success = $this->importFromFile( $csvFile );
+			if ( $success == true ){
+				return $this->processInput();
+			}
 		} else {
 			return "Error: Invalid runId.";
 		}
