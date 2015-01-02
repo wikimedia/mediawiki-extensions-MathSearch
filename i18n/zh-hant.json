@@ -6,5 +6,8 @@
 	},
 	"mathsearch": "數學搜尋",
 	"specialpages-group-mathsearch": "數學搜尋",
-	"math-wmc-download-button": "下載"
+	"math-wmc-download-button": "下載",
+	"math-wmc-SelectRun": "名稱",
+	"math-wmc-FileLabel": "CSV 檔案",
+	"math-wmc-importing": "匯入中..."
 }

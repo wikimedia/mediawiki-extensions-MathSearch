@@ -117,6 +117,7 @@ $specialPageAliases['mk'] = array(
 	'GetEquationsByQuery' => array( 'ДајРавенкиПоБарање' ),
 	'MathIndex' => array( 'МатИндекс' ),
 	'MathUpload' => array( 'МатПодигање' ),
+	'MathDownload' => array( 'МатПреземање' ),
 );
 
 /** Dutch (Nederlands) */
@@ -161,6 +162,7 @@ $specialPageAliases['zh-hans'] = array(
 	'GetEquationsByQuery' => array( '通过查询获取方程' ),
 	'MathIndex' => array( '数学公式索引' ),
 	'MathUpload' => array( '数学上传' ),
+	'MathDownload' => array( '数学下载' ),
 );
 
 /** Traditional Chinese (中文（繁體）‎) */

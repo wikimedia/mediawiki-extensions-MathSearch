@@ -17,6 +17,8 @@
 	"getequationsbyquery": "通过查询获得方程",
 	"xquerygenerator": "XQuery生成器",
 	"mathdebug": "测试渲染器",
+	"math-wmc-attach-results-help": "有时单一运算包含用于文件上传的更多结果。这种情况下上传会被拆分成数个文件。",
+	"math-wmc-attach-results-label": "附加更多结果至当前的运算",
 	"math-wmc-download-intro": "下载您之前在这里提交的流量。文件只包含有效点击数。所有无效点击数已被移除。",
 	"math-wmc-download-button": "下载",
 	"math-wmc-Introduction": "在这里上传您的提交到当前 NTCIR 维基百科数学搜索任务：",
