@@ -234,7 +234,7 @@ class ImportCsv {
 	private function  getInputHash( $pId, $eId ) {
 		$dbr = wfGetDB( DB_SLAVE );
 		return $dbr->selectField( 'mathindex', 'mathindex_inputhash',
-			array( 'mathindex_page_id' => $pId, 'mathindex_anchor' => $eId ) );
+			array( 'mathindex_revision_id' => $pId, 'mathindex_anchor' => $eId ) );
 	}
 
 	/**

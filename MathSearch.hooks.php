@@ -21,7 +21,7 @@ class MathSearchHooks {
 			throw new MWException( "Mathsearch extension requires Mediawiki 1.18 or above" );
 		}
 // 		$map = array(
-// 			'mysql' => 'mathsearch.sql',
+// 			'mysql' => 'mathindex.sql',
 // 			// 'sqlite' => 'math.sql',
 // 			// 'postgres' => 'math.pg.sql',
 // 			// 'oracle' => 'math.oracle.sql',
@@ -31,7 +31,7 @@ class MathSearchHooks {
  		$type = $updater->getDB()->getType();
  		if ( $type == "mysql"  ) {
 			$dir = dirname( __FILE__ ) . '/db/' ;// . $map[$type];
-			$updater->addExtensionTable( 'mathindex', $dir . 'mathsearch.sql' );
+			$updater->addExtensionTable( 'mathindex', $dir . 'mathindex.sql' );
 			$updater->addExtensionTable( 'mathobservation',  $dir . 'mathobservation.sql' );
 			$updater->addExtensionTable( 'mathvarstat', $dir . 'mathvarstat.sql' );
 			$updater->addExtensionTable( 'mathpagestat', $dir . 'mathpagestat.sql' );
@@ -82,9 +82,9 @@ class MathSearchHooks {
 			$oldID = self::curId2OldId( $pid );
 			$dbr = wfGetDB( DB_SLAVE );
 			$exists = $dbr->selectRow( 'mathindex',
-				array( 'mathindex_page_id', 'mathindex_anchor', 'mathindex_inputhash' ),
+				array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ),
 				array(
-					'mathindex_page_id' => $oldID,
+					'mathindex_revision_id' => $oldID,
 					'mathindex_anchor' => $eid,
 					'mathindex_inputhash' => $inputHash)
 			) ;
@@ -96,9 +96,9 @@ class MathSearchHooks {
 				$dbw->onTransactionIdle(
 					function () use ( $oldID, $eid, $inputHash, $dbw ) {
 						$dbw->replace( 'mathindex',
-							array( 'mathindex_page_id', 'mathindex_anchor' ),
+							array( 'mathindex_revision_id', 'mathindex_anchor' ),
 							array(
-								'mathindex_page_id' => $oldID,
+								'mathindex_revision_id' => $oldID,
 								'mathindex_anchor' =>  $eid ,
 								'mathindex_inputhash' => $inputHash
 							) );

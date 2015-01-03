@@ -197,7 +197,7 @@ class MathObject extends MathMathML {
 	public static function constructformpage( $pid, $eid ) {
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->selectRow(
-			array( 'mathindex' ), self::dbIndexFieldsArray(), 'mathindex_page_id = ' . $pid
+			array( 'mathindex' ), self::dbIndexFieldsArray(), 'mathindex_revision_id = ' . $pid
 			. ' AND mathindex_anchor= "' . $eid . '"' );
 		//self::DebugPrint( var_export( $res, true ) );
 		$start = microtime(true);
@@ -253,7 +253,7 @@ class MathObject extends MathMathML {
 	private static function dbIndexFieldsArray() {
 		global $wgMathDebug;
 		$in = array(
-			'mathindex_page_id',
+			'mathindex_revision_id',
 			'mathindex_anchor',
 			'mathindex_inputhash' );
 		if ( $wgMathDebug ) {
@@ -327,9 +327,9 @@ class MathObject extends MathMathML {
 			. "ORDER BY CNT DESC");
 		$dbw->query( 'TRUNCATE TABLE `mathpagestat`' );
 		$dbw->query( 'INSERT INTO `mathpagestat`(`pagestat_featureid`,`pagestat_pageid`,`pagestat_featurecount`) '
-			. 'SELECT varstat_id, mathindex_page_id, count(*) as CNT FROM `mathobservation` '
+			. 'SELECT varstat_id, mathindex_revision_id, count(*) as CNT FROM `mathobservation` '
 			. 'JOIN mathindex on `mathobservation_inputhash` = mathindex_inputhash '
 			. 'JOIN mathvarstat on varstat_featurename = `mathobservation_featurename` and varstat_featuretype = `mathobservation_featuretype` '
-			. 'GROUP by `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_page_id ORDER BY CNT DESC' );
+			. 'GROUP by `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_revision_id ORDER BY CNT DESC' );
 	}
 }

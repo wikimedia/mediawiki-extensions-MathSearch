@@ -87,14 +87,14 @@ abstract class IndexBase extends Maintenance {
 		echo "getting list of all equations from the database\n";
 		$this->res = $db->select(
 			array( 'mathindex', 'mathlatexml' ),
-			array( 'mathindex_page_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash', 'mathindex_inputhash' ),
+			array( 'mathindex_revision_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash', 'mathindex_inputhash' ),
 			array( 'math_inputhash = mathindex_inputhash',
-				'mathindex_page_id >= '. $this->getArg( 2, 0),
-				'mathindex_page_id <= '. $this->getArg( 3, PHP_INT_MAX))
+				'mathindex_revision_id >= '. $this->getArg( 2, 0),
+				'mathindex_revision_id <= '. $this->getArg( 3, PHP_INT_MAX))
 				, __METHOD__
 				,array( 
 					'LIMIT'    => $this->getOption( 'limit', PHP_INT_MAX ) ,
-					'ORDER BY' => 'mathindex_page_id' )
+					'ORDER BY' => 'mathindex_revision_id' )
  );
 		echo "write " . $this->res->numRows() . " results to index\n";
 		do {

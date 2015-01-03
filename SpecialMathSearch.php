@@ -218,7 +218,7 @@
 			$dbr = wfGetDB( DB_SLAVE );
 			$inputhash = $dbr->encodeBlob( pack( 'H32', md5( $this->mathpattern ) ) );
 			$rpage = $dbr->select(
-				'mathindex', array( 'mathindex_page_id', 'mathindex_anchor', 'mathindex_timestamp' ), array( 'mathindex_inputhash' => $inputhash )
+				'mathindex', array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_timestamp' ), array( 'mathindex_inputhash' => $inputhash )
 			);
 			foreach ( $rpage as $row )
 				wfDebugLog( "MathSearch", var_export( $row, true ) );

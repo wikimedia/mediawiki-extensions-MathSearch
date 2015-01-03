@@ -93,9 +93,9 @@ class ExtractFeatures extends Maintenance {
 		$this->dbw->query( $sql );
 		$this->output( "Generate mathpagestat\n" );
 		$sql = "INSERT INTO `mathpagestat`(`pagestat_featureid`,`pagestat_pageid`,`pagestat_featurecount`)\n"
-				. "SELECT varstat_id, mathindex_page_id, count(*) as CNT FROM `mathobservation` JOIN mathindex on `mathobservation_inputhash` =mathindex_inputhash\n"
+				. "SELECT varstat_id, mathindex_revision_id, count(*) as CNT FROM `mathobservation` JOIN mathindex on `mathobservation_inputhash` =mathindex_inputhash\n"
 				. "JOIN mathvarstat on varstat_featurename = `mathobservation_featurename` and varstat_featuretype = `mathobservation_featuretype`\n"
-						. " GROUP by `mathobservation_featurename`, `mathobservation_featuretype`,mathindex_page_id ORDER BY CNT DESC";
+						. " GROUP by `mathobservation_featurename`, `mathobservation_featuretype`,mathindex_revision_id ORDER BY CNT DESC";
 		$this->dbw->query( $sql );
 		$this->output( "Updated {$fcount} formulae!\n" );
 	}

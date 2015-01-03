@@ -50,7 +50,7 @@ EOT;
 
 
 	private $sel = "SELECT
-        `mathindex`.`mathindex_page_id` AS `mathindex_page_id`,
+        `mathindex`.`mathindex_revision_id` AS `mathindex_revision_id`,
         `mathindex`.`mathindex_anchor` AS `mathindex_anchor`,
         `mathindex`.`mathindex_inputhash` AS `mathindex_inputhash`,
         `mathindex`.`mathindex_timestamp` AS `mathindex_timestamp`,
@@ -59,7 +59,7 @@ EOT;
         `math`.`math_outputhash` AS `math_outputhash`,
         `math`.`math_html_conservativeness` AS `math_html_conservativeness`,
         `math`.`math_html` AS `math_html`
-        FROM (`mathindex` JOIN `math` ON((`mathindex`.`mathindex_page_id` = `mathindex`.`mathindex_anchor`)))";
+        FROM (`mathindex` JOIN `math` ON((`mathindex`.`mathindex_revision_id` = `mathindex`.`mathindex_anchor`)))";
 
 
 
@@ -183,8 +183,8 @@ EOT;
 		}
 
 		while($row = mysqli_fetch_array($result)){
-			$this->assertEquals($row['mathindex_page_id'], 1);
-			//echo $row['mathindex_page_id'] . " " . $row['mathindex_anchor'] . " " . $row['math_html_conservativeness']. "\n";
+			$this->assertEquals($row['mathindex_revision_id'], 1);
+			//echo $row['mathindex_revision_id'] . " " . $row['mathindex_anchor'] . " " . $row['math_html_conservativeness']. "\n";
 		}
 
 		mysqli_close($con);
