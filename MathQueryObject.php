@@ -11,6 +11,7 @@ class MathQueryObject extends MathObject {
 	/** @var XQueryGenerator current instance of xQueryGenerator */
 	private $xQuery = false;
 	private $xQueryDialect = false;
+	private $qVarCount = 0;
 	/* ToDo: Update to new format
 	<code>
 		 latexmlc --whatsin=fragment --path=$(LLIB) \
@@ -59,6 +60,29 @@ class MathQueryObject extends MathObject {
 	 */
 	public function setQueryId( $id ) {
 		$this->queryID = $id;
+	}
+
+	/**
+	 * @param bool $overwrite
+	 *
+	 * @return bool
+	 */
+	public function saveToDatabase( $overwrite = false ){
+		$fields = array(
+			'qId' => $this->queryID,
+			'oldId' => $this->getPageID(),
+			'fId' => $this->getAnchorID(),
+			'texQuery' => $this->getTeXQuery(),
+			'qVarCount' => $this->qVarCount,
+			'isDraft' => true,
+			'math_inputhash' => $this->getInputHash() ); // Store the inputhash just to be sure.
+		$dbw = wfGetDB( DB_MASTER );
+		// Overwrite draft queries only.
+		if ( $dbw->selectField( 'math_wmc_ref', 'isDraft', array( 'qId' =>  $this->queryID ) ) && $overwrite ){
+			return $dbw->update( 'math_wmc_ref', $fields, array( 'qId' => $this->queryID ) );
+		} else {
+			return $dbw->insert( 'math_wmc_ref', $fields );
+		}
 	}
 
 	public function exportTexDocument() {
@@ -180,6 +204,7 @@ TeX;
 					}
 			}
 		}
+		$this->qVarCount = $qVarNo;
 		$this->texquery = $out;
 		return $out;
 	}

@@ -35,6 +35,8 @@ class GenerateWorkload extends IndexBase {
 		parent::__construct();
 		$this->mDescription = 'Generates a workload of sample queries.';
 		$this->addOption( 'selectivity' , "Specifies the selectivity for each individual equation", false, true, "S");
+		$this->addOption ( 'lastId', "Specifies to start the ID counter after the given id. For example '-l 1' would start with id 2.", false, true, "l" );
+		$this->addOption ( 'overwrite', "Overwrite existing draft queries ", false, false, "o" );
 	}
 
 	/**
@@ -44,6 +46,7 @@ class GenerateWorkload extends IndexBase {
 	protected function generateIndexString( $row ){
 		if ( mt_rand() <= $this->selectivity ){
 			$q = MathQueryObject::newQueryFromEquationRow($row, ++$this->id );
+			$q->saveToDatabase( $this->getOption("overwrite", false) );
 			$out = $q->exportTexDocument();
 			if( $out == false ){
 				echo 'problem with ' . var_export($q,true) . "\n";
@@ -55,26 +58,27 @@ class GenerateWorkload extends IndexBase {
 
 
 	public function execute() {
-		libxml_use_internal_errors( true );
 		$i = 0;
 		$inc = $this->getArg( 1, 100 );
-		$this->selectivity = (int) ($this->getOption( "selectivity", 1 ) * mt_getrandmax()) ;
+		$this->id = $this->getOption( 'lastId', 0 );
+		$sel =  $this->getOption( "selectivity", .1 );
+		$this->selectivity = (int) ($sel * mt_getrandmax()) ;
 		$db = wfGetDB( DB_SLAVE );
 		echo "getting list of all equations from the database\n";
 		$this->res = $db->select(
 			array( 'mathindex' ),
-			array( 'mathindex_page_id', 'mathindex_anchor', 'mathindex_inputhash' ),
+			array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ),
 				true
 				, __METHOD__
-				,array('LIMIT' => $this->getOption( 'limit', 100 ) ,
+				,array('LIMIT' => $this->getOption( 'limit', (int) (100/$sel) ) ,
 					'ORDER BY' => 'mathindex_inputhash' )
 		);
-		echo "write " . $this->res->numRows() . " results to index\n";
 		do {
 			$fn = $this->getArg( 0 ) . '/math' . sprintf( '%012d', $i ) . '.tex';
 			$res = $this->wFile( $fn, $i, $inc );
 			$i += $inc;
 		} while ( $res );
+		echo "last id used: {$this->id}\n";
 		echo( "done" );
 	}
 }
