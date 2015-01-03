@@ -12,7 +12,7 @@ class MathSearchHooks {
 	 * LoadExtensionSchemaUpdates handler; set up math table on install/upgrade.
 	 *
 	 * @param $updater DatabaseUpdater
-	 * @throws MWException
+	 * @throws Exception
 	 * @return bool
 	 */
 	static function onLoadExtensionSchemaUpdates( $updater = null ) {
@@ -27,17 +27,17 @@ class MathSearchHooks {
 			$updater->addExtensionTable( 'mathobservation',  $dir . 'mathobservation.sql' );
 			$updater->addExtensionTable( 'mathvarstat', $dir . 'mathvarstat.sql' );
 			$updater->addExtensionTable( 'mathpagestat', $dir . 'mathpagestat.sql' );
-		    $updater->addExtensionTable( 'mathsemantics', $dir . 'mathsemantics.sql' );
-		    $updater->addExtensionTable( 'mathperformance', $dir . 'mathperformance.sql' );
-			if ( $wgMathWmcServer ){
-				$updater->addExtensionTable( 'math_wmc_ref', $dir . "math_wmc_ref.sql");
-				$updater->addExtensionTable( 'math_wmc_runs', $dir . "math_wmc_runs.sql");
-				$updater->addExtensionTable( 'math_wmc_results', $dir . "math_wmc_results.sql");
-				$updater->addExtensionTable( 'math_wmc_assessed_formula', $dir . "math_wmc_assessed_formula.sql");
-				$updater->addExtensionTable( 'math_wmc_assessed_revision', $dir . "math_wmc_assessed_revision.sql");
-
-			}
+			$updater->addExtensionTable( 'mathsemantics', $dir . 'mathsemantics.sql' );
+			$updater->addExtensionTable( 'mathperformance', $dir . 'mathperformance.sql' );
 			$updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
+			if ( $wgMathWmcServer ){
+				$wmcDir = $dir . 'wmc/persistent/';
+				$updater->addExtensionTable( 'math_wmc_ref', $wmcDir . "math_wmc_ref.sql");
+				$updater->addExtensionTable( 'math_wmc_runs', $wmcDir . "math_wmc_runs.sql");
+				$updater->addExtensionTable( 'math_wmc_results', $wmcDir . "math_wmc_results.sql");
+				$updater->addExtensionTable( 'math_wmc_assessed_formula', $wmcDir . "math_wmc_assessed_formula.sql");
+				$updater->addExtensionTable( 'math_wmc_assessed_revision', $wmcDir . "math_wmc_assessed_revision.sql");
+			}
  		} elseif ( $type == 'sqlite' ){
 			// Don't scare Jenkins with an exception.
 		} else {
