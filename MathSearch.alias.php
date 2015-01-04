@@ -28,6 +28,7 @@ $specialPageAliases['ar'] = array(
 	'GetEquationsByQuery' => array( 'المعادلات_بواسطة_الاستعلام', 'الصيغ_بواسطة_الاستعلام' ),
 	'MathIndex' => array( 'فهرس_الرياضيات' ),
 	'MathUpload' => array( 'رفع_الرياضيات' ),
+	'MathDownload' => array( 'تحميل_رياضيات' ),
 );
 
 /** Egyptian Spoken Arabic (مصرى) */
