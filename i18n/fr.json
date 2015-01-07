@@ -3,7 +3,8 @@
 		"authors": [
 			"Crochet.david",
 			"Gomoko",
-			"Metroitendo"
+			"Metroitendo",
+			"0x010C"
 		]
 	},
 	"mathsearch": "Recherche mathématique",
@@ -15,6 +16,7 @@
 	"getequationsbyquery": "Obtenir les équations par requête",
 	"xquerygenerator": "Générateur XQuery",
 	"mathdebug": "Rendu de test",
+	"math-wmc-download-button": "Télécharger",
 	"math-wmc-Introduction": "Télécharger votre participation à la Tâche actuelle de recherche mathématique NTCIR de Wikipédia ici :",
 	"math-wmc-SectionRun": "Informations de participation",
 	"math-wmc-SelectRun": "Nom",
