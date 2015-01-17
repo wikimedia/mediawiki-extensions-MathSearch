@@ -44,10 +44,10 @@ class CreateDB2MathTable extends IndexBase {
 		$mo = MathObject::constructformpagerow($row);
 		$out = '"'. $mo->getMd5().'"';
 		$out .= ',"'. $mo->getTex().'"';
-		$out .= ','. $row->mathindex_page_id .'';
+		$out .= ','. $row->mathindex_revision_id .'';
 		$out .= ','. $row->mathindex_anchor.'';
 		$out .= ',"'.str_replace(array('"',"\n"),array('"',' '), $mo->getMathml()).'"';
-		$res = db2_execute($this->statment, array($mo->getMd5(),$mo->getTex(),$row->mathindex_page_id,$row->mathindex_anchor,$mo->getMathml()));
+		$res = db2_execute($this->statment, array($mo->getMd5(),$mo->getTex(),$row->mathindex_revision_id,$row->mathindex_anchor,$mo->getMathml()));
 		if (  ! $res  ){   
 			echo db2_stmt_errormsg();
 		}
@@ -72,9 +72,9 @@ class CreateDB2MathTable extends IndexBase {
 		if ( $this->conn ){
 			if ( $this->getOption('truncate' , false ) ){
 				db2_exec( $this->conn , 'DROP TABLE "math"');
-				db2_exec( $this->conn , 'CREATE TABLE "math" ("math_md5" CHAR(32), "math_tex" VARCHAR(1000), "mathindex_pageid" INTEGER, "mathindex_anchord" INTEGER, "math_mathml" XML)');
+				db2_exec( $this->conn , 'CREATE TABLE "math" ("math_md5" CHAR(32), "math_tex" VARCHAR(1000), "mathindex_revision_id" INTEGER, "mathindex_anchord" INTEGER, "math_mathml" XML)');
 			}
-			$this->statment = db2_prepare( $this->conn ,'insert into "math" ("math_md5", "math_tex", "mathindex_pageid", "mathindex_anchord", "math_mathml") values(?, ?, ?, ?, ?)');
+			$this->statment = db2_prepare( $this->conn ,'insert into "math" ("math_md5", "math_tex", "mathindex_revision_id", "mathindex_anchord", "math_mathml") values(?, ?, ?, ?, ?)');
 			//db2_autocommit($this->conn , DB2_AUTOCOMMIT_OFF);
 		}
 		parent::execute();
