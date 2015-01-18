@@ -21,7 +21,7 @@
 
 require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
-class UpdateMath extends Maintenance {
+class GenerateFeatureTable extends Maintenance {
 	const RTI_CHUNK_SIZE = 100000;
 	public $purge = false;
 	public $dbw = null;
@@ -74,13 +74,7 @@ class UpdateMath extends Maintenance {
 		}
 		// $this->output( "Updated {$fcount} formulae!\n" );
 	}
-	/**
-	 * @param unknown $pId
-	 * @param unknown $pText
-	 * @param string $pTitle
-	 * @param string $purge
-	 * @return number
-	 */
+
 	private function doUpdate( $pid ) {
 		// TODO: fix link id problem
 		$anchorID = 0;
@@ -107,5 +101,6 @@ class UpdateMath extends Maintenance {
 	}
 }
 
-$maintClass = "UpdateMath";
+$maintClass = "GenerateFeatureTable";
+/** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

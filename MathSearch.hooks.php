@@ -91,19 +91,7 @@ class MathSearchHooks {
 			if ( $exists ) {
 				wfDebugLog( "MathSearch", 'Index $' . $tex . '$ already in database.' );
 			} else {
-				wfDebugLog( "MathSearch", 'Store index for $' . $tex . '$ in database' );
-				$dbw = wfGetDB( DB_MASTER );
-				$dbw->onTransactionIdle(
-					function () use ( $oldID, $eid, $inputHash, $dbw ) {
-						$dbw->replace( 'mathindex',
-							array( 'mathindex_revision_id', 'mathindex_anchor' ),
-							array(
-								'mathindex_revision_id' => $oldID,
-								'mathindex_anchor' =>  $eid ,
-								'mathindex_inputhash' => $inputHash
-							) );
-					}
-				);
+				self::writeMathIndex( $oldID, $eid, $inputHash, $tex );
 			}
 		} catch ( Exception $e ) {
 			wfDebugLog( "MathSearch", 'Problem writing to math index!'
@@ -197,9 +185,6 @@ class MathSearchHooks {
 	 * @param null $Result
 	 * @param int $pid
 	 * @param int $eid
-	 * @internal param $content
-	 * @internal param $attributes
-	 * @internal param \Parser $parser
 	 * @return boolean (true)
 	 */
 	static function onMathFormulaRenderedNoLink( $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
@@ -229,5 +214,23 @@ class MathSearchHooks {
 
 	static function generateMathAnchorString($pageID, $anchorID, $prefix = "#"){
 		return "{$prefix}math.$pageID.$anchorID";
+	}
+
+	/**
+	 * @param int    $oldID
+	 * @param int    $eid
+	 * @param string $inputHash
+	 * @param string $tex
+	 */
+	public static function writeMathIndex( $oldID, $eid, $inputHash, $tex ) {
+		wfDebugLog( "MathSearch", 'Store index for $' . $tex . '$ in database' );
+		$dbw = wfGetDB( DB_MASTER );
+		$dbw->onTransactionIdle( function () use ( $oldID, $eid, $inputHash, $dbw ) {
+			$dbw->replace( 'mathindex', array( 'mathindex_revision_id', 'mathindex_anchor' ), array(
+					'mathindex_revision_id' => $oldID,
+					'mathindex_anchor' => $eid,
+					'mathindex_inputhash' => $inputHash
+				) );
+		} );
 	}
 }
