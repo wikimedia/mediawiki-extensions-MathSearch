@@ -1,15 +1,4 @@
 <?php
-//TODO: fix that ugly workaround
-/*
- * If the unit tests are run by jenkins, the Math extension is not present.
- * Thus a fake MathMathML class must be created in order to derive the
- * MathObject class that extends MathMathML
- */
-function createDummyMathMLClass(){
-	class MathMathML{}
-	return true;
-}
-
 /**
  * Test the mathObject script.
  *
@@ -37,9 +26,6 @@ EOT;
 
 
 	public function test() {
-		if ( ! class_exists("MathMathML") ){
-			createDummyMathMLClass();
-		}
 		$comment = MathObject::extractMathTagsFromWikiText( $this->HTMLComment );
 		$this->assertEquals( 0, sizeof( $comment ) );
 		$noWiki = MathObject::extractMathTagsFromWikiText( $this->noWiki );
