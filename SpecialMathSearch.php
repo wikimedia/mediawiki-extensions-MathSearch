@@ -9,9 +9,8 @@
 	 * @file
 	 * @ingroup extensions
 	 */
-	class SpecialMathSearch extends SpecialPage
-	{
-
+	class SpecialMathSearch extends SpecialPage {
+		const  GUI_PATH = '/modules/min/index.xhtml';
 		public $qs;
 		public $math_result;
 		public $mathSearchExpr;
@@ -51,8 +50,8 @@
 		/**
 		 * The main function
 		 */
-		public function execute( $par )
-		{
+		public function execute( $par ) {
+			global $wgExtensionAssetsPath;
 			$request = $this->getRequest();
 			$this->setHeaders();
 			$this->mathpattern = $request->getText( 'mathpattern' );
@@ -62,6 +61,10 @@
 				$this->mathpattern = htmlspecialchars_decode( $this->mathpattern );
 			}
 			$this->searchForm();
+			if( file_exists( __DIR__ . self::GUI_PATH ) ) {
+				$minurl = $wgExtensionAssetsPath . '/MathSearch'. self::GUI_PATH ;
+				$this->getOutput()->addHTML("<p><a href=\"${minurl}\">Test experimental math input interface</a></p>");
+			}
 			if ( $this->mathpattern || $this->textpattern ) {
 				$this->performSearch();
 			}
@@ -109,8 +112,7 @@
 			$htmlForm->show(); # Displaying the form
 		}
 
-		public function performSearch()
-		{
+		public function performSearch() {
 			global $wgMathDebug;
 			$out = $this->getOutput();
 			$time_start = microtime( true );
