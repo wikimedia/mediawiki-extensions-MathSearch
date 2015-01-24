@@ -3,7 +3,7 @@
 class MathObject extends MathMathML {
 
 	protected $anchorID = 0;
-	protected $pageID = 0;
+	protected $revisionID = 0;
 	protected $index_timestamp = null;
 	protected $dbLoadTime= 0;
 	protected $mathTableName = null;
@@ -21,12 +21,12 @@ class MathObject extends MathMathML {
 		$this->anchorID = $ID;
 	}
 
-	public function getPageID() {
-		return $this->pageID;
+	public function getRevisionID() {
+		return $this->revisionID;
 	}
 
-	public function setPageID( $ID ) {
-		$this->pageID = $ID;
+	public function setRevisionID( $ID ) {
+		$this->revisionID = $ID;
 	}
 
 	public function getIndexTimestamp() {
@@ -57,10 +57,11 @@ class MathObject extends MathMathML {
 	 */
 	public static function constructformpagerow( $res ) {
 		global $wgMathDebug;
-		if ( $res && $res->mathindex_page_id > 0 ) {
+		if ( $res && $res->mathindex_revision_id > 0 ) {
 			$class = get_called_class();
+			/** @type MathObject $instance */
 			$instance = new $class;
-			$instance->setPageID( $res->mathindex_page_id );
+			$instance->setRevisionID( $res->mathindex_revision_id );
 			$instance->setAnchorID( $res->mathindex_anchor );
 			if ( $wgMathDebug && isset($res->mathindex_timestamp) ) {
 				$instance->index_timestamp = $res->mathindex_timestamp;
@@ -106,7 +107,7 @@ class MathObject extends MathMathML {
 					'pagestat_featurecount', "count(*) as localcnt" ), array( "mathobservation_inputhash" => $this->getInputHash(),
 					'varstat_featurename = mathobservation_featurename',
 					'varstat_featuretype = mathobservation_featuretype',
-					'pagestat_pageid' => $this->getPageID(),
+					'pagestat_pageid' => $this->getRevisionID(),
 					'pagestat_featureid = varstat_id'
 				)
 				, __METHOD__, array( 'GROUP BY' => 'mathobservation_featurename',
@@ -229,7 +230,7 @@ class MathObject extends MathMathML {
 	}
 
 	public function getPageTitle() {
-		$revision = Revision::newFromId( $this->getPageID() );
+		$revision = Revision::newFromId( $this->getRevisionID() );
 		if ( $revision ) {
 			return (string) $revision->getTitle();
 		} else {

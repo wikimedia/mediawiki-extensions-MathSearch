@@ -70,7 +70,7 @@ class MathQueryObject extends MathObject {
 	public function saveToDatabase( $overwrite = false ){
 		$fields = array(
 			'qId' => $this->queryID,
-			'oldId' => $this->getPageID(),
+			'oldId' => $this->getRevisionID(),
 			'fId' => $this->getAnchorID(),
 			'texQuery' => $this->getTeXQuery(),
 			'qVarCount' => $this->qVarCount,
@@ -88,7 +88,7 @@ class MathQueryObject extends MathObject {
 	public function exportTexDocument() {
 		$texInput = htmlspecialchars( $this->getUserInputTex() );
 		$texInputComment = preg_replace( "/[\n\r]/", "\n%", $texInput );
-		$title = Title::newFromId( $this->getPageID() );
+		$title = Title::newFromId( $this->getRevisionID() );
 		$absUrl =
 			$title->getFullURL( array( "oldid" => $title->getLatestRevID() ) ) .
 			MathSearchHooks::generateMathAnchorString( $title->getLatestRevID(), $this->getAnchorID(), '' );

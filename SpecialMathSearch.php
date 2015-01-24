@@ -25,11 +25,18 @@
 		private $resultID = 0;
 		private $xQueryEngines = array( 'db2', 'basex' );
 
+		public static function exception_error_handler($errno, $errstr, $errfile, $errline ) {
+			if (!(error_reporting() & $errno)) {
+				// This error code is not included in error_reporting
+				return;
+			}
+			throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+		}
+
 		/**
 		 *
 		 */
-		function __construct()
-		{
+		function __construct() {
 			parent::__construct( 'MathSearch' );
 		}
 
@@ -51,6 +58,7 @@
 		 * The main function
 		 */
 		public function execute( $par ) {
+			set_error_handler("SpecialMathSearch::exception_error_handler");
 			global $wgExtensionAssetsPath;
 			$request = $this->getRequest();
 			$this->setHeaders();
@@ -68,6 +76,7 @@
 			if ( $this->mathpattern || $this->textpattern ) {
 				$this->performSearch();
 			}
+			restore_error_handler();
 		}
 
 		/**
@@ -168,15 +177,18 @@
 			if ( $this->mathBackend && $this->textpattern == "" ) {
 				$results = $this->mathBackend->getResultSet();
 				if ( $results ) {
-					foreach ( $results as $pageID => $page ) {
-						$revision = Revision::newFromId( $pageID );
+					foreach ( $results as $revisionID => $page ) {
+						$revision = Revision::newFromId( $revisionID );
 						if ( $revision ) {
-							wfDebugLog( "MathSearch", "Found revision " . $revision->getTitle()->getText() );
-							$pagename = (string)$revision->getTitle();
-							$out->addWikiText( "==[[$pagename]]==" );
-							$this->DisplayMath( $pageID );
+							if ( $revision->isCurrent() ) {
+								wfDebugLog( "MathSearch",
+									"Found revision " . $revision->getTitle()->getText() );
+								$pagename = (string)$revision->getTitle();
+								$out->addWikiText( "==[[$pagename]]==" );
+								$this->DisplayMath( $revisionID );
+							}
 						} else
-							$out->addWikiText( "Error with Page (ID=$pageID) update math index.\n" );
+							$out->addWikiText( "Error with Revision (ID=$revisionID) update math index.\n" );
 					}
 				}
 			}
@@ -198,14 +210,14 @@
 						wfDebugLog( 'mathsearch', 'BOF' );
 						$pageList = "";
 						while ( $tres = $sres->next() ) {
-							$pageID = $tres->getTitle()->getLatestRevID();
+							$revisionID = $tres->getTitle()->getLatestRevID();
 							$rMap = $this->mathBackend->getRelevanceMap();
-							if ( isset( $rMap[ $pageID ] ) ) {
+							if ( isset( $rMap[ $revisionID ] ) ) {
 								$out->addWikiText( "[[" . $tres->getTitle() . "]]" );
 								$out->addHtml( $tres->getTextSnippet( $textpattern ) );
-								$pageList .= "OR [[" . $pageID . "]]";
+								$pageList .= "OR [[" . $revisionID . "]]";
 								// $out->addHtml($this->showHit($tres),$textpattern);
-								$this->DisplayMath( $pageID );
+								$this->DisplayMath( $revisionID );
 							} /* else {
 					  $out->addWikiText(":NO MATH");
 					  }// */
@@ -239,16 +251,17 @@
 
 		/**
 		 * Displays the equations for one page
-		 * @param unknown $pageID
+		 *
+		 * @param int $revisionID
+		 *
 		 * @return boolean
 		 */
-		function DisplayMath( $pageID )
-		{
+		function DisplayMath( $revisionID ) {
 			global $wgMathDebug;
 			$out = $this->getOutput();
-			$resultes = $this->mathBackend->getResultSet();
-			$page = $resultes[ (string)$pageID ];
-			$revision = Revision::newFromId( $pageID );
+			$results = $this->mathBackend->getResultSet();
+			$page = $results[ (string)$revisionID ];
+			$revision = Revision::newFromId( $revisionID );
 			if ( $revision === false ) {
 				wfDebugLog( "MathSearch", "invalid revision number" );
 				return false;
@@ -256,7 +269,7 @@
 			$pagename = (string)$revision->getTitle();
 			wfDebugLog( "MathSearch", "Processing results for $pagename" );
 			foreach ( $page as $anchorID => $answ ) {
-				$res = MathObject::constructformpage( $pageID, $anchorID );
+				$res = MathObject::constructformpage( $revisionID, $anchorID );
 				if( $res ){
 					$mml = $res->getMathml();
 					$out->addWikiText( "====[[$pagename#$anchorID|Eq: $anchorID (Result " . $this->resultID++ . ")]]====", false );
@@ -276,7 +289,12 @@
 						foreach ( $hits as $node ) {
 							/* @var DOMDocument $node */
 							if ( $node->hasAttributes() ) {
-								$domRes = $dom->getElementById( $node->attributes->getNamedItem( 'xref' )->nodeValue );
+								try {
+									$domRes = $dom->getElementById( $node->attributes->getNamedItem( 'xref' )->nodeValue );
+								} catch (Exception $e ){
+									wfDebugLog( 'MathSearch', 'Problem getting references ' . $e->getMessage() );
+									$domRes = false;
+								}
 								if ( $domRes ) {
 									$domRes->setAttribute( 'mathcolor', '#cc0000' );
 									$out->addHtml( $domRes->ownerDocument->saveXML() );
@@ -290,9 +308,8 @@
 							}
 						}
 					}
-					wfDebugLog( "MathSearch", "PositionInfo:" . var_export( $this->mathResults[ $pageID ][ $anchorID ], true ) );
 				} else
-					wfDebugLog( "MathSearch", "Failure: Could not get entry $anchorID for page $pagename (id $pageID) :" . var_export( $this->mathResults, true ) );
+					wfDebugLog( "MathSearch", "Failure: Could not get entry $anchorID for page $pagename (id $revisionID) :" . var_export( $this->mathResults, true ) );
 			}
 			return true;
 		}

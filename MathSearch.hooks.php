@@ -153,7 +153,7 @@ class MathSearchHooks {
 	static function addIdentifierDescription( MathRenderer $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
 		self::setMathId( $eid , $Renderer );
 		$mo = MathObject::cloneFromRenderer($Renderer);
-		$mo->setPageID($pid);
+		$mo->setRevisionID($pid);
 		$mo->setID($eid);
 		$Result = preg_replace_callback("#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u", array( $mo , 'addIdentifierTitle' ), $Result);
 		return true;
