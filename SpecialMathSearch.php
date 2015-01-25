@@ -23,7 +23,7 @@
 		public $displayQuery;
 		private $mathBackend;
 		private $resultID = 0;
-		private $xQueryEngines = array( 'db2', 'basex' );
+		private $xQueryEngines = array( 'db2' );
 
 		public static function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 			if (!(error_reporting() & $errno)) {
@@ -133,8 +133,6 @@
 					case 'db2':
 						$query->setXQueryDialect( 'db2' );
 						break;
-					case 'basex':
-						$query->setXQueryDialect( 'basex' );
 				}
 				$cQuery = $query->getCQuery();
 				if ( $cQuery ) {
@@ -285,7 +283,7 @@
 					if ( $wgMathDebug ) {
 						wfDebugLog( 'MathSearch', "xPATH:" . $xpath );
 					}
-					if ( !is_null( $hits ) ) {
+					if ( !is_null( $hits ) && $hits ) {
 						foreach ( $hits as $node ) {
 							/* @var DOMDocument $node */
 							if ( $node->hasAttributes() ) {
@@ -307,9 +305,16 @@
 								$out->addHtml( $renderer->getHtmlOutput() );
 							}
 						}
+					} else {
+						$renderer = new MathMathML();#
+						$renderer->setMathml( $mml );
+						$out->addHtml( $renderer->getHtmlOutput() );
 					}
-				} else
-					wfDebugLog( "MathSearch", "Failure: Could not get entry $anchorID for page $pagename (id $revisionID) :" . var_export( $this->mathResults, true ) );
+				} else {
+					wfDebugLog( "MathSearch",
+						"Failure: Could not get entry $anchorID for page $pagename (id $revisionID) :" .
+						var_export( $this->mathResults, TRUE ) );
+				}
 			}
 			return true;
 		}

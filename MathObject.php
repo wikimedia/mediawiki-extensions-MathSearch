@@ -51,8 +51,8 @@ class MathObject extends MathMathML {
 	}
 	/**
 	 *
-	 * @global ResultWrapper $wgMathDebug
-	 * @param type $res
+	 * @global boolean $wgMathDebug
+	 * @param stdClass $res
 	 * @return boolean|\self
 	 */
 	public static function constructformpagerow( $res ) {

@@ -9,12 +9,28 @@
  * @file
  * @ingroup extensions
  */
-class MathEngineMws {
+abstract class MathEngineRest {
 	/** @var MathQueryObject the query to be answered*/
 	protected $query;
 	protected $size = false;
 	protected $resultSet = false;
 	protected $relevanceMap = false;
+	/** @type string */
+	protected $backendUrl = "http://localhost:9090";
+
+	/**
+	 * @return string
+	 */
+	public function getBackendUrl() {
+		return $this->backendUrl;
+	}
+
+	/**
+	 * @param string $backendUrl
+	 */
+	public function setBackendUrl( $backendUrl ) {
+		$this->backendUrl = $backendUrl;
+	}
 	/**
 	 * 
 	 * @return MathQueryObject
@@ -22,8 +38,16 @@ class MathEngineMws {
 	public function getQuery() {
 		return $this->query;
 	}
-	function __construct(MathQueryObject $query) {
+
+	/**
+	 * @param MathQueryObject $query
+	 * @param bool|string     $url
+	 */
+	function __construct(MathQueryObject $query, $url = false ) {
 		$this->query = $query;
+		if ( $url ){
+			$this->setBackendUrl( $url );
+		}
 	}
 	public function getSize() {
 		return $this->size;
@@ -52,18 +76,16 @@ class MathEngineMws {
 	 * @return boolean
 	 */
 	function postQuery() {
-		global $wgMathSearchMWSUrl, $wgMathDebug;
-
 		$numProcess = 30000;
 		$tmp = str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"", $this->getQuery()->getCQuery() );
 		$mwsExpr = str_replace( "m:", "", $tmp );
 		wfDebugLog( 'mathsearch', 'MWS query:' . $mwsExpr );
-		$res = Http::post( $wgMathSearchMWSUrl, array( "postData" => $mwsExpr, "timeout" => 60 ) );
+		$res = Http::post( $this->backendUrl, array( "postData" => $mwsExpr, "timeout" => 60 ) );
 		if ( $res == false ) {
 			if ( function_exists( 'curl_init' ) ) {
 				$handle = curl_init();
 				$options = array(
-					CURLOPT_URL => $wgMathSearchMWSUrl,
+					CURLOPT_URL => $this->backendUrl,
 					CURLOPT_CUSTOMREQUEST => 'POST', // GET POST PUT PATCH DELETE HEAD OPTIONS
 				);
 				// TODO: Figure out how not to write the error in a message and not in top of the output page
@@ -72,13 +94,13 @@ class MathEngineMws {
 			} else {
 				$details = "curl is not installed.";
 			}
-			wfDebugLog( "MathSearch", "Nothing retreived from $wgMathSearchMWSUrl. Check if mwsd is running. Error:" .
+			wfDebugLog( "MathSearch", "Nothing retreived from $this->backendUrl. Check if mwsd is running. Error:" .
 					var_export( $details, true ) );
 			return false;
 		}
 		$xres = new SimpleXMLElement( $res );
 		$this->size = (int) $xres["total"];
-		wfDebugLog( "MathSearch", $this->size . " results retreived from $wgMathSearchMWSUrl." );
+		wfDebugLog( "MathSearch", $this->size . " results retreived from $this->backendUrl." );
 		if ($this->size == 0) {
 			return true;
 		}
@@ -89,10 +111,10 @@ class MathEngineMws {
 			ini_set( 'memory_limit', '256M' );
 			for ( $i = $numProcess; $i <= $this->size; $i += $numProcess ) {
 				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $mwsExpr );
-				$res = Http::post( $wgMathSearchMWSUrl, array( "postData" => $query, "timeout" => 60 ) );
+				$res = Http::post( $this->backendUrl, array( "postData" => $query, "timeout" => 60 ) );
 				wfDebugLog( 'mathsearch', 'MWS query:' . $query );
 				if ( $res == false ) {
-					wfDebugLog( "MathSearch", "Nothing retreived from $wgMathSearchMWSUrl. check if mwsd is running there" );
+					wfDebugLog( "MathSearch", "Nothing retreived from $this->backendUrl. check if mwsd is running there" );
 					return false;
 				}
 				$xres = new SimpleXMLElement( $res );
@@ -103,24 +125,8 @@ class MathEngineMws {
 	}
 
 	/**
-	 * @param unknown $xmlRoot
+	 * @param SimpleXMLElement $xmlRoot
 	 */
-	function processMathResults( $xmlRoot ) {
-		wfProfileIn( __METHOD__ );
-		foreach ( $xmlRoot->children( "mws", TRUE ) as $page ) {
-			$attrs = $page->attributes();
-			$uri = explode( ".", $attrs["uri"] );
-			$revisionID = $uri[1];
-			$AnchorID = $uri[2];
-			$this->relevanceMap[$revisionID] = true;
-			$substarr = array();
-			// $this->mathResults[(string) $pageID][(string) $AnchorID][]=$page->asXML();
-			foreach ( $page->children( "mws", TRUE ) as $substpair ) {
-				$substattrs = $substpair->attributes();
-				$substarr[] = array( "qvar" => (string) $substattrs["qvar"], "xpath" => (string) $substattrs["xpath"] );
-			}
-			$this->resultSet[(string) $revisionID][(string) $AnchorID][] = array( "xpath" => (string) $attrs["xpath"], "mappings" => $substarr ); // ,"original"=>$page->asXML()
-		}
-		wfProfileOut( __METHOD__ );
-	}
+	abstract function processMathResults( $xmlRoot ) ;
+
 }
