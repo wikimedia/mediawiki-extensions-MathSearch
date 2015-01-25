@@ -20,17 +20,20 @@
  */
 # Alert the user that this is not a valid entry point to MediaWiki if they try to access the special pages file directly.
 if ( !defined( 'MEDIAWIKI' ) ) {
-	die( "This is not a valid entry point to MediaWiki.\n"
-		. "To run the script use:\n"
-		. 'php ../../../maintenance/dumpBackup.php --current --plugin=MathMLFilter:./MathDump.php --filter=mathml'
-		. "\n" );
+	die( "This is not a valid entry point to MediaWiki.\n" . "To run the script use:\n" .
+		 'php ../../../maintenance/dumpBackup.php --current --plugin=MathMLFilter:./MathDump.php --filter=mathml' .
+		 "\n" );
 }
 
 /**
  * Simple dump output filter to exclude all talk pages.
+ *
  * @ingroup Dump
  */
 class MathMLFilter extends DumpFilter {
+	/**
+	 * @param $backupDumper
+	 */
 	public static function register( $backupDumper ) {
 		$backupDumper->registerFilter( 'mathml', 'MathMLFilter' );
 
@@ -38,7 +41,9 @@ class MathMLFilter extends DumpFilter {
 
 	/**
 	 * Callback function that replaces TeX by MathML
+	 *
 	 * @param array $match
+	 *
 	 * @return string
 	 */
 	private static function renderMath( $match ) {
@@ -51,19 +56,22 @@ class MathMLFilter extends DumpFilter {
 	}
 
 	/**
-	 * Replaces the math tags with rendered Mathml
-	 * @param unknown $pText
+	 * Replaces the math tags with rendered MathML
+	 *
+	 * @param string $pText
+	 *
 	 * @return string
 	 */
 	private static function replaceMath( $pText ) {
 		$pText = Sanitizer::removeHTMLcomments( $pText );
-		return preg_replace_callback( "#&lt;math&gt;(.*?)&lt;/math&gt;#s", 'self::renderMath', $pText );
+		return preg_replace_callback( "#&lt;math&gt;(.*?)&lt;/math&gt;#s", 'self::renderMath',
+			$pText );
 	}
 
 
 	/**
-	 * @param $rev
-	 * @param $string the revision text
+	 * @param object $rev
+	 * @param string $string the revision text
 	 */
 	function writeRevision( $rev, $string ) {
 		if ( $this->sendingThisPage ) {

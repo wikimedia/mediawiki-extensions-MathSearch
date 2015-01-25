@@ -21,6 +21,9 @@
 
 require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
+/**
+ * Class CleanMathTable
+ */
 class CleanMathTable extends Maintenance {
 	const RTI_CHUNK_SIZE = 10;
 	public $purge = false;
@@ -29,14 +32,18 @@ class CleanMathTable extends Maintenance {
 	 * @var DatabaseBase
 	 */
 	private $db;
+
 	/**
 	 *
 	 */
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
-		$this->addOption( 'purge', "If set all formulae are rendered again from strech. (Very time consuming!)", false, false, "f" );
+		$this->addOption( 'purge',
+			"If set all formulae are rendered again from strech. (Very time consuming!)", false,
+			false, "f" );
 	}
+
 	/**
 	 * The idea is basically to select the math elements that do not have a corresponding mathindex entry.
 	 * Basically that means:
@@ -52,4 +59,5 @@ class CleanMathTable extends Maintenance {
 }
 
 $maintClass = "CleanMathTable";
+/** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

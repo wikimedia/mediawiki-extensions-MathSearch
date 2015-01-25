@@ -31,7 +31,7 @@ class CreateBaseXMathTable extends IndexBase {
 	private static $mwsns = "mws:";
 	private static $XMLHead;
 	private static $XMLFooter;
-	/** @var \BaseXSession  */
+	/** @var \BaseXSession */
 	private $session;
 
 	/**
@@ -39,28 +39,31 @@ class CreateBaseXMathTable extends IndexBase {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Generates harvest files for the MathWebSearch Deamon.';
+		$this->mDescription = 'Generates harvest files for the MathWebSearch Daemon.';
 		$this->addOption( 'mwsns', 'The namespace or mws normally "mws:"', false );
 		$this->addOption( 'truncate', 'If set the database will be recreated.' );
 	}
 
 	/**
-	 * @param unknown $row
+	 * @param stdClass $row
+	 *
 	 * @return string
 	 */
 	protected function generateIndexString( $row ) {
 		$out = "";
-		$xml = simplexml_load_string( utf8_decode($row->math_mathml) );
+		$xml = simplexml_load_string( utf8_decode( $row->math_mathml ) );
 		if ( !$xml ) {
 			echo "ERROR while converting:\n " . var_export( $row->math_mathml, true ) . "\n";
-			foreach ( libxml_get_errors() as $error )
+			foreach ( libxml_get_errors() as $error ) {
 				echo "\t", $error->message;
+			}
 			libxml_clear_errors();
 			return "";
 		}
 		$out .= "\n<" . self::$mwsns . "expr url=\"" .
-	        MathSearchHooks::generateMathAnchorString( $row->mathindex_revision_id, $row->mathindex_anchor, '' ) . "\">\n\t";
-		$out .=  utf8_decode( $row->math_mathml );// $xml->math->children()->asXML();
+				MathSearchHooks::generateMathAnchorString( $row->mathindex_revision_id,
+					$row->mathindex_anchor, '' ) . "\">\n\t";
+		$out .= utf8_decode( $row->math_mathml );// $xml->math->children()->asXML();
 		$out .= "\n</" . self::$mwsns . "expr>\n";
 		// TODO: This does not work yet.
 		// Find out how to insert new data without to write it into a temporary file
@@ -68,43 +71,51 @@ class CreateBaseXMathTable extends IndexBase {
 		return $out;
 	}
 
-	protected function getHead(){
+	protected function getHead() {
 		return self::$XMLHead;
 	}
-	protected function getFooter(){
+
+	protected function getFooter() {
 		return self::$XMLFooter;
 	}
+
 	/**
 	 * @param string $fn
-	 * @param int $min
-	 * @param int $inc
+	 * @param int    $min
+	 * @param int    $inc
+	 *
 	 * @return boolean
 	 */
 	protected function wFile( $fn, $min, $inc ) {
-		$retval = parent::wFile($fn,$min,$inc);
-		$this->session->execute("add $fn");
+		$retval = parent::wFile( $fn, $min, $inc );
+		$this->session->execute( "add $fn" );
 		return $retval;
 	}
+
 	/**
 	 *
 	 */
 	public function execute() {
 		global $wgMathSearchBaseXDatabaseName;
 		self::$mwsns = $this->getOption( 'mwsns', '' );
-		self::$XMLHead = "<?xml version=\"1.0\"?>\n<" . self::$mwsns . "harvest xmlns:mws=\"http://search.mathweb.org/ns\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\">";
+		self::$XMLHead =
+			"<?xml version=\"1.0\"?>\n<" . self::$mwsns .
+			"harvest xmlns:mws=\"http://search.mathweb.org/ns\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\">";
 		self::$XMLFooter = "</" . self::$mwsns . "harvest>";
 		$this->session = new BaseXSession();
-		if( $this->getOption('truncate',false) ){
-			$this->session->execute("open ".$wgMathSearchBaseXDatabaseName);
+		if ( $this->getOption( 'truncate', false ) ) {
+			$this->session->execute( "open " . $wgMathSearchBaseXDatabaseName );
 		} else {
-			$this->session->execute("create db ".$wgMathSearchBaseXDatabaseName);
+			$this->session->execute( "create db " . $wgMathSearchBaseXDatabaseName );
 		}
 		parent::execute();
 	}
-	public function __destruct(){
+
+	public function __destruct() {
 		$this->session->close();
 	}
 }
 
 $maintClass = "CreateBaseXMathTable";
+/** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

@@ -69,16 +69,16 @@ class UpdateMath extends Maintenance {
 			$this->performance[$category] += $delta;
 		else
 			$this->performance[$category] = $delta;
-		if($wgMathDebug){
-			$this->db->insert('mathperformance',array(
+		if ( $wgMathDebug ) {
+			$this->db->insert( 'mathperformance', array(
 				'math_inputhash' => $this->current->getInputHash(),
-				'mathperformance_name' => substr($category,0,10),
+				'mathperformance_name' => substr( $category, 0, 10 ),
 				'mathperformance_time' => $delta,
-			    'mathperformance_mode' => $this->renderingMode
-			));
+				'mathperformance_mode' => $this->renderingMode
+			) );
 
 		}
-		$this->time = microtime(true);
+		$this->time = microtime( true );
 
 		return (int) $delta;
 	}

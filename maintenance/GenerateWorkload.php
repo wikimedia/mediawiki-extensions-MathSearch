@@ -31,29 +31,38 @@ class GenerateWorkload extends IndexBase {
 	private $id = 0;
 	private $selectivity = PHP_INT_MAX;
 
+	/**
+	 *
+	 */
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Generates a workload of sample queries.';
-		$this->addOption( 'selectivity' , "Specifies the selectivity for each individual equation", false, true, "S");
-		$this->addOption ( 'lastId', "Specifies to start the ID counter after the given id. For example '-l 1' would start with id 2.", false, true, "l" );
-		$this->addOption ( 'overwrite', "Overwrite existing draft queries ", false, false, "o" );
+		$this->addOption( 'selectivity', "Specifies the selectivity for each individual equation",
+			false, true, "S" );
+		$this->addOption( 'lastId',
+			"Specifies to start the ID counter after the given id. For example '-l 1' would start with id 2.",
+			false, true, "l" );
+		$this->addOption( 'overwrite', "Overwrite existing draft queries ", false, false, "o" );
 	}
 
 	/**
 	 * @param ResultWrapper $row
+	 *
 	 * @return string
 	 */
-	protected function generateIndexString( $row ){
-		if ( mt_rand() <= $this->selectivity ){
-			$q = MathQueryObject::newQueryFromEquationRow($row, ++$this->id );
-			$q->saveToDatabase( $this->getOption("overwrite", false) );
+	protected function generateIndexString( $row ) {
+		if ( mt_rand() <= $this->selectivity ) {
+			$q = MathQueryObject::newQueryFromEquationRow( $row, ++ $this->id );
+			$q->saveToDatabase( $this->getOption( "overwrite", false ) );
 			$out = $q->exportTexDocument();
-			if( $out == false ){
-				echo 'problem with ' . var_export($q,true) . "\n";
+			if ( $out == false ) {
+				echo 'problem with ' . var_export( $q, true ) . "\n";
 				$out = '';
 			}
 			return $out;
-		} else return '';
+		} else {
+			return '';
+		}
 	}
 
 
@@ -61,18 +70,17 @@ class GenerateWorkload extends IndexBase {
 		$i = 0;
 		$inc = $this->getArg( 1, 100 );
 		$this->id = $this->getOption( 'lastId', 0 );
-		$sel =  $this->getOption( "selectivity", .1 );
-		$this->selectivity = (int) ($sel * mt_getrandmax()) ;
+		$sel = $this->getOption( "selectivity", .1 );
+		$this->selectivity = (int)( $sel * mt_getrandmax() );
 		$db = wfGetDB( DB_SLAVE );
 		echo "getting list of all equations from the database\n";
-		$this->res = $db->select(
-			array( 'mathindex' ),
-			array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ),
-				true
-				, __METHOD__
-				,array('LIMIT' => $this->getOption( 'limit', (int) (100/$sel) ) ,
-					'ORDER BY' => 'mathindex_inputhash' )
-		);
+		$this->res =
+			$db->select( array( 'mathindex' ),
+				array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ), true,
+				__METHOD__, array(
+					'LIMIT' => $this->getOption( 'limit', (int)( 100 / $sel ) ),
+					'ORDER BY' => 'mathindex_inputhash'
+				) );
 		do {
 			$fn = $this->getArg( 0 ) . '/math' . sprintf( '%012d', $i ) . '.tex';
 			$res = $this->wFile( $fn, $i, $inc );
@@ -82,5 +90,7 @@ class GenerateWorkload extends IndexBase {
 		echo( "done" );
 	}
 }
+
 $maintClass = "GenerateWorkload";
+/** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

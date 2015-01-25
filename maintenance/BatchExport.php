@@ -21,13 +21,17 @@
 
 require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
+/**
+ * Class BatchExport
+ */
 class BatchExport extends Maintenance {
 	/**
 	 *
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = "Exports  submissions to a folder. \n Each run is named after the following convention: \n \$userName-\$runName-\$runId.csv";
+		$this->mDescription =
+			"Exports  submissions to a folder. \n Each run is named after the following convention: \n \$userName-\$runName-\$runId.csv";
 		$this->addArg( "dir", "The output directory", true );
 	}
 
@@ -36,9 +40,9 @@ class BatchExport extends Maintenance {
 	 */
 	public function execute() {
 		$dir = $this->getArg( 0 );
-		if ( ! is_dir($dir) ){
-			$this->output("{$dir} is not a directory.\n");
-			exit(1);
+		if ( !is_dir( $dir ) ) {
+			$this->output( "{$dir} is not a directory.\n" );
+			exit( 1 );
 		}
 		$dbr = wfGetDB( DB_SLAVE );
 		//runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -50,10 +54,10 @@ class BatchExport extends Maintenance {
 		foreach ( $res as $row ) {
 			$user = User::newFromId( $row->userId );
 			$username = $user->getName();
-			$runName = preg_replace( "#/#","_", escapeSingleString( $row->runName ));
+			$runName = preg_replace( "#/#", "_", escapeSingleString( $row->runName ) );
 			$fn = "$dir/$username-$runName-{$row->runId}.csv";
-			$this->output("Export to file $fn.\n");
-			$fh =  fopen( $fn, 'w' );
+			$this->output( "Export to file $fn.\n" );
+			$fh = fopen( $fn, 'w' );
 			fwrite( $fh, SpecialMathDownloadResult::run2CSV( $row->runId ) );
 			fclose( $fh );
 		}
@@ -61,4 +65,5 @@ class BatchExport extends Maintenance {
 }
 
 $maintClass = "BatchExport";
+/** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

@@ -30,6 +30,9 @@ class CreateDB2MathTable extends IndexBase {
 	private $conn;
 	private $time;
 
+	/**
+	 *
+	 */
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Exports a db2 compatible math index table.';
@@ -37,44 +40,62 @@ class CreateDB2MathTable extends IndexBase {
 	}
 
 	/**
-	 * @param unknown $row
+	 * @param stdClass $row
+	 *
 	 * @return string
 	 */
 	protected function generateIndexString( $row ) {
-		$mo = MathObject::constructformpagerow($row);
-		$out = '"'. $mo->getMd5().'"';
-		$out .= ',"'. $mo->getTex().'"';
-		$out .= ','. $row->mathindex_revision_id .'';
-		$out .= ','. $row->mathindex_anchor.'';
-		$out .= ',"'.str_replace(array('"',"\n"),array('"',' '), $mo->getMathml()).'"';
-		$res = db2_execute($this->statment, array($mo->getMd5(),$mo->getTex(),$row->mathindex_revision_id,$row->mathindex_anchor,$mo->getMathml()));
-		if (  ! $res  ){   
+		$mo = MathObject::constructformpagerow( $row );
+		$out = '"' . $mo->getMd5() . '"';
+		$out .= ',"' . $mo->getTex() . '"';
+		$out .= ',' . $row->mathindex_revision_id . '';
+		$out .= ',' . $row->mathindex_anchor . '';
+		$out .= ',"' . str_replace( array( '"', "\n" ), array( '"', ' ' ), $mo->getMathml() ) . '"';
+		$res =
+			db2_execute( $this->statment, array(
+				$mo->getMd5(),
+				$mo->getTex(),
+				$row->mathindex_revision_id,
+				$row->mathindex_anchor,
+				$mo->getMathml()
+			) );
+		if ( !$res ) {
 			echo db2_stmt_errormsg();
 		}
-		return $out."\n";
+		return $out . "\n";
 	}
 
+	/**
+	 * @param string $fn
+	 * @param int    $min
+	 * @param int    $inc
+	 *
+	 * @return bool
+	 */
 	protected function wFile( $fn, $min, $inc ) {
-	$res = db2_commit($this->conn);
-	if ( $res ){
-		echo db2_stmt_errormsg();
+		$res = db2_commit( $this->conn );
+		if ( $res ) {
+			echo db2_stmt_errormsg();
+		}
+		$delta = microtime( true ) - $this->time;
+		$this->time = microtime( true );
+		echo 'took ' . number_format( $delta, 1 ) . "s \n";
+		return parent::wFile( $fn, $min, $inc );
 	}
-	$delta = microtime(true) - $this->time ;
-	$this->time = microtime(true);
-	echo 'took '. number_format($delta ,1) ."s \n";
-	return parent::wFile( $fn, $min, $inc );
-}
 
 	public function execute() {
 		global $wgMathSearchDB2ConnStr;
-		$this->time = microtime(true);
-		$this->conn = db2_connect($wgMathSearchDB2ConnStr, '', '');
-		if ( $this->conn ){
-			if ( $this->getOption('truncate' , false ) ){
-				db2_exec( $this->conn , 'DROP TABLE "math"');
-				db2_exec( $this->conn , 'CREATE TABLE "math" ("math_md5" CHAR(32), "math_tex" VARCHAR(1000), "mathindex_revision_id" INTEGER, "mathindex_anchord" INTEGER, "math_mathml" XML)');
+		$this->time = microtime( true );
+		$this->conn = db2_connect( $wgMathSearchDB2ConnStr, '', '' );
+		if ( $this->conn ) {
+			if ( $this->getOption( 'truncate', false ) ) {
+				db2_exec( $this->conn, 'DROP TABLE "math"' );
+				db2_exec( $this->conn,
+					'CREATE TABLE "math" ("math_md5" CHAR(32), "math_tex" VARCHAR(1000), "mathindex_revision_id" INTEGER, "mathindex_anchord" INTEGER, "math_mathml" XML)' );
 			}
-			$this->statment = db2_prepare( $this->conn ,'insert into "math" ("math_md5", "math_tex", "mathindex_revision_id", "mathindex_anchord", "math_mathml") values(?, ?, ?, ?, ?)');
+			$this->statment =
+				db2_prepare( $this->conn,
+					'INSERT INTO "math" ("math_md5", "math_tex", "mathindex_revision_id", "mathindex_anchord", "math_mathml") VALUES(?, ?, ?, ?, ?)' );
 			//db2_autocommit($this->conn , DB2_AUTOCOMMIT_OFF);
 		}
 		parent::execute();
@@ -82,4 +103,5 @@ class CreateDB2MathTable extends IndexBase {
 }
 
 $maintClass = "CreateDB2MathTable";
+/** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

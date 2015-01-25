@@ -24,6 +24,7 @@ require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 class GenerateFeatureTable extends Maintenance {
 	const RTI_CHUNK_SIZE = 100000;
 	public $purge = false;
+	/** @type DatabaseMysql */
 	public $dbw = null;
 
 	/**
@@ -42,8 +43,11 @@ class GenerateFeatureTable extends Maintenance {
 	}
 	/**
 	 * Populates the search index with content from all pages
+	 *
+	 * @param int $n
+	 * @param int $cmax
 	 */
-	protected function populateSearchIndex( $n = 0, $cmax = -1 ) {
+	protected function populateSearchIndex( $n = 0, $cmax = - 1 ) {
 		$res = $this->db->select( 'page', 'MAX(page_id) AS count' );
 		$s = $this->db->fetchObject( $res );
 		$count = $s->count;
@@ -59,11 +63,12 @@ class GenerateFeatureTable extends Maintenance {
 			}
 			$end = $n + self::RTI_CHUNK_SIZE - 1;
 
-			$res = $this->db->select( array( 'page', 'revision', 'text' ),
-					array( 'page_id' ),
-					array( "page_id BETWEEN $n AND $end", 'page_latest = rev_id', 'rev_text_id = old_id' ),
-					__METHOD__
-			);
+			$res =
+				$this->db->select( array( 'page', 'revision', 'text' ), array( 'page_id' ), array(
+						"page_id BETWEEN $n AND $end",
+						'page_latest = rev_id',
+						'rev_text_id = old_id'
+					), __METHOD__ );
 			$this->dbw->begin();
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
@@ -75,18 +80,35 @@ class GenerateFeatureTable extends Maintenance {
 		// $this->output( "Updated {$fcount} formulae!\n" );
 	}
 
+	/**
+	 * @param $pid
+	 *
+	 * @return number
+	 * @internal param unknown $pId
+	 * @internal param unknown $pText
+	 * @internal param string $pTitle
+	 * @internal param string $purge
+	 */
 	private function doUpdate( $pid ) {
 		// TODO: fix link id problem
-		$anchorID = 0;
-		$res = $this->db->select( array( 'mathpagestat', 'mathvarstat' ),
-					array( 'pagestat_pageid', 'pagestat_featurename', 'pagestat_featuretype', 'pagestat_featurecount', 'varstat_id', 'varstat_featurecount' ),
-					array( 'pagestat_pageid' => $pid, 'pagestat_featurename = varstat_featurename', 'pagestat_featuretype=varstat_featuretype'  ),
-					__METHOD__
-			);
+		$res =
+			$this->db->select( array( 'mathpagestat', 'mathvarstat' ), array(
+					'pagestat_pageid',
+					'pagestat_featurename',
+					'pagestat_featuretype',
+					'pagestat_featurecount',
+					'varstat_id',
+					'varstat_featurecount'
+				), array(
+					'pagestat_pageid' => $pid,
+					'pagestat_featurename = varstat_featurename',
+					'pagestat_featuretype=varstat_featuretype'
+				), __METHOD__ );
 		foreach ( $res as $row ) {
 			$this->output( $pid . ',' . $row->varstat_id . ',' . $row->pagestat_featurecount
-			/// $row->varstat_featurecount
-			. "\n" );// .';'.$row->pagestat_featuretype.utf8_decode($row->pagestat_featurename)."\n");
+						   /// $row->varstat_featurecount
+						   .
+						   "\n" );// .';'.$row->pagestat_featuretype.utf8_decode($row->pagestat_featurename)."\n");
 		}
 		return 0;
 	}
@@ -97,7 +119,7 @@ class GenerateFeatureTable extends Maintenance {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
-		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
+		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, - 1 ) );
 	}
 }
 

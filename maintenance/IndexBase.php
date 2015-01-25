@@ -1,6 +1,6 @@
 <?php
 /**
- * Generates harvest files for the MathWebSearch Deamon.
+ * Generates harvest files for the MathWebSearch Daemon.
  * Example: php CreateMathIndex.php ~/mws_harvest_files
  *
  * This program is free software; you can redistribute it and/or modify
@@ -28,6 +28,7 @@ require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
  *
  */
 abstract class IndexBase extends Maintenance {
+	/** @type  ResultWrapper */
 	protected $res;
 
 	/**
@@ -38,30 +39,35 @@ abstract class IndexBase extends Maintenance {
 		$this->mDescription = 'Exports data';
 		$this->addArg( 'dir', 'The directory where the harvest files go to.' );
 		$this->addArg( 'ffmax', "The maximal number of formula per file.", false );
-		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false );
-		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
-		$this->addOption( 'limit', 'The maximal number of database entries to be considered', false ,true , "L");
+		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min",
+			false );
+		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max",
+			false );
+		$this->addOption( 'limit', 'The maximal number of database entries to be considered', false,
+			true, "L" );
 	}
 
 	/**
-	 * @param unknown $row
+	 * @param stdClass $row
+	 *
 	 * @return string
 	 */
 	protected abstract function generateIndexString( $row );
 
 	/**
-	 * @param unknown $fn
-	 * @param unknown $min
-	 * @param unknown $inc
+	 * @param string $fn
+	 * @param int    $min
+	 * @param int    $inc
+	 *
 	 * @return boolean
 	 */
 	protected function wFile( $fn, $min, $inc ) {
 		$out = $this->getHead();
 		$max = min( $min + $inc, $this->res->numRows() );
-		for ( $i = $min; $i < $max; $i++ ) {
+		for ( $i = $min; $i < $max; $i ++ ) {
 			$this->res->seek( $i );
 			$out .= $this->generateIndexString( $this->res->fetchObject() );
-			restore_error_handler (  );
+			restore_error_handler();
 		}
 		$out .= "\n" . $this->getFooter();
 		$fh = fopen( $fn, 'w' );
@@ -70,10 +76,11 @@ abstract class IndexBase extends Maintenance {
 		fwrite( $fh, $out );
 		fclose( $fh );
 		echo "written file $fn with entries($min ... $max)\n";
-		if ( $max < $this->res->numRows() -1 )
+		if ( $max < $this->res->numRows() - 1 ) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 
 	/**
@@ -85,17 +92,21 @@ abstract class IndexBase extends Maintenance {
 		$inc = $this->getArg( 1, 100 );
 		$db = wfGetDB( DB_SLAVE );
 		echo "getting list of all equations from the database\n";
-		$this->res = $db->select(
-			array( 'mathindex', 'mathlatexml' ),
-			array( 'mathindex_revision_id', 'mathindex_anchor', 'math_mathml', 'math_inputhash', 'mathindex_inputhash' ),
-			array( 'math_inputhash = mathindex_inputhash',
-				'mathindex_revision_id >= '. $this->getArg( 2, 0),
-				'mathindex_revision_id <= '. $this->getArg( 3, PHP_INT_MAX))
-				, __METHOD__
-				,array( 
-					'LIMIT'    => $this->getOption( 'limit', PHP_INT_MAX ) ,
-					'ORDER BY' => 'mathindex_revision_id' )
- );
+		$this->res =
+			$db->select( array( 'mathindex', 'mathlatexml' ), array(
+					'mathindex_revision_id',
+					'mathindex_anchor',
+					'math_mathml',
+					'math_inputhash',
+					'mathindex_inputhash'
+				), array(
+					'math_inputhash = mathindex_inputhash',
+					'mathindex_revision_id >= ' . $this->getArg( 2, 0 ),
+					'mathindex_revision_id <= ' . $this->getArg( 3, PHP_INT_MAX )
+				), __METHOD__, array(
+					'LIMIT' => $this->getOption( 'limit', PHP_INT_MAX ),
+					'ORDER BY' => 'mathindex_revision_id'
+				) );
 		echo "write " . $this->res->numRows() . " results to index\n";
 		do {
 			$fn = $this->getArg( 0 ) . '/math' . sprintf( '%012d', $i ) . '.xml';
@@ -104,10 +115,18 @@ abstract class IndexBase extends Maintenance {
 		} while ( $res );
 		echo( "done" );
 	}
-	protected function getHead(){
+
+	/**
+	 * @return string
+	 */
+	protected function getHead() {
 		return "";
 	}
-	protected function getFooter(){
+
+	/**
+	 * @return string
+	 */
+	protected function getFooter() {
 		return "";
 	}
 }

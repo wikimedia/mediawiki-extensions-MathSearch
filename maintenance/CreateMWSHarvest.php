@@ -37,32 +37,34 @@ class CreateMWSHarvest extends IndexBase {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Generates harvest files for the MathWebSearch Deamon.';
+		$this->mDescription = 'Generates harvest files for the MathWebSearch Daemon.';
 		$this->addOption( 'mwsns', 'The namespace or mws normally "mws:"', false );
 	}
 
 	/**
-	 * @param unknown $row
+	 * @param stdClass $row
+	 *
 	 * @return string
 	 */
 	protected function generateIndexString( $row ) {
 		$out = "";
-		$xml = simplexml_load_string( utf8_decode($row->math_mathml) );
+		$xml = simplexml_load_string( utf8_decode( $row->math_mathml ) );
 		if ( !$xml ) {
 			echo "ERROR while converting:\n " . var_export( $row->math_mathml, true ) . "\n";
-			foreach ( libxml_get_errors() as $error )
+			foreach ( libxml_get_errors() as $error ) {
 				echo "\t", $error->message;
+			}
 			libxml_clear_errors();
 			return "";
 		}
 		// if ( $xml->math ) {
-			// $smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
+		// $smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
 		$out .= "\n<" . self::$mwsns . "expr url=\"" .
-		        MathSearchHooks::generateMathAnchorString( $row->mathindex_revision_id, $row->mathindex_anchor, '' ) .
-		        "\">\n\t";
-			$out .=  utf8_decode( $row->math_mathml );// $xml->math->children()->asXML();
-			$out .= "\n</" . self::$mwsns . "expr>\n";
-			return $out;
+				MathSearchHooks::generateMathAnchorString( $row->mathindex_revision_id,
+					$row->mathindex_anchor, '' ) . "\">\n\t";
+		$out .= utf8_decode( $row->math_mathml );// $xml->math->children()->asXML();
+		$out .= "\n</" . self::$mwsns . "expr>\n";
+		return $out;
 		/*} else {
 			var_dump($xml);
 			die("nomath");
@@ -70,22 +72,27 @@ class CreateMWSHarvest extends IndexBase {
 
 	}
 
-	protected function getHead(){
+	protected function getHead() {
 		return self::$XMLHead;
 	}
-	protected function getFooter(){
+
+	protected function getFooter() {
 		return self::$XMLFooter;
 	}
+
 	/**
 	 *
 	 */
 	public function execute() {
 		self::$mwsns = $this->getOption( 'mwsns', '' );
-		self::$XMLHead = "<?xml version=\"1.0\"?>\n<" . self::$mwsns . "harvest xmlns:mws=\"http://search.mathweb.org/ns\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\">";
+		self::$XMLHead =
+			"<?xml version=\"1.0\"?>\n<" . self::$mwsns .
+			"harvest xmlns:mws=\"http://search.mathweb.org/ns\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\">";
 		self::$XMLFooter = "</" . self::$mwsns . "harvest>";
 		parent::execute();
 	}
 }
 
 $maintClass = "CreateMWSHarvest";
+/** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

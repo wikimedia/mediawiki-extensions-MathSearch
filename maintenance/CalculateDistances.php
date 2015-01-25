@@ -21,6 +21,9 @@
 
 require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
+/**
+ * Class CalculateDistances
+ */
 class CalculateDistances extends Maintenance {
 	const RTI_CHUNK_SIZE = 100;
 	/**@var DatabaseBase $dbw */
@@ -38,7 +41,8 @@ class CalculateDistances extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
-		$this->addOption( 'page9', 'Ignore pages with only 9 equations or less.', false, false, "9" );
+		$this->addOption( 'page9', 'Ignore pages with only 9 equations or less.', false, false,
+			"9" );
 		$this->addArg( 'min', "If set processing is started at the page with curid>min", false );
 		$this->addArg( 'max', "If set processing is stopped at the page with curid<=max", false );
 	}
@@ -57,10 +61,14 @@ class CalculateDistances extends Maintenance {
 			$conds .= " AND pagestat_pageid <= $max";
 		}
 		if ( $this->getOption( 'page9', false ) ) {
-			$res = $this->db->select( array( 'mathpage9' , 'mathpagestat'), array( 'page_id' ,'pagestat_pageid') ,
-				$conds . ' AND pagestat_pageid = page_id',  __METHOD__, array( 'DISTINCT' ) );
+			$res =
+				$this->db->select( array( 'mathpage9', 'mathpagestat' ),
+					array( 'page_id', 'pagestat_pageid' ),
+					$conds . ' AND pagestat_pageid = page_id', __METHOD__, array( 'DISTINCT' ) );
 		} else {
-			$res = $this->db->select( 'mathpagestat', 'pagestat_pageid', $conds, __METHOD__, array( 'DISTINCT' ) );
+			$res =
+				$this->db->select( 'mathpagestat', 'pagestat_pageid', $conds, __METHOD__,
+					array( 'DISTINCT' ) );
 		}
 		foreach ( $res as $row ) {
 			array_push( $this->pagelist, $row->pagestat_pageid );
@@ -72,22 +80,23 @@ class CalculateDistances extends Maintenance {
 	/**
 	 * Populates the search index with content from all pages
 	 */
-	protected function populateSearchIndex( ) {
+	protected function populateSearchIndex() {
 		$n = 0;
-		$count = sizeof($this->pagelist);
+		$count = sizeof( $this->pagelist );
 		$this->output( "Rebuilding index fields for $count pages...\n" );
 		while ( $n < $count ) {
 			if ( $n ) {
 				$this->output( $n . " of $count \n" );
 			}
-				$this->dbw->begin();
-			for($j=0;$j<self::RTI_CHUNK_SIZE;$j++){
+			$this->dbw->begin();
+			for ( $j = 0; $j < self::RTI_CHUNK_SIZE; $j ++ ) {
 				//TODO: USE PREPARED STATEMENTS
 				$pid = $this->pagelist[$n];
-				$sql = "INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value)\n"
-					. "SELECT DISTINCT $pid,`pagestat_pageid`,\n"
-					. "CosProd( $pid,`pagestat_pageid`) FROM `mathpagestat` m ";
-				if ( $this->getOption( 'page9', false ) ){
+				$sql =
+					"INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value)\n" .
+					"SELECT DISTINCT $pid,`pagestat_pageid`,\n" .
+					"CosProd( $pid,`pagestat_pageid`) FROM `mathpagestat` m ";
+				if ( $this->getOption( 'page9', false ) ) {
 					$sql .= " JOIN (SELECT page_id from mathpage9) as r WHERE m.pagestat_pageid=r.page_id AND ";
 				} else {
 					$sql .= " WHERE ";
@@ -97,7 +106,7 @@ class CalculateDistances extends Maintenance {
 				$start = microtime( true );
 				$this->dbw->query( $sql );
 				echo 'done in ' . ( microtime( true ) - $start ) . "\n";
-				$n++;
+				$n ++;
 			}
 			$start = microtime( true );
 			$this->dbw->commit();
@@ -107,4 +116,5 @@ class CalculateDistances extends Maintenance {
 }
 
 $maintClass = "CalculateDistances";
+/** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

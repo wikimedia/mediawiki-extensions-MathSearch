@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 echo "Warning: Experimental don't use in any kind of production environment."
 echo "Make sure that you have downloaded and extracted the"
 echo "Data Server Driver Package (dsdriver) to /vagrant/ibm/dsdriver"
@@ -6,7 +6,7 @@ echo "For vagrant you need to chose IBM Data Server Driver Package (Linux AMD64 
 echo "Are the drivers downloaded and extracted?"
 select yn in "Yes" "No"
 do
-    case $yn in
+    case ${yn} in
         Yes ) break;;
         No ) exit;;
     esac

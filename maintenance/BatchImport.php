@@ -21,22 +21,23 @@
 
 require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
+/**
+ * Class BatchImport
+ */
 class BatchImport extends Maintenance {
 	private $dir;
 	private $overwrite;
 
 	/**
-	 * @var DatabaseBase
-	 */
-	private $db;
-	/**
 	 *
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = "Batch imports submissions from a folder. \n Processes CSV files that follow the naming convention: \n \$userName-\$runName.csv";
+		$this->mDescription =
+			"Batch imports submissions from a folder. \n Processes CSV files that follow the naming convention: \n \$userName-\$runName.csv";
 		$this->addArg( "dir", "The directory to be read", true );
-		$this->addOption( "overwrite" , "Overwrite existing runs with the same name.", false, false, "o" );
+		$this->addOption( "overwrite", "Overwrite existing runs with the same name.", false, false,
+			"o" );
 	}
 
 	/**
@@ -45,32 +46,34 @@ class BatchImport extends Maintenance {
 	public function execute() {
 		$this->dir = $this->getArg( 0 );
 		$this->overwrite = $this->getOption( 'overwrite' );
-		if( $this->overwrite ){
+		if ( $this->overwrite ) {
 			$this->output( "Loaded with option overwrite enabled .\n" );
 		}
-		if ( ! is_dir($this->dir) ){
-			$this->output("{$this->dir} is not a directory.\n");
-			exit(1);
+		if ( !is_dir( $this->dir ) ) {
+			$this->output( "{$this->dir} is not a directory.\n" );
+			exit( 1 );
 		}
-		$files = new GlobIterator($this->dir."/*-*.csv");
+		$files = new GlobIterator( $this->dir . "/*-*.csv" );
 		foreach ( $files as $file ) {
 			$fn = $file->getFilename();
-			if ( preg_match( "/(?P<user>.*?)-(?P<runName>.*?)\\.csv/", $fn,$matches) ){
+			if ( preg_match( "/(?P<user>.*?)-(?P<runName>.*?)\\.csv/", $fn, $matches ) ) {
 				$user = User::newFromName( $matches['user'] );
-				if( $user->getId() > 0 ){
-					$this->output("Importing filename $fn for userId {$user->getId()}.\n");
-					$importer = new ImportCsv($user);
-					$result = $importer->execute( fopen($file,'r'), $matches['runName'], $this->overwrite );
-					foreach( $importer->getWarnings() as $warning){
-						$this->output("warning: $warning \n");
+				if ( $user->getId() > 0 ) {
+					$this->output( "Importing filename $fn for userId {$user->getId()}.\n" );
+					$importer = new ImportCsv( $user );
+					$result =
+						$importer->execute( fopen( $file, 'r' ), $matches['runName'],
+							$this->overwrite );
+					foreach ( $importer->getWarnings() as $warning ) {
+						$this->output( "warning: $warning \n" );
 					}
-					if ( $result !== true ){
-						$this->output("$result\n");
+					if ( $result !== true ) {
+						$this->output( "$result\n" );
 					} else {
 						$this->output( "File $fn imported as {$importer->getRunId()} \n" );
 					}
 				} else {
-					$this->output("User {$matches['user']} is invalid. Skipping file $fn.\n");
+					$this->output( "User {$matches['user']} is invalid. Skipping file $fn.\n" );
 				}
 			}
 		}
@@ -78,4 +81,5 @@ class BatchImport extends Maintenance {
 }
 
 $maintClass = "BatchImport";
+/** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );
