@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
+require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 /**
  * Class CleanMathTable
@@ -40,8 +40,8 @@ class CleanMathTable extends Maintenance {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
 		$this->addOption( 'purge',
-			"If set all formulae are rendered again from strech. (Very time consuming!)", false,
-			false, "f" );
+			'If set all formulae are rendered again from strech. (Very time consuming!)', false,
+			false, 'f' );
 	}
 
 	/**
@@ -51,13 +51,13 @@ class CleanMathTable extends Maintenance {
 	 */
 	public function execute() {
 		// FIXME: this does not work at all
-		$this->purge = $this->getOption( "purge", false );
+		$this->purge = $this->getOption( 'purge', false );
 		$this->db = wfGetDB( DB_MASTER );
-		$this->db->query( "DELETE math FROM (`math` LEFT OUTER JOIN `mathindex` ON ( (`mathindex`.`mathindex_inputhash` = `math`.`math_inputhash`) )) WHERE mathindex_inputhash IS NULL " );
+		$this->db->query( 'DELETE math FROM (`math` LEFT OUTER JOIN `mathindex` ON ( (`mathindex`.`mathindex_inputhash` = `math`.`math_inputhash`) )) WHERE mathindex_inputhash IS NULL ' );
 		$this->output( "Done.\n" );
 	}
 }
 
-$maintClass = "CleanMathTable";
+$maintClass = 'CleanMathTable';
 /** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

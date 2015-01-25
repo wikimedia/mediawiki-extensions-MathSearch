@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
+require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 /**
  * Class ExtractFeatures
@@ -42,11 +42,11 @@ class ExtractFeatures extends Maintenance {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
 		$this->addOption( 'purge',
-			"If set all formulae are rendered again from strech. (Very time consuming!)", false,
-			false, "f" );
-		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min",
+			'If set all formulae are rendered again from strech. (Very time consuming!)', false,
+			false, 'f' );
+		$this->addArg( 'min', 'If set processing is started at the page with rank(pageID)>min',
 			false );
-		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max",
+		$this->addArg( 'max', 'If set processing is stopped at the page with rank(pageID)<=max',
 			false );
 	}
 
@@ -95,26 +95,26 @@ class ExtractFeatures extends Maintenance {
 			$n += self::RTI_CHUNK_SIZE;
 		}
 		$this->output( "Clear mathvarstat\n" );
-		$sql = "TRUNCATE TABLE `mathvarstat`";
+		$sql = 'TRUNCATE TABLE `mathvarstat`';
 		$this->dbw->query( $sql );
 		$this->output( "Generate mathvarstat\n" );
 		$sql =
-			"INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)\n" .
-			"SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT\n" .
-			"FROM `mathobservation`\n" .
-			"JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash\n" .
-			"GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n" .
-			"ORDER BY CNT DESC";
+			'INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)\n' .
+			'SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT\n' .
+			'FROM `mathobservation`\n' .
+			'JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash\n' .
+			'GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n' .
+			'ORDER BY CNT DESC';
 		$this->dbw->query( $sql );
 		$this->output( "Clear mathpagestat\n" );
-		$sql = "TRUNCATE TABLE `mathpagestat`";
+		$sql = 'TRUNCATE TABLE `mathpagestat`';
 		$this->dbw->query( $sql );
 		$this->output( "Generate mathpagestat\n" );
 		$sql =
-			"INSERT INTO `mathpagestat`(`pagestat_featureid`,`pagestat_pageid`,`pagestat_featurecount`)\n" .
-			"SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` JOIN mathindex ON `mathobservation_inputhash` =mathindex_inputhash\n" .
-			"JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype`\n" .
-			" GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`,mathindex_revision_id ORDER BY CNT DESC";
+			'INSERT INTO `mathpagestat`(`pagestat_featureid`,`pagestat_pageid`,`pagestat_featurecount`)\n' .
+			'SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` JOIN mathindex ON `mathobservation_inputhash` =mathindex_inputhash\n' .
+			'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype`\n' .
+			' GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`,mathindex_revision_id ORDER BY CNT DESC';
 		$this->dbw->query( $sql );
 		$this->output( "Updated {$fcount} formulae!\n" );
 	}
@@ -152,13 +152,13 @@ class ExtractFeatures extends Maintenance {
 	 */
 	public function execute() {
 		$this->dbw = wfGetDB( DB_MASTER );
-		$this->purge = $this->getOption( "purge", false );
+		$this->purge = $this->getOption( 'purge', false );
 		$this->db = wfGetDB( DB_MASTER );
 		$this->output( "Done.\n" );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, - 1 ) );
 	}
 }
 
-$maintClass = "ExtractFeatures";
+$maintClass = 'ExtractFeatures';
 /** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

@@ -21,14 +21,14 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/IndexBase.php' );
+require_once( __DIR__ . '/IndexBase.php' );
 
 /**
  * @author Moritz Schubotz
  *
  */
 class CreateMWSHarvest extends IndexBase {
-	private static $mwsns = "mws:";
+	private static $mwsns = 'mws:';
 	private static $XMLHead;
 	private static $XMLFooter;
 
@@ -55,7 +55,7 @@ class CreateMWSHarvest extends IndexBase {
 				echo "\t", $error->message;
 			}
 			libxml_clear_errors();
-			return "";
+			return '';
 		}
 		// if ( $xml->math ) {
 		// $smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
@@ -86,13 +86,13 @@ class CreateMWSHarvest extends IndexBase {
 	public function execute() {
 		self::$mwsns = $this->getOption( 'mwsns', '' );
 		self::$XMLHead =
-			"<?xml version=\"1.0\"?>\n<" . self::$mwsns .
-			"harvest xmlns:mws=\"http://search.mathweb.org/ns\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\">";
-		self::$XMLFooter = "</" . self::$mwsns . "harvest>";
+			'<?xml version="1.0"?>\n<' . self::$mwsns .
+			'harvest xmlns:mws="http://search.mathweb.org/ns" xmlns:m="http://www.w3.org/1998/Math/MathML">';
+		self::$XMLFooter = '</' . self::$mwsns . 'harvest>';
 		parent::execute();
 	}
 }
 
-$maintClass = "CreateMWSHarvest";
+$maintClass = 'CreateMWSHarvest';
 /** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

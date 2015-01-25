@@ -21,7 +21,7 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
+require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 /**
  * @author Moritz Schubotz
@@ -38,10 +38,10 @@ abstract class IndexBase extends Maintenance {
 		parent::__construct();
 		$this->mDescription = 'Exports data';
 		$this->addArg( 'dir', 'The directory where the harvest files go to.' );
-		$this->addArg( 'ffmax', "The maximal number of formula per file.", false );
-		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min",
+		$this->addArg( 'ffmax', 'The maximal number of formula per file.', false );
+		$this->addArg( 'min', 'If set processing is started at the page with rank(pageID)>min',
 			false );
-		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max",
+		$this->addArg( 'max', 'If set processing is stopped at the page with rank(pageID)<=max',
 			false );
 		$this->addOption( 'limit', 'The maximal number of database entries to be considered', false,
 			true, "L" );
@@ -113,20 +113,20 @@ abstract class IndexBase extends Maintenance {
 			$res = $this->wFile( $fn, $i, $inc );
 			$i += $inc;
 		} while ( $res );
-		echo( "done" );
+		echo( 'done' );
 	}
 
 	/**
 	 * @return string
 	 */
 	protected function getHead() {
-		return "";
+		return '';
 	}
 
 	/**
 	 * @return string
 	 */
 	protected function getFooter() {
-		return "";
+		return '';
 	}
 }

@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
+require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 /**
  * Class CalculateDistances
@@ -42,9 +42,9 @@ class CalculateDistances extends Maintenance {
 		parent::__construct();
 		$this->mDescription = 'Outputs page text to stdout';
 		$this->addOption( 'page9', 'Ignore pages with only 9 equations or less.', false, false,
-			"9" );
-		$this->addArg( 'min', "If set processing is started at the page with curid>min", false );
-		$this->addArg( 'max', "If set processing is stopped at the page with curid<=max", false );
+			'9' );
+		$this->addArg( 'min', 'If set processing is started at the page with curid>min', false );
+		$this->addArg( 'max', 'If set processing is stopped at the page with curid<=max', false );
 	}
 
 	/**
@@ -110,11 +110,11 @@ class CalculateDistances extends Maintenance {
 			}
 			$start = microtime( true );
 			$this->dbw->commit();
-			echo " committed in " . ( microtime( true ) - $start ) . "s\n\n";
+			echo ' committed in ' . ( microtime( true ) - $start ) . "s\n\n";
 		}
 	}
 }
 
-$maintClass = "CalculateDistances";
+$maintClass = 'CalculateDistances';
 /** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

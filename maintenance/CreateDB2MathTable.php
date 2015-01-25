@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/IndexBase.php' );
+require_once( __DIR__. '/IndexBase.php' );
 
 /**
  * @author Moritz Schubotz
@@ -36,7 +36,7 @@ class CreateDB2MathTable extends IndexBase {
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Exports a db2 compatible math index table.';
-		$this->addArg( 'truncate', "If true, db2 math table is deleted before import", false );
+		$this->addArg( 'truncate', 'If true, db2 math table is deleted before import', false );
 	}
 
 	/**
@@ -102,6 +102,6 @@ class CreateDB2MathTable extends IndexBase {
 	}
 }
 
-$maintClass = "CreateDB2MathTable";
+$maintClass = 'CreateDB2MathTable';
 /** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

@@ -32,7 +32,7 @@ class BatchExport extends Maintenance {
 		parent::__construct();
 		$this->mDescription =
 			"Exports  submissions to a folder. \n Each run is named after the following convention: \n \$userName-\$runName-\$runId.csv";
-		$this->addArg( "dir", "The output directory", true );
+		$this->addArg( 'dir', 'The output directory', true );
 	}
 
 	/**
@@ -49,7 +49,7 @@ class BatchExport extends Maintenance {
 		//runName VARCHAR(45),
 		//userId INT UNSIGNED,
 		//isDraft TINYINT NOT NULL,
-		$res = $dbr->select( "math_wmc_runs", "*" );
+		$res = $dbr->select( 'math_wmc_runs', '*' );
 		//TODO: Implement support for isDraft.
 		foreach ( $res as $row ) {
 			$user = User::newFromId( $row->userId );
@@ -64,6 +64,6 @@ class BatchExport extends Maintenance {
 	}
 }
 
-$maintClass = "BatchExport";
+$maintClass = 'BatchExport';
 /** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

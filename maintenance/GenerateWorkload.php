@@ -21,7 +21,7 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/IndexBase.php' );
+require_once( __DIR__ . '/IndexBase.php' );
 
 /**
  * @author Moritz Schubotz
@@ -37,12 +37,12 @@ class GenerateWorkload extends IndexBase {
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Generates a workload of sample queries.';
-		$this->addOption( 'selectivity', "Specifies the selectivity for each individual equation",
-			false, true, "S" );
+		$this->addOption( 'selectivity', 'Specifies the selectivity for each individual equation',
+			false, true, 'S' );
 		$this->addOption( 'lastId',
-			"Specifies to start the ID counter after the given id. For example '-l 1' would start with id 2.",
-			false, true, "l" );
-		$this->addOption( 'overwrite', "Overwrite existing draft queries ", false, false, "o" );
+			'Specifies to start the ID counter after the given id. For example \'-l 1\' would start with id 2.',
+			false, true, 'l' );
+		$this->addOption( 'overwrite', 'Overwrite existing draft queries ', false, false, "o" );
 	}
 
 	/**
@@ -53,7 +53,7 @@ class GenerateWorkload extends IndexBase {
 	protected function generateIndexString( $row ) {
 		if ( mt_rand() <= $this->selectivity ) {
 			$q = MathQueryObject::newQueryFromEquationRow( $row, ++ $this->id );
-			$q->saveToDatabase( $this->getOption( "overwrite", false ) );
+			$q->saveToDatabase( $this->getOption( 'overwrite', false ) );
 			$out = $q->exportTexDocument();
 			if ( $out == false ) {
 				echo 'problem with ' . var_export( $q, true ) . "\n";
@@ -70,7 +70,7 @@ class GenerateWorkload extends IndexBase {
 		$i = 0;
 		$inc = $this->getArg( 1, 100 );
 		$this->id = $this->getOption( 'lastId', 0 );
-		$sel = $this->getOption( "selectivity", .1 );
+		$sel = $this->getOption( 'selectivity', .1 );
 		$this->selectivity = (int)( $sel * mt_getrandmax() );
 		$db = wfGetDB( DB_SLAVE );
 		echo "getting list of all equations from the database\n";
@@ -87,10 +87,10 @@ class GenerateWorkload extends IndexBase {
 			$i += $inc;
 		} while ( $res );
 		echo "last id used: {$this->id}\n";
-		echo( "done" );
+		echo( 'done' );
 	}
 }
 
-$maintClass = "GenerateWorkload";
+$maintClass = 'GenerateWorkload';
 /** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

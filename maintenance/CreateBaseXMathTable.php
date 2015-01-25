@@ -21,14 +21,14 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/IndexBase.php' );
+require_once( __DIR__ . '/IndexBase.php' );
 
 /**
  * @author Moritz Schubotz
  *
  */
 class CreateBaseXMathTable extends IndexBase {
-	private static $mwsns = "mws:";
+	private static $mwsns = 'mws:';
 	private static $XMLHead;
 	private static $XMLFooter;
 	/** @var \BaseXSession */
@@ -116,6 +116,6 @@ class CreateBaseXMathTable extends IndexBase {
 	}
 }
 
-$maintClass = "CreateBaseXMathTable";
+$maintClass = 'CreateBaseXMathTable';
 /** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );

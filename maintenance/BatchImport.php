@@ -35,8 +35,8 @@ class BatchImport extends Maintenance {
 		parent::__construct();
 		$this->mDescription =
 			"Batch imports submissions from a folder. \n Processes CSV files that follow the naming convention: \n \$userName-\$runName.csv";
-		$this->addArg( "dir", "The directory to be read", true );
-		$this->addOption( "overwrite", "Overwrite existing runs with the same name.", false, false,
+		$this->addArg( 'dir', 'The directory to be read', true );
+		$this->addOption( 'overwrite', 'Overwrite existing runs with the same name.', false, false,
 			"o" );
 	}
 
@@ -53,10 +53,10 @@ class BatchImport extends Maintenance {
 			$this->output( "{$this->dir} is not a directory.\n" );
 			exit( 1 );
 		}
-		$files = new GlobIterator( $this->dir . "/*-*.csv" );
+		$files = new GlobIterator( $this->dir . '/*-*.csv' );
 		foreach ( $files as $file ) {
 			$fn = $file->getFilename();
-			if ( preg_match( "/(?P<user>.*?)-(?P<runName>.*?)\\.csv/", $fn, $matches ) ) {
+			if ( preg_match( '/(?P<user>.*?)-(?P<runName>.*?)\\.csv/', $fn, $matches ) ) {
 				$user = User::newFromName( $matches['user'] );
 				if ( $user->getId() > 0 ) {
 					$this->output( "Importing filename $fn for userId {$user->getId()}.\n" );
@@ -80,6 +80,6 @@ class BatchImport extends Maintenance {
 	}
 }
 
-$maintClass = "BatchImport";
+$maintClass = 'BatchImport';
 /** @noinspection PhpIncludeInspection */
 require_once( RUN_MAINTENANCE_IF_MAIN );
