@@ -20,17 +20,9 @@ class MathSearchHooks {
 		if ( is_null( $updater ) ) {
 			throw new MWException( "Mathsearch extension requires Mediawiki 1.18 or above" );
 		}
-// 		$map = array(
-// 			'mysql' => 'mathindex.sql',
-// 			// 'sqlite' => 'math.sql',
-// 			// 'postgres' => 'math.pg.sql',
-// 			// 'oracle' => 'math.oracle.sql',
-// 			// 'mssql' => 'math.mssql.sql',
-// 			// 'db2' => 'math.db2.sql',
-// 		);
  		$type = $updater->getDB()->getType();
  		if ( $type == "mysql"  ) {
-			$dir = dirname( __FILE__ ) . '/db/' ;// . $map[$type];
+			$dir = __DIR__ . '/db/' ;
 			$updater->addExtensionTable( 'mathindex', $dir . 'mathindex.sql' );
 			$updater->addExtensionTable( 'mathobservation',  $dir . 'mathobservation.sql' );
 			$updater->addExtensionTable( 'mathvarstat', $dir . 'mathvarstat.sql' );
@@ -41,10 +33,15 @@ class MathSearchHooks {
 				$updater->addExtensionTable( 'math_wmc_ref', $dir . "math_wmc_ref.sql");
 				$updater->addExtensionTable( 'math_wmc_runs', $dir . "math_wmc_runs.sql");
 				$updater->addExtensionTable( 'math_wmc_results', $dir . "math_wmc_results.sql");
+				$updater->addExtensionTable( 'math_wmc_assessed_formula', $dir . "math_wmc_assessed_formula.sql");
+				$updater->addExtensionTable( 'math_wmc_assessed_revision', $dir . "math_wmc_assessed_revision.sql");
+
 			}
-		    $updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
- 		} else {
- 			//throw new MWException( "Math extension does not currently support $type database." );
+			$updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
+ 		} elseif ( $type == 'sqlite' ){
+			// Don't scare Jenkins with an exception.
+		} else {
+ 			throw new Exception( "Math extension does not currently support $type database." );
  		}
 		return true;
 	}
