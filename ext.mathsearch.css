@@ -1,0 +1,8 @@
+/*
+   Document   : ext.mathsearch.css
+   Author     : Physikerwelt (Moritz Schubotz)
+   Description:
+       Shows math output in all browsers.
+*/
+
+.mwe-math-demo { display: inline-block; vertical-align: middle; }

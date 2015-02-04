@@ -57,6 +57,7 @@ class FormulaInfo extends SpecialPage {
 	public function DisplayInfo( $oldID, $eid ) {
 		global $wgMathDebug, $wgExtensionAssetsPath;
 		$out = $this->getOutput();
+		$out->addModuleStyles( array( 'ext.mathsearch.styles' ) );
 		$out->addWikiText( '==General==' );
 		$out->addWikiText( 'Display information for equation id:' . $eid . ' on revision:' . $oldID );
 		$revision = Revision::newFromId( $oldID );
@@ -88,10 +89,10 @@ class FormulaInfo extends SpecialPage {
 		# $log=htmlspecialchars( $res->math_log );
 		$out->addHtml( "<br />\n" );
 		$out->addWikiText( 'SVG (' . self::getlengh( $mo->getSvg() ) . ') :', false );
-		$out->addHtml( $mo->getFallbackImage( false , true, '' ) );
+		$out->addHtml( $mo->getFallbackImage( false , 'mwe-math-demo' ) );
 		$out->addHtml( "<br />\n" );
 		$out->addWikiText( 'PNG (' . self::getlengh( $mo->getPng() ) . ') :', false );
-		$out->addHtml( $mo->getFallbackImage( true , true , '' ) );
+		$out->addHtml( preg_replace( '/mode=\d/', 'mode=0' ,$mo->getFallbackImage( true , 'mwe-math-demo' ) ) );
 		$out->addHtml( "<br />\n" );
 		$out->addWikiText( 'Hash : ' . $mo->getMd5(), false );
 		$out->addHtml( "<br />" );

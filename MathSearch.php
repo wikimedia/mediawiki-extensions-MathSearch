@@ -97,3 +97,10 @@ $wgMathUploadEnabled = false;
 $wgAutoloadClasses['SpecialMathDownloadResult'] = $dir . 'SpecialMathDownloadResult.php';
 $wgSpecialPages['MathDownload'] = 'SpecialMathDownloadResult';
 $wgSpecialPageGroups['MathDownload'] = 'mathsearch';
+
+$wgResourceModules['ext.mathsearch.styles'] = array(
+	'localBasePath' => __DIR__ ,
+	'remoteExtPath' => 'MathSearch/',
+	'styles' => 'ext.mathsearch.css',
+	'targets' => array( 'desktop', 'mobile' ),
+);
