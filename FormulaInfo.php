@@ -105,7 +105,7 @@ class FormulaInfo extends SpecialPage {
 
 		$out->addHtml( "<br />" );
 		$out->addHtml( '<div class="NavFrame"><div class="NavHead">mathml</div>
-<div class="NavContent">' );
+<div class="NavContent" style="text-align: left">' );
 		$out->addWikiText( '<syntaxhighlight lang="xml">' . ( $mo->getMathml() ) . '</syntaxhighlight>' );
 		$out->addHtml( '</div></div>' );
 		$out->addHtml( "<br />" );
