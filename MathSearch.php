@@ -48,6 +48,7 @@ $wgAutoloadClasses['XQueryGeneratorBaseX'] = $dir . 'XQueryGeneratorBaseX.php';
 $wgAutoloadClasses['GetEquationsByQuery'] = $dir . 'GetEquationsByQuery.php';
 $wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';
 $wgAutoloadClasses['SpecialMathIndex'] = $dir . 'SpecialMathIndex.php';
+$wgAutoloadClasses['SpecialDisplayTopics'] = $dir . '/includes/special/SpecialDisplayTopics.php';
 $wgAutoloadClasses['MathEngineMws'] = $dir . '/includes/engines/MathEngineMws.php';
 $wgAutoloadClasses['MathEngineDB2'] = $dir . '/includes/engines/MathEngineDB2.php';
 $wgAutoloadClasses['MathEngineBaseX'] = $dir . '/includes/engines/MathEngineBaseX.php';
@@ -66,17 +67,21 @@ $wgSpecialPageGroups['GetEquationsByQuery'] = 'mathsearch';
 $wgSpecialPageGroups['XQueryGenerator'] = 'mathsearch';
 $wgSpecialPageGroups['MathDebug'] = 'mathsearch';
 $wgSpecialPageGroups['MathIndex'] = 'mathsearch';
+$wgSpecialPageGroups['DisplayTopics'] = 'mathsearch';
+
 $wgSpecialPages['MathSearch'] = 'SpecialMathSearch';
 $wgSpecialPages['FormulaInfo'] = 'FormulaInfo';
 $wgSpecialPages['GetEquationsByQuery'] = 'GetEquationsByQuery';
 $wgSpecialPages['MathDebug'] = 'SpecialMathDebug';
 $wgSpecialPages['MathIndex'] = 'SpecialMathIndex';
+$wgSpecialPages['DisplayTopics'] = 'SpecialDisplayTopics';
 $wgAPIModules['mathquery'] = 'MathSearchApi';
 
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['MathFormulaRendered']['updateIndex'] = 'MathSearchHooks::updateMathIndex';
 $wgHooks['MathFormulaRendered']['addLink'] = 'MathSearchHooks::addLinkToFormulaInfoPage';
 $wgHooks['UnitTestsList'][] = 'MathSearchHooks::onRegisterUnitTests';
+$wgHooks['ParserFirstCallInit'][] = 'MathSearchHooks::onParserFirstCallInit';
 
 $wgGroupPermissions['user']['MathDebug'] = true;
 

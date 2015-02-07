@@ -230,4 +230,45 @@ class MathSearchHooks {
 				) );
 		} );
 	}
+
+	/**
+	 * Register the <mquery> tag with the Parser.
+	 *
+	 * @param $parser Parser instance of Parser
+	 * @return Boolean: true
+	 */
+	static function onParserFirstCallInit( $parser ) {
+		$parser->setHook( 'mquery', array( 'MathSearchHooks', 'mQueryTagHook' ) );
+		wfDebugLog('MathSearch','mquery tag registered');
+		return true;
+	}
+
+	/**
+	 * Callback function for the <mquery> parser hook.
+	 *
+	 * @param $content (the LaTeX+MWS query input)
+	 * @param $attributes
+	 * @param Parser $parser
+	 * @return array
+	 */
+	static function mQueryTagHook( $content, $attributes, $parser ) {
+		global $wgMathDefaultLaTeXMLSetting;
+		if ( trim( $content ) === '' ) { // bug 8372
+			return '';
+		}
+		wfDebugLog('MathSearch','Render mquery tag.');
+		wfProfileIn( __METHOD__ );
+		//TODO: Report %\n problem to LaTeXML upstream
+		$content = preg_replace( '/%\n/', '', $content );
+		$renderer = new MathLaTeXML( $content );
+		$mQuerySettings  = $wgMathDefaultLaTeXMLSetting;
+		$mQuerySettings['preload'][] = 'mws.sty';
+		$renderer->setLaTeXMLSettings($mQuerySettings);
+		$renderer->render( );
+		$renderedMath = $renderer->getHtmlOutput();
+		wfProfileOut( __METHOD__ );
+
+		return array( $renderedMath, "markerType" => 'nowiki' );
+	}
+
 }
