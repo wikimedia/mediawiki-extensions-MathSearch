@@ -54,6 +54,13 @@ class FormulaInfo extends SpecialPage {
 		}
 	}
 
+	/**
+	 * @param $oldID
+	 * @param $eid
+	 *
+	 * @return bool
+	 * @throws MWException
+	 */
 	public function DisplayInfo( $oldID, $eid ) {
 		global $wgMathDebug, $wgExtensionAssetsPath;
 		$out = $this->getOutput();
@@ -77,7 +84,11 @@ class FormulaInfo extends SpecialPage {
 			return false;
 		}
 		$out->addWikiText( "Occurrences on the following pages:" );
-		wfDebugLog( "MathSearch", var_export( $mo->getAllOccurences(), true ) );
+		$all = $mo->getAllOccurences();
+		foreach( $all as  $occ ){
+			/** @type MathObject $occ */
+			$out->addWikiText( '*' . $occ->printLink2Page( false ) );
+		}
 		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
 		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex() . '</syntaxhighlight>' );
 		$out->addWikiText( 'MathML (' . self::getlengh( $mo->getMathml() ) . ') :', false );

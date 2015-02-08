@@ -209,9 +209,12 @@ class MathObject extends MathMathML {
 
 	/**
 	 * Gets all occurences of the tex.
-	 * @return array(MathObject)
+	 *
+	 * @param bool $currentOnly
+	 *
+	 * @return array
 	 */
-	public function getAllOccurences($printOutput = true) {
+	public function getAllOccurences( $currentOnly = true ) {
 		$out = array( );
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
@@ -219,12 +222,12 @@ class MathObject extends MathMathML {
 		);
 
 		foreach ( $res as $row ) {
-			//self::DebugPrint( var_export( $row, true ) );
 			$var = self::constructformpagerow( $row );
 			if ( $var ) {
-				if ($printOutput) $var->printLink2Page( false );
+				if ( $currentOnly === false || $var->isCurrent() ){
 				array_push( $out, $var );
 			}
+		}
 		}
 		return $out;
 	}
@@ -238,14 +241,14 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	public function printLink2Page( $hidePage = true ) {
-		global $wgOut;
-		$wgOut->addHtml( "&nbsp;&nbsp;&nbsp;" );
+	/**
+	 * @param bool $hidePage
+	 *
+	 * @return string
+	 */public function printLink2Page( $hidePage = true ) {
 		$pageString = $hidePage ? "" : $this->getPageTitle() . " ";
-		$wgOut->addWikiText( "[[" . $this->getPageTitle() . "#math" . $this->getAnchorID()
-			. "|" . $pageString . "Eq: " . $this->getAnchorID() . "]] ", false );
-		// $wgOut->addHtml( MathLaTeXML::embedMathML( $this->mathml ) );
-		$wgOut->addHtml( "<br />" );
+		$anchor = MathSearchHooks::generateMathAnchorString( $this->getRevisionID(), $this->getAnchorID() );
+		return "[[{$this->getPageTitle()}{$anchor}|{$pageString}Eq: {$this->getAnchorID()}]]";
 	}
 
 	/**
@@ -332,5 +335,24 @@ class MathObject extends MathMathML {
 			. 'JOIN mathindex on `mathobservation_inputhash` = mathindex_inputhash '
 			. 'JOIN mathvarstat on varstat_featurename = `mathobservation_featurename` and varstat_featuretype = `mathobservation_featuretype` '
 			. 'GROUP by `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_revision_id ORDER BY CNT DESC' );
+	}
+
+	/**
+	 * @return null|Revision
+	 */
+	public function getRevision(){
+		return Revision::newFromId( $this->revisionID );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isCurrent(){
+		$rev = Revision::newFromId( $this->revisionID );
+		if ( is_null( $rev ) ){
+			return false;
+		} else {
+			return $rev->isCurrent();
+		}
 	}
 }
