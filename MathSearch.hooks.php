@@ -209,8 +209,10 @@ class MathSearchHooks {
 		return true;
 	}
 
-	static function generateMathAnchorString($pageID, $anchorID, $prefix = "#"){
-		return "{$prefix}math.$pageID.$anchorID";
+	static function generateMathAnchorString($revId, $anchorID, $prefix = "#"){
+		$result = "{$prefix}math.$revId.$anchorID";
+		Hooks::run( "MathSearchGenerateAnchorString" , array( $revId, $anchorID, $prefix, &$result ) );
+		return $result;
 	}
 
 	/**
