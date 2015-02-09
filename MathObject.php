@@ -98,7 +98,7 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	public function getObservations() {
+	public function getObservations( $update = true) {
 		global $wgOut;
 		$dbr = wfGetDB( DB_SLAVE );
 		try {
@@ -118,7 +118,12 @@ class MathObject extends MathMathML {
 		}
 		$wgOut->addWikiText($res->numRows(). 'results');
 		if ($res->numRows() == 0){
-			$wgOut->addWikiText("no statistics present please run the maintenance script ExtractFeatures.php");
+			if ( $update ){
+				$this->updateObservations();
+				$this->getObservations( false );
+			} else {
+				$wgOut->addWikiText("no statistics present please run the maintenance script ExtractFeatures.php");
+			}
 		}
 		$wgOut->addWikiText($res->numRows(). ' results');
 		if ( $res ) {
