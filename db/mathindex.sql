@@ -20,7 +20,7 @@ CREATE TABLE /*_*/mathindex (
   mathindex_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   PRIMARY KEY (mathindex_revision_id,mathindex_anchor),
-  KEY ( /*i*/mathindex_inputhash ), -- FOREIGEN KEY .. REFERENCES mathoid( mathindex_inputhash ),
+  FOREIGN KEY ( /*i*/mathindex_inputhash ) REFERENCES mathlatexml( mathindex_inputhash ),
   FOREIGN KEY ( /*i*/mathindex_revision_id ) REFERENCES revision( rev_id )
 
 ) /*$wgDBTableOptions*/;

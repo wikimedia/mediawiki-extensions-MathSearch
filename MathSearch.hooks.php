@@ -69,26 +69,25 @@ class MathSearchHooks {
 	/**
 	 * Updates the formula index in the database
 	 *
-	 * @param int $pid Page-ID
+	 * @param int $revId Page-ID
 	 * @param int $eid Equation-ID (get updated incrementally for every math element on the page)
 	 * @param string $inputHash hash of tex string (used as database entry)
 	 * @param string $tex the user input hash
 	 */
-	private static function updateIndex($pid, $eid, $inputHash, $tex){
+	private static function updateIndex($revId, $eid, $inputHash, $tex){
 		try {
-			$oldID = self::curId2OldId( $pid );
 			$dbr = wfGetDB( DB_SLAVE );
 			$exists = $dbr->selectRow( 'mathindex',
 				array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ),
 				array(
-					'mathindex_revision_id' => $oldID,
+					'mathindex_revision_id' => $revId,
 					'mathindex_anchor' => $eid,
 					'mathindex_inputhash' => $inputHash)
 			) ;
 			if ( $exists ) {
 				wfDebugLog( "MathSearch", 'Index $' . $tex . '$ already in database.' );
 			} else {
-				self::writeMathIndex( $oldID, $eid, $inputHash, $tex );
+				self::writeMathIndex( $revId, $eid, $inputHash, $tex );
 			}
 		} catch ( Exception $e ) {
 			wfDebugLog( "MathSearch", 'Problem writing to math index!'
@@ -123,18 +122,18 @@ class MathSearchHooks {
 	 * Callback function that is called after a formula was rendered
 	 * @param MathRenderer $Renderer
 	 * @param string|null $Result reference to the rendering result
-	 * @param int $pid
+	 * @param int $revId
 	 * @param int $eid
 	 * @return bool
 	 */
-	static function updateMathIndex( MathRenderer $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
-		if ( $pid > 0 ) { // Only store something if a pageid was set.
+	static function updateMathIndex( MathRenderer $Renderer, &$Result = null, $revId = 0, $eid = 0 ) {
+		if ( $revId > 0 ) { // Only store something if a pageid was set.
 			// Use manually assigned IDs whenever possible
 			// and fallback to automatic IDs otherwise.
 			if ( ! self::setMathId( $eid , $Renderer ) ){
 				$Result = preg_replace( '/(class="mwe-math-mathml-(inline|display))/', "id=\"$eid\" \\1", $Result );
 			}
-			self::updateIndex( $pid , $eid , $Renderer->getInputHash() , $Renderer->getTex() );
+			self::updateIndex( $revId , $eid , $Renderer->getInputHash() , $Renderer->getTex() );
 		}
 		return true;
 	}

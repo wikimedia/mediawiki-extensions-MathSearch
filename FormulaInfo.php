@@ -10,6 +10,7 @@
  * @ingroup extensions
  */
 class FormulaInfo extends SpecialPage {
+	private $purge = false;
 	/**
 	 *
 	 */
@@ -24,15 +25,16 @@ class FormulaInfo extends SpecialPage {
 		global $wgRequest, $wgOut;
 		$pid = $wgRequest->getVal( 'pid' );// Page ID
 		$eid = $wgRequest->getVal( 'eid' );// Equation ID
+		$this->purge = $wgRequest->getVal( 'purge' , false );
 		if ( is_null( $pid ) or is_null( $eid ) ) {
 			$tex = $wgRequest->getVal( 'tex', '' );
 			if ( $tex == '' ) {
 				$wgOut->addHTML( '<b>Please specify page and equation id</b>' );
 			} else {
-				self::InfoTex( $tex );
+				$this->InfoTex( $tex );
 			}
 		} else {
-			self::DisplayInfo( $pid, $eid );
+			$this->DisplayInfo( $pid, $eid );
 		}
 	}
 	public function InfoTex( $tex ) {
@@ -158,10 +160,11 @@ class FormulaInfo extends SpecialPage {
 	 * @param $mode
 	 *
 	 * @throws MWException
+	 *
 	 * @internal param $out
 	 * @internal param $mo
 	 */
-	private function DisplayRendering( $tex, $mode) {
+	private function DisplayRendering( $tex, $mode ) {
 		global $wgExtensionAssetsPath, $wgMathValidModes;
 		if ( !in_array( $mode, $wgMathValidModes ) ) {
 			return;
@@ -171,9 +174,10 @@ class FormulaInfo extends SpecialPage {
 		$name = $names[$mode];
 		$out->addWikiText( "=== $name rendering === " );
 		$renderer = MathRenderer::getRenderer( $tex, array(), $mode );
-		if ( $renderer->isInDatabase() ) {
-			$out->addWikiText( "rendering found in database" );
-		} else {
+		if ( $this->purge ){
+			$renderer->render( true );
+		} elseif ( ! $renderer->isInDatabase() ) {
+			$out->addWikiText( "No database entry. Start rendering" );
 			$renderer->render();
 		}
 		if( self::hasMathMLSupport( $mode ) ){
@@ -181,16 +185,15 @@ class FormulaInfo extends SpecialPage {
 			$out->addWikiText( 'MathML (' . self::getlengh( $renderer->getMathml() ) . ') :', FALSE );
 			$imgUrl = $wgExtensionAssetsPath . "/MathSearch/images/math_search_logo.png";
 			$mathSearchImg = Html::element( 'img', array( 'src' => $imgUrl, 'width' => 15, 'height' => 15 ) );
-			$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' .
-						   urlencode( $tex ) . '&searchx=Search">' . $mathSearchImg .
-						   '</a>' );
+			$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $tex ) .
+				'&searchx=Search">' . $mathSearchImg . '</a>' );
 			$out->addHtml( $renderer->getMathml() );
 			$out->addHtml( '</div><div class="NavContent">' );
 			$out->addWikiText( '<syntaxhighlight lang="xml">' . ( $renderer->getMathml() ) . '</syntaxhighlight>' );
 			$out->addHtml( '</div></div>' );
 		}
 		if( self::hasSvgSupport( $mode ) ){
-			$out->addWikiText( 'SVG (' . self::getlengh( $renderer->getSvg() ) . ') :',
+			$out->addWikiText( 'SVG (' . self::getlengh( $renderer->getSvg( 'render' ) ) . ') :',
 				FALSE );
 			$out->addHtml( $renderer->getSvg() ); // FALSE, 'mwe-math-demo' ) );
 			$out->addHtml( "<br />\n" );
