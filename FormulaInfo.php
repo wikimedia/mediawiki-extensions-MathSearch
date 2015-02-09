@@ -62,7 +62,7 @@ class FormulaInfo extends SpecialPage {
 	 * @throws MWException
 	 */
 	public function DisplayInfo( $oldID, $eid ) {
-		global $wgMathDebug, $wgExtensionAssetsPath;
+		global $wgMathDebug, $wgExtensionAssetsPath, $wgMathValidModes;
 		$out = $this->getOutput();
 		$out->addModuleStyles( array( 'ext.mathsearch.styles' ) );
 		$out->addWikiText( '==General==' );
@@ -89,46 +89,25 @@ class FormulaInfo extends SpecialPage {
 			/** @type MathObject $occ */
 			$out->addWikiText( '*' . $occ->printLink2Page( false ) );
 		}
-		// $wgOut->addWikiText('<b>:'.var_export($res,true).'</b>');
+		$out->addWikiText( 'Hash: ' . $mo->getMd5() );
 		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex() . '</syntaxhighlight>' );
-		$out->addWikiText( 'MathML (' . self::getlengh( $mo->getMathml() ) . ') :', false );
-
-		$imgUrl = $wgExtensionAssetsPath . "/MathSearch/images/math_search_logo.png";
-		$mathSearchImg = Html::element( 'img', array( 'src' => $imgUrl, 'width' => 15, 'height' => 15 ) );
-		$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $mo->getTex() ) . '&searchx=Search">' . $mathSearchImg . '</a>' );
-		$out->addHtml(  $mo->getMathml() );
-		# $log=htmlspecialchars( $res->math_log );
-		$out->addHtml( "<br />\n" );
-		$out->addWikiText( 'SVG (' . self::getlengh( $mo->getSvg() ) . ') :', false );
-		$out->addHtml( $mo->getFallbackImage( false , 'mwe-math-demo' ) );
-		$out->addHtml( "<br />\n" );
-		$out->addWikiText( 'PNG (' . self::getlengh( $mo->getPng() ) . ') :', false );
-		$out->addHtml( preg_replace( '/mode=\d/', 'mode=0' ,$mo->getFallbackImage( true , 'mwe-math-demo' ) ) );
-		$out->addHtml( "<br />\n" );
-		$out->addWikiText( 'Hash : ' . $mo->getMd5(), false );
-		$out->addHtml( "<br />" );
+		$out->addWikiText( 'TeX (original user input): <syntaxhighlight lang="latex">' . $mo->getUserInputTex() . '</syntaxhighlight>' );
+		$this->DisplayRendering( $mo->getUserInputTex(), MW_MATH_LATEXML );
+		$this->DisplayRendering( $mo->getUserInputTex(), MW_MATH_MATHML );
+		$this->DisplayRendering( $mo->getUserInputTex(), MW_MATH_PNG );
 		$out->addWikiText( '==Similar pages==' );
 		$out->addWikiText( 'Calculated based on the variables occurring on the entire ' . $pageName . ' page' );
 		$mo->findSimilarPages( $pid );
 		$out->addWikiText( '==Variables==' );
 		$mo->getObservations();
-		$out->addWikiText( '==MathML==' );
-
-		$out->addHtml( "<br />" );
-		$out->addHtml( '<div class="NavFrame"><div class="NavHead">mathml</div>
-<div class="NavContent" style="text-align: left">' );
-		$out->addWikiText( '<syntaxhighlight lang="xml">' . ( $mo->getMathml() ) . '</syntaxhighlight>' );
-		$out->addHtml( '</div></div>' );
-		$out->addHtml( "<br />" );
-		$out->addHtml( "<br />" );
 		if ( $wgMathDebug ) {
-		$out->addWikiText( '==LOG and Debug==' );
-		$out->addWikiText( 'Rendered at : <syntaxhighlight lang="text">' . $mo->getTimestamp()
-			. '</syntaxhighlight> an idexed at <syntaxhighlight lang="text">' . $mo->getIndexTimestamp() . '</syntaxhighlight>' );
-		$out->addWikiText( 'validxml : <syntaxhighlight lang="text">' . $mo->isValidMathML( $mo->getMathml() ) . '</syntaxhighlight> recheck:', false );
-		$out->addHtml( $mo->isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
-		$out->addWikiText( 'status : <syntaxhighlight lang="text">' . $mo->getStatusCode() . '</syntaxhighlight>' );
-		$out->addHtml( htmlspecialchars( $mo->getLog() ) );
+			$out->addWikiText( '==LOG and Debug==' );
+			$out->addWikiText( 'Rendered at : <syntaxhighlight lang="text">' . $mo->getTimestamp()
+				. '</syntaxhighlight> an idexed at <syntaxhighlight lang="text">' . $mo->getIndexTimestamp() . '</syntaxhighlight>' );
+			$out->addWikiText( 'validxml : <syntaxhighlight lang="text">' . $mo->isValidMathML( $mo->getMathml() ) . '</syntaxhighlight> recheck:', false );
+			$out->addHtml( $mo->isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
+			$out->addWikiText( 'status : <syntaxhighlight lang="text">' . $mo->getStatusCode() . '</syntaxhighlight>' );
+			$out->addHtml( htmlspecialchars( $mo->getLog() ) );
 		}
 	}
 	private static function getlengh( $binray ) {
@@ -148,5 +127,79 @@ class FormulaInfo extends SpecialPage {
 			// $bytes /= (1 << (10 * $pow));
 
 		return round( $bytes, $precision ) . ' ' . $units[$pow];
+	}
+
+	public static function hasMathMLSupport( $mode ) {
+		if ( $mode === MW_MATH_LATEXML or $mode === MW_MATH_MATHML ) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+
+	public static function hasSvgSupport( $mode ) {
+		if ( $mode === MW_MATH_LATEXML or $mode === MW_MATH_MATHML ) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+
+	public static function hasPngSupport( $mode ) {
+		if ( $mode === MW_MATH_PNG ) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $tex
+	 * @param $mode
+	 *
+	 * @throws MWException
+	 * @internal param $out
+	 * @internal param $mo
+	 */
+	private function DisplayRendering( $tex, $mode) {
+		global $wgExtensionAssetsPath, $wgMathValidModes;
+		if ( !in_array( $mode, $wgMathValidModes ) ) {
+			return;
+		}
+		$out = $this->getOutput();
+		$names = MathHooks::getMathNames();
+		$name = $names[$mode];
+		$out->addWikiText( "=== $name rendering === " );
+		$renderer = MathRenderer::getRenderer( $tex, array(), $mode );
+		if ( $renderer->isInDatabase() ) {
+			$out->addWikiText( "rendering found in database" );
+		} else {
+			$renderer->render();
+		}
+		if( self::hasMathMLSupport( $mode ) ){
+			$out->addHtml( '<div class="NavFrame collapsed"  style="text-align: left"><div class="NavHead">');
+			$out->addWikiText( 'MathML (' . self::getlengh( $renderer->getMathml() ) . ') :', FALSE );
+			$imgUrl = $wgExtensionAssetsPath . "/MathSearch/images/math_search_logo.png";
+			$mathSearchImg = Html::element( 'img', array( 'src' => $imgUrl, 'width' => 15, 'height' => 15 ) );
+			$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' .
+						   urlencode( $tex ) . '&searchx=Search">' . $mathSearchImg .
+						   '</a>' );
+			$out->addHtml( $renderer->getMathml() );
+			$out->addHtml( '</div><div class="NavContent">' );
+			$out->addWikiText( '<syntaxhighlight lang="xml">' . ( $renderer->getMathml() ) . '</syntaxhighlight>' );
+			$out->addHtml( '</div></div>' );
+		}
+		if( self::hasSvgSupport( $mode ) ){
+			$out->addWikiText( 'SVG (' . self::getlengh( $renderer->getSvg() ) . ') :',
+				FALSE );
+			$out->addHtml( $renderer->getSvg() ); // FALSE, 'mwe-math-demo' ) );
+			$out->addHtml( "<br />\n" );
+		}
+		if( self::hasPngSupport( $mode ) ){
+			$out->addWikiText( 'PNG (' . self::getlengh( $renderer->getPng() ) . ') :', false );
+			$out->addHtml( $renderer->getHtmlOutput( ) );
+			$out->addHtml( "<br />\n" );
+		}
+		$renderer->writeCache();
 	}
 }
