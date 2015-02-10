@@ -143,18 +143,8 @@ TEX;
 			$this->output("{$dir} is not a directory.\n");
 			exit(1);
 		}
-
-		$this->addExtensionTable( 'math_wmc_formula_counts', 'topics' );
-		$this->addExtensionTable( 'math_wmc_topics_easy', 'topics' );
-		$this->addExtensionTable( 'math_wmc_topics_frequent', 'topics' );
-		$this->addExtensionTable( 'math_wmc_topics_variable', 'topics' );
-		$this->addExtensionTable( 'math_wmc_topics_hard', 'topics' );
-		$this->addExtensionTable( 'math_wmc_results_pages' );
-		$this->addExtensionTable( 'math_wmc_results_top' );
-		$this->addExtensionTable( 'math_wmc_queries_top_dist' );
+		MathSearchUtils::createEvaluationTables();
 		$this->addExtensionTable( 'math_wmc_udf_create' );
-		$this->addExtensionTable( 'math_wmc_page_ranks' );
-		$this->addExtensionTable( 'math_wmc_query_summary' );
 		$this->dbu->doUpdates( array( "extensions" ) );
 		$dbr = wfGetDB( DB_SLAVE );
 		//runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,

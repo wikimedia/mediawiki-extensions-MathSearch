@@ -267,6 +267,7 @@ class MathSearchHooks {
 		$renderer->setLaTeXMLSettings($mQuerySettings);
 		$renderer->render( );
 		$renderedMath = $renderer->getHtmlOutput();
+		$renderer->writeCache();
 		wfProfileOut( __METHOD__ );
 
 		return array( $renderedMath, "markerType" => 'nowiki' );

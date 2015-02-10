@@ -1,4 +1,4 @@
-CREATE TEMPORARY TABLE math_wmc_results_pages (
+CREATE TEMPORARY TABLE IF NOT EXISTS math_wmc_results_pages (
   UNIQUE KEY uniqueRanks( runId, qId, rank ) )
 (  SELECT
     @r := IF( @g = CONCAT( runId, qId ), @r + 1, 1 ) AS rank,
