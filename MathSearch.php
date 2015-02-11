@@ -83,8 +83,6 @@ $wgHooks['MathFormulaRendered']['addLink'] = 'MathSearchHooks::addLinkToFormulaI
 $wgHooks['UnitTestsList'][] = 'MathSearchHooks::onRegisterUnitTests';
 $wgHooks['ParserFirstCallInit'][] = 'MathSearchHooks::onParserFirstCallInit';
 
-$wgGroupPermissions['user']['MathDebug'] = true;
-
 $wgMathSearchDB2Table = 'math';
 
 $wgMathSearchBaseXBackendUrl = 'http://localhost:10043/mwsquery';
