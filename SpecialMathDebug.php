@@ -1,9 +1,8 @@
 <?php
 class SpecialMathDebug extends SpecialPage {
 
-
 	function __construct() {
-		parent::__construct( 'MathDebug', 'MathDebug', true );
+		parent::__construct( 'MathDebug' );
 	}
 	/**
 	 * Sets headers - this should be called from the execute() method of all derived classes!
