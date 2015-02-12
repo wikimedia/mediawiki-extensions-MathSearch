@@ -193,6 +193,10 @@ class FormulaInfo extends SpecialPage {
 			$out->addHtml( '</div></div>' );
 		}
 		if( self::hasSvgSupport( $mode ) ){
+			if ( $renderer->getSvg('cached') === '' ){
+				$out->addWikiText('SVG image empty. Force Re-Rendering' );
+				$renderer->render( true );
+			}
 			$out->addWikiText( 'SVG (' . self::getlengh( $renderer->getSvg( 'render' ) ) . ') :',
 				FALSE );
 			$out->addHtml( $renderer->getSvg() ); // FALSE, 'mwe-math-demo' ) );
