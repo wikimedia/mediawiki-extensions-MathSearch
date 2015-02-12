@@ -78,9 +78,8 @@ class FormulaInfo extends SpecialPage {
 		$pageName = (string)$revision->getTitle();
 		$out->addWikiText( "* Page found: [[$pageName#$eid|$pageName]] (eq $eid)  ", false );
 		$out->addHtml( '<a href="/index.php?title=' . $pageName . '&action=purge&mathpurge=true">(force rerendering)</a>' );
-		$pid = Revision::newFromId($oldID)->getTitle()->getArticleID();
 		/* @var $mo MathObject  */
-		$mo = MathObject::constructformpage( $pid, $eid );
+		$mo = MathObject::constructformpage( $oldID, $eid );
 		if ( !$mo ) {
 			$out->addWikiText( 'Cannot find the equation data in the database.' );
 			return false;
@@ -99,6 +98,7 @@ class FormulaInfo extends SpecialPage {
 		$this->DisplayRendering( $mo->getUserInputTex(), MW_MATH_PNG );
 		$out->addWikiText( '==Similar pages==' );
 		$out->addWikiText( 'Calculated based on the variables occurring on the entire ' . $pageName . ' page' );
+		$pid = Revision::newFromId($oldID)->getTitle()->getArticleID();
 		$mo->findSimilarPages( $pid );
 		$out->addWikiText( '==Variables==' );
 		$mo->getObservations();
@@ -197,8 +197,7 @@ class FormulaInfo extends SpecialPage {
 				$out->addWikiText('SVG image empty. Force Re-Rendering' );
 				$renderer->render( true );
 			}
-			$out->addWikiText( 'SVG (' . self::getlengh( $renderer->getSvg( 'render' ) ) . ') :',
-				FALSE );
+			$out->addWikiText( 'SVG (' . self::getlengh( $renderer->getSvg( 'render' ) ) . ') :', false );
 			$out->addHtml( $renderer->getSvg() ); // FALSE, 'mwe-math-demo' ) );
 			$out->addHtml( "<br />\n" );
 		}
