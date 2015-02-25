@@ -49,6 +49,7 @@ $wgAutoloadClasses['MathEngineBaseX'] = $dir . '/includes/engines/MathEngineBase
 $wgAutoloadClasses['MathEngineRest'] = $dir . '/includes/engines/MathEngineRest.php';
 $wgAutoloadClasses['ImportCsv'] = $dir . 'includes/ImportCsv.php';
 $wgAutoloadClasses['MathSearchUtils'] = $dir . 'includes/MathSearchUtils.php';
+$wgAutoloadClasses['MathSearchTerm'] = $dir . 'includes/MathSearchTerm.php';
 
 $wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php';

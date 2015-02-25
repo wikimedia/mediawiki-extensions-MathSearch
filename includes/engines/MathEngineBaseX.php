@@ -20,17 +20,16 @@ class MathEngineBaseX extends MathEngineRest {
 	 * @param SimpleXMLElement $xmlRoot
 	 */
 	function processMathResults( $xmlRoot ) {
-		wfProfileIn( __METHOD__ );
 		foreach ( $xmlRoot->children( )->children() as $page ) {
 			$attrs = $page->attributes();
 			$uri = explode( ".", $attrs["id"] );
 			$revisionID = $uri[1];
 			$AnchorID = $uri[2];
-			$this->relevanceMap[$revisionID] = true;
+			$this->relevanceMap[] = $revisionID;
 			$substarr = array();
 			//TODO: Add hit support.
 			$this->resultSet[(string) $revisionID][(string) $AnchorID][] = array( "xpath" => (string) $attrs["xpath"], "mappings" => $substarr ); // ,"original"=>$page->asXML()
 		}
-		wfProfileOut( __METHOD__ );
+		$this->relevanceMap = array_unique( $this->relevanceMap );
 	}
 }

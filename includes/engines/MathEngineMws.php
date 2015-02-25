@@ -11,7 +11,7 @@
  */
 class MathEngineMws extends MathEngineRest {
 
-	function __construct( MathQueryObject $query ) {
+	function __construct( $query ) {
 		global $wgMathSearchMWSUrl;
 		parent::__construct( $query, $wgMathSearchMWSUrl );
 	}
@@ -20,13 +20,12 @@ class MathEngineMws extends MathEngineRest {
 	 * @param SimpleXMLElement $xmlRoot
 	 */
 	function processMathResults( $xmlRoot ) {
-		wfProfileIn( __METHOD__ );
 		foreach ( $xmlRoot->children( "mws", TRUE ) as $page ) {
 			$attrs = $page->attributes();
 			$uri = explode( ".", $attrs["uri"] );
 			$revisionID = $uri[1];
 			$AnchorID = $uri[2];
-			$this->relevanceMap[$revisionID] = true;
+			$this->relevanceMap[] = $revisionID;
 			$substarr = array();
 			// $this->mathResults[(string) $pageID][(string) $AnchorID][]=$page->asXML();
 			foreach ( $page->children( "mws", TRUE ) as $substpair ) {
@@ -35,7 +34,7 @@ class MathEngineMws extends MathEngineRest {
 			}
 			$this->resultSet[(string) $revisionID][(string) $AnchorID][] = array( "xpath" => (string) $attrs["xpath"], "mappings" => $substarr ); // ,"original"=>$page->asXML()
 		}
-		wfProfileOut( __METHOD__ );
+		$this->relevanceMap = array_unique( $this->relevanceMap );
 	}
 
 }

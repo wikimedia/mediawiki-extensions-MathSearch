@@ -23,7 +23,10 @@
 		public $displayQuery;
 		private $mathBackend;
 		private $resultID = 0;
-		private $xQueryEngines = array( 'db2' );
+		private $noTerms  = 1;
+		private $terms = array();
+		private $relevanceMap;
+
 
 		public static function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 			if (!(error_reporting() & $errno)) {
@@ -43,15 +46,23 @@
 		/**
 		 * Processes the submitted Form input
 		 * @param array $formData
+		 * @return bool
 		 */
-		public static function processInput( $formData )
-		{
-			$instance = new SpecialMathSearch();
-			$instance->mathpattern = $formData[ 'mathpattern' ];
-			$instance->textpattern = $formData[ 'textpattern' ];
-			$instance->mathEngine = $formData[ 'mathEngine' ];
-			$instance->displayQuery = $formData[ 'displayQuery' ];
-			$instance->performSearch();
+		public function processInput( $formData ) {
+			if ( $formData['noTerms'] != $this->noTerms ) {
+				$this->noTerms = $formData['noTerms'];
+				$this->searchForm();
+				return true;
+			}
+
+			for ( $i = 1; $i <= $this->noTerms; $i ++ ) {
+				$this->addTerm( $i, $formData["rel-$i"], $formData["type-$i"],
+					$formData["expr-$i"] );
+			}
+
+			$this->mathEngine = $formData['mathEngine'];
+			$this->displayQuery = $formData['displayQuery'];
+			$this->performSearch();
 		}
 
 		/**
@@ -86,24 +97,11 @@
 		{
 			# A formDescriptor Array to tell HTMLForm what to build
 			$formDescriptor = array(
-				'mathpattern'  => array(
-					'label'   => 'LaTeX pattern', # What's the label of the field
-					'class'   => 'HTMLTextField', # What's the input type
-					'help'    => 'for example: \sin(?x^2)',
-					'default' => $this->mathpattern,
-				),
-				'textpattern'  => array(
-					'label'   => 'Text pattern', # What's the label of the field
-					'class'   => 'HTMLTextField', # What's the input type
-					'help'    => 'a term like: algebra',
-					'default' => $this->textpattern,
-				),
 				'mathEngine'   => array(
 					'label'   => 'Math engine',
 					'class'   => 'HTMLSelectField',
 					'options' => array(
 						'MathWebSearch' => 'mws',
-						'DB2'           => 'db2',
 						'BaseX'         => 'basex'
 					),
 					'default' => $this->mathEngine,
@@ -112,170 +110,128 @@
 					'label'   => 'Display search query',
 					'type'    => 'check',
 					'default' => $this->displayQuery,
-				)
+				),
+				'noTerms' => array(
+					'label'   => 'Number of search terms',
+					'type'    => 'int',
+					'min'     => 1,
+					'default' => 1,
+				),
 			);
+			$formDescriptor = array_merge( $formDescriptor, $this->getSearchRows( $this->noTerms ) );
 			$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() ); # We build the HTMLForm object
 			$htmlForm->setSubmitText( 'Search' );
-			$htmlForm->setSubmitCallback( array( get_class( $this ), 'processInput' ) );
+			$htmlForm->setSubmitCallback( array(  $this , 'processInput' ) );
 			$htmlForm->setHeaderText( "<h2>Input</h2>" );
 			$htmlForm->show(); # Displaying the form
 		}
 
+
+		private function getSearchRows( $cnt ) {
+			$out = array();
+			for($i=1;$i<=$cnt;$i++){
+				if( $i == 1 ) {
+					// Hide the meaningless first relation from the user
+					$relType = 'hidden';
+				} else {
+					$relType = 'select';
+				}
+				$out["rel-$i"] = array(
+						'label-message' => 'math-search-relation-label',
+						'options' => array(
+							'and' => 0,
+							'or' => 1,
+							'and not' => 2//,
+							//'nor' => 3
+						),
+						'type' => $relType,
+						'section' => "term $i"
+					);
+				$out[ "type-$i"] =	array(
+					'label-message' => 'math-search-type-label',
+					'options' => array(
+						'keyword' => 0,
+						'TeX pattern' => 1
+					),
+					'type' => 'select',
+					'section' => "term $i",
+				);
+				$out[ "expr-$i" ] =	array(
+					'label-message' => 'math-search-expression-label',
+					'type' => 'text',
+					'section' => "term $i"
+				);
+			}
+			return $out;
+		}
+
 		public function performSearch() {
-			global $wgMathDebug;
 			$out = $this->getOutput();
 			$time_start = microtime( true );
 			$out->addWikiText( '==Results==' );
-			$out->addWikiText( 'You searched for the LaTeX pattern "' . $this->mathpattern . '" and the text pattern "' . $this->textpattern . '".' );
-			if ( $this->mathpattern ) {
-				$query = new MathQueryObject( $this->mathpattern );
-				switch ( $this->mathEngine ) {
-					case 'db2':
-						$query->setXQueryDialect( 'db2' );
-						break;
-				}
-				$cQuery = $query->getCQuery();
-				if ( $cQuery ) {
-					$out->addWikiText( "Your mathpattern was successfully rendered!" );
-					if ( $this->displayQuery === true ) {
-						if ( in_array( $this->mathEngine, $this->xQueryEngines ) ) {
-							$this->printSource( $query->getXQuery() );
-						} else {
-							$this->printSource( $query->getCQuery() );
-						}
-					}
-					switch ( $this->mathEngine ) {
-						case 'db2':
-							$this->mathBackend = new MathEngineDB2( $query );
-							break;
-						case 'basex':
-							$this->mathBackend = new MathEngineBaseX( $query );
-							break;
-						default:
-							$this->mathBackend = new MathEngineMws( $query );
-					}
+			$out->addWikiText( 'You searched for the following terms:' );
+			$this->displaySearchPatterns();
+			switch ( $this->mathEngine ) {
+				case 'basex':
+					$this->mathBackend = new MathEngineBaseX( null );
+					break;
+				default:
+					$this->mathBackend = new MathEngineMws( null );
+			}
+			/** @var MathSearchTerm $term */
+			foreach( $this->terms as $term ){
+				$term->doSearch( $this->mathBackend );
+//				$this->getOutput()->addWikiText( "term {$term->getKey()} has ". sizeof($term->getRelevanceMap()) ." results");
+				if( $term->getKey() == 1 ){
+					$this->relevanceMap = $term->getRelevanceMap();
 
-					if ( $this->mathBackend->postQuery() ) {
-						$out->addWikiText( "Your mathquery was successfully submitted and " . $this->mathBackend->getSize() . " hits were obtained." );
-					} else {
-						$out->addWikiText( "Failed to post query." );
-					}
-					$time_end = microtime( true );
-					$time = $time_end - $time_start;
-					wfDebugLog( "MathSearch", "math searched in $time seconds" );
 				} else {
-					$out->addWikiText( "Your query could not be rendered see the DebugLog for details." );
-				}
-				// $out->addHTML(var_export($this->mathResults, true));
-			} else {
-				$out->addWikiText( 'The math-pattern is empty. No math search has been performed.' );
-				$out->addWikiText( "To view the text results click [{{canonicalurl:search|search=$this->textpattern}} Text-only search]." );
-			}
-
-			if ( $this->mathBackend && $this->textpattern == "" ) {
-				$results = $this->mathBackend->getResultSet();
-				if ( $results ) {
-					foreach ( $results as $revisionID => $page ) {
-						$revision = Revision::newFromId( $revisionID );
-						if ( $revision ) {
-							if ( $revision->isCurrent() ) {
-								wfDebugLog( "MathSearch",
-									"Found revision " . $revision->getTitle()->getText() );
-								$pagename = (string)$revision->getTitle();
-								$out->addWikiText( "==[[$pagename]]==" );
-								$this->DisplayMath( $revisionID );
-							}
-						} else
-							$out->addWikiText( "Error with Revision (ID=$revisionID) update math index.\n" );
+					switch ($term->getRel() ) {
+						case $term::REL_AND:
+							$this->relevanceMap =
+								array_intersect( $this->relevanceMap, $term->getRelevanceMap() );
+//							$this->getOutput()->addWikiText("Intersected with {$term->getKey()}");
+//							$this->getOutput()->addWikiText("In total".sizeof($term->getRelevanceMap()));
+							break;
+						case $term::REL_OR:
+							$this->relevanceMap = $this->relevanceMap + $term->getRelevanceMap();
+							break;
+						case $term::REL_NAND:
+							$this->relevanceMap =
+								array_diff( $this->relevanceMap, $term->getRelevanceMap() );
+						//case $term::REL_NOR: (too many results)
 					}
 				}
 			}
-			if ( $this->textpattern ) {
-				$textpattern = $this->textpattern;
-				$search = SearchEngine::create( "CirrusSearch" );
-				$search->setLimitOffset( 10000 );
-				$sres = $search->searchText( $textpattern );
-				if ( $sres ) {
-					if ( !$sres->numRows() ) {
-						$out->addWikiText( 'No results found.' );
-					} else {
-						$out->addWikiText( "You searched for the text '$textpattern' and the TeX-Pattern '{$this->mathpattern}'." );
-						$out->addWikiText( "The text search results in [{{canonicalurl:search|search=$textpattern}} " .
-							$sres->getTotalHits()
-							. "] hits and the math pattern matched {$this->mathBackend->getSize()} times on [{{canonicalurl:{{FULLPAGENAMEE}}|pattern={$this->mathpattern}}} " .
-							sizeof( $this->mathBackend->getRelevanceMap() ) .
-							"] pages." );
-						wfDebugLog( 'mathsearch', 'BOF' );
-						$pageList = "";
-						while ( $tres = $sres->next() ) {
-							$revisionID = $tres->getTitle()->getLatestRevID();
-							$rMap = $this->mathBackend->getRelevanceMap();
-							if ( isset( $rMap[ $revisionID ] ) ) {
-								$out->addWikiText( "[[" . $tres->getTitle() . "]]" );
-								$out->addHtml( $tres->getTextSnippet( $textpattern ) );
-								$pageList .= "OR [[" . $revisionID . "]]";
-								// $out->addHtml($this->showHit($tres),$textpattern);
-								$this->DisplayMath( $revisionID );
-							} /* else {
-					  $out->addWikiText(":NO MATH");
-					  }// */
-						} // $tres->mHighlightTitle)}
-
-						wfDebugLog( 'mathsearch', 'EOF' );
-						wfDebugLog( 'mathsearch', var_export( $this->mathResults, true ) );
-					}
-				}
+			foreach( $this->relevanceMap as $revisionID ){
+				$this->displayRevisionResults($revisionID);
 			}
-			$out->addWikiText( "<math> $this->mathpattern </math>" );
-			$dbr = wfGetDB( DB_SLAVE );
-			$inputhash = $dbr->encodeBlob( pack( 'H32', md5( $this->mathpattern ) ) );
-			$rpage = $dbr->select(
-				'mathindex', array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_timestamp' ), array( 'mathindex_inputhash' => $inputhash )
-			);
-			foreach ( $rpage as $row )
-				wfDebugLog( "MathSearch", var_export( $row, true ) );
+//			$this->getOutput()->addWikiText("In total".sizeof($this->relevanceMap,true));
+//			$this->getOutput()->addWikiText("Map2".var_export($this->relevanceMap,true));
+
 		}
 
 		/**
-		 *
-		 * @param String $src
-		 * @param String $lang the language of the source snippet
+		 * @param $revisionID
+		 * @param $mathElements
+		 * @param $out
+		 * @param $pagename
 		 */
-		private function printSource( $src, $lang = "xml" )
-		{
-			$out = $this->getOutput();
-			$out->addWikiText( '<source lang="' . $lang . '">' . $src . '</source>' );
-		}
-
-		/**
-		 * Displays the equations for one page
-		 *
-		 * @param int $revisionID
-		 *
-		 * @return boolean
-		 */
-		function DisplayMath( $revisionID ) {
+		public function displayMathElements( $revisionID, $mathElements, $out, $pagename ) {
 			global $wgMathDebug;
-			$out = $this->getOutput();
-			$results = $this->mathBackend->getResultSet();
-			$page = $results[ (string)$revisionID ];
-			$revision = Revision::newFromId( $revisionID );
-			if ( $revision === false ) {
-				wfDebugLog( "MathSearch", "invalid revision number" );
-				return false;
-			}
-			$pagename = (string)$revision->getTitle();
-			wfDebugLog( "MathSearch", "Processing results for $pagename" );
-			foreach ( $page as $anchorID => $answ ) {
+			foreach ( $mathElements as $anchorID => $answ ) {
 				$res = MathObject::constructformpage( $revisionID, $anchorID );
-				if( $res ){
+				if ( $res ) {
 					$mml = $res->getMathml();
-					$out->addWikiText( "====[[$pagename#$anchorID|Eq: $anchorID (Result " . $this->resultID++ . ")]]====", false );
+					$out->addWikiText( "====[[$pagename#$anchorID|Eq: $anchorID (Result " .
+									   $this->resultID ++ . ")]]====", false );
 					$out->addHtml( "<br />" );
-					$xpath = $answ[ 0 ][ 'xpath' ];
+					$xpath = $answ[0]['xpath'];
 					// TODO: Remove hack and report to Prode that he fixes that
 					// $xmml->registerXPathNamespace('m', 'http://www.w3.org/1998/Math/MathML');
-					$xpath = str_replace( '/m:semantics/m:annotation-xml[@encoding="MathML-Content"]', '', $xpath );
+					$xpath =
+						str_replace( '/m:semantics/m:annotation-xml[@encoding="MathML-Content"]',
+							'', $xpath );
 					$dom = new DOMDocument;
 					$dom->loadXML( $mml );
 					$DOMx = new DOMXpath( $dom );
@@ -288,9 +244,12 @@
 							/* @var DOMDocument $node */
 							if ( $node->hasAttributes() ) {
 								try {
-									$domRes = $dom->getElementById( $node->attributes->getNamedItem( 'xref' )->nodeValue );
-								} catch (Exception $e ){
-									wfDebugLog( 'MathSearch', 'Problem getting references ' . $e->getMessage() );
+									$domRes =
+										$dom->getElementById( $node->attributes->getNamedItem( 'xref' )->nodeValue );
+								}
+								catch ( Exception $e ) {
+									wfDebugLog( 'MathSearch',
+										'Problem getting references ' . $e->getMessage() );
 									$domRes = false;
 								}
 								if ( $domRes ) {
@@ -316,6 +275,54 @@
 						var_export( $this->mathResults, TRUE ) );
 				}
 			}
+		}
+
+		/**
+		 *
+		 * @param String $src
+		 * @param String $lang the language of the source snippet
+		 */
+		private function printSource( $src, $lang = "xml" )
+		{
+			$out = $this->getOutput();
+			$out->addWikiText( '<source lang="' . $lang . '">' . $src . '</source>' );
+		}
+
+		/**
+		 * Displays the equations for one page
+		 *
+		 * @param int $revisionID
+		 *
+		 * @return boolean
+		 */
+		function displayRevisionResults( $revisionID ) {
+			$out = $this->getOutput();
+			$revision = Revision::newFromId( $revisionID );
+			if ( $revision === false ) {
+				wfDebugLog( "MathSearch", "invalid revision number" );
+				return false;
+			}
+			$pagename = (string)$revision->getTitle();
+			$mathElements = array();
+			$textElements = array();
+			/** @var MathSearchTerm $term */
+			foreach($this->terms as $term ){
+				if ( $term->getType() == MathSearchTerm::TYPE_MATH ){
+					$mathElements += $term->getRevisionResult( $revisionID );
+				} elseif ( $term->getType() == MathSearchTerm::TYPE_TEXT ) { //Forward compatible
+					/** @var SearchResult $textResult */
+					$textResult = $term->getRevisionResult( $revisionID );
+					//see: T90976
+					$textElements[]= $textResult->getTextSnippet( array( $term->getExpr() ) );
+					//$textElements[]=$textResult->getSectionSnippet();
+				}
+			}
+			$out->addWikiText( "=== [[Special:Permalink/$revisionID | $pagename]] ===" );
+			foreach( $textElements as $textResult ){
+				$out->addWikiText( $textResult );
+			}
+			wfDebugLog( "MathSearch", "Processing results for $pagename" );
+			$this->displayMathElements( $revisionID, $mathElements, $out, $pagename );
 			return true;
 		}
 
@@ -336,4 +343,23 @@
 				return true;
 			}
 		}
+
+		/**
+		 * @param int $i
+		 * @param int $rel
+		 * @param int $type
+		 * @param string $expr
+		 */
+		private function addTerm( $i, $rel, $type, $expr ) {
+			$this->terms[ $i ]= new MathSearchTerm($i, $rel, $type, $expr );
+		}
+
+		private function displaySearchPatterns() {
+			/** @var MathSearchTerm $term */
+			foreach( $this->terms as $term) {
+				$this->getOutput()->addWikiMsg( 'math-search-term', $term->getExpr(), $term->getType() );
+			}
+
+		}
+
 	}

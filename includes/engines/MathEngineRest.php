@@ -13,8 +13,8 @@ abstract class MathEngineRest {
 	/** @var MathQueryObject the query to be answered*/
 	protected $query;
 	protected $size = false;
-	protected $resultSet = false;
-	protected $relevanceMap = false;
+	protected $resultSet = array();
+	protected $relevanceMap = array();
 	/** @type string */
 	protected $backendUrl = "http://localhost:9090";
 
@@ -43,7 +43,7 @@ abstract class MathEngineRest {
 	 * @param MathQueryObject $query
 	 * @param bool|string     $url
 	 */
-	function __construct(MathQueryObject $query, $url = false ) {
+	function __construct( $query = null, $url = false ) {
 		$this->query = $query;
 		if ( $url ){
 			$this->setBackendUrl( $url );
