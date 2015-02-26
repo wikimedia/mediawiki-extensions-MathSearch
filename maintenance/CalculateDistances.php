@@ -56,18 +56,18 @@ class CalculateDistances extends Maintenance {
 		$this->pagelist = array();
 		$min = $this->getArg( 0, 0 );
 		$max = $this->getArg( 1, PHP_INT_MAX );
-		$conds = "pagestat_pageid >= $min";
+		$conds = "revstat_revid >= $min";
 		if ( $max < PHP_INT_MAX ) {
-			$conds .= " AND pagestat_pageid <= $max";
+			$conds .= " AND revstat_revid <= $max";
 		}
 		if ( $this->getOption( 'page9', false ) ) {
 			$res =
-				$this->db->select( array( 'mathpage9', 'mathpagestat' ),
-					array( 'page_id', 'pagestat_pageid' ),
-					$conds . ' AND pagestat_pageid = page_id', __METHOD__, array( 'DISTINCT' ) );
+				$this->db->select( array( 'mathpage9', 'mathrevisionstat' ),
+					array( 'page_id', 'revstat_revid' ),
+					$conds . ' AND revstat_revid = page_id', __METHOD__, array( 'DISTINCT' ) );
 		} else {
 			$res =
-				$this->db->select( 'mathpagestat', 'pagestat_pageid', $conds, __METHOD__,
+				$this->db->select( 'mathrevisionstat', 'revstat_revid', $conds, __METHOD__,
 					array( 'DISTINCT' ) );
 		}
 		foreach ( $res as $row ) {
@@ -94,14 +94,14 @@ class CalculateDistances extends Maintenance {
 				$pid = $this->pagelist[$n];
 				$sql =
 					"INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value)\n" .
-					"SELECT DISTINCT $pid,`pagestat_pageid`,\n" .
-					"CosProd( $pid,`pagestat_pageid`) FROM `mathpagestat` m ";
+					"SELECT DISTINCT $pid,`revstat_revid`,\n" .
+					"CosProd( $pid,`revstat_revid`) FROM `mathrevisionstat` m ";
 				if ( $this->getOption( 'page9', false ) ) {
-					$sql .= " JOIN (SELECT page_id from mathpage9) as r WHERE m.pagestat_pageid=r.page_id AND ";
+					$sql .= " JOIN (SELECT page_id from mathpage9) as r WHERE m.revstat_revid=r.page_id AND ";
 				} else {
 					$sql .= " WHERE ";
 				}
-				$sql .= "m.pagestat_pageid < $pid ";
+				$sql .= "m.revstat_revid < $pid ";
 				echo "writing entries for page $pid...";
 				$start = microtime( true );
 				$this->dbw->query( $sql );

@@ -106,12 +106,12 @@ class ExtractFeatures extends Maintenance {
 			'GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n' .
 			'ORDER BY CNT DESC';
 		$this->dbw->query( $sql );
-		$this->output( "Clear mathpagestat\n" );
-		$sql = 'TRUNCATE TABLE `mathpagestat`';
+		$this->output( "Clear mathrevisionstat\n" );
+		$sql = 'TRUNCATE TABLE `mathrevisionstat`';
 		$this->dbw->query( $sql );
-		$this->output( "Generate mathpagestat\n" );
+		$this->output( "Generate mathrevisionstat\n" );
 		$sql =
-			'INSERT INTO `mathpagestat`(`pagestat_featureid`,`pagestat_pageid`,`pagestat_featurecount`)\n' .
+			'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`)\n' .
 			'SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` JOIN mathindex ON `mathobservation_inputhash` =mathindex_inputhash\n' .
 			'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype`\n' .
 			' GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`,mathindex_revision_id ORDER BY CNT DESC';

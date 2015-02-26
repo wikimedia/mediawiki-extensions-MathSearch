@@ -8,10 +8,10 @@ BEGIN
 return (
 	SELECT SUM(CAST(LOG( a.`pagestat_featurecount`)* LOG(b.`pagestat_featurecount`) as DECIMAL(20,10))
 		/(LOG(varstat_featurecount)*LOG(varstat_featurecount)) )/(getNorm(IDA)* getNorm(IDB))
-	from mathpagestat as a, mathpagestat as b,  mathvarstat as s
-	WHERE (b.`pagestat_pageid`= IDA and a.`pagestat_pageid`=IDB 
-	and a.`pagestat_featureid`=b.`pagestat_featureid` 
-	and a.`pagestat_featureid`=s.varstat_id)
+	from mathrevisionstat as a, mathrevisionstat as b,  mathvarstat as s
+	WHERE (b.revstat_revid= IDA and a.revstat_revid=IDB
+	and a.revstat_featureid=b.revstat_featureid
+	and a.revstat_featureid=s.varstat_id)
 );
 END$$
 

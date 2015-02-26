@@ -26,7 +26,7 @@ class MathSearchHooks {
 			$updater->addExtensionTable( 'mathindex', $dir . 'mathindex.sql' );
 			$updater->addExtensionTable( 'mathobservation',  $dir . 'mathobservation.sql' );
 			$updater->addExtensionTable( 'mathvarstat', $dir . 'mathvarstat.sql' );
-			$updater->addExtensionTable( 'mathpagestat', $dir . 'mathpagestat.sql' );
+			$updater->addExtensionTable( 'mathrevisionstat', $dir . 'mathrevisionstat.sql' );
 			$updater->addExtensionTable( 'mathsemantics', $dir . 'mathsemantics.sql' );
 			$updater->addExtensionTable( 'mathperformance', $dir . 'mathperformance.sql' );
 			$updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
@@ -85,7 +85,8 @@ class MathSearchHooks {
 					'mathindex_inputhash' => $inputHash)
 			) ;
 			if ( $exists ) {
-				wfDebugLog( "MathSearch", 'Index $' . $tex . '$ already in database.' );
+				wfDebugLog( 'MathSearch', 'Index $' . $tex . '$ already in database.');
+				wfDebugLog( 'MathSearch', "$revId-$eid with hash ". bin2hex($inputHash) );
 			} else {
 				self::writeMathIndex( $revId, $eid, $inputHash, $tex );
 			}

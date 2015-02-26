@@ -92,15 +92,15 @@ class GenerateFeatureTable extends Maintenance {
 	private function doUpdate( $pid ) {
 		// TODO: fix link id problem
 		$res =
-			$this->db->select( array( 'mathpagestat', 'mathvarstat' ), array(
-					'pagestat_pageid',
+			$this->db->select( array( 'mathrevisionstat', 'mathvarstat' ), array(
+					'revstat_revid',
 					'pagestat_featurename',
 					'pagestat_featuretype',
-					'pagestat_featurecount',
+					'revstat_featurecount',
 					'varstat_id',
 					'varstat_featurecount'
 				), array(
-					'pagestat_pageid' => $pid,
+					'revstat_revid' => $pid,
 					'pagestat_featurename = varstat_featurename',
 					'pagestat_featuretype=varstat_featuretype'
 				), __METHOD__ );

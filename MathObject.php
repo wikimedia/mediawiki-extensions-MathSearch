@@ -104,14 +104,14 @@ class MathObject extends MathMathML {
 		global $wgOut;
 		$dbr = wfGetDB( DB_SLAVE );
 		try {
-			$res = $dbr->select( array( "mathobservation", "mathvarstat", 'mathpagestat' )
+			$res = $dbr->select( array( "mathobservation", "mathvarstat", 'mathrevisionstat' )
 				, array( "mathobservation_featurename", "mathobservation_featuretype", 'varstat_featurecount',
-					'pagestat_featurecount', "count(*) as localcnt" ),
+					'revstat_featurecount', "count(*) as localcnt" ),
 					array( "mathobservation_inputhash" => $this->getInputHash(),
 					'varstat_featurename = mathobservation_featurename',
 					'varstat_featuretype = mathobservation_featuretype',
-					'pagestat_pageid' => $this->getRevisionID(),
-					'pagestat_featureid = varstat_id'
+					'revstat_revid' => $this->getRevisionID(),
+					'revstat_featureid = varstat_id'
 				)
 				, __METHOD__, array( 'GROUP BY' => 'mathobservation_featurename',
 					'ORDER BY' => 'varstat_featurecount' )
@@ -180,12 +180,15 @@ class MathObject extends MathMathML {
 			$dbgiven = true;
 		}
 		$dbw->delete( "mathobservation", array( "mathobservation_inputhash" => $this->getInputHash() ) );
+		wfDebugLog('MathSearch', 'delete obervations for '.bin2hex($this->getInputHash()));
 		foreach ( $rule as $feature ) {
 			$dbw->insert( "mathobservation", array(
 				"mathobservation_inputhash" => $this->getInputHash(),
 				"mathobservation_featurename" => utf8_encode( trim( $feature[ 4 ] ) ),
 				"mathobservation_featuretype" => utf8_encode( $feature[ 1 ] ),
 			) );
+			wfDebugLog('MathSearch', 'insert observation for '.bin2hex($this->getInputHash())
+			. utf8_encode( trim( $feature[ 4 ] )		));
 		}
 		if ( !$dbgiven ) {
 			$dbw->commit();
@@ -339,8 +342,8 @@ class MathObject extends MathMathML {
 			. "JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash\n"
 			. "GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n"
 			. "ORDER BY CNT DESC");
-		$dbw->query( 'TRUNCATE TABLE `mathpagestat`' );
-		$dbw->query( 'INSERT INTO `mathpagestat`(`pagestat_featureid`,`pagestat_pageid`,`pagestat_featurecount`) '
+		$dbw->query( 'TRUNCATE TABLE `mathrevisionstat`' );
+		$dbw->query( 'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`) '
 			. 'SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` '
 			. 'JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash '
 			. 'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype` '
