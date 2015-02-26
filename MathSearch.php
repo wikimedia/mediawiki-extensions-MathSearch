@@ -26,8 +26,6 @@ $wgExtensionCredits['specialpage'][] = array(
 	'descriptionmsg' => 'mathsearch-desc',
 	'version' => '0.2.0',
 );
-/** @var String the IBM DB connection string*/
-$wgMathSearchDB2ConnStr = false;
 /** @var String URL of MathWebSearch instance */
 $wgMathSearchMWSUrl = 'http://localhost:9090/';
 /** @var boolean if true the observation is updated everytime the SpecialPage formulainfo is shown. */
@@ -42,18 +40,13 @@ $wgAutoloadClasses['SpecialMathSearch'] = $dir . '/includes/special/SpecialMathS
 $wgAutoloadClasses['FormulaInfo'] = $dir . 'FormulaInfo.php';
 $wgAutoloadClasses['MathObject'] = $dir . 'MathObject.php';
 $wgAutoloadClasses['MathQueryObject'] = $dir . 'MathQueryObject.php';
-$wgAutoloadClasses['XQueryGenerator'] = $dir . 'XQueryGenerator.php';
-$wgAutoloadClasses['XQueryGeneratorDB2'] = $dir . 'XQueryGeneratorDB2.php';
-$wgAutoloadClasses['XQueryGeneratorBaseX'] = $dir . 'XQueryGeneratorBaseX.php';
 $wgAutoloadClasses['GetEquationsByQuery'] = $dir . 'GetEquationsByQuery.php';
 $wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';
 $wgAutoloadClasses['SpecialMathIndex'] = $dir . 'SpecialMathIndex.php';
 $wgAutoloadClasses['SpecialDisplayTopics'] = $dir . '/includes/special/SpecialDisplayTopics.php';
 $wgAutoloadClasses['MathEngineMws'] = $dir . '/includes/engines/MathEngineMws.php';
-$wgAutoloadClasses['MathEngineDB2'] = $dir . '/includes/engines/MathEngineDB2.php';
 $wgAutoloadClasses['MathEngineBaseX'] = $dir . '/includes/engines/MathEngineBaseX.php';
 $wgAutoloadClasses['MathEngineRest'] = $dir . '/includes/engines/MathEngineRest.php';
-$wgAutoloadClasses['MathSearchApi'] = $dir . 'MathSearchApi.php';
 $wgAutoloadClasses['ImportCsv'] = $dir . 'includes/ImportCsv.php';
 $wgAutoloadClasses['MathSearchUtils'] = $dir . 'includes/MathSearchUtils.php';
 
@@ -82,8 +75,6 @@ $wgHooks['MathFormulaRendered']['updateIndex'] = 'MathSearchHooks::updateMathInd
 $wgHooks['MathFormulaRendered']['addLink'] = 'MathSearchHooks::addLinkToFormulaInfoPage';
 $wgHooks['UnitTestsList'][] = 'MathSearchHooks::onRegisterUnitTests';
 $wgHooks['ParserFirstCallInit'][] = 'MathSearchHooks::onParserFirstCallInit';
-
-$wgMathSearchDB2Table = 'math';
 
 $wgMathSearchBaseXBackendUrl = 'http://localhost:10043/mwsquery';
 
