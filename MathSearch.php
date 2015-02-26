@@ -38,7 +38,7 @@ $wgMathAnalysisTableName = 'mathlatexml';
 $dir = dirname( __FILE__ ) . '/';
 
 $wgAutoloadClasses['MathSearchHooks'] = $dir . 'MathSearch.hooks.php';
-$wgAutoloadClasses['SpecialMathSearch'] = $dir . 'SpecialMathSearch.php';
+$wgAutoloadClasses['SpecialMathSearch'] = $dir . '/includes/special/SpecialMathSearch.php';
 $wgAutoloadClasses['FormulaInfo'] = $dir . 'FormulaInfo.php';
 $wgAutoloadClasses['MathObject'] = $dir . 'MathObject.php';
 $wgAutoloadClasses['MathQueryObject'] = $dir . 'MathQueryObject.php';
