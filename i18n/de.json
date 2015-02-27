@@ -38,5 +38,14 @@
 	"math-wmc-importing": "Importiere …",
 	"math-wmc-display-formulae-label": "Rendering für übermittelte Formeln anzeigen",
 	"math-wmc-display-formulae-help": "Nicht empfohlen für große Eingabedateien.",
-	"action-mathwmcsubmit": "Ergebnisse des NTCIR-Wikipedia-Math-Suchauftrags zu übermitteln"
+	"action-mathwmcsubmit": "Ergebnisse des NTCIR-Wikipedia-Math-Suchauftrags zu übermitteln",
+	"math-search-term": "* $4 Term-$1: $3-Ausdruck „$2“ mit {{PLURAL:$5|einem Ergebnis|$5 Ergebnissen}}.",
+	"math-search-relation-label": "Relation:",
+	"math-search-relation-0": "und",
+	"math-search-relation-1": "oder",
+	"math-search-relation-2": "und nicht",
+	"math-search-type-label": "Typ:",
+	"math-search-type-0": "Schlüsselwort",
+	"math-search-type-1": "TeX-Muster",
+	"math-search-expression-label": "Ausdruck:"
 }

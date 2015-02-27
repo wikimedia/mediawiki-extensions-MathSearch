@@ -4,7 +4,8 @@
 			"Moritz Schubotz",
 			"Shirayuki",
 			"Robby",
-			"Liuxinyu970226"
+			"Liuxinyu970226",
+			"Metalhead64"
 		]
 	},
 	"mathsearch": "{{doc-special|MathSearch}}\n\"Math Search\" is the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.\n\nMath Search is used to search for a formula based on their MathML representation.\n{{Identical|Math search}}",
@@ -40,13 +41,13 @@
 	"math-wmc-display-formulae-label": "Checkbox label",
 	"math-wmc-display-formulae-help": "Checkbox help",
 	"action-mathwmcsubmit": "{{doc-action|mathwmcsubmit}}",
-    "math-search-term": "Wiki text that repeates the user input with parameters:\n* term number\n* expression \n * relation type {{msg-mw|math-search-relation-0} or {{msg-mw|math-search-relation-1} or {{msg-mw|math-search-relation-2} or empty \n* type of serach {{msg-mw|math-search-type-0} or {{msg-mw|math-search-type-1} \n* numer of search results",
-    "math-search-relation-label": "Selection form label",
-    "math-search-relation-0": "First option in relation selection menu and part of {{msg-mw|math-search-term}}",
-    "math-search-relation-1": "Second option in relation selection menu and part of {{msg-mw|math-search-term}}",
-    "math-search-relation-2": "Third option in relation selection menu and part of {{msg-mw|math-search-term}}",
-    "math-search-type-label": "Selection form label",
-    "math-search-type-0": "First option in type selection menu and part of {{msg-mw|math-search-term}}",
-    "math-search-type-1": "Section option in type selection menu and part of {{msg-mw|math-search-term}}",
-    "math-search-expression-label": "Text form label"
+	"math-search-term": "Wiki text that repeates the user input with parameters:\n* term number\n* expression \n* relation type {{msg-mw|math-search-relation-0}} or {{msg-mw|math-search-relation-1}} or {{msg-mw|math-search-relation-2}} or empty \n* type of serach {{msg-mw|math-search-type-0}} or {{msg-mw|math-search-type-1}} \n* numer of search results",
+	"math-search-relation-label": "Selection form label",
+	"math-search-relation-0": "First option in relation selection menu and part of {{msg-mw|math-search-term}}",
+	"math-search-relation-1": "Second option in relation selection menu and part of {{msg-mw|math-search-term}}",
+	"math-search-relation-2": "Third option in relation selection menu and part of {{msg-mw|math-search-term}}",
+	"math-search-type-label": "Selection form label",
+	"math-search-type-0": "First option in type selection menu and part of {{msg-mw|math-search-term}}",
+	"math-search-type-1": "Section option in type selection menu and part of {{msg-mw|math-search-term}}",
+	"math-search-expression-label": "Text form label"
 }
