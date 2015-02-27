@@ -108,8 +108,12 @@ abstract class IndexBase extends Maintenance {
 					'ORDER BY' => 'mathindex_revision_id'
 				) );
 		echo "write " . $this->res->numRows() . " results to index\n";
+		$dir = $this->getArg( 0 );
+		if ( !file_exists( $dir ) ){
+			mkdir( $dir, '0755', true );
+		}
 		do {
-			$fn = $this->getArg( 0 ) . '/math' . sprintf( '%012d', $i ) . '.xml';
+			$fn = $dir . '/math' . sprintf( '%012d', $i ) . '.xml';
 			$res = $this->wFile( $fn, $i, $inc );
 			$i += $inc;
 		} while ( $res );

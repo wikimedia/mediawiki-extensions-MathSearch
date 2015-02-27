@@ -86,7 +86,7 @@ class CreateMWSHarvest extends IndexBase {
 	public function execute() {
 		self::$mwsns = $this->getOption( 'mwsns', '' );
 		self::$XMLHead =
-			'<?xml version="1.0"?>\n<' . self::$mwsns .
+			"<?xml version=\"1.0\"?>\n<" . self::$mwsns .
 			'harvest xmlns:mws="http://search.mathweb.org/ns" xmlns:m="http://www.w3.org/1998/Math/MathML">';
 		self::$XMLFooter = '</' . self::$mwsns . 'harvest>';
 		parent::execute();
