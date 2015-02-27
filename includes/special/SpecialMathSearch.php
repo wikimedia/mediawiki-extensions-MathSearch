@@ -23,17 +23,17 @@
 		public $displayQuery;
 		private $mathBackend;
 		private $resultID = 0;
-		private $noTerms  = 1;
+		private $noTerms = 1;
 		private $terms = array();
 		private $relevanceMap;
 
 
-		public static function exception_error_handler($errno, $errstr, $errfile, $errline ) {
-			if (!(error_reporting() & $errno)) {
+		public static function exception_error_handler( $errno, $errstr, $errfile, $errline ) {
+			if ( !( error_reporting() & $errno ) ) {
 				// This error code is not included in error_reporting
 				return;
 			}
-			throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+			throw new ErrorException( $errstr, 0, $errno, $errfile, $errline );
 		}
 
 		/**
@@ -69,7 +69,7 @@
 		 * The main function
 		 */
 		public function execute( $par ) {
-			set_error_handler("SpecialMathSearch::exception_error_handler");
+			set_error_handler( "SpecialMathSearch::exception_error_handler" );
 			global $wgExtensionAssetsPath;
 			$request = $this->getRequest();
 			$this->setHeaders();
@@ -80,9 +80,10 @@
 				$this->mathpattern = htmlspecialchars_decode( $this->mathpattern );
 			}
 			$this->searchForm();
-			if( file_exists( __DIR__ . self::GUI_PATH ) ) {
-				$minurl = $wgExtensionAssetsPath . '/MathSearch'. self::GUI_PATH ;
-				$this->getOutput()->addHTML("<p><a href=\"${minurl}\">Test experimental math input interface</a></p>");
+			if ( file_exists( __DIR__ . self::GUI_PATH ) ) {
+				$minurl = $wgExtensionAssetsPath . '/MathSearch' . self::GUI_PATH;
+				$this->getOutput()
+					->addHTML( "<p><a href=\"${minurl}\">Test experimental math input interface</a></p>" );
 			}
 			if ( $this->mathpattern || $this->textpattern ) {
 				$this->performSearch();
@@ -93,35 +94,36 @@
 		/**
 		 * Generates the search input form
 		 */
-		private function searchForm()
-		{
+		private function searchForm() {
 			# A formDescriptor Array to tell HTMLForm what to build
 			$formDescriptor = array(
-				'mathEngine'   => array(
-					'label'   => 'Math engine',
-					'class'   => 'HTMLSelectField',
+				'mathEngine' => array(
+					'label' => 'Math engine',
+					'class' => 'HTMLSelectField',
 					'options' => array(
 						'MathWebSearch' => 'mws',
-						'BaseX'         => 'basex'
+						'BaseX' => 'basex'
 					),
 					'default' => $this->mathEngine,
 				),
 				'displayQuery' => array(
-					'label'   => 'Display search query',
-					'type'    => 'check',
+					'label' => 'Display search query',
+					'type' => 'check',
 					'default' => $this->displayQuery,
 				),
 				'noTerms' => array(
-					'label'   => 'Number of search terms',
-					'type'    => 'int',
-					'min'     => 1,
+					'label' => 'Number of search terms',
+					'type' => 'int',
+					'min' => 1,
 					'default' => 1,
 				),
 			);
-			$formDescriptor = array_merge( $formDescriptor, $this->getSearchRows( $this->noTerms ) );
-			$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() ); # We build the HTMLForm object
+			$formDescriptor =
+				array_merge( $formDescriptor, $this->getSearchRows( $this->noTerms ) );
+			$htmlForm =
+				new HTMLForm( $formDescriptor, $this->getContext() ); # We build the HTMLForm object
 			$htmlForm->setSubmitText( 'Search' );
-			$htmlForm->setSubmitCallback( array(  $this , 'processInput' ) );
+			$htmlForm->setSubmitCallback( array( $this, 'processInput' ) );
 			$htmlForm->setHeaderText( "<h2>Input</h2>" );
 			$htmlForm->show(); # Displaying the form
 		}
@@ -129,34 +131,34 @@
 
 		private function getSearchRows( $cnt ) {
 			$out = array();
-			for($i=1;$i<=$cnt;$i++){
-				if( $i == 1 ) {
+			for ( $i = 1; $i <= $cnt; $i ++ ) {
+				if ( $i == 1 ) {
 					// Hide the meaningless first relation from the user
 					$relType = 'hidden';
 				} else {
 					$relType = 'select';
 				}
 				$out["rel-$i"] = array(
-						'label-message' => 'math-search-relation-label',
-						'options' => array(
-							'and' => 0,
-							'or' => 1,
-							'and not' => 2//,
-							//'nor' => 3
-						),
-						'type' => $relType,
-						'section' => "term $i"
-					);
-				$out[ "type-$i"] =	array(
+					'label-message' => 'math-search-relation-label',
+					'options' => array(
+						wfMessage('math-search-relation-0')->text() => 0,
+						wfMessage('math-search-relation-1')->text() => 1,
+						wfMessage('math-search-relation-2')->text() => 2//,
+						//'nor' => 3
+					),
+					'type' => $relType,
+					'section' => "term $i" //TODO: figure out how to localize section with parameter
+				);
+				$out["type-$i"] = array(
 					'label-message' => 'math-search-type-label',
 					'options' => array(
-						'keyword' => 0,
-						'TeX pattern' => 1
+						wfMessage('math-search-type-0')->text() => 0,
+						wfMessage('math-search-type-1')->text() => 1
 					),
 					'type' => 'select',
 					'section' => "term $i",
 				);
-				$out[ "expr-$i" ] =	array(
+				$out["expr-$i"] = array(
 					'label-message' => 'math-search-expression-label',
 					'type' => 'text',
 					'section' => "term $i"
@@ -170,7 +172,6 @@
 			$time_start = microtime( true );
 			$out->addWikiText( '==Results==' );
 			$out->addWikiText( 'You searched for the following terms:' );
-			$this->displaySearchPatterns();
 			switch ( $this->mathEngine ) {
 				case 'basex':
 					$this->mathBackend = new MathEngineBaseX( null );
@@ -179,14 +180,14 @@
 					$this->mathBackend = new MathEngineMws( null );
 			}
 			/** @var MathSearchTerm $term */
-			foreach( $this->terms as $term ){
+			foreach ( $this->terms as $term ) {
 				$term->doSearch( $this->mathBackend );
-//				$this->getOutput()->addWikiText( "term {$term->getKey()} has ". sizeof($term->getRelevanceMap()) ." results");
-				if( $term->getKey() == 1 ){
+				$this->printTerm( $term );
+				if ( $term->getKey() == 1 ) {
 					$this->relevanceMap = $term->getRelevanceMap();
 
 				} else {
-					switch ($term->getRel() ) {
+					switch ( $term->getRel() ) {
 						case $term::REL_AND:
 							$this->relevanceMap =
 								array_intersect( $this->relevanceMap, $term->getRelevanceMap() );
@@ -278,6 +279,18 @@
 		}
 
 		/**
+		 * @param MathSearchTerm $term
+		 */
+		public function printTerm( $term ) {
+			$this->getOutput()->addWikiMsg( 'math-search-term',
+				$term->getKey(),
+				$term->getExpr(),
+				wfMessage( "math-search-type-{$term->getType()}")->text(),
+				$term->getRel() == '' ? '' : wfMessage( "math-search-relation-{$term->getRel()}")->text(),
+				sizeof( $term->getRelevanceMap() ) );
+		}
+
+		/**
 		 *
 		 * @param String $src
 		 * @param String $lang the language of the source snippet
@@ -352,14 +365,6 @@
 		 */
 		private function addTerm( $i, $rel, $type, $expr ) {
 			$this->terms[ $i ]= new MathSearchTerm($i, $rel, $type, $expr );
-		}
-
-		private function displaySearchPatterns() {
-			/** @var MathSearchTerm $term */
-			foreach( $this->terms as $term) {
-				$this->getOutput()->addWikiMsg( 'math-search-term', $term->getExpr(), $term->getType() );
-			}
-
 		}
 
 	}

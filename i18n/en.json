@@ -46,5 +46,14 @@
     "math-wmc-importing": "Importing...",
     "math-wmc-display-formulae-label": "Display rendering of submitted formulae",
     "math-wmc-display-formulae-help": "Not recommended for large input files.",
-    "action-mathwmcsubmit": "submit results to the NTCIR Wikipedia Math Search Task"
+    "action-mathwmcsubmit": "submit results to the NTCIR Wikipedia Math Search Task",
+    "math-search-term": "* $4 term-$1: $3-expression \"$2\" with {{PLURAL:$5|1 result|$5 results}}.",
+    "math-search-relation-label": "Relation:",
+    "math-search-relation-0": "and",
+    "math-search-relation-1": "or",
+    "math-search-relation-2": "and not",
+    "math-search-type-label": "Type:",
+    "math-search-type-0": "Keyword",
+    "math-search-type-1": "TeX pattern",
+    "math-search-expression-label": "Expression:"
 }
