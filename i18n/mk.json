@@ -37,5 +37,14 @@
 	"math-wmc-importing": "Увезувам...",
 	"math-wmc-display-formulae-label": "Прикажувај исцртување на поднесените формули",
 	"math-wmc-display-formulae-help": "Не се препорачува за големи вносни податотеки.",
-	"action-mathwmcsubmit": "поднесување на резултати на Википедиината пребарувачка задача NTCIR"
+	"action-mathwmcsubmit": "поднесување на резултати на Википедиината пребарувачка задача NTCIR",
+	"math-search-term": "* $4 член-$1: $3-израз „$2“ со {{PLURAL:$5|1 резултат|$5 резултати}}.",
+	"math-search-relation-label": "Однос:",
+	"math-search-relation-0": "и",
+	"math-search-relation-1": "или",
+	"math-search-relation-2": "а не",
+	"math-search-type-label": "Тип:",
+	"math-search-type-0": "Клучен збор",
+	"math-search-type-1": "TeX-шема",
+	"math-search-expression-label": "Израз:"
 }

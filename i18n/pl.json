@@ -20,5 +20,11 @@
 	"math-wmc-Warnings": "Następujące linie plików wejściowych zostały zignorowane:",
 	"math-wmc-bad-header": "Błąd: Nagłówkiem kolumny musi być queryId,formulaId. Dodatkowe kolumny nie są dozwolone.",
 	"math-wmc-importing": "Importowanie...",
-	"math-wmc-display-formulae-help": "Nie zalecane dla dużych plików wejściowych."
+	"math-wmc-display-formulae-help": "Nie zalecane dla dużych plików wejściowych.",
+	"math-search-relation-label": "Zależność:",
+	"math-search-relation-0": "i",
+	"math-search-relation-1": "lub",
+	"math-search-relation-2": "i nie",
+	"math-search-type-0": "Słowo kluczowe",
+	"math-search-expression-label": "Wyrażenie:"
 }
