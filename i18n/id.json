@@ -1,8 +1,16 @@
 {
 	"@metadata": {
 		"authors": [
-			"Ahdan"
+			"Ahdan",
+			"Fate Kage"
 		]
 	},
-	"math-wmc-display-formulae-help": "Tidak dianjurkan untuk input file besar"
+	"math-wmc-display-formulae-help": "Tidak dianjurkan untuk input file besar",
+	"math-search-relation-label": "Hubungan:",
+	"math-search-relation-0": "dan",
+	"math-search-relation-1": "atau",
+	"math-search-relation-2": "dan tidak",
+	"math-search-type-label": "Tipe:",
+	"math-search-type-0": "Kata kunci",
+	"math-search-expression-label": "Ekspresi:"
 }

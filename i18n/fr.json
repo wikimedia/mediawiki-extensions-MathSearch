@@ -4,7 +4,8 @@
 			"Crochet.david",
 			"Gomoko",
 			"Metroitendo",
-			"0x010C"
+			"0x010C",
+			"Caliburn"
 		]
 	},
 	"mathsearch": "Recherche mathématique",
@@ -36,5 +37,8 @@
 	"math-wmc-importing": "Import en cours...",
 	"math-wmc-display-formulae-label": "Afficher un rendu des formulaires envoyés",
 	"math-wmc-display-formulae-help": "Non recommandé pour les gros fichiers d’entrée.",
-	"action-mathwmcsubmit": "envoyer les résultats à la Tâche de recherche mathématique de Wikipédia NTCIR"
+	"action-mathwmcsubmit": "envoyer les résultats à la Tâche de recherche mathématique de Wikipédia NTCIR",
+	"math-search-relation-0": "et",
+	"math-search-relation-1": "ou",
+	"math-search-relation-2": "et pas"
 }

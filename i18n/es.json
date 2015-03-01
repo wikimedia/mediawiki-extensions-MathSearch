@@ -3,7 +3,8 @@
 		"authors": [
 			"Fitoschido",
 			"Ralgis",
-			"Macofe"
+			"Macofe",
+			"Caliburn"
 		]
 	},
 	"mathsearch": "Búsqueda matemática",
@@ -22,5 +23,13 @@
 	"math-wmc-RunAddExist": "El envío «$1» ya existe con el identificador «$2»",
 	"math-wmc-SubmissionSuccess": "Se realizó el envío correctamente.",
 	"math-wmc-wrong-query-reference": "Línea $1: la referencia de consulta «$2» no es válida.",
-	"math-wmc-importing": "Importando…"
+	"math-wmc-importing": "Importando…",
+	"math-search-relation-label": "Relación:",
+	"math-search-relation-0": "y",
+	"math-search-relation-1": "o",
+	"math-search-relation-2": "y no",
+	"math-search-type-label": "Tipo:",
+	"math-search-type-0": "Palabra clave",
+	"math-search-type-1": "Patrón TeX",
+	"math-search-expression-label": "Expresión:"
 }

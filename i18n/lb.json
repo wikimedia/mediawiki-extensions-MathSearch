@@ -11,5 +11,11 @@
 	"mathsearch-desc": "Integréiert d'[http://search.mathweb.org/about.html MathWeb Search] Software",
 	"math-wmc-download-button": "Eroflueden",
 	"math-wmc-SelectRun": "Numm",
-	"math-wmc-FileLabel": "CSV Fichier"
+	"math-wmc-FileLabel": "CSV Fichier",
+	"math-search-relation-label": "Relatioun:",
+	"math-search-relation-0": "a(n)",
+	"math-search-relation-1": "oder",
+	"math-search-relation-2": "an net",
+	"math-search-type-label": "Typ:",
+	"math-search-expression-label": "Ausdrock:"
 }

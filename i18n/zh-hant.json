@@ -9,5 +9,8 @@
 	"math-wmc-download-button": "下載",
 	"math-wmc-SelectRun": "名稱",
 	"math-wmc-FileLabel": "CSV 檔案",
-	"math-wmc-importing": "匯入中..."
+	"math-wmc-importing": "匯入中...",
+	"math-search-relation-label": "關係：",
+	"math-search-type-label": "類型：",
+	"math-search-type-0": "關鍵字"
 }
