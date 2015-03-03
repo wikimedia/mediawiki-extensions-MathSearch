@@ -153,7 +153,8 @@
 					'label-message' => 'math-search-type-label',
 					'options' => array(
 						wfMessage('math-search-type-0')->text() => 0,
-						wfMessage('math-search-type-1')->text() => 1
+						wfMessage('math-search-type-1')->text() => 1,
+						wfMessage('math-search-type-2')->text() => 2
 					),
 					'type' => 'select',
 					'section' => "term $i",

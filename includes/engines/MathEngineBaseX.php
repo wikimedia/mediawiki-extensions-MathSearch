@@ -10,7 +10,7 @@
  * @ingroup extensions
  */
 class MathEngineBaseX extends MathEngineRest {
-	function __construct(MathQueryObject $query) {
+	function __construct( $query = null ) {
 		global $wgMathSearchBaseXBackendUrl;
 		parent::__construct( $query, $wgMathSearchBaseXBackendUrl );
 	}

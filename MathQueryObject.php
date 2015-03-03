@@ -8,9 +8,7 @@ class MathQueryObject extends MathObject {
 	private $texquery = false;
 	private $cquery = false;
 	private $pquery = false;
-	/** @var XQueryGenerator current instance of xQueryGenerator */
-	private $xQuery = false;
-	private $xQueryDialect = false;
+	private $xQuery = '';
 	private $qVarCount = 0;
 	/* ToDo: Update to new format
 	<code>
@@ -47,11 +45,9 @@ class MathQueryObject extends MathObject {
 
 	/**
 	 * @param string $texquery the TeX-like search input
-	 * @param string $xQueryDialect e.g. db2 or basex
 	 */
-	public function __construct( $texquery = '', $xQueryDialect = 'db2' ) {
+	public function __construct( $texquery = '') {
 		$this->texquery = $texquery;
-		$this->xQueryDialect = $xQueryDialect;
 	}
 
 	/**
@@ -116,6 +112,7 @@ TeX;
 	 * @return \self
 	 */
 	public static function newQueryFromEquationRow( $rpage, $queryID = false ) {
+		/** @var self $instance */
 		$instance = self::constructformpagerow( $rpage );
 		$instance->setQueryId( $queryID );
 		return $instance;
@@ -239,7 +236,7 @@ TeX;
 
 	public function generatePresentationQueryString() {
 		$renderer = new MathLaTeXML( $this->getTexQuery() );
-		$renderer->setXMLValidaton( false );
+		//$renderer->setXMLValidaton( false );
 		//$renderer->setAllowedRootElments(array('query'));
 		$renderer->setLaTeXMLSettings( $this->pmmlSettings );
 		if ( $renderer->render( true ) ) {
@@ -252,107 +249,16 @@ TeX;
 	}
 
 	/**
-	 *
-	 * @param String ("DB2"|"BaseX") $dialect the name of the xQueryGenerator
-	 * @return XQueryGenerator
-	 * @throws Exception
-	 */
-	public function setXQueryDialect( $dialect = false ) {
-		if ( $dialect === false ) {
-			$dialect = $this->xQueryDialect;
-		}
-		switch ( $dialect ) {
-			case 'db2':
-				$this->xQuery = new XQueryGeneratorDB2( $this->getCQuery() );
-				break;
-			case 'basex':
-				$this->xQuery = new XQueryGeneratorBaseX( $this->getCQuery() );
-				break;
-			default:
-				throw new Exception( $dialect . 'is not a valid XQueryDialect' );
-		}
-		return $this->xQuery;
-	}
-
-	public function setXQueryGenerator( $xQueryGenerator ) {
-		$this->xQuery = $xQueryGenerator;
-	}
-
-	public function getXQueryGenerator() {
-		if ( $this->xQuery === false ) {
-			$this->setXQueryDialect();
-		}
-		return $this->xQuery;
-	}
-
-	/**
-	 * @see XQueryGenerator::getXQuery()
-	 * @return String
+	 * @return string
 	 */
 	public function getXQuery() {
-		return $this->getXQueryGenerator()->getXQuery();
+		return $this->xQuery;
 	}
 
 	/**
-	 * Posts the query to mwsd and evaluates the result data
-	 * @return boolean
+	 * @param string $xQuery
 	 */
-	function postQuery() {
-		global $wgMathSearchMWSUrl, $wgMathDebug;
-
-		$numProcess = 30000;
-		$tmp =
-			str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"", $this->getCQuery() );
-		$mwsExpr = str_replace( "m:", "", $tmp );
-		wfDebugLog( 'mathsearch', 'MWS query:' . $mwsExpr );
-		$res = Http::post( $wgMathSearchMWSUrl, array( "postData" => $mwsExpr, "timeout" => 60 ) );
-		if ( $res == false ) {
-			if ( function_exists( 'curl_init' ) ) {
-				$handle = curl_init();
-				$options = array(
-					CURLOPT_URL => $wgMathSearchMWSUrl,
-					CURLOPT_CUSTOMREQUEST => 'POST', // GET POST PUT PATCH DELETE HEAD OPTIONS
-				);
-				// TODO: Figure out how not to write the error in a message and not in top of the output page
-				curl_setopt_array( $handle, $options );
-				$details = curl_exec( $handle );
-			} else {
-				$details = "curl is not installed.";
-			}
-			wfDebugLog( "MathSearch",
-				"Nothing retreived from $wgMathSearchMWSUrl. Check if mwsd is running. Error:" .
-				var_export( $details, true ) );
-			return false;
-		}
-		$xres = new SimpleXMLElement( $res );
-		if ( $wgMathDebug ) {
-			$out = $this->getOutput();
-			$out->addWikiText( '<source lang="xml">' . $res . '</source>' );
-		}
-		$this->numMathResults = (int)$xres["total"];
-		wfDebugLog( "MathSearch", $this->numMathResults . " results retreived from $wgMathSearchMWSUrl." );
-		if ( $this->numMathResults == 0 ) {
-			return true;
-		}
-		$this->relevantMathMap = array();
-		$this->mathResults = array();
-		$this->processMathResults( $xres );
-		if ( $this->numMathResults >= $numProcess ) {
-			ini_set( 'memory_limit', '256M' );
-			for ( $i = $numProcess; $i <= $this->numMathResults; $i += $numProcess ) {
-				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $mwsExpr );
-				$res = Http::post( $wgMathSearchMWSUrl, array( "postData" => $query, "timeout" => 60 ) );
-				wfDebugLog( 'mathsearch', 'MWS query:' . $query );
-				if ( $res == false ) {
-					wfDebugLog( "MathSearch",
-						"Nothing retreived from $wgMathSearchMWSUrl. check if mwsd is running there" );
-					return false;
-				}
-				$xres = new SimpleXMLElement( $res );
-				$this->processMathResults( $xres );
-			}
-		}
-		return true;
+	public function setXQuery( $xQuery ) {
+		$this->xQuery = $xQuery;
 	}
-
 }

@@ -49,5 +49,6 @@
 	"math-search-type-label": "Selection form label\n{{Identical|Type}}",
 	"math-search-type-0": "First option in type selection menu and part of {{msg-mw|math-search-term}}\n{{Identical|Keyword}}",
 	"math-search-type-1": "Section option in type selection menu and part of {{msg-mw|math-search-term}}",
+	"math-search-type-2": "Section option in type selection menu and part of {{msg-mw|math-search-term}}",
 	"math-search-expression-label": "Text form label\n{{Identical|Expression}}"
 }
