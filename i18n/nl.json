@@ -17,5 +17,7 @@
 	"math-wmc-download-button": "Downloaden",
 	"math-wmc-SelectRun": "Naam",
 	"math-wmc-FileLabel": "CSV-bestand",
-	"math-wmc-importing": "Importeren..."
+	"math-wmc-importing": "Importeren...",
+	"math-search-relation-0": "en",
+	"math-search-relation-1": "of"
 }

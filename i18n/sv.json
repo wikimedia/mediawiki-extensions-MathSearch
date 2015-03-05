@@ -5,7 +5,8 @@
 			"Lokal Profil",
 			"Freked",
 			"Platinawolf",
-			"WikiPhoenix"
+			"WikiPhoenix",
+			"Aaoo"
 		]
 	},
 	"mathsearch": "Matematiksökning",
@@ -22,5 +23,8 @@
 	"math-wmc-FileLabel": "CSV-fil",
 	"math-wmc-Warnings": "Följande rader i indatafilerna ignorerades:",
 	"math-wmc-SubmissionSuccess": "Inlämningen lyckades.",
-	"math-wmc-importing": "Importerar..."
+	"math-wmc-importing": "Importerar...",
+	"math-search-relation-0": "och",
+	"math-search-relation-1": "eller",
+	"math-search-type-0": "Nyckelord"
 }
