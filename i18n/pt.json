@@ -10,5 +10,10 @@
 	"math-wmc-SelectRun": "Nome",
 	"math-wmc-FileLabel": "Ficheiro CSV",
 	"math-wmc-RunAddError": "Erro: Não foi possível adicionar a submissão \"$1\".",
-	"math-wmc-importing": "A importar..."
+	"math-wmc-importing": "A importar...",
+	"math-search-relation-0": "e",
+	"math-search-relation-1": "ou",
+	"math-search-relation-2": "e não",
+	"math-search-type-label": "Tipo:",
+	"math-search-expression-label": "Expressão:"
 }
