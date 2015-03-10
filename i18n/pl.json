@@ -25,6 +25,8 @@
 	"math-search-relation-0": "i",
 	"math-search-relation-1": "lub",
 	"math-search-relation-2": "i nie",
+	"math-search-type-label": "Typ:",
 	"math-search-type-0": "Słowo kluczowe",
+	"math-search-type-1": "Wzorzec TeX",
 	"math-search-expression-label": "Wyrażenie:"
 }
