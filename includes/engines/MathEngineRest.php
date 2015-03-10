@@ -61,10 +61,10 @@ abstract class MathEngineRest {
 		return $this->relevanceMap;
 	}
 
-		/**
-	 * 
+	/**
+	 *
 	 * @param MathQueryObject $query
-	 * @return \MathSearchEngine
+	 * @return $this
 	 */
 	public function setQuery(MathQueryObject $query) {
 		$this->query = $query;
@@ -76,11 +76,16 @@ abstract class MathEngineRest {
 	 * @return boolean
 	 */
 	function postQuery() {
+		global $wgMathDebug;
 		$numProcess = 30000;
-		$tmp = str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"", $this->getQuery()->getCQuery() );
-		$mwsExpr = str_replace( "m:", "", $tmp );
-		wfDebugLog( 'mathsearch', 'MWS query:' . $mwsExpr );
-		$res = Http::post( $this->backendUrl, array( "postData" => $mwsExpr, "timeout" => 60 ) );
+		if ( $this->query->getXQuery() ){
+			$postData = $this->query->getXQuery();
+		} else {
+			$tmp = str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"", $this->getQuery()->getCQuery() );
+			$postData = str_replace( "m:", "", $tmp );
+			if ( $wgMathDebug ) { wfDebugLog( 'MathSearch', 'MWS query:' . $postData ); }
+		}
+		$res = Http::post( $this->backendUrl, array( "postData" => $postData, "timeout" => 60 ) );
 		if ( $res == false ) {
 			if ( function_exists( 'curl_init' ) ) {
 				$handle = curl_init();
@@ -98,7 +103,13 @@ abstract class MathEngineRest {
 					var_export( $details, true ) );
 			return false;
 		}
-		$xres = new SimpleXMLElement( $res );
+		try{
+			$xres = new SimpleXMLElement( $res );
+		} catch (Exception $e){
+			wfDebugLog( 'MathSearch', "No valid XMLRESUSLT" . $res);
+			return false;
+		}
+
 		$this->size = (int) $xres["total"];
 		wfDebugLog( "MathSearch", $this->size . " results retreived from $this->backendUrl." );
 		if ($this->size == 0) {
@@ -110,7 +121,7 @@ abstract class MathEngineRest {
 		if ( $this->size >= $numProcess ) {
 			ini_set( 'memory_limit', '256M' );
 			for ( $i = $numProcess; $i <= $this->size; $i += $numProcess ) {
-				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $mwsExpr );
+				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $postData );
 				$res = Http::post( $this->backendUrl, array( "postData" => $query, "timeout" => 60 ) );
 				wfDebugLog( 'mathsearch', 'MWS query:' . $query );
 				if ( $res == false ) {

@@ -1,8 +1,9 @@
 <?php
 
 class MathSearchTerm {
-	const TYPE_MATH = 1;
 	const TYPE_TEXT = 0;
+	const TYPE_MATH = 1;
+	const TYPE_XMATH =2;
 	const REL_AND = 0;
 	const REL_OR = 1;
 	const REL_NAND = 2;
@@ -84,7 +85,7 @@ class MathSearchTerm {
 	}
 
 	public function doSearch(MathEngineRest $backend){
-		switch ($this->getType() ){
+		switch ($this->getType() ) {
 			case self::TYPE_TEXT:
 				$search = SearchEngine::create( "CirrusSearch" );
 				$search->setLimitOffset( 10000 );
@@ -92,7 +93,7 @@ class MathSearchTerm {
 				if ( $sres ) {
 					while ( $tres = $sres->next() ) {
 						$revisionID = $tres->getTitle()->getLatestRevID();
-						$this->resultSet[ (string) $revisionID] = $tres;
+						$this->resultSet[(string)$revisionID] = $tres;
 						$this->relevanceMap[] = $revisionID;
 					}
 					return true;
@@ -100,19 +101,30 @@ class MathSearchTerm {
 					return false;
 				}
 			case self::TYPE_MATH:
-					$query = new MathQueryObject( $this->getExpr() );
-					$cQuery = $query->getCQuery();
-					if ( $cQuery ) {
-						$backend->setQuery( $query );
-						if ( ! $backend->postQuery() ) {
-							return false;
-						}
-						$this->relevanceMap = $backend->getRelevanceMap();
-						$this->resultSet = $backend->getResultSet();
-					} else {
+				$query = new MathQueryObject( $this->getExpr() );
+				$cQuery = $query->getCQuery();
+				if ( $cQuery ) {
+					$backend->setQuery( $query );
+					if ( !$backend->postQuery() ) {
 						return false;
 					}
-
+					$this->relevanceMap = $backend->getRelevanceMap();
+					$this->resultSet = $backend->getResultSet();
+				} else {
+					return false;
+				}
+				break;
+			case self::TYPE_XMATH:
+				$query = new MathQueryObject( '' );
+				$query->setXQuery( $this->getExpr() );
+				$backend = new MathEngineBaseX( $query );
+				$backend->setBackendUrl( str_replace( 'mwsquery', 'xquery' ,
+					$backend->getBackendUrl() ));
+				if ( !$backend->postQuery() ) {
+					return false;
+				}
+				$this->relevanceMap = $backend->getRelevanceMap();
+				$this->resultSet = $backend->getResultSet();
 		}
 	}
 

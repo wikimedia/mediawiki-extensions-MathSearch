@@ -55,5 +55,6 @@
     "math-search-type-label": "Type:",
     "math-search-type-0": "Keyword",
     "math-search-type-1": "TeX pattern",
+    "math-search-type-2": "xQuery expression",
     "math-search-expression-label": "Expression:"
 }
