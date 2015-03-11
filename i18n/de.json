@@ -47,5 +47,6 @@
 	"math-search-type-label": "Typ:",
 	"math-search-type-0": "Schlüsselwort",
 	"math-search-type-1": "TeX-Muster",
+	"math-search-type-2": "xQuery-Ausdruck",
 	"math-search-expression-label": "Ausdruck:"
 }
