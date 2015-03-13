@@ -49,5 +49,6 @@
 	"math-search-type-label": "类型：",
 	"math-search-type-0": "关键词",
 	"math-search-type-1": "TeX模式",
+	"math-search-type-2": "xQuery表达式",
 	"math-search-expression-label": "表达式："
 }

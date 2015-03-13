@@ -31,5 +31,6 @@
 	"math-search-type-label": "Tipo:",
 	"math-search-type-0": "Palabra clave",
 	"math-search-type-1": "Patrón TeX",
+	"math-search-type-2": "expresión xQuery",
 	"math-search-expression-label": "Expresión:"
 }

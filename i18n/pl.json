@@ -28,5 +28,6 @@
 	"math-search-type-label": "Typ:",
 	"math-search-type-0": "Słowo kluczowe",
 	"math-search-type-1": "Wzorzec TeX",
+	"math-search-type-2": "Wyrażenie xQuery",
 	"math-search-expression-label": "Wyrażenie:"
 }
