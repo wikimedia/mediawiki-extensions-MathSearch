@@ -46,5 +46,6 @@
 	"math-search-type-label": "Тип:",
 	"math-search-type-0": "Клучен збор",
 	"math-search-type-1": "TeX-шема",
+	"math-search-type-2": "xQuery-израз",
 	"math-search-expression-label": "Израз:"
 }
