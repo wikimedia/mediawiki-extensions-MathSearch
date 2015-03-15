@@ -6,3 +6,4 @@
 .settings
 .buildpath
 nbproject
+node_modules/
