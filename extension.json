@@ -85,7 +85,7 @@
 	},
 	"ResourceFileModulePaths": {
 		"localBasePath": "",
-		"remoteExtPath": "MathSearch/"
+		"remoteExtPath": "MathSearch"
 	},
 	"SpecialPages": {
 		"MathSearch": "SpecialMathSearch",
