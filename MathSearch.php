@@ -33,27 +33,25 @@ $wgMathUpdateObservations = false;
 /** @var string $wgMathAnalysisTableName mathoid or mathlatexml */
 $wgMathAnalysisTableName = 'mathlatexml';
 
-$dir = dirname( __FILE__ ) . '/';
-
-$wgAutoloadClasses['MathSearchHooks'] = $dir . 'MathSearch.hooks.php';
-$wgAutoloadClasses['SpecialMathSearch'] = $dir . '/includes/special/SpecialMathSearch.php';
-$wgAutoloadClasses['FormulaInfo'] = $dir . 'FormulaInfo.php';
-$wgAutoloadClasses['MathObject'] = $dir . 'MathObject.php';
-$wgAutoloadClasses['MathQueryObject'] = $dir . 'MathQueryObject.php';
-$wgAutoloadClasses['GetEquationsByQuery'] = $dir . 'GetEquationsByQuery.php';
-$wgAutoloadClasses['SpecialMathDebug'] = $dir . 'SpecialMathDebug.php';
-$wgAutoloadClasses['SpecialMathIndex'] = $dir . 'SpecialMathIndex.php';
-$wgAutoloadClasses['SpecialDisplayTopics'] = $dir . '/includes/special/SpecialDisplayTopics.php';
-$wgAutoloadClasses['MathEngineMws'] = $dir . '/includes/engines/MathEngineMws.php';
-$wgAutoloadClasses['MathEngineBaseX'] = $dir . '/includes/engines/MathEngineBaseX.php';
-$wgAutoloadClasses['MathEngineRest'] = $dir . '/includes/engines/MathEngineRest.php';
-$wgAutoloadClasses['ImportCsv'] = $dir . 'includes/ImportCsv.php';
-$wgAutoloadClasses['MathSearchUtils'] = $dir . 'includes/MathSearchUtils.php';
-$wgAutoloadClasses['MathSearchTerm'] = $dir . 'includes/MathSearchTerm.php';
+$wgAutoloadClasses['MathSearchHooks'] = __DIR__ . '/MathSearch.hooks.php';
+$wgAutoloadClasses['SpecialMathSearch'] = __DIR__ . '/includes/special/SpecialMathSearch.php';
+$wgAutoloadClasses['FormulaInfo'] = __DIR__ . '/FormulaInfo.php';
+$wgAutoloadClasses['MathObject'] = __DIR__ . '/MathObject.php';
+$wgAutoloadClasses['MathQueryObject'] = __DIR__ . '/MathQueryObject.php';
+$wgAutoloadClasses['GetEquationsByQuery'] = __DIR__ . '/GetEquationsByQuery.php';
+$wgAutoloadClasses['SpecialMathDebug'] = __DIR__ . '/SpecialMathDebug.php';
+$wgAutoloadClasses['SpecialMathIndex'] = __DIR__ . '/SpecialMathIndex.php';
+$wgAutoloadClasses['SpecialDisplayTopics'] = __DIR__ . '/includes/special/SpecialDisplayTopics.php';
+$wgAutoloadClasses['MathEngineMws'] = __DIR__ . '/includes/engines/MathEngineMws.php';
+$wgAutoloadClasses['MathEngineBaseX'] = __DIR__ . '/includes/engines/MathEngineBaseX.php';
+$wgAutoloadClasses['MathEngineRest'] = __DIR__ . '/includes/engines/MathEngineRest.php';
+$wgAutoloadClasses['ImportCsv'] = __DIR__ . '/includes/ImportCsv.php';
+$wgAutoloadClasses['MathSearchUtils'] = __DIR__ . '/includes/MathSearchUtils.php';
+$wgAutoloadClasses['MathSearchTerm'] = __DIR__ . '/includes/MathSearchTerm.php';
 
 $wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
-$wgExtensionMessagesFiles['MathSearch'] = $dir . 'MathSearch.i18n.php';
-$wgExtensionMessagesFiles['MathSearchAlias'] = $dir . 'MathSearch.alias.php';
+$wgExtensionMessagesFiles['MathSearch'] = __DIR__ . '/MathSearch.i18n.php';
+$wgExtensionMessagesFiles['MathSearchAlias'] = __DIR__ . '/MathSearch.alias.php';
 
 $wgSpecialPageGroups['MathSearch'] = 'mathsearch';
 $wgSpecialPageGroups['FormulaInfo'] = 'mathsearch';
@@ -69,7 +67,6 @@ $wgSpecialPages['GetEquationsByQuery'] = 'GetEquationsByQuery';
 $wgSpecialPages['MathDebug'] = 'SpecialMathDebug';
 $wgSpecialPages['MathIndex'] = 'SpecialMathIndex';
 $wgSpecialPages['DisplayTopics'] = 'SpecialDisplayTopics';
-$wgAPIModules['mathquery'] = 'MathSearchApi';
 
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['MathFormulaRendered']['updateIndex'] = 'MathSearchHooks::updateMathIndex';
@@ -85,11 +82,11 @@ $wgGroupPermissions['sysop']['mathwmcsubmit'] = true;
 $wgAvailableRights[] = 'mathwmcsubmit';
 /** @var boolean $MathSearchWmcServer set true if you offer a math search competition server */
 $wgMathWmcMaxResults = 10000;
-$wgAutoloadClasses['SpecialUploadResult'] = $dir . 'SpecialUploadResult.php';
+$wgAutoloadClasses['SpecialUploadResult'] = __DIR__ . '/SpecialUploadResult.php';
 $wgSpecialPages['MathUpload'] = 'SpecialUploadResult';
 $wgSpecialPageGroups['MathUpload'] = 'mathsearch';
 $wgMathUploadEnabled = false;
-$wgAutoloadClasses['SpecialMathDownloadResult'] = $dir . 'SpecialMathDownloadResult.php';
+$wgAutoloadClasses['SpecialMathDownloadResult'] = __DIR__ . '/SpecialMathDownloadResult.php';
 $wgSpecialPages['MathDownload'] = 'SpecialMathDownloadResult';
 $wgSpecialPageGroups['MathDownload'] = 'mathsearch';
 
