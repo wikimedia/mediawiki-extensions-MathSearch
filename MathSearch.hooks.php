@@ -10,12 +10,6 @@ use MediaWiki\Logger\LoggerFactory;
 class MathSearchHooks {
 	static $nextID = 0;
 
-	public static function registerExtension() {
-		global $wgHooks;
-
-		$wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
-	}
-
 	/**
 	 * @return int
 	 */

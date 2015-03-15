@@ -5,7 +5,6 @@
 	"url": "https://www.mediawiki.org/wiki/Extension:MathSearch",
 	"descriptionmsg": "mathsearch-desc",
 	"type": "specialpage",
-	"callback": "MathSearchHooks::registerExtension",
 	"AutoloadClasses": {
 		"MathSearchHooks": "MathSearch.hooks.php",
 		"SpecialMathSearch": "includes/special/SpecialMathSearch.php",
