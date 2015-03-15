@@ -1,0 +1,103 @@
+{
+	"name": "MathSearch",
+	"version": "0.2.0",
+	"author": "Moritz Schubotz",
+	"url": "https://www.mediawiki.org/wiki/Extension:MathSearch",
+	"descriptionmsg": "mathsearch-desc",
+	"type": "specialpage",
+	"callback": "MathSearchHooks::registerExtension",
+	"AutoloadClasses": {
+		"MathSearchHooks": "MathSearch.hooks.php",
+		"SpecialMathSearch": "includes/special/SpecialMathSearch.php",
+		"FormulaInfo": "FormulaInfo.php",
+		"MathObject": "MathObject.php",
+		"MathQueryObject": "MathQueryObject.php",
+		"GetEquationsByQuery": "GetEquationsByQuery.php",
+		"SpecialMathDebug": "SpecialMathDebug.php",
+		"SpecialMathIndex": "SpecialMathIndex.php",
+		"SpecialDisplayTopics": "includes/special/SpecialDisplayTopics.php",
+		"MathEngineMws": "includes/engines/MathEngineMws.php",
+		"MathEngineBaseX": "includes/engines/MathEngineBaseX.php",
+		"MathEngineRest": "includes/engines/MathEngineRest.php",
+		"ImportCsv": "includes/ImportCsv.php",
+		"MathSearchUtils": "includes/MathSearchUtils.php",
+		"MathSearchTerm": "includes/MathSearchTerm.php",
+		"MwsDumpWriter": "includes/MwsDumpWriter.php",
+		"SpecialLaTeXTranslator": "includes/special/SpecialLaTeXTranslator.php",
+		"LaTeXTranslator": "includes/LaTeXTranslator.php",
+		"SpecialUploadResult": "SpecialUploadResult.php",
+		"SpecialMathDownloadResult": "SpecialMathDownloadResult.php"
+	},
+	"AvailableRights": [
+		"mathwmcsubmit"
+	],
+	"ExtensionMessagesFiles": {
+		"MathSearchAlias": "MathSearch.alias.php"
+	},
+	"GroupPermissions": {
+		"sysop": {
+			"mathwmcsubmit": true
+		}
+	},
+	"Hooks": {
+		"LoadExtensionSchemaUpdates": [
+			"MathSearchHooks::onLoadExtensionSchemaUpdates"
+		],
+		"MathFormulaPostRender": {
+			"updateIndex": "MathSearchHooks::updateMathIndex",
+			"addLink": "MathSearchHooks::addLinkToFormulaInfoPage"
+		},
+		"UnitTestsList": [
+			"MathSearchHooks::onRegisterUnitTests"
+		],
+		"ParserFirstCallInit": [
+			"MathSearchHooks::onParserFirstCallInit"
+		],
+		"ArticleDeleteComplete": [
+			"MathSearchHooks::onArticleDeleteComplete"
+		],
+		"PageContentSaveComplete": [
+			"MathSearchHooks::onPageContentSaveComplete"
+		]
+	},
+	"config": {
+		"MathAnalysisTableName": "mathlatexml",
+		"MathDebug": false,
+		"MathSearchBaseXBackendUrl": "http://localhost:10043/",
+		"MathSearchMWSUrl": "http://localhost:9090/",
+		"MathUpdateObservations": false,
+		"MathUploadEnabled": false,
+		"MathWmcMaxResults": 10000,
+		"MathWmcServer": false
+	},
+	"MessagesDirs": {
+		"MathSearch": [
+			"i18n"
+		]
+	},
+	"ResourceModules": {
+		"ext.mathsearch.styles": {
+			"styles": "ext.mathsearch.css",
+			"targets": [
+				"desktop",
+				"mobile"
+			]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteExtPath": "MathSearch/"
+	},
+	"SpecialPages": {
+		"MathSearch": "SpecialMathSearch",
+		"FormulaInfo": "FormulaInfo",
+		"GetEquationsByQuery": "GetEquationsByQuery",
+		"MathDebug": "SpecialMathDebug",
+		"MathIndex": "SpecialMathIndex",
+		"DisplayTopics": "SpecialDisplayTopics",
+		"LaTeXTranslator": "SpecialLaTeXTranslator",
+		"MathUpload": "SpecialUploadResult",
+		"MathDownload": "SpecialMathDownloadResult"
+	},
+	"manifest_version": 1
+}

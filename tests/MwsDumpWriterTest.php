@@ -165,7 +165,7 @@ XML;
 		$dw = new MwsDumpWriter();
 		MathSearchHooks::resetId();
 		$this->setMwGlobals( array(
-			'wgMathValidModes' => array( MW_MATH_LATEXML ) ,
+			'wgMathValidModes' => array( 'latexml' ) ,
 			'wgMathDefaultLaTeXMLSetting' => array(
 				'format' => 'xhtml',
 				'whatsin' => 'math',
@@ -189,7 +189,7 @@ XML;
 			$id = null;
 			$content = $tag[1];
 			$attributes = $tag[2];
-			$renderer = MathRenderer::getRenderer( $content, $attributes, MW_MATH_LATEXML );
+			$renderer = MathRenderer::getRenderer( $content, $attributes, 'latexml' );
 			$renderer->render( true );
 			MathSearchHooks::setMathId( $id, $renderer, $revId );
 			$dw->addMwsExpression( $renderer->getMathml(), $revId, $id );
