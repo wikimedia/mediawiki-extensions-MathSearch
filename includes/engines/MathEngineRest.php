@@ -12,6 +12,7 @@
 abstract class MathEngineRest {
 	/** @var MathQueryObject the query to be answered*/
 	protected $query;
+	protected $type = "mws";
 	protected $size = false;
 	protected $resultSet = array();
 	protected $relevanceMap = array();
@@ -78,13 +79,7 @@ abstract class MathEngineRest {
 	function postQuery() {
 		global $wgMathDebug;
 		$numProcess = 30000;
-		if ( $this->query->getXQuery() ){
-			$postData = $this->query->getXQuery();
-		} else {
-			$tmp = str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"", $this->getQuery()->getCQuery() );
-			$postData = str_replace( "m:", "", $tmp );
-			if ( $wgMathDebug ) { wfDebugLog( 'MathSearch', 'MWS query:' . $postData ); }
-		}
+		$postData = $this->getPostData( $numProcess );
 		$res = Http::post( $this->backendUrl, array( "postData" => $postData, "timeout" => 60 ) );
 		if ( $res == false ) {
 			if ( function_exists( 'curl_init' ) ) {
@@ -103,16 +98,53 @@ abstract class MathEngineRest {
 					var_export( $details, true ) );
 			return false;
 		}
-		try{
+		return $this->processResults( $res, $numProcess );
+	}
+
+	/**
+	 * @param SimpleXMLElement $xmlRoot
+	 */
+	abstract function processMathResults( $xmlRoot ) ;
+
+	/**
+	 * @param $numProcess
+	 * @return mixed|string
+	 */
+	protected function getPostData( $numProcess ) {
+		global $wgMathDebug;
+		if ( $this->query->getXQuery() ) {
+			$postData = $this->query->getXQuery();
+			return $postData;
+		} else {
+			$tmp =
+				str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"",
+					$this->getQuery()->getCQuery() );
+			$postData = str_replace( "m:", "", $tmp );
+			if ( $wgMathDebug ) {
+				wfDebugLog( 'MathSearch', 'MWS query:' . $postData );
+				return $postData;
+			}
+			return $postData;
+		}
+	}
+
+	/**
+	 * @param $res
+	 * @param $numProcess
+	 * @return bool
+	 */
+	protected function processResults( $res, $numProcess ) {
+		try {
 			$xres = new SimpleXMLElement( $res );
-		} catch (Exception $e){
-			wfDebugLog( 'MathSearch', "No valid XMLRESUSLT" . $res);
+		}
+		catch ( Exception $e ) {
+			wfDebugLog( 'MathSearch', "No valid XMLRESUSLT" . $res );
 			return false;
 		}
 
-		$this->size = (int) $xres["total"];
+		$this->size = (int)$xres["total"];
 		wfDebugLog( "MathSearch", $this->size . " results retreived from $this->backendUrl." );
-		if ($this->size == 0) {
+		if ( $this->size == 0 ) {
 			return true;
 		}
 		$this->relevanceMap = array();
@@ -121,11 +153,13 @@ abstract class MathEngineRest {
 		if ( $this->size >= $numProcess ) {
 			ini_set( 'memory_limit', '256M' );
 			for ( $i = $numProcess; $i <= $this->size; $i += $numProcess ) {
-				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $postData );
-				$res = Http::post( $this->backendUrl, array( "postData" => $query, "timeout" => 60 ) );
+				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $this->postData );
+				$res =
+					Http::post( $this->backendUrl, array( "postData" => $query, "timeout" => 60 ) );
 				wfDebugLog( 'mathsearch', 'MWS query:' . $query );
 				if ( $res == false ) {
-					wfDebugLog( "MathSearch", "Nothing retreived from $this->backendUrl. check if mwsd is running there" );
+					wfDebugLog( "MathSearch",
+						"Nothing retreived from $this->backendUrl. check if mwsd is running there" );
 					return false;
 				}
 				$xres = new SimpleXMLElement( $res );
@@ -136,8 +170,17 @@ abstract class MathEngineRest {
 	}
 
 	/**
-	 * @param SimpleXMLElement $xmlRoot
+	 * @return mixed
 	 */
-	abstract function processMathResults( $xmlRoot ) ;
+	public function getType() {
+		return $this->type;
+	}
+
+	/**
+	 * @param string $type
+	 */
+	public function setType( $type ) {
+		$this->type = $type;
+	}
 
 }

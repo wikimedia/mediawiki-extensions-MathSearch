@@ -74,7 +74,7 @@ $wgHooks['MathFormulaRendered']['addLink'] = 'MathSearchHooks::addLinkToFormulaI
 $wgHooks['UnitTestsList'][] = 'MathSearchHooks::onRegisterUnitTests';
 $wgHooks['ParserFirstCallInit'][] = 'MathSearchHooks::onParserFirstCallInit';
 
-$wgMathSearchBaseXBackendUrl = 'http://localhost:10043/mwsquery';
+$wgMathSearchBaseXBackendUrl = 'http://localhost:10043/';
 
 /* Optional stuff for math search competetion server */
 $wgMathWmcServer = false;

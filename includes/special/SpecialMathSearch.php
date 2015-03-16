@@ -23,7 +23,7 @@
 		public $displayQuery;
 		private $mathBackend;
 		private $resultID = 0;
-		private $noTerms = 1;
+		private $noTerms = 4;
 		private $terms = array();
 		private $relevanceMap;
 
@@ -170,7 +170,6 @@
 
 		public function performSearch() {
 			$out = $this->getOutput();
-			$time_start = microtime( true );
 			$out->addWikiText( '==Results==' );
 			$out->addWikiText( 'You searched for the following terms:' );
 			switch ( $this->mathEngine ) {
@@ -183,6 +182,7 @@
 			/** @var MathSearchTerm $term */
 			foreach ( $this->terms as $term ) {
 				$term->doSearch( $this->mathBackend );
+				$this->enableMathStyles();
 				$this->printTerm( $term );
 				if ( $term->getKey() == 1 ) {
 					$this->relevanceMap = $term->getRelevanceMap();
@@ -216,14 +216,20 @@
 		/**
 		 * @param $revisionID
 		 * @param $mathElements
-		 * @param $out
 		 * @param $pagename
+		 * @internal param $out
 		 */
-		public function displayMathElements( $revisionID, $mathElements, $out, $pagename ) {
+		public function displayMathElements( $revisionID, $mathElements, $pagename ) {
+			$out = $this->getOutput();
 			global $wgMathDebug;
 			foreach ( $mathElements as $anchorID => $answ ) {
 				$res = MathObject::constructformpage( $revisionID, $anchorID );
-				if ( $res ) {
+				if ( !$res ) {
+					wfDebugLog( "MathSearch",
+						"Failure: Could not get entry $anchorID for page $pagename (id $revisionID) :" .
+						var_export( $this->mathResults, TRUE ) );
+					return;
+				}
 					$mml = $res->getMathml();
 					$out->addWikiText( "====[[$pagename#$anchorID|Eq: $anchorID (Result " .
 									   $this->resultID ++ . ")]]====", false );
@@ -231,10 +237,11 @@
 					$xpath = $answ[0]['xpath'];
 					// TODO: Remove hack and report to Prode that he fixes that
 					// $xmml->registerXPathNamespace('m', 'http://www.w3.org/1998/Math/MathML');
-					$xpath =
-						str_replace( '/m:semantics/m:annotation-xml[@encoding="MathML-Content"]',
-							'', $xpath );
+					$xpath = str_replace( '/m:semantics/m:annotation-xml[@encoding="MathML-Content"]',
+						'', $xpath );
 					$dom = new DOMDocument;
+					$dom->preserveWhiteSpace = false;
+					$dom->validateOnParse = true;
 					$dom->loadXML( $mml );
 					$DOMx = new DOMXpath( $dom );
 					$hits = $DOMx->query( $xpath );
@@ -243,52 +250,75 @@
 					}
 					if ( !is_null( $hits ) && $hits ) {
 						foreach ( $hits as $node ) {
-							/* @var DOMDocument $node */
-							if ( $node->hasAttributes() ) {
-								try {
-									$domRes =
-										$dom->getElementById( $node->attributes->getNamedItem( 'xref' )->nodeValue );
-								}
-								catch ( Exception $e ) {
-									wfDebugLog( 'MathSearch',
-										'Problem getting references ' . $e->getMessage() );
-									$domRes = false;
-								}
-								if ( $domRes ) {
-									$domRes->setAttribute( 'mathcolor', '#cc0000' );
-									$out->addHtml( $domRes->ownerDocument->saveXML() );
-								} else {
-									$out->addHTML( $node->ownerDocument->saveXML() );
-								}
-							} else {
-								$renderer = new MathMathML();
-								$renderer->setMathml( $mml );
-								$out->addHtml( $renderer->getHtmlOutput() );
-							}
+							$this->highlightHit( $node, $dom, $mml );
 						}
-					} else {
-						$renderer = new MathMathML();#
-						$renderer->setMathml( $mml );
-						$out->addHtml( $renderer->getHtmlOutput() );
 					}
-				} else {
-					wfDebugLog( "MathSearch",
-						"Failure: Could not get entry $anchorID for page $pagename (id $revisionID) :" .
-						var_export( $this->mathResults, TRUE ) );
+				$renderer = new MathMathML( $mml, array( 'type' => 'pmml' ) );
+				$renderer->setMathml( $mml );
+				$renderer->render();
+				$out->addHtml( $renderer->getHtmlOutput() );
 				}
 			}
+
+		/**
+		 * Note that the default getElementById function
+		 * <code>
+		 *  $dom->getElementById( $id );
+		 * </code>
+		 * works for "xml:id" only,  but not for "id" which is extended to "math:id"
+		 * 	TODO: could be fixed with
+		 * @link http://php.net/manual/de/domdocument.getelementbyid.php#86056
+		 * @param String $id
+		 * @param DOMDocument $doc
+		 * @return DOMElement
+		 */
+		private function getElementById($id,$doc){
+				$xpath = new DOMXPath($doc);
+				return $xpath->query("//*[@id='$id']")->item(0);
 		}
 
 		/**
 		 * @param MathSearchTerm $term
 		 */
 		public function printTerm( $term ) {
+			if ( $term->getType() == MathSearchTerm::TYPE_MATH ){
+				$expr = "<math>{$term->getExpr()}</math>";
+			} else {
+				$expr = "<code>{$term->getExpr()}</code>";
+			}
 			$this->getOutput()->addWikiMsg( 'math-search-term',
 				$term->getKey(),
-				$term->getExpr(),
+				$expr,
 				wfMessage( "math-search-type-{$term->getType()}")->text(),
 				$term->getRel() == '' ? '' : wfMessage( "math-search-relation-{$term->getRel()}")->text(),
 				sizeof( $term->getRelevanceMap() ) );
+		}
+
+		/**
+		 * @param DOMNode $node
+		 * @param DOMDocument $dom
+		 * @param string $mml
+		 */
+		protected function highlightHit( $node, $dom, &$mml ) {
+			if( $node == null || !$node->hasAttributes() ){
+				return;
+			}
+			try {
+				$xRef = $node->attributes->getNamedItem( 'xref' );
+				if ( $xRef ) {
+					$domRes = $this->getElementById( $xRef->nodeValue, $dom );
+					if ( $domRes ) {
+						$domRes->setAttribute( 'mathcolor', '#cc0000' );
+						$mml = $domRes->ownerDocument->saveXML();
+					}
+				} else {
+					// CMML node has no corresponding PMML element
+					$fallback = $node->parentNode;
+					$this->highlightHit( $fallback, $dom, $mml );
+				}
+			} catch ( Exception $e ) {
+				wfDebugLog( 'MathSearch', 'Problem highlighting hit ' . $e->getMessage() );
+			}
 		}
 
 		/**
@@ -312,7 +342,7 @@
 		function displayRevisionResults( $revisionID ) {
 			$out = $this->getOutput();
 			$revision = Revision::newFromId( $revisionID );
-			if ( $revision === false ) {
+			if ( !$revision ) {
 				wfDebugLog( "MathSearch", "invalid revision number" );
 				return false;
 			}
@@ -336,7 +366,7 @@
 				$out->addWikiText( $textResult );
 			}
 			wfDebugLog( "MathSearch", "Processing results for $pagename" );
-			$this->displayMathElements( $revisionID, $mathElements, $out, $pagename );
+			$this->displayMathElements( $revisionID, $mathElements, $pagename );
 			return true;
 		}
 
@@ -344,8 +374,7 @@
 		 * Renders the math search input to mathml
 		 * @return boolean
 		 */
-		function render()
-		{
+		function render() {
 			$renderer = new MathLaTeXML( $this->mathpattern );
 			$renderer->setLaTeXMLSettings( 'profile=mwsquery' );
 			$renderer->setAllowedRootElments( array( 'query' ) );
@@ -368,4 +397,9 @@
 			$this->terms[ $i ]= new MathSearchTerm($i, $rel, $type, $expr );
 		}
 
+		private function enableMathStyles(){
+			$out = $this->getOutput();
+			$out->addModuleStyles(
+				array( 'ext.math.styles' , 'ext.math.desktop.styles', 'ext.math.scripts' ) );
+		}
 	}

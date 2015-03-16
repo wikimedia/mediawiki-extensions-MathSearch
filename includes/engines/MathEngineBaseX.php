@@ -15,7 +15,6 @@ class MathEngineBaseX extends MathEngineRest {
 		parent::__construct( $query, $wgMathSearchBaseXBackendUrl );
 	}
 
-
 	/**
 	 * @param SimpleXMLElement $xmlRoot
 	 */
@@ -31,5 +30,13 @@ class MathEngineBaseX extends MathEngineRest {
 			$this->resultSet[(string) $revisionID][(string) $AnchorID][] = array( "xpath" => (string) $attrs["xpath"], "mappings" => $substarr ); // ,"original"=>$page->asXML()
 		}
 		$this->relevanceMap = array_unique( $this->relevanceMap );
+	}
+
+	/**
+	 *
+	 *
+	 */
+	function getPostData( $numProcess ){
+		return json_encode( array( "type" => $this->type, "query" => $this->query ) );
 	}
 }
