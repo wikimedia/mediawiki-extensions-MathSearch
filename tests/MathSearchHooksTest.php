@@ -85,7 +85,12 @@ EOT;
 	public function testNTCIRHook() {
 		//use Page-ID = 0 to avoid that the test tries to save something to the DB
 		$sample = $this->mathMLSample;
-		$this->assertTrue( MathSearchHooks::onMathFormulaRenderedNoLink( null, $sample, 0, 6 ), 'Hook did not return true' );
+		$parser = new Parser();
+		$parser->mLinkID = 5;
+		$parser->mRevisionId = 0;
+		$renderer = MathRenderer::getRenderer( "" );
+		$this->assertEquals( 5, $parser->nextLinkID());
+		$this->assertTrue( MathSearchHooks::onMathFormulaRenderedNoLink( $parser, $renderer , $sample), 'Hook did not return true' );
 		$this->assertContains( "math.0.6.14.1.cmml", $sample, "expected replaced id not found" );
 	}
 }

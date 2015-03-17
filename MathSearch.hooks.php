@@ -58,14 +58,6 @@ class MathSearchHooks {
 		}
 	}
 
-	private static function curId2OldId( $curId ){
-		$title = Title::newFromID( $curId );
-		if ( $title ){
-			return Title::newFromID( $curId )->getLatestRevID();
-		} else {
-			return 0;
-		}
-	}
 	/**
 	 * Updates the formula index in the database
 	 *
@@ -106,51 +98,54 @@ class MathSearchHooks {
 	 * #math{$id}.
 	 * @param int $id
 	 * @param MathRenderer $renderer
+	 * @param int $revId
 	 * @return bool true if an ID has been assigned manually,
 	 * false if the automatic fallback math{$id} was used.
 	 */
-	private static function setMathId( &$id, MathRenderer $renderer) {
+	private static function setMathId( &$id, MathRenderer $renderer, $revId) {
 		if ( $renderer->getID() ){
 			$id = $renderer->getID();
 			return true;
 		} else {
-			$id = "math{$id}";
+			$id = self::generateMathAnchorString( $revId, $id, '' );
 			return false;
 		}
 	}
 
 	/**
 	 * Callback function that is called after a formula was rendered
-	 * @param MathRenderer $Renderer
+	 * @param Parser $parser
+	 * @param MathRenderer $renderer
 	 * @param string|null $Result reference to the rendering result
-	 * @param int $revId
-	 * @param int $eid
 	 * @return bool
 	 */
-	static function updateMathIndex( MathRenderer $Renderer, &$Result = null, $revId = 0, $eid = 0 ) {
+	static function updateMathIndex( Parser $parser, MathRenderer $renderer, &$Result = null ) {
+		$revId = $parser->getRevisionId();
+		$eid = $parser->nextLinkID();
 		if ( $revId > 0 ) { // Only store something if a pageid was set.
 			// Use manually assigned IDs whenever possible
 			// and fallback to automatic IDs otherwise.
-			if ( ! self::setMathId( $eid , $Renderer ) ){
+			if ( ! self::setMathId( $eid , $renderer, $revId ) ){
 				$Result = preg_replace( '/(class="mwe-math-mathml-(inline|display))/', "id=\"$eid\" \\1", $Result );
 			}
-			self::updateIndex( $revId , $eid , $Renderer->getInputHash() , $Renderer->getTex() );
+			self::updateIndex( $revId , $eid , $renderer->getInputHash() , $renderer->getTex() );
 		}
 		return true;
 	}
 
 	/**
 	 * Callback function that is called after a formula was rendered
-	 * @param MathRenderer $Renderer
+	 * @param Parser $parser
+	 * @param MathRenderer $renderer
 	 * @param string|null $Result reference to the rendering result
-	 * @param int $pid
-	 * @param int $eid
 	 * @return bool
 	 */
-	static function addIdentifierDescription( MathRenderer $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
-		self::setMathId( $eid , $Renderer );
-		$mo = MathObject::cloneFromRenderer($Renderer);
-		$mo->setRevisionID($pid);
+	static function addIdentifierDescription( Parser $parser, MathRenderer $renderer, &$Result = null ) {
+		$revId = $parser->getRevisionId();
+		$eid = $parser->nextLinkID();
+		self::setMathId( $eid , $renderer, $revId );
+		$mo = MathObject::cloneFromRenderer($renderer);
+		$mo->setRevisionID($revId);
 		$mo->setID($eid);
 		$Result = preg_replace_callback("#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u", array( $mo , 'addIdentifierTitle' ), $Result);
 		return true;
@@ -158,15 +153,16 @@ class MathSearchHooks {
 
 	/**
 	 * Callback function that is called after a formula was rendered
-	 * @param MathRenderer $Renderer
+	 * @param Parser $parser
+	 * @param MathRenderer $renderer
 	 * @param string|null $Result reference to the rendering result
-	 * @param int $pid
-	 * @param int $eid
 	 * @return bool
 	 */
-	static function addLinkToFormulaInfoPage( MathRenderer $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
-		self::setMathId( $eid , $Renderer );
-		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( array( 'pid' => $pid, 'eid' => $eid ) );
+	static function addLinkToFormulaInfoPage( Parser $parser, MathRenderer $renderer, &$Result = null ) {
+		$revId = $parser->getRevisionId();
+		$eid = $parser->nextLinkID();
+		self::setMathId( $eid , $renderer, $revId );
+		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( array( 'pid' => $revId, 'eid' => $eid ) );
 		$Result = "<span><a href=\"$url\" id=\"$eid\" style=\"color:inherit;\">$Result</a></span>";
 		return true;
 	}
@@ -178,20 +174,20 @@ class MathSearchHooks {
 	 * <code>$wgHooks['MathFormulaRendered'] = array('MathSearchHooks::onMathFormulaRenderedNoLink');</code>
 	 * in your local settings
 	 *
-	 * @param MathRenderer $Renderer
+	 * @param Parser $parser
+	 * @param MathRenderer $renderer
 	 * @param null $Result
-	 * @param int $pid
-	 * @param int $eid
-	 * @return boolean (true)
+	 * @return bool
 	 */
-	static function onMathFormulaRenderedNoLink( $Renderer, &$Result = null, $pid = 0, $eid = 0 ) {
-		if ( $pid > 0 ) { // Only store something if a pageid was set.
-			self::updateIndex( $pid, $eid, $Renderer->getInputHash(), $Renderer->getTex() );
+	static function onMathFormulaRenderedNoLink( Parser $parser, MathRenderer $renderer, &$Result = null ) {
+		$revId = $parser->getRevisionId();
+		$eid = $parser->nextLinkID();
+		if ( $revId > 0 ) { // Only store something if a pageid was set.
+			self::updateIndex( $revId, $eid, $renderer->getInputHash(), $renderer->getTex() );
 		}
 		if ( preg_match( '#<math(.*)?\sid="(?P<id>[\w\.]+)"#', $Result, $matches ) ) {
 			$rendererId = $matches['id'];
-			$oldId = self::curId2OldId( $pid );
-			$newID = self::generateMathAnchorString( $oldId, $eid, '' );
+			$newID = self::generateMathAnchorString( $revId, $eid, '' );
 			$Result = str_replace( $rendererId, $newID, $Result );
 		}
 		return true;
@@ -259,7 +255,6 @@ class MathSearchHooks {
 			return '';
 		}
 		wfDebugLog('MathSearch','Render mquery tag.');
-		wfProfileIn( __METHOD__ );
 		//TODO: Report %\n problem to LaTeXML upstream
 		$content = preg_replace( '/%\n/', '', $content );
 		$renderer = new MathLaTeXML( $content );
@@ -269,7 +264,6 @@ class MathSearchHooks {
 		$renderer->render( );
 		$renderedMath = $renderer->getHtmlOutput();
 		$renderer->writeCache();
-		wfProfileOut( __METHOD__ );
 
 		return array( $renderedMath, "markerType" => 'nowiki' );
 	}

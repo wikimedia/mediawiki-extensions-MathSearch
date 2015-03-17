@@ -69,8 +69,8 @@ $wgSpecialPages['MathIndex'] = 'SpecialMathIndex';
 $wgSpecialPages['DisplayTopics'] = 'SpecialDisplayTopics';
 
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
-$wgHooks['MathFormulaRendered']['updateIndex'] = 'MathSearchHooks::updateMathIndex';
-$wgHooks['MathFormulaRendered']['addLink'] = 'MathSearchHooks::addLinkToFormulaInfoPage';
+$wgHooks['MathFormulaPostRender']['updateIndex'] = 'MathSearchHooks::updateMathIndex';
+$wgHooks['MathFormulaPostRender']['addLink'] = 'MathSearchHooks::addLinkToFormulaInfoPage';
 $wgHooks['UnitTestsList'][] = 'MathSearchHooks::onRegisterUnitTests';
 $wgHooks['ParserFirstCallInit'][] = 'MathSearchHooks::onParserFirstCallInit';
 
