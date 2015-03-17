@@ -118,8 +118,7 @@ class MathSearchTerm {
 				$query = new MathQueryObject( '' );
 				$query->setXQuery( $this->getExpr() );
 				$backend = new MathEngineBaseX( $query );
-				$backend->setBackendUrl( str_replace( 'mwsquery', 'xquery' ,
-					$backend->getBackendUrl() ));
+				$backend->setType( 'xquery' );
 				if ( !$backend->postQuery() ) {
 					return false;
 				}

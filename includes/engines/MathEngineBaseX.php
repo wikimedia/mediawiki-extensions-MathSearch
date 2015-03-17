@@ -10,13 +10,14 @@
  * @ingroup extensions
  */
 class MathEngineBaseX extends MathEngineRest {
-	protected $type = "tex";
+	protected $type = "mws";
 	function __construct( $query = null ) {
 		global $wgMathSearchBaseXBackendUrl;
 		parent::__construct( $query, $wgMathSearchBaseXBackendUrl . 'api/mwsquery' );
 	}
 
 	/**
+	 * TODO: Add error handling.
 	 * @param $res
 	 * @param $numProcess
 	 * @return bool
@@ -24,11 +25,20 @@ class MathEngineBaseX extends MathEngineRest {
 	protected function processResults( $res, $numProcess ) {
 		$jsonResult = json_decode( $res );
 		if ( $jsonResult && json_last_error() === JSON_ERROR_NONE ) {
-			if ( $jsonResult->response ) {
-				$xmlObject = new XmlTypeCheck( $jsonResult->response, null, false );
-				$xRes = new SimpleXMLElement( $xmlObject );
+			if ( $jsonResult->success && $jsonResult->response ) {
+				// $xmlObject = new XmlTypeCheck( $jsonResult->response, null, false );
+				try {
+					$xRes = new SimpleXMLElement( $jsonResult->response );
+				} catch (Exception $e){
+					global $wgOut;
+					$wgOut->addWikiText("invalid XML <code>{$jsonResult->response}</code>");
+					return false;
+				}
 				$this->processMathResults( $xRes );
+				return true;
 			} else {
+				global $wgOut;
+				$wgOut->addWikiText("<code>{$jsonResult->response}</code>");
 				return false;
 			}
 		} else {
