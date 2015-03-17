@@ -81,7 +81,7 @@ abstract class MathEngineRest {
 		$numProcess = 30000;
 		$postData = $this->getPostData( $numProcess );
 		$res = Http::post( $this->backendUrl, array( "postData" => $postData, "timeout" => 60 ) );
-		if ( $res == false ) {
+		if ( $res === false ) {
 			if ( function_exists( 'curl_init' ) ) {
 				$handle = curl_init();
 				$options = array(

@@ -19,13 +19,14 @@
 		public $mathpattern;
 		public $textpattern;
 		public $mathmlquery;
-		public $mathEngine;
+		public $mathEngine = 'mws';
 		public $displayQuery;
 		private $mathBackend;
 		private $resultID = 0;
 		private $noTerms = 4;
 		private $terms = array();
 		private $relevanceMap;
+		private $defaults;
 
 
 		public static function exception_error_handler( $errno, $errstr, $errfile, $errline ) {
@@ -44,28 +45,6 @@
 		}
 
 		/**
-		 * Processes the submitted Form input
-		 * @param array $formData
-		 * @return bool
-		 */
-		public function processInput( $formData ) {
-			if ( $formData['noTerms'] != $this->noTerms ) {
-				$this->noTerms = $formData['noTerms'];
-				$this->searchForm();
-				return true;
-			}
-
-			for ( $i = 1; $i <= $this->noTerms; $i ++ ) {
-				$this->addTerm( $i, $formData["rel-$i"], $formData["type-$i"],
-					$formData["expr-$i"] );
-			}
-
-			$this->mathEngine = $formData['mathEngine'];
-			$this->displayQuery = $formData['displayQuery'];
-			$this->performSearch();
-		}
-
-		/**
 		 * The main function
 		 */
 		public function execute( $par ) {
@@ -73,20 +52,38 @@
 			global $wgExtensionAssetsPath;
 			$request = $this->getRequest();
 			$this->setHeaders();
-			$this->mathpattern = $request->getText( 'mathpattern' );
+			$this->mathpattern = $request->getText( 'mathpattern', '' );
 			$this->textpattern = $request->getText( 'textpattern', '' );
 			$isEncoded = $request->getBool( 'isEncoded', false );
 			if ( $isEncoded ) {
 				$this->mathpattern = htmlspecialchars_decode( $this->mathpattern );
 			}
-			$this->searchForm();
-			if ( file_exists( __DIR__ . self::GUI_PATH ) ) {
-				$minurl = $wgExtensionAssetsPath . '/MathSearch' . self::GUI_PATH;
-				$this->getOutput()
-					->addHTML( "<p><a href=\"${minurl}\">Test experimental math input interface</a></p>" );
-			}
 			if ( $this->mathpattern || $this->textpattern ) {
-				$this->performSearch();
+				$i = 0;
+				if ( $this->mathpattern ){
+					$i++;
+					$this->addFormData($this->mathpattern, $i,
+						MathSearchTerm::TYPE_MATH,MathSearchTerm::REL_AND);
+				}
+				if ( $this->textpattern ){
+					$i++;
+					$this->addFormData($this->textpattern, $i,
+						MathSearchTerm::TYPE_TEXT,MathSearchTerm::REL_AND);
+				}
+				$this->noTerms = $i;
+				$form = $this->searchForm();
+				$form->prepareForm();
+				$res = $form->trySubmit();
+				$this->getOutput()->addHTML( $form->getHTML( $res ) );
+				//$this->performSearch();
+				//$this->performSearch();
+			} else {
+				$this->searchForm()->show();
+				if ( file_exists( __DIR__ . self::GUI_PATH ) ) {
+					$minurl = $wgExtensionAssetsPath . '/MathSearch' . self::GUI_PATH;
+					$this->getOutput()
+						->addHTML( "<p><a href=\"${minurl}\">Test experimental math input interface</a></p>" );
+				}
 			}
 			restore_error_handler();
 		}
@@ -115,17 +112,16 @@
 					'label' => 'Number of search terms',
 					'type' => 'int',
 					'min' => 1,
-					'default' => 1,
+					'default' =>  $this->noTerms,
 				),
 			);
-			$formDescriptor =
-				array_merge( $formDescriptor, $this->getSearchRows( $this->noTerms ) );
-			$htmlForm =
-				new HTMLForm( $formDescriptor, $this->getContext() ); # We build the HTMLForm object
+			$formDescriptor = array_merge( $formDescriptor, $this->getSearchRows( $this->noTerms ) );
+			$htmlForm =	new HTMLForm( $formDescriptor, $this->getContext() );
 			$htmlForm->setSubmitText( 'Search' );
 			$htmlForm->setSubmitCallback( array( $this, 'processInput' ) );
 			$htmlForm->setHeaderText( "<h2>Input</h2>" );
-			$htmlForm->show(); # Displaying the form
+			//$htmlForm->show();
+			return $htmlForm;
 		}
 
 
@@ -147,6 +143,7 @@
 						//'nor' => 3
 					),
 					'type' => $relType,
+					'default' => $this->getDefault( $i, 'rel'),
 					'section' => "term $i" //TODO: figure out how to localize section with parameter
 				);
 				$out["type-$i"] = array(
@@ -158,14 +155,38 @@
 					),
 					'type' => 'select',
 					'section' => "term $i",
+					'default' => $this->getDefault( $i, 'type')
 				);
 				$out["expr-$i"] = array(
 					'label-message' => 'math-search-expression-label',
 					'type' => 'text',
-					'section' => "term $i"
+					'section' => "term $i",
+					'default' => $this->getDefault( $i, 'expr')
 				);
 			}
 			return $out;
+		}
+
+		/**
+		 * Processes the submitted Form input
+		 * @param array $formData
+		 * @return bool
+		 */
+		public function processInput( $formData ) {
+			if ( $formData['noTerms'] != $this->noTerms ) {
+				$this->noTerms = $formData['noTerms'];
+				$this->searchForm();
+				return true;
+			}
+
+			for ( $i = 1; $i <= $this->noTerms; $i ++ ) {
+				$this->addTerm( $i, $formData["rel-$i"], $formData["type-$i"],
+					$formData["expr-$i"] );
+			}
+
+			$this->mathEngine = $formData['mathEngine'];
+			$this->displayQuery = $formData['displayQuery'];
+			$this->performSearch();
 		}
 
 		public function performSearch() {
@@ -181,6 +202,9 @@
 			}
 			/** @var MathSearchTerm $term */
 			foreach ( $this->terms as $term ) {
+				if( $term->getExpr()=="" ){
+					continue;
+				}
 				$term->doSearch( $this->mathBackend );
 				$this->enableMathStyles();
 				$this->printTerm( $term );
@@ -351,6 +375,9 @@
 			$textElements = array();
 			/** @var MathSearchTerm $term */
 			foreach($this->terms as $term ){
+				if($term->getExpr()==""){
+					continue;
+				}
 				if ( $term->getType() == MathSearchTerm::TYPE_MATH ){
 					$mathElements += $term->getRevisionResult( $revisionID );
 				} elseif ( $term->getType() == MathSearchTerm::TYPE_TEXT ) { //Forward compatible
@@ -401,5 +428,27 @@
 			$out = $this->getOutput();
 			$out->addModuleStyles(
 				array( 'ext.math.styles' , 'ext.math.desktop.styles', 'ext.math.scripts' ) );
+		}
+
+		private function addFormData( $mathpattern, $i, $TYPE_MATH, $REL_AND ) {
+			$this->defaults[$i]['type']= $TYPE_MATH;
+			$this->defaults[$i]['rel'] = $REL_AND;
+			$this->defaults[$i]['expr'] = $mathpattern;
+		}
+
+		private function getDefault( $i , $what ) {
+			if ( isset( $this->defaults[$i][$what] ) ){
+				return $this->defaults[$i][$what];
+			} else {
+				switch( $what ){
+					case 'expr':
+						return '';
+					case 'type':
+						return MathSearchTerm::TYPE_MATH;
+					case 'rel':
+						return MathSearchTerm::REL_AND;
+				}
+				return "";
+			}
 		}
 	}

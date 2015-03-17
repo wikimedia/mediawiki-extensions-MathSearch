@@ -10,11 +10,31 @@
  * @ingroup extensions
  */
 class MathEngineBaseX extends MathEngineRest {
+	protected $type = "tex";
 	function __construct( $query = null ) {
 		global $wgMathSearchBaseXBackendUrl;
-		parent::__construct( $query, $wgMathSearchBaseXBackendUrl );
+		parent::__construct( $query, $wgMathSearchBaseXBackendUrl . 'api/mwsquery' );
 	}
 
+	/**
+	 * @param $res
+	 * @param $numProcess
+	 * @return bool
+	 */
+	protected function processResults( $res, $numProcess ) {
+		$jsonResult = json_decode( $res );
+		if ( $jsonResult && json_last_error() === JSON_ERROR_NONE ) {
+			if ( $jsonResult->response ) {
+				$xmlObject = new XmlTypeCheck( $jsonResult->response, null, false );
+				$xRes = new SimpleXMLElement( $xmlObject );
+				$this->processMathResults( $xRes );
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
 	/**
 	 * @param SimpleXMLElement $xmlRoot
 	 */
@@ -37,6 +57,6 @@ class MathEngineBaseX extends MathEngineRest {
 	 *
 	 */
 	function getPostData( $numProcess ){
-		return json_encode( array( "type" => $this->type, "query" => $this->query ) );
+		return json_encode( array( "type" => $this->type, "query" => $this->query->getCQuery()) );
 	}
 }
