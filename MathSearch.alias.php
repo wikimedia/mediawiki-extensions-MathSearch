@@ -88,6 +88,9 @@ $specialPageAliases['he'] = array(
 	'MathDebug' => array( 'בדיקת_נוסחה' ),
 	'FormulaInfo' => array( 'מידע_על_נוסחה' ),
 	'GetEquationsByQuery' => array( 'קבלת_נוסחה_לפי_שאילתה' ),
+	'MathIndex' => array( 'מפתח_מתמטיקה' ),
+	'MathUpload' => array( 'העלאת_מתמטיקה' ),
+	'MathDownload' => array( 'הורדת_מתמטיקה' ),
 );
 
 /** Italian (italiano) */

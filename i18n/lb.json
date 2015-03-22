@@ -17,5 +17,7 @@
 	"math-search-relation-1": "oder",
 	"math-search-relation-2": "an net",
 	"math-search-type-label": "Typ:",
+	"math-search-type-0": "Schlësselwuert",
+	"math-search-type-1": "TeX-Muster",
 	"math-search-expression-label": "Ausdrock:"
 }
