@@ -88,9 +88,21 @@ EOT;
 		$parser = new Parser();
 		$parser->mLinkID = 5;
 		$parser->mRevisionId = 0;
-		$renderer = MathRenderer::getRenderer( "" );
+		$renderer = MathRenderer::getRenderer( '' );
 		$this->assertEquals( 5, $parser->nextLinkID());
 		$this->assertTrue( MathSearchHooks::onMathFormulaRenderedNoLink( $parser, $renderer , $sample), 'Hook did not return true' );
-		$this->assertContains( "math.0.6.14.1.cmml", $sample, "expected replaced id not found" );
+		$this->assertContains( "math.0.0.14.1.cmml", $sample, "expected replaced id not found" );
+		$this->assertEquals( 6, $parser->nextLinkID());
+	}
+
+	public function testSetMathIdIdempotence() {
+		$renderer = MathRenderer::getRenderer( '' );
+		$id = null;
+		MathSearchHooks::setMathId( $id, $renderer, 0 );
+		$this->assertEquals( $id, $renderer->getId() );
+		$id0 = $id;
+		MathSearchHooks::setMathId( $id, $renderer, 0 );
+		$this->assertEquals( $id0, $id );
+
 	}
 }

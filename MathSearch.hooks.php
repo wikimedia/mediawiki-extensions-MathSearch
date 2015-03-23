@@ -7,6 +7,21 @@
  */
 
 class MathSearchHooks {
+	static $nextID = 0;
+
+	/**
+	 * @return int
+	 */
+	public static function getNextID() {
+		return self::$nextID;
+	}
+
+	/**
+	 * @param int $nextID
+	 */
+	public static function setNextID( $nextID ) {
+		self::$nextID = $nextID;
+	}
 
 	/**
 	 * LoadExtensionSchemaUpdates handler; set up math table on install/upgrade.
@@ -102,12 +117,16 @@ class MathSearchHooks {
 	 * @return bool true if an ID has been assigned manually,
 	 * false if the automatic fallback math{$id} was used.
 	 */
-	private static function setMathId( &$id, MathRenderer $renderer, $revId) {
+	public static function setMathId( &$id, MathRenderer $renderer, $revId) {
 		if ( $renderer->getID() ){
 			$id = $renderer->getID();
 			return true;
 		} else {
-			$id = self::generateMathAnchorString( $revId, $id, '' );
+			if ( is_null( $id ) ){
+				$id = self::$nextID++;
+				$id = self::generateMathAnchorString( $revId, $id, '' );
+				$renderer->setID($id);
+			}
 			return false;
 		}
 	}
@@ -121,11 +140,10 @@ class MathSearchHooks {
 	 */
 	static function updateMathIndex( Parser $parser, MathRenderer $renderer, &$Result = null ) {
 		$revId = $parser->getRevisionId();
-		$eid = $parser->nextLinkID();
 		if ( $revId > 0 ) { // Only store something if a pageid was set.
 			// Use manually assigned IDs whenever possible
 			// and fallback to automatic IDs otherwise.
-			if ( ! self::setMathId( $eid , $renderer, $revId ) ){
+			if ( self::setMathId( $eid , $renderer, $revId ) === false  ){
 				$Result = preg_replace( '/(class="mwe-math-mathml-(inline|display))/', "id=\"$eid\" \\1", $Result );
 			}
 			self::updateIndex( $revId , $eid , $renderer->getInputHash() , $renderer->getTex() );
@@ -142,7 +160,6 @@ class MathSearchHooks {
 	 */
 	static function addIdentifierDescription( Parser $parser, MathRenderer $renderer, &$Result = null ) {
 		$revId = $parser->getRevisionId();
-		$eid = $parser->nextLinkID();
 		self::setMathId( $eid , $renderer, $revId );
 		$mo = MathObject::cloneFromRenderer($renderer);
 		$mo->setRevisionID($revId);
@@ -160,7 +177,6 @@ class MathSearchHooks {
 	 */
 	static function addLinkToFormulaInfoPage( Parser $parser, MathRenderer $renderer, &$Result = null ) {
 		$revId = $parser->getRevisionId();
-		$eid = $parser->nextLinkID();
 		self::setMathId( $eid , $renderer, $revId );
 		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( array( 'pid' => $revId, 'eid' => $eid ) );
 		$Result = "<span><a href=\"$url\" id=\"$eid\" style=\"color:inherit;\">$Result</a></span>";
@@ -181,7 +197,7 @@ class MathSearchHooks {
 	 */
 	static function onMathFormulaRenderedNoLink( Parser $parser, MathRenderer $renderer, &$Result = null ) {
 		$revId = $parser->getRevisionId();
-		$eid = $parser->nextLinkID();
+		self::setMathId($eid, $renderer, $revId);
 		if ( $revId > 0 ) { // Only store something if a pageid was set.
 			self::updateIndex( $revId, $eid, $renderer->getInputHash(), $renderer->getTex() );
 		}

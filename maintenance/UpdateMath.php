@@ -92,7 +92,7 @@ class UpdateMath extends Maintenance {
 	 * @throws DBUnexpectedError
 	 */
 	protected function populateSearchIndex( $n = 0, $cMax = -1 ) {
-		$res = $this->db->select( 'page', 'MAX(page_id) AS count' );
+		$res = $this->db->select( 'revision', 'MAX(rev_id) AS count' );
 		$s = $this->db->fetchObject( $res );
 		$count = $s->count;
 		if ( $cMax > 0 && $count > $cMax ) {
@@ -116,7 +116,7 @@ class UpdateMath extends Maintenance {
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$i = $n;
 			foreach ( $res as $s ) {
-				echo "\np$i:";
+				echo "\nr$i:";
 				$revText = Revision::getRevisionText( $s );
 				$fCount += $this->doUpdate( $s->page_id, $revText, $s->page_title, $s->rev_id );
 				$i++;
@@ -142,11 +142,16 @@ class UpdateMath extends Maintenance {
 	 */
 	private function doUpdate( $pid, $pText, $pTitle = "", $revId = 0) {
 		$notused = '';
-		$eId = 0;
+		$eId=0;
+		$parser = new Parser();
+		$parser->mLinkID = 0;
+		$parser->mRevisionId = $revId;
+		//MathSearchHooks::setNextID($eId);
 		$math = MathObject::extractMathTagsFromWikiText( $pText );
 		$matches = sizeof( $math );
 		if ( $matches ) {
 			echo( "\t processing $matches math fields for {$pTitle} page\n" );
+			MathSearchHooks::setNextID(0);
 			foreach ( $math as $formula ) {
 				$this->time = microtime(true);
 				$renderer = MathRenderer::getRenderer( $formula[1], $formula[2], $this->renderingMode );
@@ -182,20 +187,19 @@ class UpdateMath extends Maintenance {
 					echo "\nF:\t\t".$renderer->getMd5()." texvccheck error:" . $renderer->getLastError();
 					continue;
 				}
+				MathSearchHooks::setNextID( $eId, $renderer, $pid );
 				if ( ! $this->getOption( "hooks", false ) ) {
-					wfRunHooks( 'MathFormulaRendered', array( &$renderer, &$notused, $pid, $eId ) );
+					Hooks::run( 'MathFormulaPostRender', array( $parser, &$renderer, &$notused ) );
 					$this->time( "hooks" );
-					$eId++;
 				} else {
 					MathSearchHooks::writeMathIndex( $revId, $eId, $renderer->getInputHash(), '' );
 					$this->time( "index" );
-					$eId++;
 				}
 				$renderer->writeCache($this->dbw);
 				$this->time("write Cache");
 				if ( $renderer->getLastError() ) {
 					echo "\n\t\t". $renderer->getLastError() ;
-					echo "\nF:\t\t".$renderer->getMd5()." equation " . ( $eId -1 ) .
+					echo "\nF:\t\t".$renderer->getMd5()." equation " . ( $eId ) .
 						"-failed beginning with\n\t\t'" . substr( $formula, 0, 100 )
 						. "'\n\t\tmathml:" . substr($renderer->getMathml(),0,10) ."\n ";
 				} else{
