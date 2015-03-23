@@ -177,4 +177,5 @@ $specialPageAliases['zh-hant'] = array(
 	'GetEquationsByQuery' => array( '查詢取得方程式' ),
 	'MathIndex' => array( '數學索引' ),
 	'MathUpload' => array( '數學上傳' ),
+	'MathDownload' => array( '數學下載' ),
 );

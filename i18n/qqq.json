@@ -5,7 +5,8 @@
 			"Shirayuki",
 			"Robby",
 			"Liuxinyu970226",
-			"Metalhead64"
+			"Metalhead64",
+			"Umherirrender"
 		]
 	},
 	"mathsearch": "{{doc-special|MathSearch}}\n\"Math Search\" is the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.\n\nMath Search is used to search for a formula based on their MathML representation.\n{{Identical|Math search}}",
@@ -13,7 +14,7 @@
 	"mathdownload": "{{doc-special|MathDownload}}\nUsers and admins can download submissions to the wmc math search search challenge for archival.",
 	"mathindex": "{{doc-special|MathIndex}}\nThe special page provides a user interface to the maintenance scripts to maintain the index for mathematical formulae.",
 	"specialpages-group-mathsearch": "{{doc-special-group|that=are related to the extension MathSearch|like=[[Special:MathSearch]], [[Special:FormulaInfo]], [[Special:GetEquationsByQuery]], [[Special:XQueryGenerator]]}}\n\"Math Search\" is also the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.\n{{Identical|Math search}}",
-	"mathsearch-desc": "{{desc|name=Math Search|http://www.mediawiki.org/wiki/Extension:MathSearch}}",
+	"mathsearch-desc": "{{desc|name=Math Search|https://www.mediawiki.org/wiki/Extension:MathSearch}}",
 	"getequationsbyquery": "{{doc-special|GetEquationByQuery}}",
 	"xquerygenerator": "{{doc-special|XQueryGenerator}}",
 	"mathdebug": "{{doc-special|MathDebug}}",
