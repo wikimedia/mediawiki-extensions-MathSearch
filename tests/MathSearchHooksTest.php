@@ -99,7 +99,7 @@ EOT;
 		$renderer = MathRenderer::getRenderer( '' );
 		$id = null;
 		MathSearchHooks::setMathId( $id, $renderer, 0 );
-		$this->assertEquals( $id, $renderer->getId() );
+		$this->assertEquals( $id, $renderer->getID() );
 		$id0 = $id;
 		MathSearchHooks::setMathId( $id, $renderer, 0 );
 		$this->assertEquals( $id0, $id );

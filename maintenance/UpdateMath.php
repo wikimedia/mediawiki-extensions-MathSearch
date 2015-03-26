@@ -25,7 +25,7 @@ require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
  * Class UpdateMath
  */
 class UpdateMath extends Maintenance {
-	const RTI_CHUNK_SIZE = 100;
+	const RTI_CHUNK_SIZE = 10000;
 	public $purge = false;
 	/** @var boolean */
 	private $verbose;

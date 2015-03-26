@@ -51,9 +51,13 @@ class MathEngineBaseX extends MathEngineRest {
 	function processMathResults( $xmlRoot ) {
 		foreach ( $xmlRoot->children( )->children() as $page ) {
 			$attrs = $page->attributes();
-			$uri = explode( ".", $attrs["id"] );
-			$revisionID = $uri[1];
-			$AnchorID = $uri[2];
+			$uri = explode( "#", $attrs["id"] );
+			if ( sizeof($uri) != 2 ) {
+				wfDebugLog('MathSearch','Can not parse'. $attrs['id']);
+				continue;
+			}
+			$revisionID = $uri[0];
+			$AnchorID = $uri[1];
 			$this->relevanceMap[] = $revisionID;
 			$substarr = array();
 			//TODO: Add hit support.
@@ -68,5 +72,20 @@ class MathEngineBaseX extends MathEngineRest {
 	 */
 	function getPostData( $numProcess ){
 		return json_encode( array( "type" => $this->type, "query" => $this->query->getCQuery()) );
+	}
+
+	function update( $harvest = "", array $delte=array() ){
+		global $wgMathSearchBaseXBackendUrl;
+		$json_payload = json_encode( array( "harvest" => $harvest, "delete" => $delte) );
+		$res = self::doPost( $wgMathSearchBaseXBackendUrl. 'api/update', $json_payload);
+		if($res){
+			$resJson = json_decode($res);
+			if ($resJson->success==true){
+				return true;
+			} else {
+				wfDebugLog("MathSearch", "harvest update failed" . var_export($resJson,true));
+			}
+		}
+		return false;
 	}
 }

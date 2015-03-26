@@ -19,6 +19,29 @@ abstract class MathEngineRest {
 	/** @type string */
 	protected $backendUrl = "http://localhost:9090";
 
+	protected static function doPost( $url, $postData ) {
+		$res = Http::post( $url, array( "postData" => $postData, "timeout" => 60 ) );
+		if ( $res === false ) {
+			if ( function_exists( 'curl_init' ) ) {
+				$handle = curl_init();
+				$options = array(
+					CURLOPT_URL => $url,
+					CURLOPT_CUSTOMREQUEST => 'POST', // GET POST PUT PATCH DELETE HEAD OPTIONS
+				);
+				// TODO: Figure out how not to write the error in a message and not in top of the output page
+				curl_setopt_array( $handle, $options );
+				$details = curl_exec( $handle );
+			} else {
+				$details = "curl is not installed.";
+			}
+			wfDebugLog( "MathSearch", "Nothing retreived from $url. Check if server is running. Error:" .
+				var_export( $details, true ) );
+			return false;
+		} else {
+			return $res;
+		}
+	}
+
 	/**
 	 * @return string
 	 */
@@ -80,25 +103,12 @@ abstract class MathEngineRest {
 		global $wgMathDebug;
 		$numProcess = 30000;
 		$postData = $this->getPostData( $numProcess );
-		$res = Http::post( $this->backendUrl, array( "postData" => $postData, "timeout" => 60 ) );
-		if ( $res === false ) {
-			if ( function_exists( 'curl_init' ) ) {
-				$handle = curl_init();
-				$options = array(
-					CURLOPT_URL => $this->backendUrl,
-					CURLOPT_CUSTOMREQUEST => 'POST', // GET POST PUT PATCH DELETE HEAD OPTIONS
-				);
-				// TODO: Figure out how not to write the error in a message and not in top of the output page
-				curl_setopt_array( $handle, $options );
-				$details = curl_exec( $handle );
-			} else {
-				$details = "curl is not installed.";
-			}
-			wfDebugLog( "MathSearch", "Nothing retreived from $this->backendUrl. Check if mwsd is running. Error:" .
-					var_export( $details, true ) );
+		$res = self::doPost($this->backendUrl,$postData);
+		if ( $res === false ){
 			return false;
+		} else {
+			return $this->processResults( $res, $numProcess );
 		}
-		return $this->processResults( $res, $numProcess );
 	}
 
 	/**

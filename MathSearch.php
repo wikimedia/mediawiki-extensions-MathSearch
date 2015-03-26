@@ -48,6 +48,7 @@ $wgAutoloadClasses['MathEngineRest'] = __DIR__ . '/includes/engines/MathEngineRe
 $wgAutoloadClasses['ImportCsv'] = __DIR__ . '/includes/ImportCsv.php';
 $wgAutoloadClasses['MathSearchUtils'] = __DIR__ . '/includes/MathSearchUtils.php';
 $wgAutoloadClasses['MathSearchTerm'] = __DIR__ . '/includes/MathSearchTerm.php';
+$wgAutoloadClasses['MwsDumpWriter'] = __DIR__ . '/includes/MwsDumpWriter.php';
 
 $wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['MathSearch'] = __DIR__ . '/MathSearch.i18n.php';
@@ -73,6 +74,8 @@ $wgHooks['MathFormulaPostRender']['updateIndex'] = 'MathSearchHooks::updateMathI
 $wgHooks['MathFormulaPostRender']['addLink'] = 'MathSearchHooks::addLinkToFormulaInfoPage';
 $wgHooks['UnitTestsList'][] = 'MathSearchHooks::onRegisterUnitTests';
 $wgHooks['ParserFirstCallInit'][] = 'MathSearchHooks::onParserFirstCallInit';
+$wgHooks['ArticleDeleteComplete'][] = 'MathSearchHooks::onArticleDeleteComplete';
+$wgHooks['PageContentSaveComplete'][] = 'MathSearchHooks::onPageContentSaveComplete';
 
 $wgMathSearchBaseXBackendUrl = 'http://localhost:10043/';
 
