@@ -6,7 +6,8 @@ class MwsDumpWriter {
 	private $XMLFooter;
 	private $outBuffer = '';
 
-	public function __construct() {
+	public function __construct( $ns = 'mws:' ) {
+		$this->setMwsns( $ns );
 		$this->InitializeHeader();
 	}
 

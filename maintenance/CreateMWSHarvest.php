@@ -28,24 +28,13 @@ require_once( __DIR__ . '/IndexBase.php' );
  *
  */
 class CreateMWSHarvest extends IndexBase {
-	private static $mwsns = 'mws:';
-	private static $XMLHead;
-	private static $XMLFooter;
+	/** @var MwsDumpWriter */
+	private $dw;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Generates harvest files for the MathWebSearch Daemon.';
 		$this->addOption( 'mwsns', 'The namespace or mws normally "mws:"', false );
-	}
-
-	public function InitializeHeader() {
-		self::$XMLHead =
-			"<?xml version=\"1.0\"?>\n<" . self::$mwsns .
-			'harvest xmlns:mws="http://search.mathweb.org/ns" xmlns:m="http://www.w3.org/1998/Math/MathML">';
-		self::$XMLFooter = '</' . self::$mwsns . 'harvest>';
 	}
 
 	/**
@@ -54,7 +43,6 @@ class CreateMWSHarvest extends IndexBase {
 	 * @return string
 	 */
 	protected function generateIndexString( $row ) {
-		$out = "";
 		$xml = simplexml_load_string( utf8_decode( $row->math_mathml ) );
 		if ( !$xml ) {
 			echo "ERROR while converting:\n " . var_export( $row->math_mathml, true ) . "\n";
@@ -64,35 +52,23 @@ class CreateMWSHarvest extends IndexBase {
 			libxml_clear_errors();
 			return '';
 		}
-		// if ( $xml->math ) {
-		// $smath = $xml->math->semantics-> { 'annotation-xml' } ->children()->asXML();
-		$out .= "\n<" . self::$mwsns . "expr url=\"" .
-				MathSearchHooks::generateMathAnchorString( $row->mathindex_revision_id,
-					$row->mathindex_anchor, '' ) . "\">\n\t";
-		$out .= utf8_decode( $row->math_mathml );// $xml->math->children()->asXML();
-		$out .= "\n</" . self::$mwsns . "expr>\n";
-		return $out;
-		/*} else {
-			var_dump($xml);
-			die("nomath");
-		}*/
-
+		return $this->dw->getMwsExpression(
+			utf8_decode( $row->math_mathml ),
+			$row->mathindex_revision_id,
+			$row->mathindex_anchor );
 	}
 
 	protected function getHead() {
-		return self::$XMLHead;
+		return $this->dw->getHead();
 	}
 
 	protected function getFooter() {
-		return self::$XMLFooter;
+		return $this->dw->getFooter();
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
-		self::$mwsns = $this->getOption( 'mwsns', '' );
-		$this->InitializeHeader();
+		$ns = $this->getOption( 'mwsns', '' );
+		$this->dw = new MwsDumpWriter( $ns );
 		parent::execute();
 	}
 }
