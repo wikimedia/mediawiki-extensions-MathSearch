@@ -229,6 +229,8 @@
 					}
 				}
 			}
+			$this->getOutput()->addWikiText("In total " . sizeof($this->relevanceMap,true) .
+				' results.');
 			foreach( $this->relevanceMap as $revisionID ){
 				$this->displayRevisionResults($revisionID);
 			}
@@ -254,35 +256,42 @@
 						var_export( $this->mathResults, TRUE ) );
 					return;
 				}
-					$mml = $res->getMathml();
-					$out->addWikiText( "====[[$pagename#$anchorID|Eq: $anchorID (Result " .
-									   $this->resultID ++ . ")]]====", false );
-					$out->addHtml( "<br />" );
-					$xpath = $answ[0]['xpath'];
-					// TODO: Remove hack and report to Prode that he fixes that
-					// $xmml->registerXPathNamespace('m', 'http://www.w3.org/1998/Math/MathML');
-					$xpath = str_replace( '/m:semantics/m:annotation-xml[@encoding="MathML-Content"]',
-						'', $xpath );
-					$dom = new DOMDocument;
-					$dom->preserveWhiteSpace = false;
-					$dom->validateOnParse = true;
-					$dom->loadXML( $mml );
-					$DOMx = new DOMXpath( $dom );
-					$hits = $DOMx->query( $xpath );
-					if ( $wgMathDebug ) {
-						wfDebugLog( 'MathSearch', "xPATH:" . $xpath );
-					}
-					if ( !is_null( $hits ) && $hits ) {
-						foreach ( $hits as $node ) {
-							$this->highlightHit( $node, $dom, $mml );
-						}
-					}
-				$renderer = new MathMathML( $mml, array( 'type' => 'pmml' ) );
-				$renderer->setMathml( $mml );
-				$renderer->render();
-				$out->addHtml( $renderer->getHtmlOutput() );
+				$mml = $res->getMathml();
+				$out->addWikiText( "====[[$pagename#$anchorID|Eq: $anchorID (Result " .
+					$this->resultID ++ . ")]]====", false );
+				$out->addHtml( "<br />" );
+				$xpath = $answ[0]['xpath'];
+				// TODO: Remove hack and report to Prode that he fixes that
+				// $xmml->registerXPathNamespace('m', 'http://www.w3.org/1998/Math/MathML');
+				$xpath = str_replace( '/m:semantics/m:annotation-xml[@encoding="MathML-Content"]',
+					'', $xpath );
+				$dom = new DOMDocument;
+				$dom->preserveWhiteSpace = false;
+				$dom->validateOnParse = true;
+				$dom->loadXML( $mml );
+				$DOMx = new DOMXpath( $dom );
+				$hits = $DOMx->query( $xpath );
+				if ( $wgMathDebug ) {
+					wfDebugLog( 'MathSearch', "xPATH:" . $xpath );
 				}
+				if ( !is_null( $hits ) && $hits ) {
+					foreach ( $hits as $node ) {
+						$this->highlightHit( $node, $dom, $mml );
+					}
+				}
+				if ( $mml != $res->getMathml() ) {
+					$renderer = new MathMathML( $mml, array( 'type' => 'pmml' ) );
+					$renderer->setMathml( $mml );
+					$renderer->render();
+					$out->addHtml( $renderer->getHtmlOutput() );
+					$renderer->writeCache();
+				} else {
+					$res->render();
+					$out->addHtml( $res->getHtmlOutput() );
+				}
+
 			}
+		}
 
 		/**
 		 * Note that the default getElementById function

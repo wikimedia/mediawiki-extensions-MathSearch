@@ -85,6 +85,7 @@ class MathSearchTerm {
 	}
 
 	public function doSearch(MathEngineRest $backend){
+		$backend->resetResults();
 		switch ($this->getType() ) {
 			case self::TYPE_TEXT:
 				$search = SearchEngine::create( "CirrusSearch" );

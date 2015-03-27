@@ -193,4 +193,11 @@ abstract class MathEngineRest {
 		$this->type = $type;
 	}
 
+	public function resetResults() {
+		$this->size = false;
+		$this->resultSet = array();
+		$this->relevanceMap = array();
+	}
+
+
 }
