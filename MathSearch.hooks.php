@@ -298,8 +298,14 @@ class MathSearchHooks {
 		return array( $renderedMath, "markerType" => 'nowiki' );
 	}
 
-	static function onArticleDeleteComplete() {
-
+	static function onArticleDeleteComplete( &$article, User &$user, $reason, $id, $content, $logEntry ) {
+		$revId = $article->getTitle()->getLatestRevID();
+		$mathEngineBaseX = new MathEngineBaseX();
+		if ( $mathEngineBaseX->update( "", array( $revId ) ) ){
+			wfDebugLog( 'MathSearch', "Deletion of $revId was successful." );
+		} else {
+			wfDebugLog( 'MathSearch', "Deletion of $revId failed." );
+		}
 	}
 
 
