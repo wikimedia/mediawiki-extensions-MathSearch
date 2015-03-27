@@ -55,8 +55,6 @@ class MathSearchHooks {
 				$updater->addExtensionTable( 'math_wmc_assessed_revision',
 					$wmcDir . "math_wmc_assessed_revision.sql" );
 			}
-		} elseif ( $type == 'sqlite' ) {
-			// Don't scare Jenkins with an exception.
 		} else {
 			throw new Exception( "Math extension does not currently support $type database." );
 		}
