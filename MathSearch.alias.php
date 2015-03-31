@@ -161,7 +161,7 @@ $specialPageAliases['zh'] = array(
 /** Simplified Chinese (中文（简体）‎) */
 $specialPageAliases['zh-hans'] = array(
 	'MathSearch' => array( '数学搜索' ),
-	'MathDebug' => array( '数学除错' ),
+	'MathDebug' => array( '数学调试', '数学除错' ),
 	'FormulaInfo' => array( '公式信息' ),
 	'GetEquationsByQuery' => array( '通过查询获取方程' ),
 	'MathIndex' => array( '数学公式索引' ),
