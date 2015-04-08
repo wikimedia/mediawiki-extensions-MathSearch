@@ -39,6 +39,17 @@ $specialPageAliases['arz'] = array(
 	'GetEquationsByQuery' => array( 'هات_المعادلات_عن_طريق_الكويرى' ),
 );
 
+/** Western Balochi (بلوچی رخشانی) */
+$specialPageAliases['bgn'] = array(
+	'MathSearch' => array( 'ریازی_ئی_گشتین' ),
+	'MathDebug' => array( 'ریازی_ئی_اشکال_زدایی' ),
+	'FormulaInfo' => array( 'پورمول_ئی_مالومات' ),
+	'GetEquationsByQuery' => array( 'مئادل_ئی_گیپتین_گۆ_درخواستا' ),
+	'MathIndex' => array( 'ریازی_ئی_نمایگ' ),
+	'MathUpload' => array( 'ریازی_ئی_بُرز_کورتین' ),
+	'MathDownload' => array( 'ریازی_ئی_ائیرکورتین' ),
+);
+
 /** Min Dong Chinese (Mìng-dĕ̤ng-ngṳ̄) */
 $specialPageAliases['cdo'] = array(
 	'MathSearch' => array( '數學尋討' ),
