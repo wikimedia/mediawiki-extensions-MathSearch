@@ -1,0 +1,240 @@
+[
+	[
+	  "\\Alpha = 0.5",
+	   "\\[CapitalAlpha] = 0.5"
+	],[
+	  "\\Beta = 0.4",
+	   "\\[CapitalBeta] = 0.4"
+	],[
+	  "\\Gamma = 0.3",
+	   "\\[CapitalGamma] = 0.3"
+	],[
+	  "\\Delta = 0.2",
+	   "\\[CapitalDelta] = 0.2"
+	],[
+	  "\\Epsilon = 0.1",
+	   "\\[CapitalEpsilon] = 0.1"
+	],[
+	  "\\lambda = 6",
+	   "\\[Lambda] = 6"
+	],[
+	  "\\mu = 5",
+	   "\\[Mu] = 5"
+	],[
+	  "\\nu = 4",
+	   "\\[Nu] = 4"
+	],[
+	  "\\rho = 3",
+	   "\\[Rho] = 3"
+	],[
+	  "\\sigma = 2",
+	   "\\[Sigma] = 2"
+	],[
+	  "\\phi = 1",
+	   "\\[Phi] = 1"
+	],[
+	  "\\nu = 5",
+	   "\\[Nu] = 5"
+	],[
+	  "\\sin@@\\sigma",
+	   "Sin[\\[Sigma]]"
+	],[
+	  "\\AiryAi@{\\phi}",
+	   "AiryAi[\\[Phi]]"
+	],[
+	  "\\AiryBi{\\phi}",
+	   "AiryBi[\\[Phi]]"
+	]
+,[	  "\\AiryModulusM@{\\nu}",
+	   "Sqrt[AiryAi[\\[Nu]]^2+AiryBi[\\[Nu]]^2]"
+	],[
+	  "\\AGM@{\\phi}{\\sigma}",
+	   "ArithmeticGeometricMean[\\[Phi],\\[Sigma]]"
+	],[
+	  "\\AngerJ{\\phi}@{\\sigma}",
+	   "AngerJ[\\[Phi],\\[Sigma]]"
+	],[
+	  "\\AppellFi@{\\phi}{\\sigma}{\\rho}{\\nu}{\\mu}{\\lambda}",
+	   "AppellF1[\\[Phi],\\[Sigma],\\[Rho],\\[Nu],\\[Mu],\\[Lambda]]"
+	],[
+	  "\\BarnesGamma@{\\sigma}",
+	   "BarnesG[\\[Sigma]]"
+	],[
+	  "\\BesselJ{\\Alpha}@{\\Alpha}",
+	   "BesselJ[\\[CapitalAlpha],\\[CapitalAlpha]]"
+	],[
+	  "\\binom{\\sigma}{\\phi}",
+	   "Binomial[\\[Phi],\\[Sigma]]"
+	],[
+	  "\\CatalanNumber@{\\Epsilon}",
+	   "CatalanNumber[\\[CapitalEpsilon]]"
+	],[
+	  "\\ceiling{\\sigma}",
+	   "Ceiling[\\[Sigma]]"
+	],[
+	  "\\ChebyT{\\Alpha}@{\\Alpha}",
+	   "ChebyshevT[\\[CapitalAlpha],\\[CapitalAlpha]]"
+	],[
+	  "\\conj{3 + 7 I}",
+	   "Conjugate[3 + 7 I]"
+	],[
+	  "\\coshint@\\phi",
+	   "CoshIntegral[\\[Phi]]"
+	],[
+	  "\\Cylinder{\\Epsilon}{\\phi}",
+	   "ParabolicCylinderD[\\[CapitalEpsilon],\\[Phi]]"
+	],[
+	  "\\DawsonsInt@{\\phi I}",
+	   "DawsonF[\\[Phi] I]"
+	],[
+	  "\\DedekindModularEta@{\\phi + I}",
+	   "DedekindEta[\\[Phi] + I]"
+	],[
+	  "\\deriv{\\sigma x}{x}",
+	   "D[\\[Sigma] x,x]"
+	],[
+	  "\\det{\\phi}",
+	   "Det[{\\[Phi]}]"
+	],[
+	  "\\CompEllIntK@@{\\Alpha}",
+	   "EllipticK[Sqrt[\\[CapitalAlpha]]]"
+	],[
+	  "\\EllIntK@{\\Delta\\phi}",
+	   "EllipticK[Sqrt[\\[CapitalDelta]\\[Phi]]]"
+	],[
+	  "\\EulerBeta{\\phi}{\\sigma}",
+	   "Beta[\\[Phi],\\[Sigma]]"
+	],[
+	  "\\exp@{\\Delta x}",
+	   "Exp[\\[CapitalDelta] x]"
+	],[
+	  "\\ExpInti@{\\Epsilon}",
+	   "Exp[I]nti@{\\[CapitalEpsilon]}"
+	],[
+	  "\\frac{\\phi}\\sigma",
+	   "(\\[Phi])/\\[Sigma]"
+	],[
+	  "\\FresnelSin@{\\Alpha}",
+	   "FresnelS[\\[CapitalAlpha]]"
+	],[
+	  "\\floor{\\phi*\\sigma}",
+	   "Floor[\\[Phi]*\\[Sigma]]"
+	],[
+	  "\\GenHermiteH{\\phi}@{\\sigma}",
+	   "HermiteH[\\[Phi],\\[Sigma]]"
+	],[
+	  "\\Gudermannian{\\cos@\\phi}",
+	   "Gudermannian[Cos[\\[Phi]]]"
+	],[
+	  "\\HurwitzZeta@{\\Gudermannian{\\sin@\\phi}}{\\Alpha}",
+	   "HurwitzZeta[Gudermannian[Sin[\\[Phi]]],\\[CapitalAlpha]]"
+	],[
+	  "\\HypergeoF@{\\Alpha}{\\Beta}{\\Gamma}{\\Delta}",
+	   "Hypergeometric2F1[{\\[CapitalAlpha]},{\\[CapitalBeta]},{\\[CapitalGamma]},{\\[CapitalDelta]}]"
+	],[
+	  "\\HyperpFq{\\phi}{\\sigma}@{\\phi}{\\phi,\\sigma}{\\rho}",
+	   "HypergeometricPFQ[{\\[Phi]},{\\[Phi],\\[Sigma]},\\[Rho]]"
+	],[
+	  "\\IncBeta{\\rho}@{\\phi}{\\sigma}",
+	   "Beta[\\[Rho],\\[Phi],\\[Sigma]]"
+	],[
+	  "\\inverfc@\\phi",
+	   "InverseErfc[\\[Phi]]"
+	],[
+	  "\\Jacobisd@{\\nu}{\\sigma}",
+	   "JacobiSD[\\[Nu], Sqrt[\\[Sigma]]]"
+	],[
+	  "\\JacobiP{\\phi}{\\sigma}{\\rho}@{\\nu}",
+	   "JacobiP[\\[Sigma],\\[Phi],\\[Rho],\\[Nu]]"
+	],[
+	  "\\JacobiZeta@{\\Alpha}{\\Alpha}",
+	   "JacobiZeta[\\[CapitalAlpha], Sqrt[\\[CapitalAlpha]]]"
+	],[
+	  "\\Kelvinber{\\nu}@{\\Gamma}",
+	   "KelvinBer[\\[Nu],\\[CapitalGamma]]"
+	],[
+	  "\\Kronecker{\\Alpha}{\\Alpha}",
+	   "KroneckerDelta[\\[CapitalAlpha],\\[CapitalAlpha]]"
+	],[
+	  "\\LaguerreL[\\Alpha]{\\nu}@{x}",
+	   "LaguerreL[\\[Nu],[\\[CapitalAlpha]],x]"
+	],[
+	  "\\LegendreP{\\Alpha}@\\phi",
+	   "LegendreP[\\[CapitalAlpha],\\[Phi]]"
+	],[
+	  "\\LogInt@{\\Alpha}",
+	   "Log[I]nt@{\\[CapitalAlpha]}"
+	],[
+	  "\\LerchPhi@{\\phi}{\\sigma}{\\rho}",
+	   "LerchPhi[\\[Phi],\\[Sigma],\\[Rho]]"
+	],[
+	  "\\MittagLeffler{\\phi}{\\sigma}{\\rho}",
+	   "MittagLefflerE[\\[Phi],\\[Sigma],\\[Rho]]"
+	],[
+	  "5\\mod2",
+	   "Mod[5,2]"
+	],[
+	  "\\ModularJ{\\phi}",
+	   "KleinInvariantJ[\\[Phi]]"
+	],[
+	  "\\pochhammer{\\phi}{\\sigma}",
+	   "Pochhammer[\\[Phi],\\[Sigma]]"
+	],[
+	  "\\polygamma{\\Alpha}@{\\Beta}",
+	   "PolyLog[\\[CapitalAlpha],\\[CapitalBeta]]"
+	],[
+	  "\\Polylogarithm{\\Alpha}@{\\Alpha}",
+	   "PolyLog[\\[CapitalAlpha],\\[CapitalAlpha]]"
+	],[
+	  "\\qFactorial{\\lambda}{\\mu}{\\nu}",
+	   "QFactorial[\\[Mu],\\[Nu]]"
+	],[
+	  "\\qGamma{\\Alpha}@{\\Alpha}",
+	   "QGamma[\\[CapitalAlpha],\\[CapitalAlpha]]"
+	],[
+	  "\\RamanujanTau@{\\rho}",
+	   "RamanujanTau[\\[Rho]]"
+	],[
+	  "\\realpart{\\rho I+\\nu}",
+	   "Re[\\[Rho] I+\\[Nu]]"
+	],[
+	  "\\RiemannXi@{\\Alpha}",
+	   "RiemannXi[\\[CapitalAlpha]]"
+	],[
+	  "\\ScorerHi@{\\Alpha}",
+	   "ScorerHi[\\[CapitalAlpha]]"
+	],[
+	  "\\sign@{-\\Alpha}",
+	   "Sign[-\\[CapitalAlpha]]"
+	],[
+	  "\\SinInt@{\\Alpha}",
+	   "SinIntegral[\\[CapitalAlpha]]"
+	],[
+	  "\\SphBesselY{\\Alpha}@{\\phi}",
+	   "SphericalBesselY[\\[CapitalAlpha],\\[Phi]]"
+	],[
+	  "\\SphHankelHii{\\Alpha}@{\\Beta}",
+	   "SphericalHankelH2[\\[CapitalAlpha],\\[CapitalBeta]]"
+	],[
+	  "\\SphericalHarmonicY{\\Epsilon}{\\Delta}@{\\Gamma}{\\Beta}",
+	   "SphericalHarmonicY[\\[CapitalEpsilon],\\[CapitalDelta],\\[CapitalGamma],\\[CapitalBeta]]"
+	],[
+	  "\\SpheroidalEigenvalueLambda{\\Epsilon}{\\Delta}@{\\Gamma}",
+	   "SpheroidalEigenvalue[\\[CapitalEpsilon],\\[CapitalDelta],\\[CapitalGamma]]"
+	],[
+	  "\\SpheroidalPs{\\Epsilon}{\\Delta}@{\\Gamma}{\\Beta}",
+	   "SpheroidalPS[\\[CapitalEpsilon],\\[CapitalDelta],Sqrt[\\[CapitalBeta]],\\[CapitalGamma]]"
+	],[
+	  "\\sqrt\\sigma",
+	   "Sqrt[\\[Sigma]]"
+	],[
+	  "\\StruveL{\\Epsilon}@{\\Delta}",
+	   "StruveL[\\[CapitalEpsilon],\\[CapitalDelta]]"
+	],[
+	  "\\WeberE{\\Epsilon}{\\Delta}",
+	   "WeberE[\\[CapitalEpsilon],\\[CapitalDelta]]"
+	],[
+	  "\\WhitW{\\Epsilon}{\\Delta}@{\\Gamma}",
+	   "WhittakerW[\\[CapitalEpsilon],\\[CapitalDelta],\\[CapitalGamma]]"
+	]
+  ]

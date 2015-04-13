@@ -18,6 +18,7 @@ $specialPageAliases['en'] = array(
 	'MathIndex' => array( 'MathIndex', 'Math Index' ),
 	'MathUpload' => array( 'MathUpload', 'Math Upload' ),
 	'MathDownload' => array( 'MathDownload', 'Math Download' ),
+	'LaTeXTranslator' => array( 'LaTeXTranslator', 'LaTeX Translator' ),
 );
 
 /** Arabic (العربية) */

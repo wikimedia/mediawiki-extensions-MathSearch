@@ -49,6 +49,8 @@ $wgAutoloadClasses['ImportCsv'] = __DIR__ . '/includes/ImportCsv.php';
 $wgAutoloadClasses['MathSearchUtils'] = __DIR__ . '/includes/MathSearchUtils.php';
 $wgAutoloadClasses['MathSearchTerm'] = __DIR__ . '/includes/MathSearchTerm.php';
 $wgAutoloadClasses['MwsDumpWriter'] = __DIR__ . '/includes/MwsDumpWriter.php';
+$wgAutoloadClasses['SpecialLaTeXTranslator'] = __DIR__ . '/includes/special/SpecialLaTeXTranslator.php';
+$wgAutoloadClasses['LaTeXTranslator'] = __DIR__ . '/includes/LaTeXTranslator.php';
 
 $wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['MathSearchAlias'] = __DIR__ . '/MathSearch.alias.php';
@@ -60,6 +62,7 @@ $wgSpecialPageGroups['XQueryGenerator'] = 'mathsearch';
 $wgSpecialPageGroups['MathDebug'] = 'mathsearch';
 $wgSpecialPageGroups['MathIndex'] = 'mathsearch';
 $wgSpecialPageGroups['DisplayTopics'] = 'mathsearch';
+$wgSpecialPageGroups['SpecialLaTeXTranslator'] = 'mathsearch';
 
 $wgSpecialPages['MathSearch'] = 'SpecialMathSearch';
 $wgSpecialPages['FormulaInfo'] = 'FormulaInfo';
@@ -67,6 +70,7 @@ $wgSpecialPages['GetEquationsByQuery'] = 'GetEquationsByQuery';
 $wgSpecialPages['MathDebug'] = 'SpecialMathDebug';
 $wgSpecialPages['MathIndex'] = 'SpecialMathIndex';
 $wgSpecialPages['DisplayTopics'] = 'SpecialDisplayTopics';
+$wgSpecialPages['LaTeXTranslator'] = 'SpecialLaTeXTranslator';
 
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'MathSearchHooks::onLoadExtensionSchemaUpdates';
 $wgHooks['MathFormulaPostRender']['updateIndex'] = 'MathSearchHooks::updateMathIndex';
