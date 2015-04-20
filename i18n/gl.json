@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Toliño"
+			"Toliño",
+			"Banjo"
 		]
 	},
 	"mathsearch": "Procura matemática",
@@ -10,5 +11,14 @@
 	"mathsearch-desc": "Integra o motor [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Obter as ecuacións por pescuda",
 	"xquerygenerator": "Xerador XQuery",
-	"mathdebug": "Probar o renderizador"
+	"mathdebug": "Probar o renderizador",
+	"math-wmc-download-button": "Descargar",
+	"math-wmc-SelectRun": "Nome",
+	"math-wmc-FileLabel": "Ficheiro CSV",
+	"math-wmc-importing": "Importando...",
+	"math-search-relation-0": "e",
+	"math-search-relation-1": "ou",
+	"math-search-relation-2": "e non",
+	"math-search-type-label": "Tipo:",
+	"math-search-expression-label": "Expresión:"
 }
