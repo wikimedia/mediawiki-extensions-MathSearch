@@ -16,6 +16,7 @@
 	"getequationsbyquery": "Obter as ecuacións por pescuda",
 	"xquerygenerator": "Xerador XQuery",
 	"mathdebug": "Probar o renderizador",
+	"math-wmc-attach-results-label": "Engadir máis resultados á execución existente",
 	"math-wmc-download-button": "Descargar",
 	"math-wmc-SectionRun": "Información do envío",
 	"math-wmc-SelectRun": "Nome",
