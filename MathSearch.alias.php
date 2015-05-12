@@ -31,7 +31,7 @@ $specialPageAliases['ar'] = array(
 	'MathDownload' => array( 'تحميل_رياضيات' ),
 );
 
-/** Egyptian Spoken Arabic (مصرى) */
+/** Egyptian Arabic (مصرى) */
 $specialPageAliases['arz'] = array(
 	'MathSearch' => array( 'بحث-رياضه' ),
 	'MathDebug' => array( 'ديبج_رياضه' ),
