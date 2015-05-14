@@ -4,7 +4,8 @@
 			"Okras",
 			"Kopcap94",
 			"Striking Blue",
-			"Oashnic"
+			"Oashnic",
+			"Kaganer"
 		]
 	},
 	"mathsearch": "Математический поиск",
@@ -22,7 +23,7 @@
 	"math-wmc-SelectRun": "Название",
 	"math-wmc-SelectRunHelp": "Укажите уникальное имя для вашего представления, или перепишите существующий проект.",
 	"math-wmc-FileLabel": "CSV Файл",
-	"math-wmc-FileHelp": "Загрузите ваши результаты в форме ранжированного, разделённого запятыми списка (queryId,formulaId) пар. Заголовок столбца формы <code>queryId,formulaId</code> необходим.",
+	"math-wmc-FileHelp": "Загрузите ваши результаты в форме ранжированного, разделённого запятыми списка из пар значений (queryId,formulaId). Первая строка списка должна содержать заголовки столбцов в виде <code>queryId,formulaId</code>.",
 	"math-wmc-RunAdded": "Добавлено представление для \"$1: с ID \"$2\"",
 	"math-wmc-RunAddError": "Ошибка: Невозможно добавить представление \"$1\".",
 	"math-wmc-RunAddExist": "Представление с именем \"$1\" уже существует вместе с Id \"$2\"",
