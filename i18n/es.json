@@ -4,7 +4,8 @@
 			"Fitoschido",
 			"Ralgis",
 			"Macofe",
-			"Caliburn"
+			"Caliburn",
+			"Ryo567"
 		]
 	},
 	"mathsearch": "Búsqueda matemática",
@@ -18,12 +19,16 @@
 	"math-wmc-download-button": "Descargar",
 	"math-wmc-SectionRun": "Información del envío",
 	"math-wmc-SelectRun": "Nombre",
+	"math-wmc-SelectRunHelp": "Especifica un nombre único para tu presentación o sobrescribe un borrador existente.",
 	"math-wmc-FileLabel": "Archivo CSV",
+	"math-wmc-RunAdded": "Se ha añadido la presentación \"$1\" con la ID \"$2\"",
 	"math-wmc-RunAddError": "Error: no se puede añadir el envío «$1».",
 	"math-wmc-RunAddExist": "El envío «$1» ya existe con el identificador «$2»",
+	"math-wmc-Warnings": "Se han ignorado las siguientes líneas de los archivos de entradaː",
 	"math-wmc-SubmissionSuccess": "Se realizó el envío correctamente.",
 	"math-wmc-wrong-query-reference": "Línea $1: la referencia de consulta «$2» no es válida.",
 	"math-wmc-importing": "Importando…",
+	"math-wmc-display-formulae-help": "No recomendable para grandes archivos de entrada.",
 	"math-search-relation-label": "Relación:",
 	"math-search-relation-0": "y",
 	"math-search-relation-1": "o",
