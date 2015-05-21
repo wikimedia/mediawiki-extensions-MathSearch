@@ -51,7 +51,6 @@ $wgAutoloadClasses['MathSearchTerm'] = __DIR__ . '/includes/MathSearchTerm.php';
 $wgAutoloadClasses['MwsDumpWriter'] = __DIR__ . '/includes/MwsDumpWriter.php';
 
 $wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
-$wgExtensionMessagesFiles['MathSearch'] = __DIR__ . '/MathSearch.i18n.php';
 $wgExtensionMessagesFiles['MathSearchAlias'] = __DIR__ . '/MathSearch.alias.php';
 
 $wgSpecialPageGroups['MathSearch'] = 'mathsearch';
