@@ -50,7 +50,6 @@ WikiText;
         </apply>
       </apply>
     </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">{\displaystyle E=mc}</annotation>
   </semantics>
 </math>
 </mws:expr>
@@ -85,7 +84,6 @@ WikiText;
         </apply>
       </apply>
     </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">{\displaystyle E=mc^{2}}</annotation>
   </semantics>
 </math>
 </mws:expr>
@@ -120,7 +118,6 @@ WikiText;
         </apply>
       </apply>
     </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">{\displaystyle E=mc^{3}}</annotation>
   </semantics>
 </math>
 </mws:expr>
@@ -155,7 +152,6 @@ WikiText;
         </apply>
       </apply>
     </annotation-xml>
-    <annotation encoding="application/x-tex" id="p1.1.m1.1c">{\displaystyle E=mc^{4}}</annotation>
   </semantics>
 </math>
 </mws:expr>

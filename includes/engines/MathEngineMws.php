@@ -1,5 +1,5 @@
 <?php
-
+use MediaWiki\Logger\LoggerFactory;
 /**
  * MediaWiki MathSearch extension
  *
