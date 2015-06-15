@@ -10,6 +10,7 @@
 	"mathdownload": "Mathematische Suchergebnisse herunterladen",
 	"mathindex": "Math-Index",
 	"mathupload": "Mathematik-Suchergebnisse einreichen",
+	"latextranslator": "LaTeX-nach-Mathematica-Übersetzer",
 	"specialpages-group-mathsearch": "Math-Suche",
 	"mathsearch-desc": "Ermöglicht die Integration der [http://search.mathweb.org/about.html MathWeb-Suchmaschine]",
 	"getequationsbyquery": "Gleichungen von Abfrage erhalten",
@@ -48,5 +49,10 @@
 	"math-search-type-0": "Schlüsselwort",
 	"math-search-type-1": "TeX-Muster",
 	"math-search-type-2": "xQuery-Ausdruck",
-	"math-search-expression-label": "Ausdruck:"
+	"math-search-expression-label": "Ausdruck:",
+	"math-tex2nb-header": "Gib unten deine eigene Eingabe an",
+	"math-tex2nb-intro": "Diese Attrappe ist zur Demonstration der Idee der Konvertierung von TeX nach Mathematica gedacht.\nDie Demoanwendung konvertiert LaTeX-Funktionen, die direkt nach Mathematica-Gegenstücke übersetzt.\nFunktionen ohne ausdrücklicher Mathematica-Unterstützung sind zur Übersetzung über ein DRMF-Paket verfügbar (unter Entwicklung).",
+	"math-tex2nb-input": "Eingabe",
+	"math-tex2nb-latex": "Die folgende LaTeX-Eingabe …",
+	"math-tex2nb-mathematica": "… wird zur Mathematica-Ausgabe übersetzt …"
 }

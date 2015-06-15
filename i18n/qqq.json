@@ -13,12 +13,12 @@
 	"formulainfo": "{{doc-special|FormulaInfo}}\nThe special page displays technical information about the formula, e.g. the variables it contains and information about rendering etc.",
 	"mathdownload": "{{doc-special|MathDownload}}\nUsers and admins can download submissions to the wmc math search search challenge for archival.",
 	"mathindex": "{{doc-special|MathIndex}}\nThe special page provides a user interface to the maintenance scripts to maintain the index for mathematical formulae.",
+	"latextranslator": "{{doc-special|LaTeX to Mathematica Translator}}",
 	"specialpages-group-mathsearch": "{{doc-special-group|that=are related to the extension MathSearch|like=[[Special:MathSearch]], [[Special:FormulaInfo]], [[Special:GetEquationsByQuery]], [[Special:XQueryGenerator]]}}\n\"Math Search\" is also the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.\n{{Identical|Math search}}",
 	"mathsearch-desc": "{{desc|name=Math Search|https://www.mediawiki.org/wiki/Extension:MathSearch}}",
 	"getequationsbyquery": "{{doc-special|GetEquationByQuery}}",
 	"xquerygenerator": "{{doc-special|XQueryGenerator}}",
 	"mathdebug": "{{doc-special|MathDebug}}",
-	"latextranslator": "{{doc-special|LaTeX to Mathematica Translator}}",
 	"math-wmc-attach-results-help": "Form label help text",
 	"math-wmc-attach-results-label": "Form label",
 	"math-wmc-download-intro": "Introductory text for MathDownload special page.",
@@ -53,9 +53,9 @@
 	"math-search-type-1": "Section option in type selection menu and part of {{msg-mw|math-search-term}}",
 	"math-search-type-2": "Section option in type selection menu and part of {{msg-mw|math-search-term}}",
 	"math-search-expression-label": "Text form label\n{{Identical|Expression}}",
+	"math-tex2nb-header": "Header of the input-box for user-defined LaTeX input on the specialpage LaTeXTranslator.",
 	"math-tex2nb-intro": "Introductory text for the specialpage LaTeXTranslator.",
 	"math-tex2nb-input": "Form label for the LaTeX input form on the specialpage LaTeXTranslator.",
 	"math-tex2nb-latex": "Message above the syntax-highlighted-LaTeX input on the specialpage LaTeXTranslator.",
-	"math-tex2nb-mathematica": "Message between the LaTex input and the output on the specialpage LaTeXTranslator.",
-	"math-tex2nb-header": "Header of the input-box for user-defined LaTeX input on the specialpage LaTeXTranslator."
+	"math-tex2nb-mathematica": "Message between the LaTex input and the output on the specialpage LaTeXTranslator."
 }
