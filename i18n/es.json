@@ -11,6 +11,7 @@
 	"mathsearch": "Búsqueda matemática",
 	"formulainfo": "Información de la fórmula",
 	"mathindex": "Índice de matemáticas",
+	"latextranslator": "Traductor de LaTeX a Mathematica",
 	"specialpages-group-mathsearch": "Búsqueda matemática",
 	"mathsearch-desc": "Integra el motor [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Obtener ecuaciones por consulta",
@@ -37,5 +38,9 @@
 	"math-search-type-0": "Palabra clave",
 	"math-search-type-1": "Patrón TeX",
 	"math-search-type-2": "expresión xQuery",
-	"math-search-expression-label": "Expresión:"
+	"math-search-expression-label": "Expresión:",
+	"math-tex2nb-header": "Especifica tu propia entrada debajo",
+	"math-tex2nb-input": "Entrada",
+	"math-tex2nb-latex": "La siguiente entrada en LaTeX...",
+	"math-tex2nb-mathematica": "... se traduce al formato de salida de Mathematica ..."
 }

@@ -9,6 +9,7 @@
 	"mathdownload": "Преземи ги резултатите од математичкото пребарување",
 	"mathindex": "Математички индекс",
 	"mathupload": "Поднеси резултати од математичкото пребарување",
+	"latextranslator": "Преведувач од LaTeX во Mathematica",
 	"specialpages-group-mathsearch": "Math-пребарување",
 	"mathsearch-desc": "Овозможува интеграција на пребарувачот [http://search.mathweb.org/about.html MathWeb]",
 	"getequationsbyquery": "Дај равенки по барање",
@@ -47,5 +48,9 @@
 	"math-search-type-0": "Клучен збор",
 	"math-search-type-1": "TeX-шема",
 	"math-search-type-2": "xQuery-израз",
-	"math-search-expression-label": "Израз:"
+	"math-search-expression-label": "Израз:",
+	"math-tex2nb-header": "Подолу укажете свој внос",
+	"math-tex2nb-input": "Внос",
+	"math-tex2nb-latex": "Следниов внос во LaTeX ...",
+	"math-tex2nb-mathematica": "... се преведува во извод во Mathematica ..."
 }
