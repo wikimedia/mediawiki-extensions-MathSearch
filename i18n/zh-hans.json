@@ -50,5 +50,9 @@
 	"math-search-type-0": "关键词",
 	"math-search-type-1": "TeX模式",
 	"math-search-type-2": "xQuery表达式",
-	"math-search-expression-label": "表达式："
+	"math-search-expression-label": "表达式：",
+	"math-tex2nb-header": "请在下方指定您自己的输入",
+	"math-tex2nb-input": "输入",
+	"math-tex2nb-latex": "以下LaTeX输入...",
+	"math-tex2nb-mathematica": "...被翻译至Mathematica输出..."
 }

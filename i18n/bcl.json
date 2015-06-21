@@ -4,5 +4,10 @@
 			"Geopoet"
 		]
 	},
-	"mathindex": "Panukdo sa math"
+	"mathindex": "Panukdo sa math",
+	"latextranslator": "LaTeX na magin paradakit-taramon sa Matematika",
+	"math-tex2nb-header": "Ipaghipray sa ibaba an saimong sadireng kinaluwasan",
+	"math-tex2nb-intro": "Ining bonagwá iyo kuta na an maglaladawan sa ideya kan TeX na magin Matematikang kombersyon.\n\nAn aplikasyon sa paglaladawan minakomberte kan punksyon nin LaTeX na iyo an direktang minadakit-taramon na magin Matematikang mga kaparte.\n\nMga punksyon na mayong maliwanag na suporta sa Matematika iyo an pinapanguyugan para sa dakit-taramon sa paagi kan sarong DRMF na pakete (yaon pa sa pagpapatalubo).",
+	"math-tex2nb-input": "Kinalaog",
+	"math-tex2nb-mathematica": "... iyo an pinagdakit-taramon sa Matematikang kinaluwasan ..."
 }

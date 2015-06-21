@@ -50,6 +50,7 @@
 	"math-search-type-2": "xQuery-израз",
 	"math-search-expression-label": "Израз:",
 	"math-tex2nb-header": "Подолу укажете свој внос",
+	"math-tex2nb-intro": "Овој нагледен пример е наменет да го прикаже претворањето од TeX во Mathematica.\n\nПриказниот извршник претвора функции на LaTeX кои непосредно се претвораат во нивните истоветници во Mathematica.\n\nФункциите без изрична поддршка за Mathematica се достапни за превод преку пакетот DRMF (во изработка).",
 	"math-tex2nb-input": "Внос",
 	"math-tex2nb-latex": "Следниов внос во LaTeX ...",
 	"math-tex2nb-mathematica": "... се преведува во извод во Mathematica ..."

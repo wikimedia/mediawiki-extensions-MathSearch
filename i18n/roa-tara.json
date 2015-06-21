@@ -10,5 +10,6 @@
 	"mathsearch-desc": "Integre 'u motore de [http://search.mathweb.org/about.html Ricerche MathWeb]",
 	"getequationsbyquery": "Pigghie le equaziune cu l'inderrogazione",
 	"xquerygenerator": "Generatore XQuery",
-	"mathdebug": "Test d'u render"
+	"mathdebug": "Test d'u render",
+	"math-tex2nb-input": "Ingresse"
 }
