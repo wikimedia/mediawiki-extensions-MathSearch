@@ -55,15 +55,6 @@ $wgAutoloadClasses['LaTeXTranslator'] = __DIR__ . '/includes/LaTeXTranslator.php
 $wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['MathSearchAlias'] = __DIR__ . '/MathSearch.alias.php';
 
-$wgSpecialPageGroups['MathSearch'] = 'mathsearch';
-$wgSpecialPageGroups['FormulaInfo'] = 'mathsearch';
-$wgSpecialPageGroups['GetEquationsByQuery'] = 'mathsearch';
-$wgSpecialPageGroups['XQueryGenerator'] = 'mathsearch';
-$wgSpecialPageGroups['MathDebug'] = 'mathsearch';
-$wgSpecialPageGroups['MathIndex'] = 'mathsearch';
-$wgSpecialPageGroups['DisplayTopics'] = 'mathsearch';
-$wgSpecialPageGroups['SpecialLaTeXTranslator'] = 'mathsearch';
-
 $wgSpecialPages['MathSearch'] = 'SpecialMathSearch';
 $wgSpecialPages['FormulaInfo'] = 'FormulaInfo';
 $wgSpecialPages['GetEquationsByQuery'] = 'GetEquationsByQuery';
@@ -90,11 +81,9 @@ $wgAvailableRights[] = 'mathwmcsubmit';
 $wgMathWmcMaxResults = 10000;
 $wgAutoloadClasses['SpecialUploadResult'] = __DIR__ . '/SpecialUploadResult.php';
 $wgSpecialPages['MathUpload'] = 'SpecialUploadResult';
-$wgSpecialPageGroups['MathUpload'] = 'mathsearch';
 $wgMathUploadEnabled = false;
 $wgAutoloadClasses['SpecialMathDownloadResult'] = __DIR__ . '/SpecialMathDownloadResult.php';
 $wgSpecialPages['MathDownload'] = 'SpecialMathDownloadResult';
-$wgSpecialPageGroups['MathDownload'] = 'mathsearch';
 
 $wgResourceModules['ext.mathsearch.styles'] = array(
 	'localBasePath' => __DIR__ ,

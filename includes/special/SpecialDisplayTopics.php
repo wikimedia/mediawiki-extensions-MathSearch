@@ -158,4 +158,8 @@ SQL
 			$out->addWikiText( $rank->runId . ': ' . $rank->rank );
 		}
 	}
+
+	protected function getGroupName() {
+		return 'mathsearch';
+	}
 }

@@ -76,5 +76,8 @@ class SpecialMathIndex extends SpecialPage {
 
 	}
 
+	protected function getGroupName() {
+		return 'mathsearch';
+	}
 
 }

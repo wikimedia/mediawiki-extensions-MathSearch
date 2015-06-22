@@ -460,4 +460,8 @@
 				return "";
 			}
 		}
+
+		protected function getGroupName() {
+			return 'mathsearch';
+		}
 	}

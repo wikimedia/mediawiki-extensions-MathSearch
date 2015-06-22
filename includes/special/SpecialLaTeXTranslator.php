@@ -48,4 +48,8 @@ class SpecialLaTeXTranslator extends SpecialPage {
 		$output->addWikiMsg( 'math-tex2nb-mathematica' );
 		$output->addWikiText( "<syntaxhighlight lang='text'>$translated</syntaxhighlight>" );
 	}
+
+	protected function getGroupName() {
+		return 'mathsearch';
+	}
 }

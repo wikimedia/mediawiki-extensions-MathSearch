@@ -79,4 +79,7 @@ class GetEquationsByQuery extends SpecialPage {
 
 	}
 
+	protected function getGroupName() {
+		return 'mathsearch';
+	}
 }

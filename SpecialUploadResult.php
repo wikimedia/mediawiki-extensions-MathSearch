@@ -292,4 +292,8 @@ class SpecialUploadResult extends SpecialPage {
 		}
 		$this->getOutput()->addHTML('</table>');
 	}
+
+	protected function getGroupName() {
+		return 'mathsearch';
+	}
 }

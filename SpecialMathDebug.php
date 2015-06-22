@@ -229,4 +229,8 @@ class SpecialMathDebug extends SpecialPage {
 		$renderer->checkTex();
 		return $renderer->getTex();
 	}
+
+	protected function getGroupName() {
+		return 'mathsearch';
+	}
 }

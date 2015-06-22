@@ -208,4 +208,8 @@ class FormulaInfo extends SpecialPage {
 		}
 		$renderer->writeCache();
 	}
+
+	protected function getGroupName() {
+		return 'mathsearch';
+	}
 }
