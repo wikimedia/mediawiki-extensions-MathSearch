@@ -50,5 +50,10 @@
 	"math-search-type-0": "Palabra clave",
 	"math-search-type-1": "Patrón TeX",
 	"math-search-type-2": "expresión xQuery",
-	"math-search-expression-label": "Expresión:"
+	"math-search-expression-label": "Expresión:",
+	"math-tex2nb-header": "Especifique a súa entrada embaixo",
+	"math-tex2nb-intro": "Este prototipo está pensado para demostrar a idea da conversión dende TeX á Mathematica.\n\nA aplicación de mostra converte funcións LaTeX que se traducen directamente as súas equivalentes en Mathematica.\n\nAs funcións sen soporte explícito para Mathematica poden traducirse via paquetes DRMF (en desenvolvemento)",
+	"math-tex2nb-input": "Entrada",
+	"math-tex2nb-latex": "A seguinte entrada LaTeX...",
+	"math-tex2nb-mathematica": "...tradúcese á saída de Mathematica..."
 }
