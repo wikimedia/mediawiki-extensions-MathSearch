@@ -32,7 +32,7 @@ class MathEngineMws extends MathEngineRest {
 					$revisionID = $uri[1];
 					$AnchorID = $uri[2];
 				} else {
-					LoggerFactory::getInstance( 'MathSeach' )->error( $attrs["uri"] .
+					LoggerFactory::getInstance( 'MathSearch' )->error( $attrs["uri"] .
 						' has an invalid result format.' );
 					continue;
 				}

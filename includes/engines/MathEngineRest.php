@@ -1,5 +1,5 @@
 <?php
-
+use MediaWiki\Logger\LoggerFactory;
 /**
  * MediaWiki MathSearch extension
  *
@@ -34,7 +34,7 @@ abstract class MathEngineRest {
 			} else {
 				$details = "curl is not installed.";
 			}
-			wfDebugLog( "MathSearch", "Nothing retreived from $url. Check if server is running. Error:" .
+			LoggerFactory::getInstance( 'MathSearch' )->error( 'Nothing retreived from $url. Check if server is running. Error:' .
 				var_export( $details, true ) );
 			return false;
 		} else {
@@ -131,7 +131,7 @@ abstract class MathEngineRest {
 					$this->getQuery()->getCQuery() );
 			$postData = str_replace( "m:", "", $tmp );
 			if ( $wgMathDebug ) {
-				wfDebugLog( 'MathSearch', 'MWS query:' . $postData );
+				LoggerFactory::getInstance( 'MathSearch' )->debug( 'MWS query:' . $postData );
 				return $postData;
 			}
 			return $postData;
@@ -148,12 +148,12 @@ abstract class MathEngineRest {
 			$xres = new SimpleXMLElement( $res );
 		}
 		catch ( Exception $e ) {
-			wfDebugLog( 'MathSearch', "No valid XMLRESUSLT" . $res );
+			LoggerFactory::getInstance( 'MathSearch' )->error( 'No valid XMLRESUSLT' . $res );
 			return false;
 		}
 
 		$this->size = (int)$xres["total"];
-		wfDebugLog( "MathSearch", $this->size . " results retreived from $this->backendUrl." );
+		LoggerFactory::getInstance( 'MathSearch' )->warning( $this->size . " results retrieved from $this->backendUrl." );
 		if ( $this->size == 0 ) {
 			return true;
 		}
@@ -166,10 +166,9 @@ abstract class MathEngineRest {
 				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $this->postData );
 				$res =
 					Http::post( $this->backendUrl, array( "postData" => $query, "timeout" => 60 ) );
-				wfDebugLog( 'mathsearch', 'MWS query:' . $query );
+				LoggerFactory::getInstance( 'mathsearch' )->debug( 'MWS query:' . $query );
 				if ( $res == false ) {
-					wfDebugLog( "MathSearch",
-						"Nothing retreived from $this->backendUrl. check if mwsd is running there" );
+					LoggerFactory::getInstance( 'MathSearch' )->error( "Nothing retrieved from $this->backendUrl. Check if mwsd is running there" );
 					return false;
 				}
 				$xres = new SimpleXMLElement( $res );

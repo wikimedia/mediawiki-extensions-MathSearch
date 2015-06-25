@@ -1,4 +1,5 @@
 <?php
+use MediaWiki\Logger\LoggerFactory;
 	/**
 	 * MediaWiki MathSearch extension
 	 *
@@ -251,9 +252,8 @@
 			foreach ( $mathElements as $anchorID => $answ ) {
 				$res = MathObject::constructformpage( $revisionID, $anchorID );
 				if ( !$res ) {
-					wfDebugLog( "MathSearch",
-						"Failure: Could not get entry $anchorID for page $pagename (id $revisionID) :" .
-						var_export( $this->mathResults, TRUE ) );
+					LoggerFactory::getInstance( 'MathSearch' )->error( "Failure: Could not get entry $anchorID for page $pagename (id $revisionID) :" .
+						var_export( $this->mathResults, true ) );
 					return;
 				}
 				$mml = $res->getMathml();
@@ -272,7 +272,7 @@
 				$DOMx = new DOMXpath( $dom );
 				$hits = $DOMx->query( $xpath );
 				if ( $wgMathDebug ) {
-					wfDebugLog( 'MathSearch', "xPATH:" . $xpath );
+					LoggerFactory::getInstance( 'MathSearch' )->debug( 'xPATH:' . $xpath );
 				}
 				if ( !is_null( $hits ) && $hits ) {
 					foreach ( $hits as $node ) {
@@ -350,7 +350,7 @@
 					$this->highlightHit( $fallback, $dom, $mml );
 				}
 			} catch ( Exception $e ) {
-				wfDebugLog( 'MathSearch', 'Problem highlighting hit ' . $e->getMessage() );
+				LoggerFactory::getInstance( 'MathSearch' )->error( 'Problem highlighting hit ' . $e->getMessage() );
 			}
 		}
 
@@ -376,7 +376,7 @@
 			$out = $this->getOutput();
 			$revision = Revision::newFromId( $revisionID );
 			if ( !$revision ) {
-				wfDebugLog( "MathSearch", "invalid revision number" );
+				LoggerFactory::getInstance( 'MathSearch' )->error( 'invalid revision number' );
 				return false;
 			}
 			$pagename = (string)$revision->getTitle();
@@ -401,7 +401,7 @@
 			foreach( $textElements as $textResult ){
 				$out->addWikiText( $textResult );
 			}
-			wfDebugLog( "MathSearch", "Processing results for $pagename" );
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Processing results for $pagename" );
 			$this->displayMathElements( $revisionID, $mathElements, $pagename );
 			return true;
 		}

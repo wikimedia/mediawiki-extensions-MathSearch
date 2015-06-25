@@ -1,5 +1,5 @@
 <?php
-
+use MediaWiki\Logger\LoggerFactory;
 /**
  * MediaWiki MathSearch extension
  *
@@ -53,7 +53,7 @@ class MathEngineBaseX extends MathEngineRest {
 			$attrs = $page->attributes();
 			$uri = explode( "#", $attrs["id"] );
 			if ( sizeof($uri) != 2 ) {
-				wfDebugLog('MathSearch','Can not parse'. $attrs['id']);
+				LoggerFactory::getInstance( 'MathSearch' )->error( 'Can not parse' . $attrs['id'] );
 				continue;
 			}
 			$revisionID = $uri[0];
@@ -83,7 +83,7 @@ class MathEngineBaseX extends MathEngineRest {
 			if ($resJson->success==true){
 				return true;
 			} else {
-				wfDebugLog("MathSearch", "harvest update failed" . var_export($resJson,true));
+				LoggerFactory::getInstance( 'MathSearch' )->warning( 'harvest update failed' . var_export( $resJson, true ) );
 			}
 		}
 		return false;

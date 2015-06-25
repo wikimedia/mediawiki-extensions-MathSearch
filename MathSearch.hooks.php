@@ -1,4 +1,5 @@
 <?php
+use MediaWiki\Logger\LoggerFactory;
 
 /**
  * MediaWiki MathSearch extension
@@ -93,14 +94,14 @@ class MathSearchHooks {
 				)
 			);
 			if ( $exists ) {
-				wfDebugLog( 'MathSearch', 'Index $' . $tex . '$ already in database.' );
-				wfDebugLog( 'MathSearch', "$revId-$eid with hash " . bin2hex( $inputHash ) );
+				LoggerFactory::getInstance( 'MathSearch' )->warning( 'Index $' . $tex . '$ already in database.' );
+				LoggerFactory::getInstance( 'MathSearch' )->warning( "$revId-$eid with hash " . bin2hex( $inputHash ) );
 			} else {
 				self::writeMathIndex( $revId, $eid, $inputHash, $tex );
 			}
 		}
 		catch ( Exception $e ) {
-			wfDebugLog( "MathSearch", 'Problem writing to math index!'
+			LoggerFactory::getInstance( "MathSearch" )->error( 'Problem writing to math index!'
 				. ' You might want the rebuild the index by running:'
 				. '"php extensions/MathSearch/ReRenderMath.php". The error is'
 				. $e->getMessage() );
@@ -246,7 +247,7 @@ class MathSearchHooks {
 	 * @param string $tex
 	 */
 	public static function writeMathIndex( $oldID, $eid, $inputHash, $tex ) {
-		wfDebugLog( "MathSearch", 'Store index for $' . $tex . '$ in database' );
+		LoggerFactory::getInstance( "MathSearch" )->warning( 'Store index for $' . $tex . '$ in database' );
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->onTransactionIdle( function () use ( $oldID, $eid, $inputHash, $dbw ) {
 			$dbw->replace( 'mathindex', array( 'mathindex_revision_id', 'mathindex_anchor' ), array(
@@ -265,7 +266,7 @@ class MathSearchHooks {
 	 */
 	static function onParserFirstCallInit( $parser ) {
 		$parser->setHook( 'mquery', array( 'MathSearchHooks', 'mQueryTagHook' ) );
-		wfDebugLog( 'MathSearch', 'mquery tag registered' );
+		LoggerFactory::getInstance( 'MathSearch' )->warning( 'mquery tag registered' );
 		return true;
 	}
 
@@ -282,7 +283,7 @@ class MathSearchHooks {
 		if ( trim( $content ) === '' ) { // bug 8372
 			return '';
 		}
-		wfDebugLog( 'MathSearch', 'Render mquery tag.' );
+		LoggerFactory::getInstance( 'MathSearch' )->debug( 'Render mquery tag.' );
 		//TODO: Report %\n problem to LaTeXML upstream
 		$content = preg_replace( '/%\n/', '', $content );
 		$renderer = new MathLaTeXML( $content );
@@ -300,9 +301,9 @@ class MathSearchHooks {
 		$revId = $article->getTitle()->getLatestRevID();
 		$mathEngineBaseX = new MathEngineBaseX();
 		if ( $mathEngineBaseX->update( "", array( $revId ) ) ){
-			wfDebugLog( 'MathSearch', "Deletion of $revId was successful." );
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Deletion of $revId was successful." );
 		} else {
-			wfDebugLog( 'MathSearch', "Deletion of $revId failed." );
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Deletion of $revId failed." );
 		}
 	}
 
@@ -330,7 +331,7 @@ class MathSearchHooks {
 		$isWatch, $section, $flags, $revision, $status, $baseRevId ) {
 		//TODO: Update to JOB
 		if ( $revision == null ) {
-			wfDebugLog( 'MathSearch', "Empty update for {$article->getTitle()->getFullText()}." );
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Empty update for {$article->getTitle()->getFullText()}." );
 			return true;
 		}
 		$mathTags =
@@ -363,9 +364,9 @@ class MathSearchHooks {
 			$res = false;
 		}
 		if ( $res ) {
-			wfDebugLog( 'MathSearch', "Update for $revId (was $prevRevId) successful." );
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Update for $revId (was $prevRevId) successful." );
 		} else {
-			wfDebugLog( 'MathSearch', "Update for $revId (was $prevRevId) failed." );
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Update for $revId (was $prevRevId) failed." );
 		}
 
 		return true;

@@ -1,4 +1,6 @@
 <?php
+use MediaWiki\Logger\LoggerFactory;
+
 class SpecialMathDebug extends SpecialPage {
 
 	function __construct() {
@@ -195,7 +197,7 @@ class SpecialMathDebug extends SpecialPage {
 		// mathmode_5, mathmode_6, mathmode_7, mathmode_7+
 		$modeStr = wfMessage('mathmode_'.$mode)->inContentLanguage();
 		$res = $modeStr . ':' . $fragment;
-		wfDebugLog( 'MathSearch', 'rendered:' . $res . ' in mode '. $modeStr . '('.$mode.')');
+		LoggerFactory::getInstance( 'MathSearch' )->warning( 'rendered:' . $res . ' in mode '. $modeStr . '(' . $mode . ')' );
 		if ( $aimJax ) {
 			self::aimHTMLFromJax( $res );
 		}

@@ -1,4 +1,5 @@
 <?php
+use MediaWiki\Logger\LoggerFactory;
 
 class MathQueryObject extends MathObject {
 	const MIN_DEPTH = 0;
@@ -230,7 +231,7 @@ TeX;
 			$this->cquery = $renderer->getMathml();
 			return $this->cquery;
 		} else {
-			wfDebugLog( 'math', 'error during geration of query string' . $renderer->getLastError() );
+			LoggerFactory::getInstance( 'MathSearch' )->error( 'error during generation of query string' . $renderer->getLastError() );
 		}
 	}
 

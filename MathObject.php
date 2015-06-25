@@ -1,4 +1,5 @@
 <?php
+use MediaWiki\Logger\LoggerFactory;
 
 class MathObject extends MathMathML {
 
@@ -7,11 +8,6 @@ class MathObject extends MathMathML {
 	protected $index_timestamp = null;
 	protected $dbLoadTime= 0;
 	protected $mathTableName = null;
-
-	private static function DebugPrint( $s ) {
-		// $s= Sanitizer::safeEncodeAttribute($s);
-		wfDebugLog( "MathSearch", $s );
-	}
 
 	public function getAnchorID() {
 		return $this->anchorID;
@@ -34,8 +30,6 @@ class MathObject extends MathMathML {
 	}
 
 	public function getInputHash() {
-		//wfDebugLog( 'MathSearch', 'Debugger dies here' );
-		// die('end of debug toolbar');
 		if ( $this->inputHash ) {
 			return $this->inputHash;
 		} else {
@@ -180,14 +174,14 @@ class MathObject extends MathMathML {
 			$dbgiven = true;
 		}
 		$dbw->delete( "mathobservation", array( "mathobservation_inputhash" => $this->getInputHash() ) );
-		wfDebugLog('MathSearch', 'delete obervations for '.bin2hex($this->getInputHash()));
+		LoggerFactory::getInstance( 'MathSearch' )->warning( 'delete obervations for ' . bin2hex($this->getInputHash()));
 		foreach ( $rule as $feature ) {
 			$dbw->insert( "mathobservation", array(
 				"mathobservation_inputhash" => $this->getInputHash(),
 				"mathobservation_featurename" => utf8_encode( trim( $feature[ 4 ] ) ),
 				"mathobservation_featuretype" => utf8_encode( $feature[ 1 ] ),
 			) );
-			wfDebugLog('MathSearch', 'insert observation for '.bin2hex($this->getInputHash())
+			LoggerFactory::getInstance( 'MathSearch' )->warning( 'insert observation for ' . bin2hex($this->getInputHash())
 			. utf8_encode( trim( $feature[ 4 ] )		));
 		}
 		if ( !$dbgiven ) {
@@ -216,7 +210,7 @@ class MathObject extends MathMathML {
 			. ' AND mathindex_anchor= "' . $eid . '"' );
 		$start = microtime(true);
 		$o = self::constructformpagerow( $res );
-		wfDebugLog("MathSearch", "Fetched in ". (microtime(true)-$start) );
+		LoggerFactory::getInstance( 'MathSearch' )->warning( 'Fetched in '. microtime( true ) - $start );
 		return $o;
 	}
 

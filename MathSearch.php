@@ -52,7 +52,7 @@ $wgAutoloadClasses['MwsDumpWriter'] = __DIR__ . '/includes/MwsDumpWriter.php';
 $wgAutoloadClasses['SpecialLaTeXTranslator'] = __DIR__ . '/includes/special/SpecialLaTeXTranslator.php';
 $wgAutoloadClasses['LaTeXTranslator'] = __DIR__ . '/includes/LaTeXTranslator.php';
 
-$wgMessagesDirs['MathSeach'] = __DIR__ . '/i18n';
+$wgMessagesDirs['MathSearch'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['MathSearchAlias'] = __DIR__ . '/MathSearch.alias.php';
 
 $wgSpecialPages['MathSearch'] = 'SpecialMathSearch';
