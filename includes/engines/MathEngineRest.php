@@ -100,7 +100,6 @@ abstract class MathEngineRest {
 	 * @return boolean
 	 */
 	function postQuery() {
-		global $wgMathDebug;
 		$numProcess = 30000;
 		$postData = $this->getPostData( $numProcess );
 		$res = self::doPost($this->backendUrl,$postData);

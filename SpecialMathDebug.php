@@ -18,7 +18,7 @@ class SpecialMathDebug extends SpecialPage {
 
 
 	function execute( $par ) {
-		global $wgMathDebug, $wgRequest;
+		global $wgRequest;
 		$offset = $wgRequest->getVal( 'offset', 0 );
 		$length = $wgRequest->getVal( 'length', 10 );
 		$page = $wgRequest->getVal( 'page', 'Testpage' );
@@ -118,7 +118,7 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	public function testParser( $offset = 0, $length = 10, $page = 'Testpage' , $purge = true ) {
-		global $wgMathJax, $wgMathUseLaTeXML, $wgTexvc;
+		global $wgMathJax, $wgMathUseLaTeXML;
 		$out = $this->getOutput();
 		$out->addModules( array( 'ext.math.mathjax.enabler' ) );
 		//$out->addModules( array( 'ext.math.mathjax.enabler.mml' ) );

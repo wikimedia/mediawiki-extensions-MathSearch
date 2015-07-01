@@ -64,7 +64,7 @@ class FormulaInfo extends SpecialPage {
 	 * @throws MWException
 	 */
 	public function DisplayInfo( $oldID, $eid ) {
-		global $wgMathDebug, $wgExtensionAssetsPath, $wgMathValidModes;
+		global $wgMathDebug;
 		$out = $this->getOutput();
 		$out->addModuleStyles( array( 'ext.mathsearch.styles' ) );
 		$out->addWikiText( '==General==' );
