@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Liuxinyu970226"
+			"Liuxinyu970226",
+			"Cwlin0416"
 		]
 	},
 	"mathsearch": "數學搜尋",
@@ -12,5 +13,6 @@
 	"math-wmc-importing": "匯入中...",
 	"math-search-relation-label": "關係：",
 	"math-search-type-label": "類型：",
-	"math-search-type-0": "關鍵字"
+	"math-search-type-0": "關鍵字",
+	"math-tex2nb-input": "輸入"
 }
