@@ -5,6 +5,7 @@
 		]
 	},
 	"formulainfo": "Aanjahbe övver Formelle",
+	"latextranslator": "De Övversäzer vom <i lang=\"en\" xml:lang=\"en\" dir=\"ltr\" title=\"Lamport TeX\">LaTeX</i> noh <i lang=\"en\" xml:lang=\"en\" dir=\"ltr\" title=\"A computational software program developed by Wolfram Research\">Mathematica</i>",
 	"math-search-relation-0": "un",
 	"math-search-relation-1": "udder",
 	"math-search-relation-2": "un nit",
@@ -14,5 +15,6 @@
 	"math-search-expression-label": "Ußdrok:",
 	"math-tex2nb-header": "Jiff Ding eije Ennjahbe heh aan",
 	"math-tex2nb-input": "Ennjahbe",
+	"math-tex2nb-latex": "Heh di Ennjahbe en <i lang=\"en\" xml:lang=\"en\" dir=\"ltr\" title=\"Lamport TeX\">LaTeX</i>&nbsp;&hellip:",
 	"math-tex2nb-mathematica": " … weed vum Mathematica övversaz noh … !!FUZZYY!!"
 }
