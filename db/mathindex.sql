@@ -21,6 +21,6 @@ CREATE TABLE /*_*/mathindex (
 
   PRIMARY KEY (mathindex_revision_id,mathindex_anchor),
   -- FOREIGN KEY ( /*i*/mathindex_inputhash ) REFERENCES mathlatexml( math_inputhash ),
-  FOREIGN KEY ( /*i*/mathindex_revision_id ) REFERENCES revision( rev_id )
+  FOREIGN KEY ( /*i*/mathindex_revision_id ) REFERENCES revision( rev_id ) ON DELETE CASCADE
 
 ) /*$wgDBTableOptions*/;
