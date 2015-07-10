@@ -50,7 +50,7 @@ class UpdateMath extends Maintenance {
 		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
 		$this->addOption( 'verbose', "If set output for successful rendering will produced",false,false,'v' );
 		$this->addOption( 'SVG', "If set SVG images will be produced", false, false );
-		$this->addOption( 'hoooks', "If set hooks will be skipped, but index will be updated.", false, false );
+		$this->addOption( 'hooks', "If set hooks will be skipped, but index will be updated.", false, false );
 		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
 		$this->addOption( 'mode' , 'Rendering mode to be used (0 = PNG, 5= MathML, 7=MathML)',false,true,'m');
 	}
@@ -98,7 +98,7 @@ class UpdateMath extends Maintenance {
 		if ( $cMax > 0 && $count > $cMax ) {
 			$count = $cMax;
 		}
-		$this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
+		$this->output( "Rebuilding index fields for pages with revision < {$count} with option {$this->purge}...\n" );
 		$fCount = 0;
 		//return;
 		while ( $n < $count ) {
@@ -114,12 +114,10 @@ class UpdateMath extends Maintenance {
 			);
 			$this->dbw->begin();
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
-			$i = $n;
 			foreach ( $res as $s ) {
-				echo "\nr$i:";
+				$this->output( "\nr{$s->rev_id}" );
 				$revText = Revision::getRevisionText( $s );
 				$fCount += $this->doUpdate( $s->page_id, $revText, $s->page_title, $s->rev_id );
-				$i++;
 			}
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$start = microtime( true );
@@ -187,6 +185,8 @@ class UpdateMath extends Maintenance {
 					echo "\nF:\t\t".$renderer->getMd5()." texvccheck error:" . $renderer->getLastError();
 					continue;
 				}
+				$renderer->writeCache( $this->dbw );
+				$this->time("write Cache");
 				MathSearchHooks::setNextID( $eId, $renderer, $pid );
 				if ( ! $this->getOption( "hooks", false ) ) {
 					Hooks::run( 'MathFormulaPostRender', array( $parser, &$renderer, &$notused ) );
@@ -195,8 +195,6 @@ class UpdateMath extends Maintenance {
 					MathSearchHooks::writeMathIndex( $revId, $eId, $renderer->getInputHash(), '' );
 					$this->time( "index" );
 				}
-				$renderer->writeCache($this->dbw);
-				$this->time("write Cache");
 				if ( $renderer->getLastError() ) {
 					echo "\n\t\t". $renderer->getLastError() ;
 					echo "\nF:\t\t".$renderer->getMd5()." equation " . ( $eId ) .
