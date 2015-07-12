@@ -2,70 +2,25 @@
 use MediaWiki\Logger\LoggerFactory;
 
 class MathObject extends MathMathML {
-
+	// DEBUG VARIABLES
+	// Available, if Math extension runs in debug mode ($wgMathDebug = true) only.
+	/** @var int LaTeXML return code (will be available in future Mathoid versions as well) */
+	protected $statusCode = 0;
+	/** @var timestamp of the last modification of the database entry */
+	protected $timestamp;
+	/** @var log messages generated during conversion of mathematical content */
+	protected $log = '';
 	protected $anchorID = 0;
 	protected $revisionID = 0;
 	protected $index_timestamp = null;
 	protected $dbLoadTime= 0;
 	protected $mathTableName = null;
 
-	public function getAnchorID() {
-		return $this->anchorID;
-	}
-
-	public function setAnchorID( $ID ) {
-		$this->anchorID = $ID;
-	}
-
-	public function getRevisionID() {
-		return $this->revisionID;
-	}
-
-	public function setRevisionID( $ID ) {
-		$this->revisionID = $ID;
-	}
-
-	public function getIndexTimestamp() {
-		return $this->index_timestamp;
-	}
-
-	public function getInputHash() {
-		if ( $this->inputHash ) {
-			return $this->inputHash;
-		} else {
-			return parent::getInputHash();
-		}
-	}
-
 	public static function hash2md5( $hash ){
 		//TODO: make MathRenderer::dbHash2md5 public
 		$dbr = wfGetDB( DB_SLAVE );
 		$xhash = unpack( 'H32md5', $dbr->decodeBlob( $hash ) . "                " );
 		return $xhash['md5'];
-	}
-	/**
-	 *
-	 * @global boolean $wgMathDebug
-	 * @param stdClass $res
-	 * @return boolean|\self
-	 */
-	public static function constructformpagerow( $res ) {
-		global $wgMathDebug;
-		if ( $res && $res->mathindex_revision_id > 0 ) {
-			$class = get_called_class();
-			/** @type MathObject $instance */
-			$instance = new $class;
-			$instance->setRevisionID( $res->mathindex_revision_id );
-			$instance->setAnchorID( $res->mathindex_anchor );
-			if ( $wgMathDebug && isset($res->mathindex_timestamp) ) {
-				$instance->index_timestamp = $res->mathindex_timestamp;
-			}
-			$instance->inputHash = $res->mathindex_inputhash;
-			$instance->readFromDatabase();
-			return $instance;
-		} else {
-			return false;
-		}
 	}
 
 	public static function findSimilarPages( $pid ) {
@@ -92,6 +47,156 @@ class MathObject extends MathMathML {
 		} catch ( Exception $e ) {
 			return "DatabaseProblem";
 		}
+	}
+
+	public static function cloneFromRenderer(MathRenderer $renderer){
+		$instance = new MathObject( $renderer->getTex() );
+		$instance->setMathml( $renderer->getMathml() );
+		$instance->setSvg( $renderer->getSvg() );
+		$instance->setMode( $renderer->getMode() );
+		$instance->setMathStyle( $renderer->getMathStyle() );
+		return $instance;
+	}
+
+	/**
+	 *
+	 * @param int $pid
+	 * @param int $eid
+	 * @return self instance
+	 */
+	public static function constructformpage( $pid, $eid ) {
+		$dbr = wfGetDB( DB_SLAVE );
+		$res = $dbr->selectRow(
+			array( 'mathindex' ), self::dbIndexFieldsArray(), 'mathindex_revision_id = ' . $pid
+			. ' AND mathindex_anchor= "' . $eid . '"' );
+		$start = microtime(true);
+		$o = self::constructformpagerow( $res );
+		LoggerFactory::getInstance( 'MathSearch' )->warning( 'Fetched in '. microtime( true ) - $start );
+		return $o;
+	}
+
+	/**
+	 * @return array
+	 */
+	private static function dbIndexFieldsArray() {
+		global $wgMathDebug;
+		$in = array(
+			'mathindex_revision_id',
+			'mathindex_anchor',
+			'mathindex_inputhash' );
+		if ( $wgMathDebug ) {
+			$debug_in = array(
+				'mathindex_timestamp' );
+			$in = array_merge( $in, $debug_in );
+		}
+		return $in;
+	}
+
+	/**
+	 *
+	 * @global boolean $wgMathDebug
+	 * @param stdClass $res
+	 * @return boolean|\self
+	 */
+	public static function constructformpagerow( $res ) {
+		global $wgMathDebug;
+		if ( $res && $res->mathindex_revision_id > 0 ) {
+			$class = get_called_class();
+			/** @type MathObject $instance */
+			$instance = new $class;
+			$instance->setRevisionID( $res->mathindex_revision_id );
+			$instance->setAnchorID( $res->mathindex_anchor );
+			if ( $wgMathDebug && isset($res->mathindex_timestamp) ) {
+				$instance->index_timestamp = $res->mathindex_timestamp;
+			}
+			$instance->inputHash = $res->mathindex_inputhash;
+			$instance->readFromDatabase();
+			return $instance;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @param $wikiText
+	 * @return mixed
+	 */
+	public static function extractMathTagsFromWikiText( $wikiText ) {
+		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
+		//TODO:Check if this is necessary?
+		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
+		$matches = array();
+		Parser::extractTagsAndParams( array( 'math' ), $wikiText, $matches );
+		return $matches;
+	}
+
+	public static function updateStatistics(){
+		$dbw = wfGetDB( DB_MASTER );
+		$dbw->query( 'TRUNCATE TABLE `mathvarstat`' );
+		$dbw->query("INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)\n"
+			. "SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT\n"
+			. "FROM `mathobservation`\n"
+			. "JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash\n"
+			. "GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n"
+			. "ORDER BY CNT DESC");
+		$dbw->query( 'TRUNCATE TABLE `mathrevisionstat`' );
+		$dbw->query( 'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`) '
+			. 'SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` '
+			. 'JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash '
+			. 'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype` '
+			. 'GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_revision_id ORDER BY CNT DESC' );
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getStatusCode() {
+		return $this->statusCode;
+	}
+
+	/**
+	 * @param int $statusCode
+	 * @return MathObject
+	 */
+	public function setStatusCode( $statusCode ) {
+		$this->statusCode = $statusCode;
+		return $this;
+	}
+
+	/**
+	 * @return timestamp
+	 */
+	public function getTimestamp() {
+		return $this->timestamp;
+	}
+
+	/**
+	 * @param timestamp $timestamp
+	 * @return MathObject
+	 */
+	public function setTimestamp( $timestamp ) {
+		$this->timestamp = $timestamp;
+		return $this;
+	}
+
+	/**
+	 * @return log
+	 */
+	public function getLog() {
+		return $this->log;
+	}
+
+	/**
+	 * @param log $log
+	 * @return MathObject
+	 */
+	public function setLog( $log ) {
+		$this->log = $log;
+		return $this;
+	}
+
+	public function getIndexTimestamp() {
+		return $this->index_timestamp;
 	}
 
 	public function getObservations( $update = true) {
@@ -145,22 +250,20 @@ class MathObject extends MathMathML {
 			}
 		}
 
-	/**
-	 * @param $identifier
-	 * @return bool|ResultWrapper
-	 */
-	public function getNouns($identifier){
-		$dbr = wfGetDB( DB_SLAVE );
-		$pageName = $this->getPageTitle();
-		if( $pageName === false ) { return false; }
-		$identifiers = $dbr->select('mathidentifier',
-			array( 'noun', 'evidence' ),
-			array(  'pageTitle' => $pageName, 'identifier' => utf8_encode( $identifier )),
-			__METHOD__ ,
-			array('ORDER BY' => 'evidence DESC', 'LIMIT' => 5)
-		);
-		return $identifiers;
+	public function getInputHash() {
+		if ( $this->inputHash ) {
+			return $this->inputHash;
+		} else {
+			return parent::getInputHash();
+		}
+	}
 
+	public function getRevisionID() {
+		return $this->revisionID;
+	}
+
+	public function setRevisionID( $ID ) {
+		$this->revisionID = $ID;
 	}
 
 	public function updateObservations( $dbw = null ) {
@@ -188,30 +291,32 @@ class MathObject extends MathMathML {
 			$dbw->commit();
 		}
 	}
-	public static function cloneFromRenderer(MathRenderer $renderer){
-		$instance = new MathObject( $renderer->getTex() );
-		$instance->setMathml( $renderer->getMathml() );
-		$instance->setSvg( $renderer->getSvg() );
-		$instance->setMode( $renderer->getMode() );
-		$instance->setMathStyle( $renderer->getMathStyle() );
-		return $instance;
-	}
 
 	/**
-	 *
-	 * @param int $pid
-	 * @param int $eid
-	 * @return self instance
+	 * @param $identifier
+	 * @return bool|ResultWrapper
 	 */
-	public static function constructformpage( $pid, $eid ) {
+	public function getNouns($identifier){
 		$dbr = wfGetDB( DB_SLAVE );
-		$res = $dbr->selectRow(
-			array( 'mathindex' ), self::dbIndexFieldsArray(), 'mathindex_revision_id = ' . $pid
-			. ' AND mathindex_anchor= "' . $eid . '"' );
-		$start = microtime(true);
-		$o = self::constructformpagerow( $res );
-		LoggerFactory::getInstance( 'MathSearch' )->warning( 'Fetched in '. microtime( true ) - $start );
-		return $o;
+		$pageName = $this->getPageTitle();
+		if( $pageName === false ) { return false; }
+		$identifiers = $dbr->select('mathidentifier',
+			array( 'noun', 'evidence' ),
+			array(  'pageTitle' => $pageName, 'identifier' => utf8_encode( $identifier )),
+			__METHOD__ ,
+			array('ORDER BY' => 'evidence DESC', 'LIMIT' => 5)
+		);
+		return $identifiers;
+
+	}
+
+	public function getPageTitle() {
+		$revision = Revision::newFromId( $this->getRevisionID() );
+		if ( $revision ) {
+			return (string) $revision->getTitle();
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -239,12 +344,15 @@ class MathObject extends MathMathML {
 		return $out;
 	}
 
-	public function getPageTitle() {
-		$revision = Revision::newFromId( $this->getRevisionID() );
-		if ( $revision ) {
-			return (string) $revision->getTitle();
-		} else {
+	/**
+	 * @return bool
+	 */
+	public function isCurrent(){
+		$rev = Revision::newFromId( $this->revisionID );
+		if ( is_null( $rev ) ){
 			return false;
+		} else {
+			return $rev->isCurrent();
 		}
 	}
 
@@ -258,26 +366,18 @@ class MathObject extends MathMathML {
 		return "[[{$this->getPageTitle()}{$anchor}|{$pageString}Eq: {$this->getAnchorID()}]]";
 	}
 
-	/**
-	 * @return array
-	 */
-	private static function dbIndexFieldsArray() {
-		global $wgMathDebug;
-		$in = array(
-			'mathindex_revision_id',
-			'mathindex_anchor',
-			'mathindex_inputhash' );
-		if ( $wgMathDebug ) {
-			$debug_in = array(
-				'mathindex_timestamp' );
-			$in = array_merge( $in, $debug_in );
-		}
-		return $in;
+	public function getAnchorID() {
+		return $this->anchorID;
+	}
+
+	public function setAnchorID( $ID ) {
+		$this->anchorID = $ID;
 	}
 
 	public function render( $purge = false ) {
 
 	}
+
 	public function getPng() {
 		$texvc = MathTexvc::newFromMd5($this->getMd5());
 		$texvc->readFromDatabase();
@@ -299,6 +399,14 @@ class MathObject extends MathMathML {
 		}
 		return '<'.$arg[1]." title=\"$title\"".$attribs.'>'.$arg[4].'</'.$arg[1].'>';
 	}
+
+	/**
+	 * @return null|Revision
+	 */
+	public function getRevision(){
+		return Revision::newFromId( $this->revisionID );
+	}
+
 	protected function getMathTableName() {
 		global $wgMathAnalysisTableName;
 		if ( is_null( $this->mathTableName ) ){
@@ -313,53 +421,5 @@ class MathObject extends MathMathML {
 	 */
 	public function setMathTableName( $tableName ) {
 		$this->mathTableName = $tableName;
-	}
-	/**
-	 * @param $wikiText
-	 * @return mixed
-	 */
-	public static function extractMathTagsFromWikiText( $wikiText ) {
-		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
-		//TODO:Check if this is necessary?
-		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
-		$matches = array();
-		Parser::extractTagsAndParams( array( 'math' ), $wikiText, $matches );
-		return $matches;
-	}
-
-	public static function updateStatistics(){
-		$dbw = wfGetDB( DB_MASTER );
-		$dbw->query( 'TRUNCATE TABLE `mathvarstat`' );
-		$dbw->query("INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)\n"
-			. "SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT\n"
-			. "FROM `mathobservation`\n"
-			. "JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash\n"
-			. "GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n"
-			. "ORDER BY CNT DESC");
-		$dbw->query( 'TRUNCATE TABLE `mathrevisionstat`' );
-		$dbw->query( 'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`) '
-			. 'SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` '
-			. 'JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash '
-			. 'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype` '
-			. 'GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_revision_id ORDER BY CNT DESC' );
-	}
-
-	/**
-	 * @return null|Revision
-	 */
-	public function getRevision(){
-		return Revision::newFromId( $this->revisionID );
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isCurrent(){
-		$rev = Revision::newFromId( $this->revisionID );
-		if ( is_null( $rev ) ){
-			return false;
-		} else {
-			return $rev->isCurrent();
-		}
 	}
 }
