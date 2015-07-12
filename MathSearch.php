@@ -84,6 +84,8 @@ $wgSpecialPages['MathUpload'] = 'SpecialUploadResult';
 $wgMathUploadEnabled = false;
 $wgAutoloadClasses['SpecialMathDownloadResult'] = __DIR__ . '/SpecialMathDownloadResult.php';
 $wgSpecialPages['MathDownload'] = 'SpecialMathDownloadResult';
+/** Stores debug information in the database and provides more detailed debug output */
+$wgMathDebug = false;
 
 $wgResourceModules['ext.mathsearch.styles'] = array(
 	'localBasePath' => __DIR__ ,
