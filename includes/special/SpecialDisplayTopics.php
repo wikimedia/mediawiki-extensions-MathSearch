@@ -14,7 +14,10 @@ class SpecialDisplayTopics extends SpecialPage {
 	 * @param string $name
 	 */
 	public function __construct( $name = 'DisplayTopics' ) {
-		parent::__construct( $name );
+		global $wgMathWmcServer;
+		if ( $wgMathWmcServer ) {
+			parent::__construct( $name );
+		}
 	}
 
 	/**

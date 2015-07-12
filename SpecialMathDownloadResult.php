@@ -6,7 +6,10 @@
  */
 class SpecialMathDownloadResult extends SpecialUploadResult {
 	public function __construct( $name = 'MathDownload' ) {
-		parent::__construct( $name );
+		global $wgMathWmcServer;
+		if ( $wgMathWmcServer ) {
+			parent::__construct( $name );
+		}
 	}
 
 	public static function run2CSV( $runId ){

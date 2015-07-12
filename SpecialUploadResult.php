@@ -16,7 +16,10 @@ class SpecialUploadResult extends SpecialPage {
 	 * @param string $name
 	 */
 	public function __construct( $name = 'MathUpload' ) {
-		parent::__construct( $name );
+		global $wgMathWmcServer;
+		if ( $wgMathWmcServer ) {
+			parent::__construct( $name );
+		}
 	}
 
 	/**
