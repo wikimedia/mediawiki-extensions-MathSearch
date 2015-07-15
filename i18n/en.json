@@ -11,6 +11,7 @@
 	"mathupload": "Submit math search results",
 	"latextranslator": "LaTeX to Mathematica Translator",
 	"specialpages-group-mathsearch": "Math search",
+	"displaytopics": "Display topics",
 	"mathsearch-desc": "Integrates the [http://search.mathweb.org/about.html MathWeb Search] engine",
 	"getequationsbyquery": "Get equations by query",
 	"xquerygenerator": "XQuery generator",
