@@ -49,7 +49,7 @@ class MathEngineBaseX extends MathEngineRest {
 	 * @param SimpleXMLElement $xmlRoot
 	 */
 	function processMathResults( $xmlRoot ) {
-		foreach ( $xmlRoot->children( )->children() as $page ) {
+		foreach ( $xmlRoot->run->result->children() as $page ) {
 			$attrs = $page->attributes();
 			$uri = explode( "#", $attrs["id"] );
 			if ( sizeof($uri) != 2 ) {
