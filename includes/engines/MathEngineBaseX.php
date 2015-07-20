@@ -34,8 +34,14 @@ class MathEngineBaseX extends MathEngineRest {
 					$wgOut->addWikiText("invalid XML <code>{$jsonResult->response}</code>");
 					return false;
 				}
-				$this->processMathResults( $xRes );
-				return true;
+				if (  $xRes->run->result ){
+					$this->processMathResults( $xRes );
+					return true;
+				} else {
+					global $wgOut;
+					$wgOut->addWikiText("Result was empty.");
+					return false;
+				}
 			} else {
 				global $wgOut;
 				$wgOut->addWikiText("<code>{$jsonResult->response}</code>");

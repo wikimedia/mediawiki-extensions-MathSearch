@@ -257,14 +257,20 @@ use MediaWiki\Logger\LoggerFactory;
 					return;
 				}
 				$mml = $res->getMathml();
+				if ( ! $mml ) {
+					LoggerFactory::getInstance( 'MathSearch' )
+						->error( "Failure: Could not get MathML $anchorID for page $pagename (id $revisionID)" );
+					continue;
+				}
 				$out->addWikiText( "====[[$pagename#$anchorID|Eq: $anchorID (Result " .
 					$this->resultID ++ . ")]]====", false );
 				$out->addHtml( "<br />" );
 				$xpath = $answ[0]['xpath'];
 				// TODO: Remove hack and report to Prode that he fixes that
 				// $xmml->registerXPathNamespace('m', 'http://www.w3.org/1998/Math/MathML');
-				$xpath = str_replace( '/m:semantics/m:annotation-xml[@encoding="MathML-Content"]',
-					'', $xpath );
+				$xpath =
+					str_replace( '/m:semantics/m:annotation-xml[@encoding="MathML-Content"]',
+						'', $xpath );
 				$dom = new DOMDocument;
 				$dom->preserveWhiteSpace = false;
 				$dom->validateOnParse = true;
