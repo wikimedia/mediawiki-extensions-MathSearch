@@ -12,6 +12,7 @@
 	"mathupload": "Mathematik-Suchergebnisse einreichen",
 	"latextranslator": "LaTeX-nach-Mathematica-Übersetzer",
 	"specialpages-group-mathsearch": "Math-Suche",
+	"displaytopics": "Themen anzeigen",
 	"mathsearch-desc": "Ermöglicht die Integration der [http://search.mathweb.org/about.html MathWeb-Suchmaschine]",
 	"getequationsbyquery": "Gleichungen von Abfrage erhalten",
 	"xquerygenerator": "XQuery-Generator",
