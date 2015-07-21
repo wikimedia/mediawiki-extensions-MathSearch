@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Violetanka"
+			"Violetanka",
+			"Kincki"
 		]
 	},
+	"displaytopics": "Konuları görüntüle",
 	"math-wmc-SelectRun": "İsim",
 	"math-wmc-SelectRunHelp": "Gönderiniz için benzersiz bir ad belirtin ya da var olan bir taslak üzerine yazın.",
 	"math-wmc-FileLabel": "CSV Dosyası",

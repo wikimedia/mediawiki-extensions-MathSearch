@@ -13,6 +13,7 @@
 	"mathindex": "Índice de matemáticas",
 	"latextranslator": "Traductor de LaTeX a Mathematica",
 	"specialpages-group-mathsearch": "Búsqueda matemática",
+	"displaytopics": "Mostrar temas",
 	"mathsearch-desc": "Integra el motor [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Obtener ecuaciones por consulta",
 	"xquerygenerator": "Generador XQuery",

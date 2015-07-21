@@ -14,6 +14,7 @@
 	"mathupload": "提交数学搜索结果",
 	"latextranslator": "LaTeX至Mathematica翻译器",
 	"specialpages-group-mathsearch": "数式搜索",
+	"displaytopics": "显示话题",
 	"mathsearch-desc": "整合[http://search.mathweb.org/about.html MathWeb 搜索]引擎",
 	"getequationsbyquery": "通过查询获得方程",
 	"xquerygenerator": "XQuery生成器",

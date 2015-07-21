@@ -11,6 +11,7 @@
 	"mathupload": "Поднеси резултати од математичкото пребарување",
 	"latextranslator": "Преведувач од LaTeX во Mathematica",
 	"specialpages-group-mathsearch": "Math-пребарување",
+	"displaytopics": "Прикажи теми",
 	"mathsearch-desc": "Овозможува интеграција на пребарувачот [http://search.mathweb.org/about.html MathWeb]",
 	"getequationsbyquery": "Дај равенки по барање",
 	"xquerygenerator": "Создавач на XQuery",
