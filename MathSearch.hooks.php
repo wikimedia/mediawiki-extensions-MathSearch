@@ -248,7 +248,8 @@ class MathSearchHooks {
 	 * @param string $tex
 	 */
 	public static function writeMathIndex( $oldID, $eid, $inputHash, $tex ) {
-		LoggerFactory::getInstance( "MathSearch" )->warning( 'Store index for $' . $tex . '$ in database' );
+		LoggerFactory::getInstance( "MathSearch" )->warning(
+			"Store index for \$$tex\$ in database with id $eid for revision $oldID." );
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->onTransactionIdle( function () use ( $oldID, $eid, $inputHash, $dbw ) {
 			$dbw->replace( 'mathindex', array( 'mathindex_revision_id', 'mathindex_anchor' ), array(
