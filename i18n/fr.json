@@ -5,7 +5,8 @@
 			"Gomoko",
 			"Metroitendo",
 			"0x010C",
-			"Caliburn"
+			"Caliburn",
+			"Ash Crow"
 		]
 	},
 	"mathsearch": "Recherche mathématique",
@@ -13,6 +14,7 @@
 	"mathindex": "Indice mathématique",
 	"mathupload": "Soumettre les résultats de recherche mathématique",
 	"specialpages-group-mathsearch": "Recherche mathématique",
+	"displaytopics": "Afficher les rubriques",
 	"mathsearch-desc": "Intégrer le moteur [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Obtenir les équations par requête",
 	"xquerygenerator": "Générateur XQuery",
