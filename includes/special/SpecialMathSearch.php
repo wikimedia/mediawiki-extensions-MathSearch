@@ -6,7 +6,6 @@ use MediaWiki\Logger\LoggerFactory;
 	 * (c) 2012 Moritz Schubotz
 	 * GPLv2 license; info in main package.
 	 *
-	 * 2012/04/25 Changed LaTeXML for the MathML rendering which is passed to MathJAX
 	 * @file
 	 * @ingroup extensions
 	 */

@@ -120,9 +120,6 @@ class SpecialMathDebug extends SpecialPage {
 	public function testParser( $offset = 0, $length = 10, $page = 'Testpage' , $purge = true ) {
 		global $wgMathMathValidModes;
 		$out = $this->getOutput();
-		$out->addModules( array( 'ext.math.mathjax.enabler' ) );
-		//$out->addModules( array( 'ext.math.mathjax.enabler.mml' ) );
- 		// die('END');
 		$i = 0;
 		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t ) {
 			$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
@@ -179,7 +176,7 @@ class SpecialMathDebug extends SpecialPage {
 		$out->addWikiText( '<source>' . $tstring . '<\source>' );
 		return true;
 	}
-	private static function render( $t, $mode, $purge = true, $aimJax = true ) {
+	private static function render( $t, $mode, $purge = true ) {
 		$modeInt= (int) substr($mode, 0,1);
 		$renderer = MathRenderer::getRenderer( $t, array(), $modeInt );
 		$renderer->setPurge( $purge );
@@ -187,16 +184,7 @@ class SpecialMathDebug extends SpecialPage {
 		$fragment = $renderer->getHtmlOutput();
 		$res = $mode . ':' . $fragment;
 		LoggerFactory::getInstance( 'MathSearch' )->warning( 'rendered:' . $res . ' in mode '. $mode );
-		if ( $aimJax ) {
-			self::aimHTMLFromJax( $res );
-		}
 		return $res . '<br/>';
-	}
-	private static function aimHTMLFromJax( &$s ) {
-		$s = str_replace( 'class="tex"', 'class="-NO-JAX-"', $s );
-		$s = str_replace( 'class="MathJax_Preview"', 'class="-NO-JAX-"', $s );
-		$s = preg_replace('|<script type="math/mml">(.*?)</script>|', '', $s);
-		return $s;
 	}
 
 	private static function getMathTagsFromPage( $titleString = 'Testpage' ) {
