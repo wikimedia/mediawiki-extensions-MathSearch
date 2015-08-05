@@ -132,13 +132,6 @@ class SpecialMathDebug extends SpecialPage {
 			if ( $wgMathUseLaTeXML ) {
 				$out->addHTML( self::render( $t, MW_MATH_LATEXML, $purge ) );
 			}
-			if ( $wgMathJax ) {
-				$out->addHTML( self::render( $t, MW_MATH_MATHJAX, $purge, false ) );
-			}
-			if ( $wgMathJax && $wgMathJax) {
-				$out->addHTML( self::render( $t, '7+',$purge, false ) ); //TODO: Update the name
-			}
-
 		}
 		echo $i;
 	}
