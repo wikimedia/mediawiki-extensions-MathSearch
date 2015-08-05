@@ -37,7 +37,7 @@ class UpdateMath extends Maintenance {
 	private $current;
 	private $time = 0.0; // microtime( true );
 	private $performance = array();
-	private $renderingMode = 7; // MW_MATH_LATEXML
+	private $renderingMode = 'latexml';
 
 	/**
 	 *
@@ -52,7 +52,7 @@ class UpdateMath extends Maintenance {
 		$this->addOption( 'SVG', "If set SVG images will be produced", false, false );
 		$this->addOption( 'hooks', "If set hooks will be skipped, but index will be updated.", false, false );
 		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
-		$this->addOption( 'mode' , 'Rendering mode to be used (0 = PNG, 5= MathML, 7=MathML)',false,true,'m');
+		$this->addOption( 'mode' , 'Rendering mode to be used (png, mathml, latexml)',false,true,'m');
 	}
 
 	/**
@@ -216,7 +216,7 @@ class UpdateMath extends Maintenance {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );
 		$this->verbose = $this->getOption("verbose",false);
-		$this->renderingMode = $this->getOption( "mode" , 7);
+		$this->renderingMode = $this->getOption( "mode", 'latexml' );
 		$this->db = wfGetDB( DB_MASTER );
 		$wgMathValidModes[] = $this->renderingMode;
 		$this->output( "Loaded.\n" );

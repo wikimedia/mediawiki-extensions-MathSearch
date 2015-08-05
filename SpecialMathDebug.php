@@ -118,7 +118,7 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	public function testParser( $offset = 0, $length = 10, $page = 'Testpage' , $purge = true ) {
-		global $wgMathJax, $wgMathUseLaTeXML;
+		global $wgMathMathValidModes;
 		$out = $this->getOutput();
 		$out->addModules( array( 'ext.math.mathjax.enabler' ) );
 		//$out->addModules( array( 'ext.math.mathjax.enabler.mml' ) );
@@ -126,11 +126,11 @@ class SpecialMathDebug extends SpecialPage {
 		$i = 0;
 		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t ) {
 			$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
-			$out->addHTML( self::render( $t, MW_MATH_SOURCE , $purge) );
-			$out->addHTML( self::render( $t, MW_MATH_PNG, $purge ) );
+			$out->addHTML( self::render( $t, 'source' , $purge) );
+			$out->addHTML( self::render( $t, 'png', $purge ) );
 			$out->addWikiText( 'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>');
-			if ( $wgMathUseLaTeXML ) {
-				$out->addHTML( self::render( $t, MW_MATH_LATEXML, $purge ) );
+			if ( in_array( 'latexml', $wgMathMathValidModes ) ) {
+				$out->addHTML( self::render( $t, 'latexml', $purge ) );
 			}
 		}
 		echo $i;
@@ -146,7 +146,7 @@ class SpecialMathDebug extends SpecialPage {
 		$out->setArticleBodyOnly( true );
 		$parserTests= array();
 		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $input ) {
-			$output = MathRenderer::renderMath( $input, array(), MW_MATH_PNG );
+			$output = MathRenderer::renderMath( $input, array(), 'png' );
 			$parserTests[ ]= array( (string) $input , $output);
 		}
 		$out->addHTML( serialize($parserTests) );
@@ -185,12 +185,8 @@ class SpecialMathDebug extends SpecialPage {
 		$renderer->setPurge( $purge );
 		$renderer->render();
 		$fragment = $renderer->getHtmlOutput();
-		// Give grep a chance to find the usages:
-		// mathmode_0, mathmode_1, mathmode_2, mathmode_3, mathmode_4,
-		// mathmode_5, mathmode_6, mathmode_7, mathmode_7+
-		$modeStr = wfMessage('mathmode_'.$mode)->inContentLanguage();
-		$res = $modeStr . ':' . $fragment;
-		LoggerFactory::getInstance( 'MathSearch' )->warning( 'rendered:' . $res . ' in mode '. $modeStr . '(' . $mode . ')' );
+		$res = $mode . ':' . $fragment;
+		LoggerFactory::getInstance( 'MathSearch' )->warning( 'rendered:' . $res . ' in mode '. $mode );
 		if ( $aimJax ) {
 			self::aimHTMLFromJax( $res );
 		}
@@ -220,7 +216,7 @@ class SpecialMathDebug extends SpecialPage {
 		}
 	}
 	private function getTexvcTex( $tex ) {
-		$renderer = MathRenderer::getRenderer( $tex, array(), MW_MATH_SOURCE );
+		$renderer = MathRenderer::getRenderer( $tex, array(), 'source' );
 		$renderer->checkTex();
 		return $renderer->getTex();
 	}

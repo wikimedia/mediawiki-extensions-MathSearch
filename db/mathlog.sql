@@ -9,7 +9,7 @@ CREATE TABLE /*_*/mathlog (
   math_log text NOT NULL,
   -- the post request sent
   math_post text,
-  -- MW_MATH_(MAHML|LATEXML)
+  -- (mathml|latexml) mode
   math_mode tinyint,
   -- time needed to answer the request in ms
   math_rederingtime int,

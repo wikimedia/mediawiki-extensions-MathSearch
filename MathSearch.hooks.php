@@ -348,7 +348,7 @@ class MathSearchHooks {
 				$tagContent = $tag[1];
 				$attributes = $tag[2];
 				// $fullElement = $tag[3];
-				$renderer = MathRenderer::getRenderer( $tagContent, $attributes, MW_MATH_LATEXML );
+				$renderer = MathRenderer::getRenderer( $tagContent, $attributes, 'latexml' );
 				$renderer->render();
 				self::setMathId( $id, $renderer, $revId );
 				$dw->addMwsExpression( $renderer->getMathml(), $revId, $id );

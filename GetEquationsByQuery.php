@@ -67,7 +67,7 @@ class GetEquationsByQuery extends SpecialPage {
 			$showmml = $wgRequest->getVal( 'showmml', false );
 			if ( $showmml ) {
 				$tstart = microtime( true );
-				$renderer = MathRenderer::getRenderer( $row->math_tex, array(), MW_MATH_LATEXML );
+				$renderer = MathRenderer::getRenderer( $row->math_tex, array(), 'latexml' );
 				$result = $renderer->render( true );
 				$tend = microtime( true );
 				$wgOut->addWikiText( ":rendering in " . ( $tend -$tstart ) . "s.", false );
