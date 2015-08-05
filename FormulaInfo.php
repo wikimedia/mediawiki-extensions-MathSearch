@@ -93,9 +93,9 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiText( 'Hash: ' . $mo->getMd5() );
 		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex() . '</syntaxhighlight>' );
 		$out->addWikiText( 'TeX (original user input): <syntaxhighlight lang="latex">' . $mo->getUserInputTex() . '</syntaxhighlight>' );
-		$this->DisplayRendering( $mo->getUserInputTex(), MW_MATH_LATEXML );
-		$this->DisplayRendering( $mo->getUserInputTex(), MW_MATH_MATHML );
-		$this->DisplayRendering( $mo->getUserInputTex(), MW_MATH_PNG );
+		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
+		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
+		$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
 		$out->addWikiText( '==Similar pages==' );
 		$out->addWikiText( 'Calculated based on the variables occurring on the entire ' . $pageName . ' page' );
 		$pid = Revision::newFromId($oldID)->getTitle()->getArticleID();
@@ -132,7 +132,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasMathMLSupport( $mode ) {
-		if ( $mode === MW_MATH_LATEXML or $mode === MW_MATH_MATHML ) {
+		if ( $mode === 'latexml' or $mode === 'mathml' ) {
 			return TRUE;
 		} else {
 			return FALSE;
@@ -140,7 +140,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasSvgSupport( $mode ) {
-		if ( $mode === MW_MATH_LATEXML or $mode === MW_MATH_MATHML ) {
+		if ( $mode === 'latexml' or $mode === 'mathml' ) {
 			return TRUE;
 		} else {
 			return FALSE;
@@ -148,7 +148,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasPngSupport( $mode ) {
-		if ( $mode === MW_MATH_PNG ) {
+		if ( $mode === 'png' ) {
 			return TRUE;
 		} else {
 			return FALSE;
