@@ -3,11 +3,13 @@
 		"authors": [
 			"Beta16",
 			"Baffo",
-			"Alexmar983"
+			"Alexmar983",
+			"Statix64"
 		]
 	},
 	"formulainfo": "Informazioni formula",
 	"latextranslator": "Traduttore da LaTeX a Mathematica",
+	"displaytopics": "Visualizzare gli argomenti",
 	"mathsearch-desc": "Integra il motore di ricerca [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Ottieni equazioni da interrogazioni",
 	"xquerygenerator": "Generatore XQuery",
