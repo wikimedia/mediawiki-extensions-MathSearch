@@ -40,7 +40,7 @@
 	"math-search-type-1": "Patrón TeX",
 	"math-search-type-2": "expresión xQuery",
 	"math-search-expression-label": "Expresión:",
-	"math-tex2nb-header": "Especifica tu propia entrada debajo",
+	"math-tex2nb-header": "Especifica tu propia entrada",
 	"math-tex2nb-input": "Entrada",
 	"math-tex2nb-latex": "La siguiente entrada en LaTeX...",
 	"math-tex2nb-mathematica": "... se traduce al formato de salida de Mathematica ..."
