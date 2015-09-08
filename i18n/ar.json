@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Mervat Salman"
+			"Mervat Salman",
+			"Hiba Alshawi"
 		]
 	},
-	"displaytopics": "عرض المواضيع"
+	"displaytopics": "عرض المواضيع",
+	"math-tex2nb-header": "حددالمدخلات الخاصة بك"
 }
