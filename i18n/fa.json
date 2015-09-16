@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Armin1392",
-			"Alirezaaa"
+			"Alirezaaa",
+			"Reza1615"
 		]
 	},
 	"mathsearch": "جستجوی داده‌ها",
@@ -14,6 +15,7 @@
 	"getequationsbyquery": "پرس‌وجو شدن با سوال",
 	"xquerygenerator": "ژنراتور ایکس‌کوِری",
 	"mathdebug": "آزمون ترجمه",
+	"math-wmc-download-button": "دریافت",
 	"math-wmc-SectionRun": "اطلاعات ارسال",
 	"math-wmc-SelectRun": "نام",
 	"math-wmc-SelectRunHelp": "یک نام منحصر به فرد برای ارسال‌تان تعیین کنید، یا یک پیش‌نویس موجود را بازنویسی کنید.",
@@ -22,5 +24,12 @@
 	"math-wmc-Warnings": "خطوط زیر از پرونده‌های ورودی نادیده گرفته شدند:",
 	"math-wmc-SubmissionSuccess": "ارسال به پایان رسید.",
 	"math-wmc-bad-header": "خطا: عنوان ستون باید شناسه کوئری، شناسه فرمول باشد. ستون‌های اضافی مجاز نیست.",
-	"math-wmc-malformed-formula-reference": "خطا $1: مرجع فرمول «$2» الگوی «$3» را تطبیق نمی‌دهد."
+	"math-wmc-malformed-formula-reference": "خطا $1: مرجع فرمول «$2» الگوی «$3» را تطبیق نمی‌دهد.",
+	"math-wmc-importing": "در حال درون‌ریزی...",
+	"math-search-relation-label": "ارتباط:",
+	"math-search-relation-0": "و",
+	"math-search-relation-1": "یا",
+	"math-search-type-label": "نوع:",
+	"math-search-expression-label": "اصطلاح:",
+	"math-tex2nb-input": "ورودی"
 }
