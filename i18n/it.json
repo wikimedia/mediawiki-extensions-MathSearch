@@ -13,10 +13,20 @@
 	"mathsearch-desc": "Integra il motore di ricerca [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Ottieni equazioni da interrogazioni",
 	"xquerygenerator": "Generatore XQuery",
+	"math-wmc-download-button": "Scarica",
 	"math-wmc-SelectRun": "Nome",
 	"math-wmc-FileLabel": "File CSV",
 	"math-wmc-FileHelp": "Carica i risultati classificati, elenco di coppie (queryId, formulaId) separati da virgola. Un'intestazione di colonna del modulo <code>queryId,formulaId</code> è richiesta.",
 	"math-wmc-Warnings": "Le seguenti righe del file di input sono state ignorate:",
 	"math-wmc-display-formulae-help": "Non consigliato per grandi file di input.",
-	"math-tex2nb-header": "Specificare qui sotto il tuo input"
+	"math-search-relation-label": "Relazione:",
+	"math-search-relation-0": "e",
+	"math-search-relation-1": "o",
+	"math-search-relation-2": "e non",
+	"math-search-type-label": "Tipo:",
+	"math-search-type-0": "Parola chiave",
+	"math-search-type-1": "Modello TeX",
+	"math-search-type-2": "Espressione xQuery",
+	"math-search-expression-label": "Espressione:",
+	"math-tex2nb-header": "Specifica il tuo input"
 }
