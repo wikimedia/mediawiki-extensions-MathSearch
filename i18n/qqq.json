@@ -13,6 +13,7 @@
 	"formulainfo": "{{doc-special|FormulaInfo}}\nThe special page displays technical information about the formula, e.g. the variables it contains and information about rendering etc.",
 	"mathdownload": "{{doc-special|MathDownload}}\nUsers and admins can download submissions to the wmc math search search challenge for archival.",
 	"mathindex": "{{doc-special|MathIndex}}\nThe special page provides a user interface to the maintenance scripts to maintain the index for mathematical formulae.",
+	"mathupload": "Used as title on [[Special:MathUpload]]",
 	"latextranslator": "{{doc-special|LaTeX to Mathematica Translator}}",
 	"specialpages-group-mathsearch": "{{doc-special-group|that=are related to the extension MathSearch|like=[[Special:MathSearch]], [[Special:FormulaInfo]], [[Special:GetEquationsByQuery]], [[Special:XQueryGenerator]]}}\n\"Math Search\" is also the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.\n{{Identical|Math search}}",
 	"displaytopics": "{{doc-special|FormulaInfo}}\nThe special page displays technical information about a search topic.",
