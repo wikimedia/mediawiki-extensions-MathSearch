@@ -21,7 +21,7 @@
  * @ingroup Maintenance
  */
 
-require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 /**
  * @author Moritz Schubotz
@@ -52,7 +52,7 @@ abstract class IndexBase extends Maintenance {
 	 *
 	 * @return string
 	 */
-	protected abstract function generateIndexString( $row );
+	abstract protected function generateIndexString( $row );
 
 	/**
 	 * @param string $fn
@@ -117,7 +117,7 @@ abstract class IndexBase extends Maintenance {
 			$res = $this->wFile( $fn, $i, $inc );
 			$i += $inc;
 		} while ( $res );
-		echo( 'done' );
+		echo ( 'done' );
 	}
 
 	/**

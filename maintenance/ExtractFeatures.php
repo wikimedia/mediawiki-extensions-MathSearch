@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 /**
  * Class ExtractFeatures
@@ -98,6 +98,7 @@ class ExtractFeatures extends Maintenance {
 		$sql = 'TRUNCATE TABLE `mathvarstat`';
 		$this->dbw->query( $sql );
 		$this->output( "Generate mathvarstat\n" );
+		// @codingStandardsIgnoreStart
 		$sql =
 			'INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)\n' .
 			'SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT\n' .
@@ -105,16 +106,19 @@ class ExtractFeatures extends Maintenance {
 			'JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash\n' .
 			'GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n' .
 			'ORDER BY CNT DESC';
+		// @codingStandardsIgnoreEnd
 		$this->dbw->query( $sql );
 		$this->output( "Clear mathrevisionstat\n" );
 		$sql = 'TRUNCATE TABLE `mathrevisionstat`';
 		$this->dbw->query( $sql );
 		$this->output( "Generate mathrevisionstat\n" );
+		// @codingStandardsIgnoreStart
 		$sql =
 			'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`)\n' .
 			'SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` JOIN mathindex ON `mathobservation_inputhash` =mathindex_inputhash\n' .
 			'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype`\n' .
 			' GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`,mathindex_revision_id ORDER BY CNT DESC';
+		// @codingStandardsIgnoreEnd
 		$this->dbw->query( $sql );
 		$this->output( "Updated {$fcount} formulae!\n" );
 	}
@@ -133,9 +137,9 @@ class ExtractFeatures extends Maintenance {
 		// TODO: fix link id problem
 		$anchorID = 0;
 		$math = MathObject::extractMathTagsFromWikiText( $pText );
-		$matches = sizeof( $math );
+		$matches = count( $math );
 		if ( $matches ) {
-			echo( "\t processing $matches math fields for {$pTitle} page\n" );
+			echo ( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math as $formula ) {
 				$mo = new MathObject( $formula[1] );
 				$mo->updateObservations( $dbw );
@@ -161,4 +165,4 @@ class ExtractFeatures extends Maintenance {
 
 $maintClass = 'ExtractFeatures';
 /** @noinspection PhpIncludeInspection */
-require_once( RUN_MAINTENANCE_IF_MAIN );
+require_once ( RUN_MAINTENANCE_IF_MAIN );

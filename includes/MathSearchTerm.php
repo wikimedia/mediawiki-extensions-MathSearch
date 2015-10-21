@@ -84,9 +84,9 @@ class MathSearchTerm {
 		$this->expr = $expr;
 	}
 
-	public function doSearch(MathEngineRest $backend){
+	public function doSearch( MathEngineRest $backend ) {
 		$backend->resetResults();
-		switch ($this->getType() ) {
+		switch ( $this->getType() ) {
 			case self::TYPE_TEXT:
 				$search = SearchEngine::create( "CirrusSearch" );
 				$search->setLimitOffset( 10000 );
@@ -128,7 +128,6 @@ class MathSearchTerm {
 		}
 	}
 
-
 	/**
 	 * @return array
 	 */
@@ -143,13 +142,12 @@ class MathSearchTerm {
 		return $this->relevanceMap;
 	}
 
-	public function getRevisionResult( $revisionId ){
-		if ( array_key_exists((string) $revisionId, $this->resultSet ) ) {
+	public function getRevisionResult( $revisionId ) {
+		if ( array_key_exists( (string) $revisionId, $this->resultSet ) ) {
 			return $this->resultSet[(string) $revisionId];
 		} else {
 			return array();
 		}
-
 	}
 
 }

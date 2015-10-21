@@ -12,12 +12,12 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 		}
 	}
 
-	public static function run2CSV( $runId ){
+	public static function run2CSV( $runId ) {
 		$out = ImportCsv::getCsvColumnHeader() . "\n";
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select( 'math_wmc_results',
 			array( 'qId' , 'oldId' , 'fId' ),
-			array( 'runId' => $runId )  ,
+			array( 'runId' => $runId ),
 			__METHOD__,
 			array( 'ORDER BY' => array( 'qId' , 'rank' ) ) );
 		if ( $res !== false ) {
@@ -45,11 +45,11 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 
 	}
 
-	function processInput(  ) {
+	function processInput() {
 		$this->getOutput()->disable();
-		header( 'Content-Type: text/csv');
-		header( 'Content-Disposition: attachment; filename="run' . $this->runId . '.csv"');
-		print(self::run2CSV( $this->runId ));
+		header( 'Content-Type: text/csv' );
+		header( 'Content-Disposition: attachment; filename="run' . $this->runId . '.csv"' );
+		print ( self::run2CSV( $this->runId ) );
 		return true;
 	}
 

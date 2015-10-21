@@ -14,6 +14,7 @@ class LaTeXTranslator {
 
 	function __construct() {
 		# reference: http://stackoverflow.com/a/28611214/4521584
+		// @codingStandardsIgnoreStart
 		$this->replacements = array(
 			array(
 				# Trignometric & Trig Integrals: \acosh@{x}
@@ -188,13 +189,17 @@ class LaTeXTranslator {
 				# Determinant: \det
 				'search' => "~\\\\det@{0,2}(" . $this->arg . "|" . $this->par . ")~i",
 				# Determinant: Det[a]
-				'replace' => function ( array $m ) { return 'Det[' . $m[1] . ']'; }
+				'replace' => function ( array $m ) {
+					return 'Det[' . $m[1] . ']';
+				}
 			),
 			array(
 				# Divergence: \divergence
 				'search' => "~\\\\divergence@{0,2}(" . $this->arg . "|" . $this->par . ")~i",
 				# Divergence: divergence
-				'replace' => function ( array $m ) { return 'Div[' . $m[1] . ']'; }
+				'replace' => function ( array $m ) {
+					return 'Div[' . $m[1] . ']';
+				}
 			),
 			array(
 				# Elliptic Integral: \CompEllIntC@{a}
@@ -203,7 +208,7 @@ class LaTeXTranslator {
 					")(" . $this->arg . "|" . $this->par . ")?~i",
 				# Elliptic Integral: EllipticC[x, Sqrt[m]]
 				'replace' => function ( array $m ) {
-					return 'Elliptic' . $m[1] . '[' . ( sizeof( $m ) > 5 ?
+					return 'Elliptic' . $m[1] . '[' . ( count( $m ) > 5 ?
 						LaTeXTranslator::brackR( $m[2] ) . ', Sqrt[' . LaTeXTranslator::brackR( $m[4] ) . ']'
 						: 'Sqrt[' . LaTeXTranslator::brackR( $m[2] ) . ']' ) . ']';
 				}
@@ -212,7 +217,9 @@ class LaTeXTranslator {
 				# Error: \erf@{z}
 				'search' => "~\\\\erf[a-z]?@{0,2}(" . $this->arg . "|" . $this->par . ")~i",
 				# Error: Erf[z]
-				'replace' => function ( array $m ) { return 'Erf[' . LaTeXTranslator::brackR( $m[1] ) . ']'; }
+				'replace' => function ( array $m ) {
+					return 'Erf[' . LaTeXTranslator::brackR( $m[1] ) . ']';
+				}
 			),
 			array(
 				# Euler Beta & Gamma: \EulerBeta@{a}{b}
@@ -229,7 +236,9 @@ class LaTeXTranslator {
 				# Exponential: \exp@{x}
 				'search' => "~\\\\exp@{0,2}(" . $this->arg . "|" . $this->par . ")~i",
 				# Exponential: Exp[x]
-				'replace' => function ( array $m ) { return 'Exp[' . LaTeXTranslator::brackR( $m[1] ) . ']'; }
+				'replace' => function ( array $m ) {
+					return 'Exp[' . LaTeXTranslator::brackR( $m[1] ) . ']';
+				}
 			),
 			array(
 				# Exponential Integral: \ExpInti@{x}
@@ -258,7 +267,7 @@ class LaTeXTranslator {
 				'replace' => function ( array $m ) {
 					return ( strlen( $m[3] ) > 0 ? '(' . LaTeXTranslator::brackR( $m[1] ) . ')'
 						: LaTeXTranslator::brackR( $m[1] ) ) . '/' .
-						   ( sizeof( $m ) > 6 ? '(' . LaTeXTranslator::brackR( $m[4] ) . ')'
+						   ( count( $m ) > 6 ? '(' . LaTeXTranslator::brackR( $m[4] ) . ')'
 							   : LaTeXTranslator::brackR( $m[4] ) );
 				}
 			),
@@ -557,7 +566,9 @@ class LaTeXTranslator {
 				# Real Part: \realpart{z}
 				'search' => "~\\\\realpart@{0,2}" . $this->par . "~i",
 				# Real Part: Re[z]
-				'replace' => function ( array $m ) { return 'Re[' . LaTeXTranslator::brackR( $m[1] ) . ']'; }
+				'replace' => function ( array $m ) {
+					return 'Re[' . LaTeXTranslator::brackR( $m[1] ) . ']';
+				}
 			),
 			array(
 				# Riemann: \RiemannXi@{s}
@@ -677,6 +688,7 @@ class LaTeXTranslator {
 				}
 			)
 		);
+		// @codingStandardsIgnoreEnd
 	}
 	/**
 	 * @var string contains data in Wiki html input form
@@ -689,7 +701,7 @@ class LaTeXTranslator {
 	 */
 	public static function brackR( $arg ) {
 		$arg = trim( $arg, " " );
-		if ( substr( $arg, 0,1) == "{" && substr( $arg,  -1) == "}" ) {
+		if ( substr( $arg, 0, 1 ) == "{" && substr( $arg,  -1 ) == "}" ) {
 			$arg = substr( $arg, 1, strlen( $arg ) - 2 );
 		}
 		return $arg;

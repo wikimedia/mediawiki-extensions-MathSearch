@@ -1,5 +1,7 @@
 <?php
+
 use MediaWiki\Logger\LoggerFactory;
+
 /**
  * MediaWiki MathSearch extension
  *
@@ -20,15 +22,15 @@ class MathEngineMws extends MathEngineRest {
 	 * @param SimpleXMLElement $xmlRoot
 	 */
 	function processMathResults( $xmlRoot ) {
-		foreach ( $xmlRoot->children( "mws", TRUE ) as $page ) {
+		foreach ( $xmlRoot->children( "mws", true ) as $page ) {
 			$attrs = $page->attributes();
-			if( strpos( $attrs["uri"], '#' ) ){
+			if ( strpos( $attrs["uri"], '#' ) ) {
 				$uri = explode( "#", $attrs["uri"] );
 				$revisionID = $uri[0];
 				$AnchorID = $uri[1];
 			} else {
 				$uri = explode( ".", $attrs["uri"] );
-				if ( sizeof( $uri ) > 2 ) {
+				if ( count( $uri ) > 2 ) {
 					$revisionID = $uri[1];
 					$AnchorID = $uri[2];
 				} else {
@@ -40,7 +42,7 @@ class MathEngineMws extends MathEngineRest {
 			$this->relevanceMap[] = $revisionID;
 			$substarr = array();
 			// $this->mathResults[(string) $pageID][(string) $AnchorID][]=$page->asXML();
-			foreach ( $page->children( "mws", TRUE ) as $substpair ) {
+			foreach ( $page->children( "mws", true ) as $substpair ) {
 				$substattrs = $substpair->attributes();
 				$substarr[] =
 					array(

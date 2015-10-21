@@ -18,12 +18,14 @@
  *
  * @ingroup Maintenance
  */
+// @codingStandardsIgnoreStart
 # Alert the user that this is not a valid entry point to MediaWiki if they try to access the special pages file directly.
 if ( !defined( 'MEDIAWIKI' ) ) {
 	die( "This is not a valid entry point to MediaWiki.\n" . "To run the script use:\n" .
 		 'php ../../../maintenance/dumpBackup.php --current --plugin=MathMLFilter:./MathDump.php --filter=mathml' .
 		 "\n" );
 }
+// @codingStandardsIgnoreEnd
 
 /**
  * Simple dump output filter to exclude all talk pages.

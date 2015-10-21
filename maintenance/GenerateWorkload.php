@@ -21,7 +21,7 @@
  * @ingroup Maintenance
  */
 
-require_once( __DIR__ . '/IndexBase.php' );
+require_once ( __DIR__ . '/IndexBase.php' );
 
 /**
  * @author Moritz Schubotz
@@ -39,9 +39,13 @@ class GenerateWorkload extends IndexBase {
 		$this->mDescription = 'Generates a workload of sample queries.';
 		$this->addOption( 'selectivity', 'Specifies the selectivity for each individual equation',
 			false, true, 'S' );
-		$this->addOption( 'lastId',
+		// @codingStandardsIgnoreFile
+		$this->addOption(
+			'lastId',
 			'Specifies to start the ID counter after the given id. For example \'-l 1\' would start with id 2.',
-			false, true, 'l' );
+			false, true, 'l'
+		);
+		// @codingStandardsIgnoreEnd
 		$this->addOption( 'overwrite', 'Overwrite existing draft queries ', false, false, "o" );
 	}
 
@@ -87,10 +91,10 @@ class GenerateWorkload extends IndexBase {
 			$i += $inc;
 		} while ( $res );
 		echo "last id used: {$this->id}\n";
-		echo( 'done' );
+		echo ( 'done' );
 	}
 }
 
 $maintClass = 'GenerateWorkload';
 /** @noinspection PhpIncludeInspection */
-require_once( RUN_MAINTENANCE_IF_MAIN );
+require_once ( RUN_MAINTENANCE_IF_MAIN );

@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 /**
  * Class BatchExport
@@ -30,8 +30,10 @@ class BatchExport extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
+		// @codingStandardsIgnoreStart
 		$this->mDescription =
 			"Exports  submissions to a folder. \n Each run is named after the following convention: \n \$userName-\$runName-\$runId.csv";
+		// @codingStandardsIgnoreEnd
 		$this->addArg( 'dir', 'The output directory', true );
 	}
 
@@ -45,12 +47,12 @@ class BatchExport extends Maintenance {
 			exit( 1 );
 		}
 		$dbr = wfGetDB( DB_SLAVE );
-		//runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-		//runName VARCHAR(45),
-		//userId INT UNSIGNED,
-		//isDraft TINYINT NOT NULL,
+		// runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+		// runName VARCHAR(45),
+		// userId INT UNSIGNED,
+		// isDraft TINYINT NOT NULL,
 		$res = $dbr->select( 'math_wmc_runs', '*' );
-		//TODO: Implement support for isDraft.
+		// TODO: Implement support for isDraft.
 		foreach ( $res as $row ) {
 			$user = User::newFromId( $row->userId );
 			$username = $user->getName();
@@ -66,4 +68,4 @@ class BatchExport extends Maintenance {
 
 $maintClass = 'BatchExport';
 /** @noinspection PhpIncludeInspection */
-require_once( RUN_MAINTENANCE_IF_MAIN );
+require_once ( RUN_MAINTENANCE_IF_MAIN );

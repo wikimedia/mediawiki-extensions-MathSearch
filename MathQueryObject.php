@@ -39,7 +39,7 @@ class MathQueryObject extends MathObject {
 			'url.sty',
 			'hyperref.sty',
 			'mws.sty',
-			//		'[ids]latexml.sty',
+			// '[ids]latexml.sty',
 			'texvc'
 		),
 	);
@@ -47,7 +47,7 @@ class MathQueryObject extends MathObject {
 	/**
 	 * @param string $texquery the TeX-like search input
 	 */
-	public function __construct( $texquery = '') {
+	public function __construct( $texquery = '' ) {
 		$this->texquery = $texquery;
 	}
 
@@ -64,7 +64,7 @@ class MathQueryObject extends MathObject {
 	 *
 	 * @return bool
 	 */
-	public function saveToDatabase( $overwrite = false ){
+	public function saveToDatabase( $overwrite = false ) {
 		$fields = array(
 			'qId' => $this->queryID,
 			'oldId' => $this->getRevisionID(),
@@ -75,7 +75,9 @@ class MathQueryObject extends MathObject {
 			'math_inputhash' => $this->getInputHash() ); // Store the inputhash just to be sure.
 		$dbw = wfGetDB( DB_MASTER );
 		// Overwrite draft queries only.
-		if ( $dbw->selectField( 'math_wmc_ref', 'isDraft', array( 'qId' =>  $this->queryID ) ) && $overwrite ){
+		if ( $dbw->selectField(
+			'math_wmc_ref', 'isDraft', array( 'qId' =>  $this->queryID )
+		) && $overwrite ) {
 			return $dbw->update( 'math_wmc_ref', $fields, array( 'qId' => $this->queryID ) );
 		} else {
 			return $dbw->insert( 'math_wmc_ref', $fields );
@@ -231,14 +233,16 @@ TeX;
 			$this->cquery = $renderer->getMathml();
 			return $this->cquery;
 		} else {
-			LoggerFactory::getInstance( 'MathSearch' )->error( 'error during generation of query string' . $renderer->getLastError() );
+			LoggerFactory::getInstance(
+				'MathSearch'
+			)->error( 'error during generation of query string' . $renderer->getLastError() );
 		}
 	}
 
 	public function generatePresentationQueryString() {
 		$renderer = new MathLaTeXML( $this->getTexQuery() );
-		//$renderer->setXMLValidaton( false );
-		//$renderer->setAllowedRootElments(array('query'));
+		// $renderer->setXMLValidaton( false );
+		// $renderer->setAllowedRootElments( array( 'query' ) );
 		$renderer->setLaTeXMLSettings( $this->pmmlSettings );
 		if ( $renderer->render( true ) ) {
 			$this->pquery = $renderer->getMathml();

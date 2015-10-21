@@ -19,21 +19,24 @@
  * @ingroup Maintenance
  */
 
-require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 /**
  * TODO: Get rid of the workaround
  */
+// @codingStandardsIgnoreStart
 function createMySqlFunctionDropperClass() {
+// @codingStandardsIgnoreEnd
 	class MySqlFunctionDropper extends MysqlUpdater {
 		/**
 		 * @param $db
 		 *
 		 * @return MySqlFunctionDropper
 		 */
-		public static function newInstance($db){
-			return new MySqlFunctionDropper($db,false,null);
-	}
+		public static function newInstance( $db ) {
+			return new MySqlFunctionDropper( $db, false, null );
+		}
+
 		/**
 		 * Applies a SQL patch
 		 *
@@ -57,11 +60,13 @@ class QueryEval extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
+		// @codingStandardsIgnoreStart
 		$this->mDescription = "Exports submissions to a folder. \n Each run is named after the following convention: \n \$userName-\$runName-\$runId.csv";
+		// @codingStandardsIgnoreEnd
 		$this->addArg( "dir", "The output directory", true );
 	}
-	private function addExtensionTable( $name, $folder = '' ){
-		if( is_null( $this->dbu ) ){
+	private function addExtensionTable( $name, $folder = '' ) {
+		if ( is_null( $this->dbu ) ) {
 			$dbw = wfGetDB( DB_MASTER );
 			$this->dbu = DatabaseUpdater::newForDB( $dbw );
 		}
@@ -74,25 +79,25 @@ class QueryEval extends Maintenance {
 	 * @return string
 	 */
 	/** @noinspection PhpExpressionResultUnusedInspection */
-	private function createTopicTex( $row ){
+	private function createTopicTex( $row ) {
 		$qId = $row->qId;
-		$row->title = str_replace(array('π','ő'),array('$\\pi$','ö'),$row->title);
+		$row->title = str_replace( array( 'π','ő' ), array( '$\\pi$', 'ö' ), $row->title );
 		$tName = $row->qId. ': {\\wikiLink{' . $row->title .'}{' . $row->oldId. '}{'.$row->fId.'}}';
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select( 'math_wmc_freq_hits',
-			array( 'cntRun', 'cntUser' , 'links', 'minRank', 'rendering') ,
+			array( 'cntRun', 'cntUser' , 'links', 'minRank', 'rendering' ),
 			array( 'qId' => $qId ) );
 		$mostFrequent = "\\subsection*{Most frequent results}\n \\begin{enumerate}\n";
-		foreach($res as $hit){
-			$hit->rendering = str_replace( //TODO: preg_match replaces for by f\lor
-				array( '\\or ','%','$\\begin{align}','\\end{align}$'),
-				array( '\\lor ', '\\%','\\begin{align}','\\end{align}'),$hit->rendering);
+		foreach ( $res as $hit ) {
+			$hit->rendering = str_replace( // TODO: preg_match replaces for by f\lor
+				array( '\\or ','%','$\\begin{align}','\\end{align}$' ),
+				array( '\\lor ', '\\%','\\begin{align}','\\end{align}' ), $hit->rendering );
 			$mostFrequent .= "\\item {$hit->rendering} was found by {$hit->cntUser} users in ".
 				" {$hit->cntRun} runs with minimal rank of {$hit->minRank}. \n".
 				"For example in the context of the following pages: {$hit->links}\n";
 		}
 		$mostFrequent .= "\\end{enumerate}";
-		if ( $row->qVarCount > 0 ){
+		if ( $row->qVarCount > 0 ) {
 			$relevance = "  \\begin{relevance}[{$row->qVarCount}]
   $row->rendering
   \\end{relevance}";
@@ -100,8 +105,8 @@ class QueryEval extends Maintenance {
 			$relevance = '';
 		}
 		$individualResults='';
-		$res = $dbr->select('math_wmc_page_ranks', '*', array('qId'=>$row->qId));
-		foreach($res as $rank){
+		$res = $dbr->select( 'math_wmc_page_ranks', '*', array( 'qId'=>$row->qId ) );
+		foreach ( $res as $rank ) {
 			$individualResults .= $rank->runId . ': '.$rank->rank.'; ';
 		}
 		$out = <<<TEX
@@ -122,51 +127,53 @@ class QueryEval extends Maintenance {
 TEX;
 		return $out;
 	}
+
 	/**
 	 * TODO: Replace with DBU call
 	 */
-	private function dropUDFs(){
+	private function dropUDFs() {
 		$dbw = wfGetDB( DB_MASTER );
-		if ( ! class_exists("MySqlFunctionDropper") ) {
+		if ( !class_exists( "MySqlFunctionDropper" ) ) {
 			createMySqlFunctionDropperClass();
 		}
 		$dbu = MySqlFunctionDropper::newInstance( $dbw );
 		$dbu->dropFunction( __DIR__ . '/../db/wmc/math_wmc_udf_drop.sql', true,
-			'drop math_wmc udfs');
+			'drop math_wmc udfs' );
 	}
+
 	/**
 	 *
 	 */
 	public function execute() {
 		$dir = $this->getArg( 0 );
-		if ( ! is_dir($dir) ){
-			$this->output("{$dir} is not a directory.\n");
-			exit(1);
+		if ( !is_dir( $dir ) ) {
+			$this->output( "{$dir} is not a directory.\n" );
+			exit( 1 );
 		}
 		MathSearchUtils::createEvaluationTables();
 		$this->addExtensionTable( 'math_wmc_udf_create' );
 		$this->dbu->doUpdates( array( "extensions" ) );
 		$dbr = wfGetDB( DB_SLAVE );
-		//runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-		//runName VARCHAR(45),
-		//userId INT UNSIGNED,
-		//isDraft TINYINT NOT NULL,
-		$res = $dbr->select( "math_wmc_query_summary", '*');
+		// runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+		// runName VARCHAR(45),
+		// userId INT UNSIGNED,
+		// isDraft TINYINT NOT NULL,
+		$res = $dbr->select( "math_wmc_query_summary", '*' );
 		$all = "";
-		mb_internal_encoding('UTF-8');
-		mb_regex_encoding("UTF-8");
-		foreach ( $res as $row ){
-			$all .= $this->createTopicTex($row) . "\n\n" ;
+		mb_internal_encoding( 'UTF-8' );
+		mb_regex_encoding( "UTF-8" );
+		foreach ( $res as $row ) {
+			$all .= $this->createTopicTex( $row ) . "\n\n";
 		}
 		$fh =  fopen( $dir . '/all.tex', 'w' );
 		fwrite( $fh, $all );
 		fclose( $fh );
 		echo "all done";
 		$this->dropUDFs();
-		exit(0);
+		exit( 0 );
 	}
 }
 
 $maintClass = 'QueryEval';
 /** @noinspection PhpIncludeInspection */
-require_once( RUN_MAINTENANCE_IF_MAIN );
+require_once ( RUN_MAINTENANCE_IF_MAIN );

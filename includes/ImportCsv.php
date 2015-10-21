@@ -73,7 +73,7 @@ class ImportCsv {
 		}
 		$dbw = wfGetDB( DB_MASTER );
 		$uID = $this->getUser()->getId();
-		if ( is_int($run) ){
+		if ( is_int( $run ) ) {
 			$runId = $dbw->selectField( 'math_wmc_runs', 'runId',
 				array( 'isDraft' => true, 'userID' => $uID, 'runId' => $run ) );
 		} else {
@@ -155,7 +155,10 @@ class ImportCsv {
 	 */
 	public function importFromArray( $table ) {
 		global $wgMathWmcMaxResults;
+
+		// @codingStandardsIgnoreStart
 		define( 'ImportPattern', '/math\.(\d+)\.(\d+)/' );
+		// @codingStandardsIgnoreEnd
 
 		// check header line
 		$uploadedHeaders = $table[0];

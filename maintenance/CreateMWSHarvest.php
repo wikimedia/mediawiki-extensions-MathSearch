@@ -21,7 +21,7 @@
  * @ingroup Maintenance
  */
 
-require_once( __DIR__ . '/IndexBase.php' );
+require_once ( __DIR__ . '/IndexBase.php' );
 
 /**
  * @author Moritz Schubotz
@@ -75,4 +75,4 @@ class CreateMWSHarvest extends IndexBase {
 
 $maintClass = 'CreateMWSHarvest';
 /** @noinspection PhpIncludeInspection */
-require_once( RUN_MAINTENANCE_IF_MAIN );
+require_once ( RUN_MAINTENANCE_IF_MAIN );

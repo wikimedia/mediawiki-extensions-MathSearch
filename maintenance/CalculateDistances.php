@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 /**
  * Class CalculateDistances
@@ -82,7 +82,7 @@ class CalculateDistances extends Maintenance {
 	 */
 	protected function populateSearchIndex() {
 		$n = 0;
-		$count = sizeof( $this->pagelist );
+		$count = count( $this->pagelist );
 		$this->output( "Rebuilding index fields for $count pages...\n" );
 		while ( $n < $count ) {
 			if ( $n ) {
@@ -90,12 +90,14 @@ class CalculateDistances extends Maintenance {
 			}
 			$this->dbw->begin();
 			for ( $j = 0; $j < self::RTI_CHUNK_SIZE; $j ++ ) {
-				//TODO: USE PREPARED STATEMENTS
+				// TODO: USE PREPARED STATEMENTS
 				$pid = $this->pagelist[$n];
+				// @codingStandardsIgnoreStart
 				$sql =
 					"INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value)\n" .
 					"SELECT DISTINCT $pid,`revstat_revid`,\n" .
 					"CosProd( $pid,`revstat_revid`) FROM `mathrevisionstat` m ";
+				// @codingStandardsIgnoreEnd
 				if ( $this->getOption( 'page9', false ) ) {
 					$sql .= " JOIN (SELECT page_id from mathpage9) as r WHERE m.revstat_revid=r.page_id AND ";
 				} else {
@@ -117,4 +119,4 @@ class CalculateDistances extends Maintenance {
 
 $maintClass = 'CalculateDistances';
 /** @noinspection PhpIncludeInspection */
-require_once( RUN_MAINTENANCE_IF_MAIN );
+require_once ( RUN_MAINTENANCE_IF_MAIN );

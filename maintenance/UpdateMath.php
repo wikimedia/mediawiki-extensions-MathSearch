@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
+require_once ( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
 
 /**
  * Class UpdateMath
@@ -43,6 +43,7 @@ class UpdateMath extends Maintenance {
 	 *
 	 */
 	public function __construct() {
+		// @codingStandardsIgnoreStart
 		parent::__construct();
 		$this->mDescription = 'Updates the index of Mathematical formulae.';
 		$this->addOption( 'purge', "If set all formulae are rendered again without using caches. (Very time consuming!)", false, false, "f" );
@@ -53,6 +54,7 @@ class UpdateMath extends Maintenance {
 		$this->addOption( 'hooks', "If set hooks will be skipped, but index will be updated.", false, false );
 		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
 		$this->addOption( 'mode' , 'Rendering mode to be used (png, mathml, latexml)',false,true,'m');
+		// @codingStandardsIgnoreEnd
 	}
 
 	/**
@@ -62,13 +64,14 @@ class UpdateMath extends Maintenance {
 	 *
 	 * @return int
 	 */
-	private function time( $category = 'default' ){
+	private function time( $category = 'default' ) {
 		global $wgMathDebug;
 		$delta = ( microtime( true ) - $this->time ) * 1000;
-		if (isset ($this->performance[$category] ))
+		if ( isset( $this->performance[$category] ) ) {
 			$this->performance[$category] += $delta;
-		else
+		} else {
 			$this->performance[$category] = $delta;
+		}
 		if ( $wgMathDebug ) {
 			$this->db->insert( 'mathperformance', array(
 				'math_inputhash' => $this->current->getInputHash(),
@@ -76,7 +79,6 @@ class UpdateMath extends Maintenance {
 				'mathperformance_time' => $delta,
 				'mathperformance_mode' => $this->renderingMode
 			) );
-
 		}
 		$this->time = microtime( true );
 
@@ -98,9 +100,11 @@ class UpdateMath extends Maintenance {
 		if ( $cMax > 0 && $count > $cMax ) {
 			$count = $cMax;
 		}
-		$this->output( "Rebuilding index fields for pages with revision < {$count} with option {$this->purge}...\n" );
+		$this->output(
+			"Rebuilding index fields for pages with revision < {$count} with option {$this->purge}...\n"
+		);
 		$fCount = 0;
-		//return;
+		// return;
 		while ( $n < $count ) {
 			if ( $n ) {
 				$this->output( $n . " of $count \n" );
@@ -123,7 +127,7 @@ class UpdateMath extends Maintenance {
 			$start = microtime( true );
 			$this->dbw->commit();
 			echo " committed in " . ( microtime( true ) -$start ) . "s\n\n";
-			var_dump($this->performance);
+			var_dump( $this->performance );
 			// echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$n += self::RTI_CHUNK_SIZE;
 		}
@@ -138,36 +142,36 @@ class UpdateMath extends Maintenance {
 	 *
 	 * @return number
 	 */
-	private function doUpdate( $pid, $pText, $pTitle = "", $revId = 0) {
+	private function doUpdate( $pid, $pText, $pTitle = "", $revId = 0 ) {
 		$notused = '';
 		$eId=0;
 		$parser = new Parser();
 		$parser->mLinkID = 0;
 		$parser->mRevisionId = $revId;
-		//MathSearchHooks::setNextID($eId);
+		// MathSearchHooks::setNextID($eId);
 		$math = MathObject::extractMathTagsFromWikiText( $pText );
-		$matches = sizeof( $math );
+		$matches = count( $math );
 		if ( $matches ) {
-			echo( "\t processing $matches math fields for {$pTitle} page\n" );
-			MathSearchHooks::setNextID(0);
+			echo ( "\t processing $matches math fields for {$pTitle} page\n" );
+			MathSearchHooks::setNextID( 0 );
 			foreach ( $math as $formula ) {
-				$this->time = microtime(true);
+				$this->time = microtime( true );
 				$renderer = MathRenderer::getRenderer( $formula[1], $formula[2], $this->renderingMode );
 				$this->current = $renderer;
-				$this->time("loadClass");
+				$this->time( "loadClass" );
 				if ( $this->getOption( "texvccheck", false ) ) {
 					$checked = true;
 				} else {
 					$checked = $renderer->checkTex();
-					$this->time("checkTex");
+					$this->time( "checkTex" );
 				}
 				if ( $checked ) {
-					if( ! $renderer->isInDatabase() || $this->purge ) {
+					if ( !$renderer->isInDatabase() || $this->purge ) {
 						$renderer->render( $this->purge );
-						if( $renderer->getMathml() ){
-							$this->time("render");
+						if ( $renderer->getMathml() ) {
+							$this->time( "render" );
 						} else {
-							$this->time("Failing");
+							$this->time( "Failing" );
 						}
 						if ( $this->getOption( "SVG", false ) ) {
 							$svg = $renderer->getSvg();
@@ -178,17 +182,17 @@ class UpdateMath extends Maintenance {
 							}
 						}
 					} else {
-						$this->time('checkInDB');
+						$this->time( 'checkInDB' );
 					}
 				} else {
-					$this->time("checkTex-Fail");
+					$this->time( "checkTex-Fail" );
 					echo "\nF:\t\t".$renderer->getMd5()." texvccheck error:" . $renderer->getLastError();
 					continue;
 				}
 				$renderer->writeCache( $this->dbw );
-				$this->time("write Cache");
+				$this->time( "write Cache" );
 				MathSearchHooks::setNextID( $eId, $renderer, $pid );
-				if ( ! $this->getOption( "hooks", false ) ) {
+				if ( !$this->getOption( "hooks", false ) ) {
 					Hooks::run( 'MathFormulaPostRender', array( $parser, &$renderer, &$notused ) );
 					$this->time( "hooks" );
 				} else {
@@ -196,12 +200,12 @@ class UpdateMath extends Maintenance {
 					$this->time( "index" );
 				}
 				if ( $renderer->getLastError() ) {
-					echo "\n\t\t". $renderer->getLastError() ;
+					echo "\n\t\t". $renderer->getLastError();
 					echo "\nF:\t\t".$renderer->getMd5()." equation " . ( $eId ) .
 						"-failed beginning with\n\t\t'" . substr( $formula, 0, 100 )
-						. "'\n\t\tmathml:" . substr($renderer->getMathml(),0,10) ."\n ";
+						. "'\n\t\tmathml:" . substr( $renderer->getMathml(), 0, 10 ) ."\n ";
 				} else{
-					if($this->verbose){
+					if ( $this->verbose ) {
 						echo "\nS:\t\t".$renderer->getMd5();
 					}
 				}
@@ -215,7 +219,7 @@ class UpdateMath extends Maintenance {
 		global $wgMathValidModes;
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );
-		$this->verbose = $this->getOption("verbose",false);
+		$this->verbose = $this->getOption( "verbose", false );
 		$this->renderingMode = $this->getOption( "mode", 'latexml' );
 		$this->db = wfGetDB( DB_MASTER );
 		$wgMathValidModes[] = $this->renderingMode;
@@ -227,4 +231,4 @@ class UpdateMath extends Maintenance {
 
 $maintClass = "UpdateMath";
 /** @noinspection PhpIncludeInspection */
-require_once( RUN_MAINTENANCE_IF_MAIN );
+require_once ( RUN_MAINTENANCE_IF_MAIN );

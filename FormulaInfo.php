@@ -24,7 +24,7 @@ class FormulaInfo extends SpecialPage {
 		global $wgRequest, $wgOut;
 		$pid = $wgRequest->getVal( 'pid' );// Page ID
 		$eid = $wgRequest->getVal( 'eid' );// Equation ID
-		$this->purge = $wgRequest->getVal( 'purge' , false );
+		$this->purge = $wgRequest->getVal( 'purge', false );
 		if ( is_null( $pid ) or is_null( $eid ) ) {
 			$tex = $wgRequest->getVal( 'tex', '' );
 			if ( $tex == '' ) {
@@ -76,7 +76,10 @@ class FormulaInfo extends SpecialPage {
 
 		$pageName = (string)$revision->getTitle();
 		$out->addWikiText( "* Page found: [[$pageName#$eid|$pageName]] (eq $eid)  ", false );
-		$out->addHtml( '<a href="/index.php?title=' . $pageName . '&action=purge&mathpurge=true">(force rerendering)</a>' );
+		$out->addHtml(
+			'<a href="/index.php?title=' . $pageName
+			. '&action=purge&mathpurge=true">(force rerendering)</a>'
+		);
 		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $oldID, $eid );
 		if ( !$mo ) {
@@ -85,72 +88,90 @@ class FormulaInfo extends SpecialPage {
 		}
 		$out->addWikiText( "Occurrences on the following pages:" );
 		$all = $mo->getAllOccurences();
-		foreach( $all as  $occ ){
+		foreach ( $all as  $occ ) {
 			/** @type MathObject $occ */
 			$out->addWikiText( '*' . $occ->printLink2Page( false ) );
 		}
 		$out->addWikiText( 'Hash: ' . $mo->getMd5() );
-		$out->addWikiText( 'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex() . '</syntaxhighlight>' );
-		$out->addWikiText( 'TeX (original user input): <syntaxhighlight lang="latex">' . $mo->getUserInputTex() . '</syntaxhighlight>' );
+		$out->addWikiText(
+			'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex()
+			. '</syntaxhighlight>'
+		);
+		$out->addWikiText(
+			'TeX (original user input): <syntaxhighlight lang="latex">' . $mo->getUserInputTex()
+			. '</syntaxhighlight>'
+		);
 		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
 		$out->addWikiText( '==Similar pages==' );
-		$out->addWikiText( 'Calculated based on the variables occurring on the entire ' . $pageName . ' page' );
-		$pid = Revision::newFromId($oldID)->getTitle()->getArticleID();
+		$out->addWikiText(
+			'Calculated based on the variables occurring on the entire ' . $pageName . ' page'
+		);
+		$pid = Revision::newFromId( $oldID )->getTitle()->getArticleID();
 		$mo->findSimilarPages( $pid );
 		$out->addWikiText( '==Variables==' );
 		$mo->getObservations();
 		if ( $wgMathDebug ) {
 			$out->addWikiText( '==LOG and Debug==' );
 			$out->addWikiText( 'Rendered at : <syntaxhighlight lang="text">' . $mo->getTimestamp()
-				. '</syntaxhighlight> an idexed at <syntaxhighlight lang="text">' . $mo->getIndexTimestamp() . '</syntaxhighlight>' );
-			$out->addWikiText( 'validxml : <syntaxhighlight lang="text">' . $mo->isValidMathML( $mo->getMathml() ) . '</syntaxhighlight> recheck:', false );
+				. '</syntaxhighlight> an idexed at <syntaxhighlight lang="text">' . $mo->getIndexTimestamp()
+				. '</syntaxhighlight>'
+			);
+			$out->addWikiText(
+				'validxml : <syntaxhighlight lang="text">' . $mo->isValidMathML(
+					$mo->getMathml()
+				) . '</syntaxhighlight> recheck:', false
+			);
 			$out->addHtml( $mo->isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
-			$out->addWikiText( 'status : <syntaxhighlight lang="text">' . $mo->getStatusCode() . '</syntaxhighlight>' );
+			$out->addWikiText(
+				'status : <syntaxhighlight lang="text">' . $mo->getStatusCode() . '</syntaxhighlight>'
+			);
 			$out->addHtml( htmlspecialchars( $mo->getLog() ) );
 		}
 	}
+
 	private static function getlengh( $binray ) {
 		$uncompressed = strlen( $binray );
-		$compressed = strlen( gzcompress ( $binray ) );
-		return self::formatBytes( $uncompressed ) . " / " . self::formatBytes( $compressed ) ;
+		$compressed = strlen( gzcompress( $binray ) );
+		return self::formatBytes( $uncompressed ) . " / " . self::formatBytes( $compressed );
 	}
-		private static function formatBytes( $bytes, $precision = 3 ) {
-			$units = array( 'B', 'KB', 'MB', 'GB', 'TB' );
 
-			$bytes = max( $bytes, 0 );
-			$pow = floor( ( $bytes ? log( $bytes ) : 0 ) / log( 1024 ) );
-			$pow = min( $pow, count( $units ) - 1 );
+	private static function formatBytes( $bytes, $precision = 3 ) {
+		$units = array( 'B', 'KB', 'MB', 'GB', 'TB' );
 
-			// Uncomment one of the following alternatives
-			$bytes /= pow( 1024, $pow );
-			// $bytes /= (1 << (10 * $pow));
+		$bytes = max( $bytes, 0 );
+		$pow = floor( ( $bytes ? log( $bytes ) : 0 ) / log( 1024 ) );
+		$pow = min( $pow, count( $units ) - 1 );
+
+		// Uncomment one of the following alternatives
+		$bytes /= pow( 1024, $pow );
+		// $bytes /= (1 << (10 * $pow));
 
 		return round( $bytes, $precision ) . ' ' . $units[$pow];
 	}
 
 	public static function hasMathMLSupport( $mode ) {
 		if ( $mode === 'latexml' or $mode === 'mathml' ) {
-			return TRUE;
+			return true;
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
 	public static function hasSvgSupport( $mode ) {
 		if ( $mode === 'latexml' or $mode === 'mathml' ) {
-			return TRUE;
+			return true;
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
 	public static function hasPngSupport( $mode ) {
 		if ( $mode === 'png' ) {
-			return TRUE;
+			return true;
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -173,36 +194,42 @@ class FormulaInfo extends SpecialPage {
 		$name = $names[$mode];
 		$out->addWikiText( "=== $name rendering === " );
 		$renderer = MathRenderer::getRenderer( $tex, array(), $mode );
-		if ( $this->purge ){
+		if ( $this->purge ) {
 			$renderer->render( true );
 		} elseif ( ! $renderer->isInDatabase() ) {
 			$out->addWikiText( "No database entry. Start rendering" );
 			$renderer->render();
 		}
-		if( self::hasMathMLSupport( $mode ) ){
-			$out->addHtml( '<div class="NavFrame collapsed"  style="text-align: left"><div class="NavHead">');
-			$out->addWikiText( 'MathML (' . self::getlengh( $renderer->getMathml() ) . ') :', FALSE );
+		if ( self::hasMathMLSupport( $mode ) ) {
+			$out->addHtml(
+				'<div class="NavFrame collapsed"  style="text-align: left"><div class="NavHead">'
+			);
+			$out->addWikiText( 'MathML (' . self::getlengh( $renderer->getMathml() ) . ') :', false );
 			$imgUrl = $wgExtensionAssetsPath . "/MathSearch/images/math_search_logo.png";
-			$mathSearchImg = Html::element( 'img', array( 'src' => $imgUrl, 'width' => 15, 'height' => 15 ) );
+			$mathSearchImg = Html::element(
+				'img', array( 'src' => $imgUrl, 'width' => 15, 'height' => 15 )
+			);
 			$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $tex ) .
 				'&searchx=Search">' . $mathSearchImg . '</a>' );
 			$out->addHtml( $renderer->getMathml() );
 			$out->addHtml( '</div><div class="NavContent">' );
-			$out->addWikiText( '<syntaxhighlight lang="xml">' . ( $renderer->getMathml() ) . '</syntaxhighlight>' );
+			$out->addWikiText(
+				'<syntaxhighlight lang="xml">' . ( $renderer->getMathml() ) . '</syntaxhighlight>'
+			);
 			$out->addHtml( '</div></div>' );
 		}
-		if( self::hasSvgSupport( $mode ) ){
-			if ( $renderer->getSvg('cached') === '' ){
-				$out->addWikiText('SVG image empty. Force Re-Rendering' );
+		if ( self::hasSvgSupport( $mode ) ) {
+			if ( $renderer->getSvg( 'cached' ) === '' ) {
+				$out->addWikiText( 'SVG image empty. Force Re-Rendering' );
 				$renderer->render( true );
 			}
 			$out->addWikiText( 'SVG (' . self::getlengh( $renderer->getSvg( 'render' ) ) . ') :', false );
 			$out->addHtml( $renderer->getSvg() ); // FALSE, 'mwe-math-demo' ) );
 			$out->addHtml( "<br />\n" );
 		}
-		if( self::hasPngSupport( $mode ) ){
+		if ( self::hasPngSupport( $mode ) ) {
 			$out->addWikiText( 'PNG (' . self::getlengh( $renderer->getPng() ) . ') :', false );
-			$out->addHtml( $renderer->getHtmlOutput( ) );
+			$out->addHtml( $renderer->getHtmlOutput() );
 			$out->addHtml( "<br />\n" );
 		}
 		$renderer->writeCache();

@@ -6,7 +6,8 @@ if ( function_exists( 'wfLoadExtension' ) ) {
 	$wgMessagesDirs['MathSearch'] = __DIR__ . '/i18n';
 	$wgExtensionMessagesFiles['MathSearchAlias'] = __DIR__ . '/MathSearch.alias.php';
 	/* wfWarn(
-		'Deprecated PHP entry point used for MathSearch extension. Please use wfLoadExtension instead, ' .
+		'Deprecated PHP entry point used for MathSearch extension. ' .
+		'Please use wfLoadExtension instead, ' .
 		'see https://www.mediawiki.org/wiki/Extension_registration for more details.'
 	); */
 	return;

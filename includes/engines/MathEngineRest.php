@@ -1,5 +1,7 @@
 <?php
+
 use MediaWiki\Logger\LoggerFactory;
+
 /**
  * MediaWiki MathSearch extension
  *
@@ -34,7 +36,9 @@ abstract class MathEngineRest {
 			} else {
 				$details = "curl is not installed.";
 			}
-			LoggerFactory::getInstance( 'MathSearch' )->error( 'Nothing retreived from $url. Check if server is running. Error:' .
+			LoggerFactory::getInstance(
+				'MathSearch'
+			)->error( 'Nothing retreived from $url. Check if server is running. Error:' .
 				var_export( $details, true ) );
 			return false;
 		} else {
@@ -55,8 +59,9 @@ abstract class MathEngineRest {
 	public function setBackendUrl( $backendUrl ) {
 		$this->backendUrl = $backendUrl;
 	}
+
 	/**
-	 * 
+	 *
 	 * @return MathQueryObject
 	 */
 	public function getQuery() {
@@ -90,7 +95,7 @@ abstract class MathEngineRest {
 	 * @param MathQueryObject $query
 	 * @return $this
 	 */
-	public function setQuery(MathQueryObject $query) {
+	public function setQuery( MathQueryObject $query ) {
 		$this->query = $query;
 		return $this;
 	}
@@ -102,8 +107,8 @@ abstract class MathEngineRest {
 	function postQuery() {
 		$numProcess = 30000;
 		$postData = $this->getPostData( $numProcess );
-		$res = self::doPost($this->backendUrl,$postData);
-		if ( $res === false ){
+		$res = self::doPost( $this->backendUrl, $postData );
+		if ( $res === false ) {
 			return false;
 		} else {
 			return $this->processResults( $res, $numProcess );
@@ -113,7 +118,7 @@ abstract class MathEngineRest {
 	/**
 	 * @param SimpleXMLElement $xmlRoot
 	 */
-	abstract function processMathResults( $xmlRoot ) ;
+	abstract function processMathResults( $xmlRoot );
 
 	/**
 	 * @param $numProcess
@@ -152,7 +157,9 @@ abstract class MathEngineRest {
 		}
 
 		$this->size = (int)$xres["total"];
-		LoggerFactory::getInstance( 'MathSearch' )->warning( $this->size . " results retrieved from $this->backendUrl." );
+		LoggerFactory::getInstance(
+			'MathSearch'
+		)->warning( $this->size . " results retrieved from $this->backendUrl." );
 		if ( $this->size == 0 ) {
 			return true;
 		}
@@ -167,7 +174,9 @@ abstract class MathEngineRest {
 					Http::post( $this->backendUrl, array( "postData" => $query, "timeout" => 60 ) );
 				LoggerFactory::getInstance( 'mathsearch' )->debug( 'MWS query:' . $query );
 				if ( $res == false ) {
-					LoggerFactory::getInstance( 'MathSearch' )->error( "Nothing retrieved from $this->backendUrl. Check if mwsd is running there" );
+					LoggerFactory::getInstance(
+						'MathSearch'
+					)->error( "Nothing retrieved from $this->backendUrl. Check if mwsd is running there" );
 					return false;
 				}
 				$xres = new SimpleXMLElement( $res );

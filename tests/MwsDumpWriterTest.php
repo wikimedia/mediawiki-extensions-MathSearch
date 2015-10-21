@@ -5,7 +5,7 @@
  * @group MathSearch
  */
 class MwsDumpWriterTest extends MediaWikiTestCase {
-	//TODO: update tests strategy resources etc.
+	// TODO: update tests strategy resources etc.
 	private $testWikiText = <<<'WikiText'
 <math>
 E = m c
@@ -24,6 +24,7 @@ E = m c ^ 4
 </math>
 WikiText;
 
+	// @codingStandardsIgnoreStart
 	private $expectedOutput = <<<'XML'
 <?xml version="1.0"?>
 <mws:harvest xmlns:mws="http://search.mathweb.org/ns" xmlns:m="http://www.w3.org/1998/Math/MathML">
@@ -157,34 +158,40 @@ WikiText;
 </mws:expr>
 </mws:harvest>
 XML;
-
+// @codingStandardsIgnoreEnd
 
 	public function testExtract() {
-		$mathTags = MathObject::extractMathTagsFromWikiText( $this->testWikiText ) ;
+		$mathTags = MathObject::extractMathTagsFromWikiText( $this->testWikiText );
 		$revId = 28378;
 		$dw = new MwsDumpWriter();
 		MathSearchHooks::resetId();
-		$this->setMwGlobals( array(
-			'wgMathValidModes' => array( 'latexml' ) ,
-			'wgMathDefaultLaTeXMLSetting' => array(
-				'format' => 'xhtml',
-				'whatsin' => 'math',
-				'whatsout' => 'math',
-				'pmml',
-				'cmml',
-				'nodefaultresources',
-				'preload' => array( 'LaTeX.pool',
-					'article.cls',
-					'amsmath.sty',
-					'amsthm.sty',
-					'amstext.sty',
-					'amssymb.sty',
-					'eucal.sty',
-					'[dvipsnames]xcolor.sty',
-					'url.sty',
-					'hyperref.sty',
-					'[ids]latexml.sty',
-					'texvc' ) ) ) );
+		$this->setMwGlobals(
+			array(
+				'wgMathValidModes' => array( 'latexml' ),
+				'wgMathDefaultLaTeXMLSetting' => array(
+					'format' => 'xhtml',
+					'whatsin' => 'math',
+					'whatsout' => 'math',
+					'pmml',
+					'cmml',
+					'nodefaultresources',
+					'preload' => array(
+						'LaTeX.pool',
+						'article.cls',
+						'amsmath.sty',
+						'amsthm.sty',
+						'amstext.sty',
+						'amssymb.sty',
+						'eucal.sty',
+						'[dvipsnames]xcolor.sty',
+						'url.sty',
+						'hyperref.sty',
+						'[ids]latexml.sty',
+						'texvc'
+					)
+				)
+			)
+		);
 		foreach ( $mathTags as $tag ) {
 			$id = null;
 			$content = $tag[1];

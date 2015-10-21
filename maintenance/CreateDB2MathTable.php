@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once( __DIR__. '/IndexBase.php' );
+require_once ( __DIR__. '/IndexBase.php' );
 
 /**
  * @author Moritz Schubotz
@@ -90,13 +90,17 @@ class CreateDB2MathTable extends IndexBase {
 		if ( $this->conn ) {
 			if ( $this->getOption( 'truncate', false ) ) {
 				db2_exec( $this->conn, 'DROP TABLE "math"' );
+				// @codingStandardsIgnoreStart
 				db2_exec( $this->conn,
 					'CREATE TABLE "math" ("math_md5" CHAR(32), "math_tex" VARCHAR(1000), "mathindex_revision_id" INTEGER, "mathindex_anchord" INTEGER, "math_mathml" XML)' );
+				// @codingStandardsIgnoreEnd
 			}
 			$this->statment =
+			// @codingStandardsIgnoreStart
 				db2_prepare( $this->conn,
 					'INSERT INTO "math" ("math_md5", "math_tex", "mathindex_revision_id", "mathindex_anchord", "math_mathml") VALUES(?, ?, ?, ?, ?)' );
-			//db2_autocommit($this->conn , DB2_AUTOCOMMIT_OFF);
+			// @codingStandardsIgnoreEnd
+			// db2_autocommit($this->conn , DB2_AUTOCOMMIT_OFF);
 		}
 		parent::execute();
 	}
@@ -104,4 +108,4 @@ class CreateDB2MathTable extends IndexBase {
 
 $maintClass = 'CreateDB2MathTable';
 /** @noinspection PhpIncludeInspection */
-require_once( RUN_MAINTENANCE_IF_MAIN );
+require_once ( RUN_MAINTENANCE_IF_MAIN );

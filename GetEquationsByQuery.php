@@ -22,7 +22,9 @@ class GetEquationsByQuery extends SpecialPage {
 	function execute( $par ) {
 		global $wgRequest, $wgOut, $wgMathDebug;
 		if ( ! $wgMathDebug ) {
-			$wgOut->addWikiText( "==Debug mode needed==  This function is only supported in math debug mode." );
+			$wgOut->addWikiText(
+				"==Debug mode needed==  This function is only supported in math debug mode."
+			);
 			return false;
 		}
 
@@ -48,7 +50,9 @@ class GetEquationsByQuery extends SpecialPage {
 			default:
 				$sqlFilter = array( 'math_status' => '3', 'valid_xml' => '0' );
 		}
-		$wgOut->addWikiText( "Displaying first 10 equation for query: <pre>" . var_export( $sqlFilter, true ) . '</pre>' );
+		$wgOut->addWikiText(
+			"Displaying first 10 equation for query: <pre>" . var_export( $sqlFilter, true ) . '</pre>'
+		);
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 				array( 'math' ),
@@ -60,8 +64,10 @@ class GetEquationsByQuery extends SpecialPage {
 						'OFFSET' => $wgRequest->getInt( 'offset', 0 ) )
 		);
 		foreach ( $res as $row ) {
-			$wgOut->addWikiText( 'Renderd at <b>' . $row->math_timestamp . '</b> ', FALSE );
+			$wgOut->addWikiText( 'Renderd at <b>' . $row->math_timestamp . '</b> ', false );
+			// @codingStandardsIgnoreStart
 			$wgOut->addHtml( '<a href="/index.php/Special:FormulaInfo?tex=' . urlencode( $row->math_tex ) . '">more info</a>' );
+			// @codingStandardsIgnoreEnd
 			$wgOut->addWikiText( ':TeX-Code:<pre>' . $row->math_tex . '</pre> <br />' );
 			$showmml = $wgRequest->getVal( 'showmml', false );
 			if ( $showmml ) {

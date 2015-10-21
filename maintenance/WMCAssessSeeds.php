@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 /**
  * Class BatchExport
@@ -31,8 +31,10 @@ class WMCAssessSeeds extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
+		// @codingStandardsIgnoreStart
 		$this->mDescription =
 			'Automatically creates assessment for formulae and revisions that have been used to create the topics.';
+		// @codingStandardsIgnoreEnd
 		$this->addArg( 'user', 'The user that is marked as assessor.', true );
 	}
 
@@ -44,6 +46,7 @@ class WMCAssessSeeds extends Maintenance {
 		$uId = $user->getId();
 		if ( $uId > 0 ) {
 			$dbw = wfGetDB( DB_MASTER );
+			// @codingStandardsIgnoreStart
 			$this->output( "Insert formula assessments...\n" );
 			$dbw->query( "INSERT IGNORE INTO math_wmc_assessed_formula SELECT {$uId}, math_inputhash, qId, {$this->DEFAULT_ASSESSMENT} FROM math_wmc_ref" );
 			$this->output( "Inserted {$dbw->affectedRows()} formula assessments.\n" );
@@ -52,10 +55,11 @@ class WMCAssessSeeds extends Maintenance {
 			$this->output( "Inserted {$dbw->affectedRows()} revision assessments.\n" );
 		} else {
 			$this->output( "User {$this->getArg( 0 )} is invalid.\n" );
+			// @codingStandardsIgnoreEnd
 		}
 	}
 }
 
 $maintClass = 'WMCAssessSeeds';
 /** @noinspection PhpIncludeInspection */
-require_once( RUN_MAINTENANCE_IF_MAIN );
+require_once ( RUN_MAINTENANCE_IF_MAIN );

@@ -42,6 +42,7 @@ class SpecialDisplayTopics extends SpecialPage {
 	private function displayOverview( $filter = 1 ) {
 		$dbw = wfGetDB( DB_MASTER );
 		$cols = array( '#', 'fId', '#Var', '#matches', 'query', 'reference' );
+		// @codingStandardsIgnoreStart
 		$res = $dbw->query( <<<SQL
 SELECT
   concat( '[[{{FULLPAGENAME}}/',qId,'|',qId,']]'),
@@ -59,6 +60,7 @@ FROM math_wmc_ref ref
   GROUP BY qId
 SQL
 		);
+		// @codingStandardsIgnoreEnd
 		$this->getOutput()->addWikiText( MathSearchUtils::dbRowToWikiTable( $res, $cols ) );
 	}
 
@@ -71,8 +73,8 @@ SQL
 			return;
 		}
 		$this->displayOverview( "qID = $qId" );
-		$this->printMostFrequentRuns($qId);
-		$this->printIndividualResults($qId);
+		$this->printMostFrequentRuns( $qId );
+		$this->printIndividualResults( $qId );
 	}
 
 	/**
@@ -82,38 +84,39 @@ SQL
 	 */
 	/** @noinspection PhpExpressionResultUnusedInspection */
 	private function createTopicTex( $qId, $qVarCount ) {
-//		$this->printMostFrequentRuns( $qId );
-//		if ( $qVarCount > 0 ) {
-//			$relevance = "  \\begin{relevance}[{$qVarCount}]
-//  $row->rendering
-//  \\end{relevance}";
-//		} else {
-//			$relevance = '';
-//		}
-//		$individualResults = '';
-//		$res = $dbr->select( 'math_wmc_page_ranks', '*', array( 'qId' => $row->qId ) );
-//		foreach ( $res as $rank ) {
-//			$individualResults .= $rank->runId . ': ' . $rank->rank . '; ';
-//		}
-//		$out = <<<TEX
-//\\begin{topic}{{$tName}}
-//\\begin{fquery}
-//  \${$row->texQuery}\$
-//  \\end{fquery}
-//
-//\\begin{private}
-//  $relevance
-//  The reference entry occurs {$row->exactMatches} time(s) in the dataset.
-//  In the top 25 results the page {$row->title} occurred {$row->count} times.
-//  The rank varied between {$row->min} and {$row->max} with an average of {$row->avg}.
-//  In detail the run results are the following: $individualResults
-//  $mostFrequent
-//\\end{private}
-//\\end{topic}
-//TEX;
+		/*
+		$this->printMostFrequentRuns( $qId );
+		if ( $qVarCount > 0 ) {
+			$relevance = "  \\begin{relevance}[{$qVarCount}]
+			$row->rendering
+			\\end{relevance}";
+		} else {
+			$relevance = '';
+		}
+		$individualResults = '';
+		$res = $dbr->select( 'math_wmc_page_ranks', '*', array( 'qId' => $row->qId ) );
+		foreach ( $res as $rank ) {
+			$individualResults .= $rank->runId . ': ' . $rank->rank . '; ';
+		}
+		$out = <<<TEX
+		\\begin{topic}{{$tName}}
+		\\begin{fquery}
+		\${$row->texQuery}\$
+		\\end{fquery}
 
-//		return $out;
+		\\begin{private}
+		$relevance
+		The reference entry occurs {$row->exactMatches} time(s) in the dataset.
+		In the top 25 results the page {$row->title} occurred {$row->count} times.
+		The rank varied between {$row->min} and {$row->max} with an average of {$row->avg}.
+		In detail the run results are the following: $individualResults
+		$mostFrequent
+		\\end{private}
+		\\end{topic}
+		TEX;
 
+		return $out;
+		*/
 	}
 
 	/**
@@ -137,23 +140,25 @@ SQL
 			group by r.math_inputhash
 			having min(rank) < 50
 			order by count(distinct runs.userId) desc, min(rank) asc
-			Limit 15" );
-		$out->addWikiText( "== Most frequent results ==");
+			Limit 15"
+		);
+		$out->addWikiText( "== Most frequent results ==" );
 		foreach ( $res as $hit ) {
 			$out->addWikiText( "*<math>{$hit->rendering}</math>  was found by {$hit->cntUser} users in " .
-				" {$hit->cntRun} runs with minimal rank of {$hit->minRank} \n") ;
+				" {$hit->cntRun} runs with minimal rank of {$hit->minRank} \n" );
 			$mo = new MathObject( $hit->rendering );
 			$all = $mo->getAllOccurences();
-			foreach( $all as  $occ ){
+			foreach ( $all as  $occ ) {
 				$out->addWikiText( '*' . $occ->printLink2Page( false ) );
 			}
 		}
 	}
-	private function printIndividualResults( $qId ){
+
+	private function printIndividualResults( $qId ) {
 		$out = $this->getOutput();
-		$out->addWikiText("== Individual results ==");
+		$out->addWikiText( "== Individual results ==" );
 		$dbr = wfGetDB( DB_SLAVE );
-		if ( !$dbr->tableExists( 'math_wmc_page_ranks' ) ){
+		if ( !$dbr->tableExists( 'math_wmc_page_ranks' ) ) {
 			MathSearchUtils::createEvaluationTables();
 		}
 		$res = $dbr->select( 'math_wmc_page_ranks', '*', array( 'qId' => $qId ) );

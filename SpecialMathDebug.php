@@ -1,4 +1,5 @@
 <?php
+
 use MediaWiki\Logger\LoggerFactory;
 
 class SpecialMathDebug extends SpecialPage {
@@ -6,6 +7,7 @@ class SpecialMathDebug extends SpecialPage {
 	function __construct() {
 		parent::__construct( 'MathDebug' );
 	}
+
 	/**
 	 * Sets headers - this should be called from the execute() method of all derived classes!
 	 */
@@ -16,7 +18,6 @@ class SpecialMathDebug extends SpecialPage {
 		$out->setPageTitle( $this->getDescription() );
 	}
 
-
 	function execute( $par ) {
 		global $wgRequest;
 		$offset = $wgRequest->getVal( 'offset', 0 );
@@ -24,14 +25,14 @@ class SpecialMathDebug extends SpecialPage {
 		$page = $wgRequest->getVal( 'page', 'Testpage' );
 		$action = $wgRequest->getVal( 'action', 'show' );
 		$purge = $wgRequest->getVal( 'purge', '' );
-		if (  !$this->userCanExecute( $this->getUser() )  ) {
+		if ( !$this->userCanExecute( $this->getUser() ) ) {
 			$this->displayRestrictionError();
 		} else {
-			if ( $action != 'generateParserTests'  ){
+			if ( $action != 'generateParserTests' ) {
 				$this->setHeaders();
 				$this->displayButtons( $offset, $length, $page, $action, $purge );
-				}
-			switch ( $action ){
+			}
+			switch ( $action ) {
 				case 'parserTest':
 					$this->generateLaTeXMLOutput( $offset, $length, $page );
 					break;
@@ -47,7 +48,10 @@ class SpecialMathDebug extends SpecialPage {
 		}
 		return;
 	}
-	function displayButtons( $offset = 0, $length = 10, $page = 'Testpage', $action = 'show', $purge='' ) {
+
+	function displayButtons(
+		$offset = 0, $length = 10, $page = 'Testpage', $action = 'show', $purge=''
+	) {
 		$out = $this->getOutput();
 		// TODO check if addHTML has to be sanitized
 		$out->addHTML( '<form method=\'get\'>'
@@ -67,8 +71,9 @@ class SpecialMathDebug extends SpecialPage {
 			. ' purge <input type="checkbox" name="purge" value="checked"'
 			. $purge
 			.'></form>'
-			);
+		);
 	}
+
 	public function compareParser( $offset = 0, $length = 10, $page = 'Testpage' ) {
 		global $wgMathUseLaTeXML, $wgRequest, $wgMathLaTeXMLUrl;
 		$out = $this->getOutput();
@@ -82,16 +87,16 @@ class SpecialMathDebug extends SpecialPage {
 		$i = 0;
 		$str_out = '';
 		$renderer = new MathLaTeXML();
-		$renderer->setPurge( );
+		$renderer->setPurge();
 		$diffFormatter = new TableDiffFormatter();
 		if ( is_array( $formulae ) ) {
 			foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
 				$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
 				$renderer->setTex( $formula );
 				$wgMathLaTeXMLUrl = $parserA;
-				$stringA = $renderer->render( true ) ;
+				$stringA = $renderer->render( true );
 				$wgMathLaTeXMLUrl = $parserB;
-				$stringB = $renderer->render( true ) ;
+				$stringB = $renderer->render( true );
 				$diff = new Diff( array( $stringA ), array( $stringB ) );
 				if ( $diff->isEmpty() ) {
 					$out->addWikiText( 'Output is identical' );
@@ -100,7 +105,9 @@ class SpecialMathDebug extends SpecialPage {
 						$renderer->getPostValue() . '\' ' . $parserA . '</source>' );
 					$out->addWikiText( 'Requst B <source lang="bash"> curl -d \'' .
 						$renderer->getPostValue() . '\' ' . $parserB . '</source>' );
-					$out->addWikiText( 'Diff: <source lang="diff">' . $diffFormatter->format( $diff ) . '</source>' );
+					$out->addWikiText(
+						'Diff: <source lang="diff">' . $diffFormatter->format( $diff ) . '</source>'
+					);
 					$out->addWikiText( 'XML Element based:' );
 					$XMLA = explode( '>', $stringA );
 					$XMLB = explode( '>', $stringB );
@@ -121,11 +128,15 @@ class SpecialMathDebug extends SpecialPage {
 		global $wgMathMathValidModes;
 		$out = $this->getOutput();
 		$i = 0;
-		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t ) {
+		foreach (
+			array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t
+		) {
 			$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
-			$out->addHTML( self::render( $t, 'source' , $purge) );
+			$out->addHTML( self::render( $t, 'source', $purge ) );
 			$out->addHTML( self::render( $t, 'png', $purge ) );
-			$out->addWikiText( 'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>');
+			$out->addWikiText(
+				'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>'
+			);
 			if ( in_array( 'latexml', $wgMathMathValidModes ) ) {
 				$out->addHTML( self::render( $t, 'latexml', $purge ) );
 			}
@@ -133,20 +144,24 @@ class SpecialMathDebug extends SpecialPage {
 		echo $i;
 	}
 
-	public function generateParserTests( $offset = 0, $length = 10, $page = 'Testpage' , $purge = true ) {
+	public function generateParserTests(
+		$offset = 0, $length = 10, $page = 'Testpage' , $purge = true
+	) {
 		$res = $this->getRequest()->response();
-		$res->header('Content-Type: application/octet-stream');
-		$res->header('charset=utf-8');
-		$res->header('Content-Disposition: attachment;filename=ParserTest.data');
+		$res->header( 'Content-Type: application/octet-stream' );
+		$res->header( 'charset=utf-8' );
+		$res->header( 'Content-Disposition: attachment;filename=ParserTest.data' );
 
 		$out = $this->getOutput();
 		$out->setArticleBodyOnly( true );
-		$parserTests= array();
-		foreach ( array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $input ) {
+		$parserTests = array();
+		foreach (
+			array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $input
+		) {
 			$output = MathRenderer::renderMath( $input, array(), 'png' );
-			$parserTests[ ]= array( (string) $input , $output);
+			$parserTests[]= array( (string) $input , $output );
 		}
-		$out->addHTML( serialize($parserTests) );
+		$out->addHTML( serialize( $parserTests ) );
 	}
 
 	function generateLaTeXMLOutput( $offset = 0, $length = 10, $page = 'Testpage' ) {
@@ -160,14 +175,14 @@ class SpecialMathDebug extends SpecialPage {
 		$formulae = self::getMathTagsFromPage( $page );
 		$i = 0;
 		$renderer = new MathLaTeXML();
-		$renderer->setPurge( );
+		$renderer->setPurge();
 		$tstring = '';
 		if ( is_array( $formulae ) ) {
 			foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
 				$tstring .= "\n!! test\n Test #" . ( $offset + $i++ ) . ": $key \n!! input"
 					. "\n<math>$formula</math>\n!! result\n";
 				$renderer->setTex( $formula );
-				$tstring .= $renderer->render( true ) ;
+				$tstring .= $renderer->render( true );
 				$tstring .= "\n!! end\n";
 			}
 		} else {
@@ -176,8 +191,9 @@ class SpecialMathDebug extends SpecialPage {
 		$out->addWikiText( '<source>' . $tstring . '<\source>' );
 		return true;
 	}
+
 	private static function render( $t, $mode, $purge = true ) {
-		$modeInt= (int) substr($mode, 0,1);
+		$modeInt= (int) substr( $mode, 0, 1 );
 		$renderer = MathRenderer::getRenderer( $t, array(), $modeInt );
 		$renderer->setPurge( $purge );
 		$renderer->render();
@@ -189,20 +205,21 @@ class SpecialMathDebug extends SpecialPage {
 
 	private static function getMathTagsFromPage( $titleString = 'Testpage' ) {
 		$title = Title::newFromText( $titleString );
-		if ($title->exists()){
-		$article = new Article( $title );
-		// TODO: find a better way to extract math elements from a page
-		$wikiText = $article->getPage()->getContent()->getNativeData();
-		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
-		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
-		$matches = preg_match_all( "#<math>(.*?)</math>#s", $wikiText,  $math );
-		// TODO: Find a way to specify a key e.g '\nRenderTest:(.?)#<math>(.*?)</math>#s\n'
-		// leads to array('\1'->'\2') with \1 eg Bug 2345 and \2 the math content
-		return $math[1];}
-		else {
+		if ( $title->exists() ) {
+			$article = new Article( $title );
+			// TODO: find a better way to extract math elements from a page
+			$wikiText = $article->getPage()->getContent()->getNativeData();
+			$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
+			$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
+			$matches = preg_match_all( "#<math>(.*?)</math>#s", $wikiText,  $math );
+			// TODO: Find a way to specify a key e.g '\nRenderTest:(.?)#<math>(.*?)</math>#s\n'
+			// leads to array('\1'->'\2') with \1 eg Bug 2345 and \2 the math content
+			return $math[1];
+		} else {
 			return 'Page does not exist';
 		}
 	}
+
 	private function getTexvcTex( $tex ) {
 		$renderer = MathRenderer::getRenderer( $tex, array(), 'source' );
 		$renderer->checkTex();

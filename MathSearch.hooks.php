@@ -8,7 +8,7 @@ use MediaWiki\Logger\LoggerFactory;
  * GPLv2 license; info in main package.
  */
 class MathSearchHooks {
-	static $nextID = 0;
+	public static $nextID = 0;
 
 	/**
 	 * @return int
@@ -95,8 +95,12 @@ class MathSearchHooks {
 				)
 			);
 			if ( $exists ) {
-				LoggerFactory::getInstance( 'MathSearch' )->warning( 'Index $' . $tex . '$ already in database.' );
-				LoggerFactory::getInstance( 'MathSearch' )->warning( "$revId-$eid with hash " . bin2hex( $inputHash ) );
+				LoggerFactory::getInstance(
+					'MathSearch'
+				)->warning( 'Index $' . $tex . '$ already in database.' );
+				LoggerFactory::getInstance(
+					'MathSearch'
+				)->warning( "$revId-$eid with hash " . bin2hex( $inputHash ) );
 			} else {
 				self::writeMathIndex( $revId, $eid, $inputHash, $tex );
 			}
@@ -199,7 +203,9 @@ class MathSearchHooks {
 	 * Alternative Callback function that is called after a formula was rendered
 	 * used for test corpus generation for NTCIR11 Math-2
 	 * You can enable this alternative hook via setting
-	 * <code>$wgHooks['MathFormulaRendered'] = array('MathSearchHooks::onMathFormulaRenderedNoLink');</code>
+	 * <code>$wgHooks['MathFormulaRendered'] = array(
+	 *	 'MathSearchHooks::onMathFormulaRenderedNoLink'
+	 * );</code>
 	 * in your local settings
 	 *
 	 * @param Parser $parser
@@ -286,7 +292,7 @@ class MathSearchHooks {
 			return '';
 		}
 		LoggerFactory::getInstance( 'MathSearch' )->debug( 'Render mquery tag.' );
-		//TODO: Report %\n problem to LaTeXML upstream
+		// TODO: Report %\n problem to LaTeXML upstream
 		$content = preg_replace( '/%\n/', '', $content );
 		$renderer = new MathLaTeXML( $content );
 		$mQuerySettings = $wgMathDefaultLaTeXMLSetting;
@@ -299,7 +305,9 @@ class MathSearchHooks {
 		return array( $renderedMath, "markerType" => 'nowiki' );
 	}
 
-	static function onArticleDeleteComplete( &$article, User &$user, $reason, $id, $content, $logEntry ) {
+	static function onArticleDeleteComplete(
+		&$article, User &$user, $reason, $id, $content, $logEntry
+	) {
 		$revId = $article->getTitle()->getLatestRevID();
 		$mathEngineBaseX = new MathEngineBaseX();
 		if ( $mathEngineBaseX->update( "", array( $revId ) ) ){
@@ -331,9 +339,11 @@ class MathSearchHooks {
 	 */
 	public static function onPageContentSaveComplete( $article, $user, $content, $summary, $isMinor,
 		$isWatch, $section, $flags, $revision, $status, $baseRevId ) {
-		//TODO: Update to JOB
+		// TODO: Update to JOB
 		if ( $revision == null ) {
-			LoggerFactory::getInstance( 'MathSearch' )->warning( "Empty update for {$article->getTitle()->getFullText()}." );
+			LoggerFactory::getInstance(
+				'MathSearch'
+			)->warning( "Empty update for {$article->getTitle()->getFullText()}." );
 			return true;
 		}
 		$mathTags =
@@ -366,9 +376,13 @@ class MathSearchHooks {
 			$res = false;
 		}
 		if ( $res ) {
-			LoggerFactory::getInstance( 'MathSearch' )->warning( "Update for $revId (was $prevRevId) successful." );
+			LoggerFactory::getInstance(
+				'MathSearch'
+			)->warning( "Update for $revId (was $prevRevId) successful." );
 		} else {
-			LoggerFactory::getInstance( 'MathSearch' )->warning( "Update for $revId (was $prevRevId) failed." );
+			LoggerFactory::getInstance(
+				'MathSearch'
+			)->warning( "Update for $revId (was $prevRevId) failed." );
 		}
 
 		return true;

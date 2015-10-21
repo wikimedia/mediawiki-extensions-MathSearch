@@ -27,16 +27,16 @@ EOT;
 
 	public function test() {
 		$comment = MathObject::extractMathTagsFromWikiText( $this->HTMLComment );
-		$this->assertEquals( 0, sizeof( $comment ) );
+		$this->assertEquals( 0, count( $comment ) );
 		$noWiki = MathObject::extractMathTagsFromWikiText( $this->noWiki );
-		$this->assertEquals( 0, sizeof( $noWiki ) );
+		$this->assertEquals( 0, count( $noWiki ) );
 		$attributeTest = MathObject::extractMathTagsFromWikiText( $this->attributes );
-		$this->assertEquals( 1, sizeof( $attributeTest ) );
+		$this->assertEquals( 1, count( $attributeTest ) );
 		$expected = array( 'x' => 'x1', 'y' => 'y1' );
 		$first = array_shift( $attributeTest );
 		$this->assertEquals( $expected, $first[2] );
 		$longMatch = MathObject::extractMathTagsFromWikiText( $this->longSample );
-		$this->assertEquals( 2, sizeof( $longMatch ) );
+		$this->assertEquals( 2, count( $longMatch ) );
 		$first = array_shift( $longMatch );
 		$this->assertEquals( ' x^2 ', $first[1] );
 		$second = array_shift( $longMatch );

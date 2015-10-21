@@ -1,5 +1,7 @@
 <?php
+
 use MediaWiki\Logger\LoggerFactory;
+
 /**
  * MediaWiki MathSearch extension
  *
@@ -11,6 +13,7 @@ use MediaWiki\Logger\LoggerFactory;
  */
 class MathEngineBaseX extends MathEngineRest {
 	protected $type = "mws";
+
 	function __construct( $query = null ) {
 		global $wgMathSearchBaseXBackendUrl;
 		parent::__construct( $query, $wgMathSearchBaseXBackendUrl . 'api/mwsquery' );
@@ -29,28 +32,29 @@ class MathEngineBaseX extends MathEngineRest {
 				// $xmlObject = new XmlTypeCheck( $jsonResult->response, null, false );
 				try {
 					$xRes = new SimpleXMLElement( $jsonResult->response );
-				} catch (Exception $e){
+				} catch ( Exception $e ) {
 					global $wgOut;
-					$wgOut->addWikiText("invalid XML <code>{$jsonResult->response}</code>");
+					$wgOut->addWikiText( "invalid XML <code>{$jsonResult->response}</code>" );
 					return false;
 				}
-				if (  $xRes->run->result ){
+				if ( $xRes->run->result ) {
 					$this->processMathResults( $xRes );
 					return true;
 				} else {
 					global $wgOut;
-					$wgOut->addWikiText("Result was empty.");
+					$wgOut->addWikiText( "Result was empty." );
 					return false;
 				}
 			} else {
 				global $wgOut;
-				$wgOut->addWikiText("<code>{$jsonResult->response}</code>");
+				$wgOut->addWikiText( "<code>{$jsonResult->response}</code>" );
 				return false;
 			}
 		} else {
 			return false;
 		}
 	}
+
 	/**
 	 * @param SimpleXMLElement $xmlRoot
 	 */
@@ -58,7 +62,7 @@ class MathEngineBaseX extends MathEngineRest {
 		foreach ( $xmlRoot->run->result->children() as $page ) {
 			$attrs = $page->attributes();
 			$uri = explode( "#", $attrs["id"] );
-			if ( sizeof($uri) != 2 ) {
+			if ( count( $uri ) != 2 ) {
 				LoggerFactory::getInstance( 'MathSearch' )->error( 'Can not parse' . $attrs['id'] );
 				continue;
 			}
@@ -66,8 +70,9 @@ class MathEngineBaseX extends MathEngineRest {
 			$AnchorID = $uri[1];
 			$this->relevanceMap[] = $revisionID;
 			$substarr = array();
-			//TODO: Add hit support.
-			$this->resultSet[(string) $revisionID][(string) $AnchorID][] = array( "xpath" => (string) $attrs["xpath"], "mappings" => $substarr ); // ,"original"=>$page->asXML()
+			// TODO: Add hit support.
+			$this->resultSet[(string) $revisionID][(string) $AnchorID][] =
+				array( "xpath" => (string) $attrs["xpath"], "mappings" => $substarr );
 		}
 		$this->relevanceMap = array_unique( $this->relevanceMap );
 	}
@@ -76,20 +81,22 @@ class MathEngineBaseX extends MathEngineRest {
 	 *
 	 *
 	 */
-	function getPostData( $numProcess ){
-		return json_encode( array( "type" => $this->type, "query" => $this->query->getCQuery()) );
+	function getPostData( $numProcess ) {
+		return json_encode( array( "type" => $this->type, "query" => $this->query->getCQuery() ) );
 	}
 
-	function update( $harvest = "", array $delte=array() ){
+	function update( $harvest = "", array $delte=array() ) {
 		global $wgMathSearchBaseXBackendUrl;
-		$json_payload = json_encode( array( "harvest" => $harvest, "delete" => $delte) );
-		$res = self::doPost( $wgMathSearchBaseXBackendUrl. 'api/update', $json_payload);
-		if($res){
-			$resJson = json_decode($res);
-			if ($resJson->success==true){
+		$json_payload = json_encode( array( "harvest" => $harvest, "delete" => $delte ) );
+		$res = self::doPost( $wgMathSearchBaseXBackendUrl. 'api/update', $json_payload );
+		if ( $res ) {
+			$resJson = json_decode( $res );
+			if ( $resJson->success==true ) {
 				return true;
 			} else {
-				LoggerFactory::getInstance( 'MathSearch' )->warning( 'harvest update failed' . var_export( $resJson, true ) );
+				LoggerFactory::getInstance(
+					'MathSearch'
+				)->warning( 'harvest update failed' . var_export( $resJson, true ) );
 			}
 		}
 		return false;

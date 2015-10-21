@@ -11,7 +11,7 @@ class MwsDumpWriter {
 		$this->InitializeHeader();
 	}
 
-	public function InitializeHeader( ) {
+	public function InitializeHeader() {
 		$ns = $this->mwsns;
 		$this->XMLHead = "<?xml version=\"1.0\"?>\n<" . $ns .
 			'harvest xmlns:mws="http://search.mathweb.org/ns" xmlns:m="http://www.w3.org/1998/Math/MathML">';
@@ -34,8 +34,8 @@ class MwsDumpWriter {
 			return '';
 		}
 		return $this->getMwsExpression( utf8_decode( $row->math_mathml ),
-			$row->mathindex_revision_id, $row->mathindex_anchor  );
-
+			$row->mathindex_revision_id, $row->mathindex_anchor
+		);
 	}
 
 	public function getHead() {
@@ -72,7 +72,7 @@ class MwsDumpWriter {
 		$this->mwsns = $mwsns;
 	}
 
-	public function getOutput(){
+	public function getOutput() {
 		return $this->getHead() . $this->outBuffer . $this->getFooter();
 	}
 }

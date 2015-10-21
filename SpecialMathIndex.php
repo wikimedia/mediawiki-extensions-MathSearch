@@ -21,7 +21,7 @@ class SpecialMathIndex extends SpecialPage {
 		$output = $this->getOutput();
 		$this->setHeaders();
 		if ( $wgMathDebug ) {
-			if (  !$this->userCanExecute( $this->getUser() )  ) {
+			if ( !$this->userCanExecute( $this->getUser() ) ) {
 				$this->displayRestrictionError();
 				return;
 			} else {
@@ -34,7 +34,7 @@ class SpecialMathIndex extends SpecialPage {
 	}
 	function testIndex() {
 		$out = $this->getOutput();
-		$out->addWikiText('This is a test.');
+		$out->addWikiText( 'This is a test.' );
 		$formDescriptor = array(
 			'script' => array(
 				'label' => 'Script', # What's the label of the field
@@ -42,32 +42,38 @@ class SpecialMathIndex extends SpecialPage {
 				'help' => 'for example: \sin(?x^2)',
 				'default' => 0,
 				'options' => array( # The options available within the menu (displayed => value)
-					'UpdateMath' => self::SCRIPT_UPDATE_MATH, # depends on how you see it but keys and values are kind of mixed here
-					'ExportIndex' => self::SCRIPT_WRITE_INDEX, # "Option 1" is the displayed content, "1" is the value
-					'something else' => 'option2id' # Hmtl Result = <option value="option2id">Option 2</option>
+					# depends on how you see it but keys and values are kind of mixed here
+					'UpdateMath' => self::SCRIPT_UPDATE_MATH,
+					# "Option 1" is the displayed content, "1" is the value
+					'ExportIndex' => self::SCRIPT_WRITE_INDEX,
+					# Hmtl Result = <option value="option2id">Option 2</option>
+					'something else' => 'option2id'
 					)
 				)
 			);
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() ); # We build the HTMLForm object
 		$htmlForm->setSubmitText( 'Search' );
-		$htmlForm->setSubmitCallback( array( get_class($this) , 'processInput' ) );
-		$htmlForm->setHeaderText("<h2>Select script to run</h2>");
+		$htmlForm->setSubmitCallback( array( get_class( $this ) , 'processInput' ) );
+		$htmlForm->setHeaderText( "<h2>Select script to run</h2>" );
 		$htmlForm->show(); # Displaying the form
 	}
+
 	/* We write a callback function */
 	# OnSubmit Callback, here we do all the logic we want to do...
 	public static function processInput( $formData ) {
-		switch ($formData['script']) {
+		switch ( $formData['script'] ) {
 			case self::SCRIPT_UPDATE_MATH:
 				require_once dirname( __FILE__ ) .'/maintenance/UpdateMath.php';
 				$updater = new UpdateMath();
-				$updater->loadParamsAndArgs(null, array("max"=>1), null);
+				$updater->loadParamsAndArgs( null, array( "max"=>1 ), null );
 				$updater->execute();
 				break;
 			case self::SCRIPT_WRITE_INDEX:
 				require_once dirname( __FILE__ ) .'/maintenance/CreateMathIndex.php';
 				$updater = new CreateMathIndex();
-				$updater->loadParamsAndArgs(null, array("mwsns"=>'mws:'), array(dirname( __FILE__ ) .'/mws/data/wiki'));
+				$updater->loadParamsAndArgs( null, array( "mwsns"=>'mws:' ),
+					array( dirname( __FILE__ ) .'/mws/data/wiki' )
+				);
 				$updater->execute();
 				break;
 			default:
