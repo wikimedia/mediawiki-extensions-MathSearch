@@ -128,7 +128,7 @@ class ImportCsv {
 
 		$table = array();
 
-		while ( $line = fgetcsv( $csv_file ) ) {
+		while ( ( $line = fgetcsv( $csv_file ) ) !== false ) {
 			array_push( $table, $line );
 		}
 		fclose( $csv_file );
