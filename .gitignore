@@ -7,3 +7,6 @@
 .buildpath
 nbproject
 node_modules/
+vendor/
+npm-debug.log
+composer.lock
