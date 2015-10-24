@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once ( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
+require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 class ExportMathCache extends Maintenance {
 	const DEFAULT_TABLE = 'mathoid';
@@ -71,7 +71,8 @@ class ExportMathCache extends Maintenance {
 			'',
 			__METHOD__,
 			$options );
-		if ( $res === false ) return false;
+		if ( $res === false ) { return false;
+	 }
 		// Convert result wrapper to array
 		foreach ( $res as $row ){
 			$out[] = array(

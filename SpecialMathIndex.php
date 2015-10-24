@@ -63,16 +63,16 @@ class SpecialMathIndex extends SpecialPage {
 	public static function processInput( $formData ) {
 		switch ( $formData['script'] ) {
 			case self::SCRIPT_UPDATE_MATH:
-				require_once dirname( __FILE__ ) .'/maintenance/UpdateMath.php';
+				require_once __DIR__ .'/maintenance/UpdateMath.php';
 				$updater = new UpdateMath();
 				$updater->loadParamsAndArgs( null, array( "max"=>1 ), null );
 				$updater->execute();
 				break;
 			case self::SCRIPT_WRITE_INDEX:
-				require_once dirname( __FILE__ ) .'/maintenance/CreateMathIndex.php';
+				require_once __DIR__ .'/maintenance/CreateMathIndex.php';
 				$updater = new CreateMathIndex();
 				$updater->loadParamsAndArgs( null, array( "mwsns"=>'mws:' ),
-					array( dirname( __FILE__ ) .'/mws/data/wiki' )
+					array( __DIR__ .'/mws/data/wiki' )
 				);
 				$updater->execute();
 				break;

@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once ( dirname( __FILE__ ) . '/../../../maintenance/Maintenance.php' );
+require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
 
 class GenerateFeatureTable extends Maintenance {
 	const RTI_CHUNK_SIZE = 100000;
