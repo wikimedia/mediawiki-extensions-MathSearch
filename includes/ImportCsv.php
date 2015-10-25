@@ -120,6 +120,7 @@ class ImportCsv {
 	/**
 	 * @param $csv_file
 	 * @return null
+	 * @throws Exception
 	 */
 	public function importFromFile( $csv_file ) {
 		if ( is_null( $csv_file ) ) {
@@ -128,8 +129,13 @@ class ImportCsv {
 
 		$table = array();
 
-		while ( ( $line = fgetcsv( $csv_file ) ) !== false ) {
+		$line = fgetcsv( $csv_file );
+		if ( $line === null ) {
+			throw new Exception( "Problem processing the csv file." );
+		}
+		while ( $line !== false ) {
 			array_push( $table, $line );
+			$line = fgetcsv( $csv_file );
 		}
 		fclose( $csv_file );
 

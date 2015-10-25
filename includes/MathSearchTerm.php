@@ -92,7 +92,7 @@ class MathSearchTerm {
 				$search->setLimitOffset( 10000 );
 				$sres = $search->searchText( $this->getExpr() );
 				if ( $sres ) {
-					while ( ( $tres = $sres->next() ) !== false ) {
+					foreach ( $sres as $tres ) {
 						$revisionID = $tres->getTitle()->getLatestRevID();
 						$this->resultSet[(string)$revisionID] = $tres;
 						$this->relevanceMap[] = $revisionID;
