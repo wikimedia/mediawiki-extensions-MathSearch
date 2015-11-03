@@ -4,6 +4,7 @@
 	"author": "Moritz Schubotz",
 	"url": "https://www.mediawiki.org/wiki/Extension:MathSearch",
 	"descriptionmsg": "mathsearch-desc",
+	"callback": "MathSearchHooks::registerExtension",
 	"type": "specialpage",
 	"AutoloadClasses": {
 		"MathSearchHooks": "MathSearch.hooks.php",

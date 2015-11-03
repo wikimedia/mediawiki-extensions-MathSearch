@@ -391,4 +391,14 @@ class MathSearchHooks {
 	static function resetId() {
 		self::$nextID = 0;
 	}
+
+	/**
+	 * Enable latexml rendering mode as option by default
+	 */
+	public static function registerExtension() {
+		global $wgMathValidModes;
+		if ( ! in_array( 'latexml', $wgMathValidModes ) ) {
+			$wgMathValidModes[] = 'latexml';
+		}
+	}
 }
