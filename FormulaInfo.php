@@ -196,8 +196,9 @@ class FormulaInfo extends SpecialPage {
 		$renderer = MathRenderer::getRenderer( $tex, array(), $mode );
 		if ( $this->purge ) {
 			$renderer->render( true );
-		} elseif ( ! $renderer->isInDatabase() ) {
-			$out->addWikiText( "No database entry. Start rendering" );
+		} elseif ( $mode == 'mathml' || ! $renderer->isInDatabase() ) {
+			// workaround for restbase mathml mode that does not support database access
+			// $out->addWikiText( "No database entry. Start rendering" );
 			$renderer->render();
 		}
 		if ( self::hasMathMLSupport( $mode ) ) {
