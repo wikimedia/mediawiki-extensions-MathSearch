@@ -57,6 +57,11 @@ class MathSearchHooks {
 				$updater->addExtensionTable( 'math_wmc_assessed_revision',
 					$wmcDir . "math_wmc_assessed_revision.sql" );
 			}
+			if ( $updater->tableExists( 'mathlatexml' ) ) {
+				// temporary workaround for T117659
+				// $updater->addExtensionIndex( 'mathindex', 'fk_mathindex_hash',
+				// "$dir/patches/mathindexHashConstraint.sql" );
+			}
 		} else {
 			throw new Exception( "Math extension does not currently support $type database." );
 		}
