@@ -52,7 +52,7 @@
 	"math-search-type-1": "Шаблон TeX",
 	"math-search-type-2": "Вираз xQuery",
 	"math-search-expression-label": "Вираз:",
-	"math-tex2nb-header": "Вкажіть власні вхідні дані нижче",
+	"math-tex2nb-header": "Вкажіть власні вхідні дані",
 	"math-tex2nb-intro": "Цей макет повинен продемонструвати ідею перетворення з TeX у Mathematica.\n\nДемо-додаток перетворює функції LaTeX, які безпосередньо перекладає на аналог Mathematica.\n\nФункції без явної підтримки системи Mathematica доступні для перекладу через DRMF-пакет (у розробці).",
 	"math-tex2nb-input": "Вхід",
 	"math-tex2nb-latex": "Наступний вхід LaTeX …",
