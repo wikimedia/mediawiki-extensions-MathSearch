@@ -198,7 +198,7 @@ class FormulaInfo extends SpecialPage {
 		}
 		if ( self::hasMathMLSupport( $mode ) ) {
 			$out->addHtml(
-				'<div class="NavFrame collapsed"  style="text-align: left"><div class="NavHead">'
+				'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
 			);
 			$out->addWikiText( 'MathML (' . self::getlengh( $renderer->getMathml() ) . ') :', false );
 			$imgUrl = $wgExtensionAssetsPath . "/MathSearch/images/math_search_logo.png";
@@ -208,7 +208,7 @@ class FormulaInfo extends SpecialPage {
 			$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $tex ) .
 				'&searchx=Search">' . $mathSearchImg . '</a>' );
 			$out->addHtml( $renderer->getMathml() );
-			$out->addHtml( '</div><div class="NavContent">' );
+			$out->addHtml( '<div class="mw-collapsible-content">' );
 			$out->addWikiText(
 				'<syntaxhighlight lang="xml">' . ( $renderer->getMathml() ) . '</syntaxhighlight>'
 			);
