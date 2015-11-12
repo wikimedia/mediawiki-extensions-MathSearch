@@ -95,28 +95,28 @@ class ExtractFeatures extends Maintenance {
 			$n += self::RTI_CHUNK_SIZE;
 		}
 		$this->output( "Clear mathvarstat\n" );
-		$sql = 'TRUNCATE TABLE `mathvarstat`';
+		$sql = 'DELETE FROM `mathvarstat`';
 		$this->dbw->query( $sql );
 		$this->output( "Generate mathvarstat\n" );
 		// @codingStandardsIgnoreStart
 		$sql =
-			'INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)\n' .
-			'SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT\n' .
-			'FROM `mathobservation`\n' .
-			'JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash\n' .
-			'GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n' .
+			'INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)' .
+			'SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT ' .
+			'FROM `mathobservation` ' .
+			'JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash ' .
+			'GROUP BY `mathobservation_featurename` , `mathobservation_featuretype` ' .
 			'ORDER BY CNT DESC';
 		// @codingStandardsIgnoreEnd
 		$this->dbw->query( $sql );
 		$this->output( "Clear mathrevisionstat\n" );
-		$sql = 'TRUNCATE TABLE `mathrevisionstat`';
+		$sql = 'DELETE FROM `mathrevisionstat`';
 		$this->dbw->query( $sql );
 		$this->output( "Generate mathrevisionstat\n" );
 		// @codingStandardsIgnoreStart
 		$sql =
-			'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`)\n' .
-			'SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` JOIN mathindex ON `mathobservation_inputhash` =mathindex_inputhash\n' .
-			'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype`\n' .
+			'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`) ' .
+			'SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` JOIN mathindex ON `mathobservation_inputhash` =mathindex_inputhash ' .
+			'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype` ' .
 			' GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`,mathindex_revision_id ORDER BY CNT DESC';
 		// @codingStandardsIgnoreEnd
 		$this->dbw->query( $sql );
