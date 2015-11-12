@@ -94,14 +94,8 @@ class FormulaInfo extends SpecialPage {
 			$out->addWikiText( '*' . $occ->printLink2Page( false ) );
 		}
 		$out->addWikiText( 'Hash: ' . $mo->getMd5() );
-		$out->addWikiText(
-			'TeX (as stored in database): <syntaxhighlight lang="latex">' . $mo->getTex()
-			. '</syntaxhighlight>'
-		);
-		$out->addWikiText(
-			'TeX (original user input): <syntaxhighlight lang="latex">' . $mo->getUserInputTex()
-			. '</syntaxhighlight>'
-		);
+		$this->printSource( $mo->getUserInputTex(), 'TeX (original user input)', 'latex' );
+		$this->printSource( $mo->getTex(), 'TeX (checked)', 'latex' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
@@ -115,21 +109,21 @@ class FormulaInfo extends SpecialPage {
 		$mo->getObservations();
 		if ( $wgMathDebug ) {
 			$out->addWikiText( '==LOG and Debug==' );
-			$out->addWikiText( 'Rendered at : <syntaxhighlight lang="text">' . $mo->getTimestamp()
-				. '</syntaxhighlight> an idexed at <syntaxhighlight lang="text">' . $mo->getIndexTimestamp()
-				. '</syntaxhighlight>'
-			);
-			$out->addWikiText(
-				'validxml : <syntaxhighlight lang="text">' . $mo->isValidMathML(
-					$mo->getMathml()
-				) . '</syntaxhighlight> recheck:', false
-			);
-			$out->addHtml( $mo->isValidMathML( $mo->getMathml() ) ? "valid":"invalid" );
-			$out->addWikiText(
-				'status : <syntaxhighlight lang="text">' . $mo->getStatusCode() . '</syntaxhighlight>'
-			);
-			$out->addHtml( htmlspecialchars( $mo->getLog() ) );
+			$this->printSource( $mo->getTimestamp(), 'Rendered at', 'text', false );
+			$this->printSource( $mo->getIndexTimestamp(), 'and indexed at', 'text', false );
+			$this->printSource( $mo->isValidMathML( $mo->getMathml() ), 'validxml', 'text', false );
+			$out->addHtml( $mo->isValidMathML( $mo->getMathml() ) ? "valid" : "invalid" );
+			$this->printSource( $mo->getStatusCode(), 'status' );
+			$out->addHtml( htmlspecialchars( $mo->getLog(), 'status' ) );
 		}
+	}
+
+	private function printSource( $source, $description = "", $language = "text", $linestart = true ) {
+		if ( $description ) {
+			$description .= ": ";
+		}
+		$this->getOutput()->addWikiText( "$description<syntaxhighlight lang=\"$language\">" .
+			$source . '</syntaxhighlight>', $linestart );
 	}
 
 	private static function getlengh( $binray ) {
