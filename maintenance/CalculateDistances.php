@@ -94,8 +94,8 @@ class CalculateDistances extends Maintenance {
 				$pid = $this->pagelist[$n];
 				// @codingStandardsIgnoreStart
 				$sql =
-					"INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value)\n" .
-					"SELECT DISTINCT $pid,`revstat_revid`,\n" .
+					"INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value) " .
+					"SELECT DISTINCT $pid,`revstat_revid`, " .
 					"CosProd( $pid,`revstat_revid`) FROM `mathrevisionstat` m ";
 				// @codingStandardsIgnoreEnd
 				if ( $this->getOption( 'page9', false ) ) {
