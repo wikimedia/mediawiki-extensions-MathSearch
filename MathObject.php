@@ -1,6 +1,9 @@
 <?php
 use MediaWiki\Logger\LoggerFactory;
 
+/**
+ * Class MathObject
+ */
 class MathObject extends MathMathML {
 	// DEBUG VARIABLES
 	// Available, if Math extension runs in debug mode ($wgMathDebug = true) only.
@@ -134,11 +137,11 @@ class MathObject extends MathMathML {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->query( 'TRUNCATE TABLE `mathvarstat`' );
 		// @codingStandardsIgnoreStart
-		$dbw->query( "INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)\n"
-			. "SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT\n"
-			. "FROM `mathobservation`\n"
-			. "JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash\n"
-			. "GROUP BY `mathobservation_featurename` , `mathobservation_featuretype`\n"
+		$dbw->query( "INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`) "
+			. "SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT "
+			. "FROM `mathobservation` "
+			. "JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash "
+			. "GROUP BY `mathobservation_featurename` , `mathobservation_featuretype` "
 			. "ORDER BY CNT DESC" );
 		$dbw->query( 'TRUNCATE TABLE `mathrevisionstat`' );
 		$dbw->query( 'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`) '
@@ -436,5 +439,17 @@ class MathObject extends MathMathML {
 	 */
 	public function setMathTableName( $tableName ) {
 		$this->mathTableName = $tableName;
+	}
+
+	/**
+	 * @return MathoidDriver
+	 */
+	public function getTexInfo() {
+		$m = new MathoidDriver( $this->userInputTex );
+		if ( $m->texvcInfo() ){
+			return $m;
+		} else {
+			return false;
+		}
 	}
 }

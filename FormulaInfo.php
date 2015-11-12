@@ -95,7 +95,8 @@ class FormulaInfo extends SpecialPage {
 		}
 		$out->addWikiText( 'Hash: ' . $mo->getMd5() );
 		$this->printSource( $mo->getUserInputTex(), 'TeX (original user input)', 'latex' );
-		$this->printSource( $mo->getTex(), 'TeX (checked)', 'latex' );
+		$texInfo = $mo->getTexInfo();
+		$this->printSource( $texInfo->getChecked(), 'TeX (checked)', 'latex' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
@@ -105,7 +106,11 @@ class FormulaInfo extends SpecialPage {
 		);
 		$pid = Revision::newFromId( $oldID )->getTitle()->getArticleID();
 		$mo->findSimilarPages( $pid );
-		$out->addWikiText( '==Variables==' );
+		$out->addWikiText( '==Identifiers==' );
+		foreach ( $texInfo->getIdentifiers() as $x ){
+			$out->addWikiText( '* <math>'.$x.'</math>' );
+		}
+		$out->addWikiText( '=== MathML observations ===' );
 		$mo->getObservations();
 		if ( $wgMathDebug ) {
 			$out->addWikiText( '==LOG and Debug==' );
