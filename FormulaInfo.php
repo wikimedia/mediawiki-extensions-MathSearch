@@ -76,10 +76,11 @@ class FormulaInfo extends SpecialPage {
 
 		$pageName = (string)$revision->getTitle();
 		$out->addWikiText( "* Page found: [[$pageName#$eid|$pageName]] (eq $eid)  ", false );
-		$out->addHtml(
-			'<a href="/index.php?title=' . $pageName
-			. '&action=purge&mathpurge=true">(force rerendering)</a>'
-		);
+		$link = $revision->getTitle()->getLinkURL( array(
+				'action' => 'purge',
+				'mathpurge' => 'true'
+		) );
+		$out->addHtml( "<a href=\"$link\">(force rerendering)</a>" );
 		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $oldID, $eid );
 		if ( !$mo ) {
