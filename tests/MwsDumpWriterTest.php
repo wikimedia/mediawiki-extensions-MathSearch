@@ -196,7 +196,7 @@ XML;
 			$id = null;
 			$content = $tag[1];
 			$attributes = $tag[2];
-			$renderer = MathRenderer::getRenderer( $content, $attributes, 'latexml' );
+			$renderer = new MathLaTeXML( $content, $attributes );
 			$renderer->render( true );
 			MathSearchHooks::setMathId( $id, $renderer, $revId );
 			$dw->addMwsExpression( $renderer->getMathml(), $revId, $id );
