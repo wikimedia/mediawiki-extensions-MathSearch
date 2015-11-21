@@ -1,0 +1,171 @@
+<?php
+use MediaWiki\Logger\LoggerFactory;
+
+class MathosphereDriver {
+	private $wikiText;
+	private $language = "en";
+	private $title = "";
+	private $version;
+	private $error;
+	private $success;
+	private $relations = array();
+	private $identifiers = array();
+
+	function __construct( $articleId = null ) {
+		if ( $articleId !== null ) {
+			$article = Article::newFromID( $articleId );
+			$this->wikiText = $article->getPage()->getContent()->getNativeData();
+		}
+	}
+
+	public static function newFromWikitext( $wikiText ) {
+		$instance = new MathosphereDriver();
+		$instance->setWikiText( $wikiText );
+		return $instance;
+	}
+
+	public function setWikiText( $wikiText ) {
+		$this->wikiText = $wikiText;
+	}
+
+	public function getWikiText() {
+		return $this->wikiText;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLanguage() {
+		return $this->language;
+	}
+
+	/**
+	 * @param string $language
+	 */
+	public function setLanguage( $language ) {
+		$this->language = $language;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTitle() {
+		return $this->title;
+	}
+
+	/**
+	 * @param string $title
+	 */
+	public function setTitle( $title ) {
+		$this->title = $title;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getVersion() {
+		return $this->version;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getError() {
+		return $this->error;
+	}
+
+	public function analyze() {
+		return $this->processResults( self::doPost( $this->getBackendUrl() . "/AnalyzeWikiText",
+			$this->getPostData() ) );
+	}
+
+	protected function processResults( $res ) {
+		$jsonResult = json_decode( $res );
+		if ( $jsonResult &&
+			json_last_error() === JSON_ERROR_NONE &&
+			isset( $jsonResult->success )
+		) {
+			$this->success = $jsonResult->success;
+			if ( $this->success ) {
+				foreach ( $jsonResult->relations as $r ){
+					$this->addIdentifierDefinitionTuple( $r );
+				}
+			} else {
+				// TODO: Implement error handling
+				return false;
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private function addIdentifierDefinitionTuple( $json ) {
+		$this->relations[] = $json;
+	}
+
+	protected static function doPost( $url, $postData ) {
+		$options = array(
+			"postData" => $postData,
+			"timeout"  => 60,
+			"method"   => 'POST'
+		);
+		$req = MWHttpRequest::factory( $url, $options, __METHOD__ );
+		$status = $req->execute();
+
+		if ( $status->isOK() ) {
+			return $req->getContent();
+		} else {
+			$errors = $status->getErrorsByType( 'error' );
+			$logger = LoggerFactory::getInstance( 'http' );
+			$logger->warning( $status->getWikiText(),
+				array( 'error' => $errors, 'caller' => __METHOD__, 'content' => $req->getContent() ) );
+			return false;
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getBackendUrl() {
+		$config = ConfigFactory::getDefaultInstance()->makeConfig( 'main' );
+		return $config->get( "MathSearchBaseXBackendUrl" ).'api';
+	}
+
+	protected function getPostData() {
+		$post = array(
+			"wikitext" => $this->wikiText,
+			"title" => $this->title
+		);
+		return json_encode( $post );
+	}
+
+	public function checkBackend() {
+		$res = HTTP::get( $this->getBackendUrl().'/_info' );
+		if ( $res ) {
+			$res = json_decode( $res );
+			if ( $res && json_last_error() === JSON_ERROR_NONE ) {
+				if ( isset( $res->name ) && $res->name === 'mathosphere' ) {
+					$this->version = $res->version;
+					// Mathosphere version 3.0.0-SNAPSHOT is only version currently supported
+					if ( $this->version === "3.0.0-SNAPSHOT" ) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
+		}
+		$logger = LoggerFactory::getInstance( 'MathSearch' );
+		$logger->warning( "Mathosphere Backend server backend does not point to mathosphere.", array(
+			'detail' => $res ) );
+		return false;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRelations() {
+		return $this->relations;
+	}
+}

@@ -27,7 +27,8 @@
 		"LaTeXTranslator": "includes/LaTeXTranslator.php",
 		"SpecialUploadResult": "SpecialUploadResult.php",
 		"SpecialMathDownloadResult": "SpecialMathDownloadResult.php",
-		"MathoidDriver": "includes/MathoidDriver.php"
+		"MathoidDriver": "includes/MathoidDriver.php",
+		"MathosphereDriver": "includes/MathosphereDriver.php"
 	},
 	"AvailableRights": [
 		"mathwmcsubmit"
