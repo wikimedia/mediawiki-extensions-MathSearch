@@ -107,12 +107,18 @@ class FormulaInfo extends SpecialPage {
 		$pid = Revision::newFromId( $oldID )->getTitle()->getArticleID();
 		$mo->findSimilarPages( $pid );
 		$out->addWikiText( '==Identifiers==' );
+		$relations = $mo->getRelations();
 		foreach ( $texInfo->getIdentifiers() as $x ){
-			$out->addWikiText( '* <math>'.$x.'</math>' );
+			$line = '* <math>'.$x.'</math>';
+			if ( isset( $relations[$x] ) ){
+				foreach ( $relations[$x] as $r ){
+					$line .= ", {$r->definition} ($r->score)";
+				}
+			}
+			$out->addWikiText( $line );
 		}
 		$out->addWikiText( '=== MathML observations ===' );
 		$mo->getObservations();
-		$mo->getRelations();
 		if ( $wgMathDebug ) {
 			$out->addWikiText( '==LOG and Debug==' );
 			$this->printSource( $mo->getTimestamp(), 'Rendered at', 'text', false );

@@ -100,8 +100,11 @@ class MathosphereDriver {
 		}
 	}
 
-	private function addIdentifierDefinitionTuple( $json ) {
-		$this->relations[] = $json;
+	private function addIdentifierDefinitionTuple( $r ) {
+		if ( ! isset( $this->relations[$r->identifier] ) ){
+			$this->relations[$r->identifier] = array();
+		}
+		$this->relations[$r->identifier][] = $r;
 	}
 
 	protected static function doPost( $url, $postData ) {

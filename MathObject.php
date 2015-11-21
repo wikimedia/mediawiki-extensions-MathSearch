@@ -426,12 +426,12 @@ class MathObject extends MathMathML {
 	}
 
 	public function getRelations() {
-		global $wgOut;
 		$m = new MathosphereDriver( $this->revisionID );
-		$m->analyze();
-		$wgOut->addWikiText( "===Relations===" );
-		foreach ( $m->getRelations() as $r ){
-			$wgOut->addWikiText( "* {$r->identifier}: {$r->definition} ($r->score)" );
+		if ( $m->analyze() ) {
+			return $m->getRelations();
+		} else {
+			LoggerFactory::getInstance( 'MathSearch' )->error( 'Error contacting mathosphere.' );
+			return array();
 		}
 
 	}
