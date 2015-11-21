@@ -112,6 +112,7 @@ class FormulaInfo extends SpecialPage {
 		}
 		$out->addWikiText( '=== MathML observations ===' );
 		$mo->getObservations();
+		$mo->getRelations();
 		if ( $wgMathDebug ) {
 			$out->addWikiText( '==LOG and Debug==' );
 			$this->printSource( $mo->getTimestamp(), 'Rendered at', 'text', false );

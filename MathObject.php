@@ -425,6 +425,17 @@ class MathObject extends MathMathML {
 		return Revision::newFromId( $this->revisionID );
 	}
 
+	public function getRelations() {
+		global $wgOut;
+		$m = new MathosphereDriver( $this->revisionID );
+		$m->analyze();
+		$wgOut->addWikiText( "===Relations===" );
+		foreach ( $m->getRelations() as $r ){
+			$wgOut->addWikiText( "* {$r->identifier}: {$r->definition} ($r->score)" );
+		}
+
+	}
+
 	protected function getMathTableName() {
 		global $wgMathAnalysisTableName;
 		if ( is_null( $this->mathTableName ) ) {

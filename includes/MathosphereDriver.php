@@ -11,10 +11,10 @@ class MathosphereDriver {
 	private $relations = array();
 	private $identifiers = array();
 
-	function __construct( $articleId = null ) {
-		if ( $articleId !== null ) {
-			$article = Article::newFromID( $articleId );
-			$this->wikiText = $article->getPage()->getContent()->getNativeData();
+	function __construct( $revisionId = null ) {
+		if ( $revisionId !== null ) {
+			$revision = Revision::newFromId( $revisionId );
+			$this->wikiText = $revision->getContent()->getNativeData();
 		}
 	}
 
