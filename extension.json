@@ -9,6 +9,7 @@
 	"AutoloadClasses": {
 		"MathSearchHooks": "MathSearch.hooks.php",
 		"SpecialMathSearch": "includes/special/SpecialMathSearch.php",
+		"SpecialMlpEval": "includes/special/SpecialMlpEval.php",
 		"FormulaInfo": "FormulaInfo.php",
 		"MathObject": "MathObject.php",
 		"MathQueryObject": "MathQueryObject.php",
@@ -84,14 +85,24 @@
 				"desktop",
 				"mobile"
 			]
+		},
+		"ext.MathSearch.special": {
+			"scripts": [
+				"ext.MathSearch.autocomplete.js"
+			],
+			"dependencies": [
+				"jquery.ui.autocomplete"
+			]
 		}
+
 	},
 	"ResourceFileModulePaths": {
-		"localBasePath": "",
-		"remoteExtPath": "MathSearch"
+		"localBasePath": "modules",
+		"remoteExtPath": "MathSearch/modules"
 	},
 	"SpecialPages": {
 		"MathSearch": "SpecialMathSearch",
+		"MlpEval": "SpecialMlpEval",
 		"FormulaInfo": "FormulaInfo",
 		"GetEquationsByQuery": "GetEquationsByQuery",
 		"MathDebug": "SpecialMathDebug",

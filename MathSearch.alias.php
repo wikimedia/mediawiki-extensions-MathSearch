@@ -12,6 +12,7 @@ $specialPageAliases = array();
 /** English (English) */
 $specialPageAliases['en'] = array(
 	'MathSearch' => array( 'MathSearch', 'Math Search' ),
+	'MlpEval' => array( 'MlpEval', 'Mathematical Language Processing Evaluation' ),
 	'MathDebug' => array( 'MathDebug', 'Math Debug' ),
 	'FormulaInfo' => array( 'FormulaInfo', 'Formula Info' ),
 	'GetEquationsByQuery' => array( 'GetEquationsByQuery', 'Get Formulae by Query' ),
