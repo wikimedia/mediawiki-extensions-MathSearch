@@ -17,7 +17,7 @@ class MathIdGenerator {
 	 */
 	public function __construct( $wikiText, $revisionId = 0 ) {
 		$this->parserRegexp = Parser::MARKER_PREFIX . "-math-(\\d{8})" . Parser::MARKER_SUFFIX;
-		$this->wikiText = $wikiText;
+		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
 		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
 		$this->wikiText =
 			Parser::extractTagsAndParams( array( 'math' ), $wikiText, $this->mathTags );
@@ -33,6 +33,9 @@ class MathIdGenerator {
 			$revId );
 	}
 
+	public static function newFromTitle( Title $title ) {
+		return self::newFromRevisionId( $title->getLatestRevID() );
+	}
 	public function getIdList() {
 		return $this->formatIds( $this->mathTags );
 	}

@@ -206,15 +206,8 @@ class SpecialMathDebug extends SpecialPage {
 	private static function getMathTagsFromPage( $titleString = 'Testpage' ) {
 		$title = Title::newFromText( $titleString );
 		if ( $title->exists() ) {
-			$article = new Article( $title );
-			// TODO: find a better way to extract math elements from a page
-			$wikiText = $article->getPage()->getContent()->getNativeData();
-			$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
-			$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
-			$matches = preg_match_all( "#<math>(.*?)</math>#s", $wikiText,  $math );
-			// TODO: Find a way to specify a key e.g '\nRenderTest:(.?)#<math>(.*?)</math>#s\n'
-			// leads to array('\1'->'\2') with \1 eg Bug 2345 and \2 the math content
-			return $math[1];
+			$idGenerator = MathIdGenerator::newFromTitle( $title );
+			return $idGenerator->getMathTags();
 		} else {
 			return 'Page does not exist';
 		}

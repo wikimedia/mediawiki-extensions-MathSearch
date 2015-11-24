@@ -24,10 +24,9 @@ some more text
 <math> x^3 </math>
 EOT;
 
-
 	public function test() {
 		$comment = MathObject::extractMathTagsFromWikiText( $this->HTMLComment );
-		$this->assertEquals( 0, count( $comment ) );
+		$this->assertEquals( 0, count( $comment ), 'Math tags in comments should be ignored.' );
 		$noWiki = MathObject::extractMathTagsFromWikiText( $this->noWiki );
 		$this->assertEquals( 0, count( $noWiki ) );
 		$attributeTest = MathObject::extractMathTagsFromWikiText( $this->attributes );
