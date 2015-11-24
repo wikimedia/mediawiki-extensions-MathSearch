@@ -29,7 +29,8 @@
 		"SpecialUploadResult": "SpecialUploadResult.php",
 		"SpecialMathDownloadResult": "SpecialMathDownloadResult.php",
 		"MathoidDriver": "includes/MathoidDriver.php",
-		"MathosphereDriver": "includes/MathosphereDriver.php"
+		"MathosphereDriver": "includes/MathosphereDriver.php",
+		"MathIdGenerator": "includes/MathIdGenerator.php"
 	},
 	"AvailableRights": [
 		"mathwmcsubmit"
