@@ -14,7 +14,11 @@ use MediaWiki\Logger\LoggerFactory;
 class SpecialMlpEval extends SpecialPage {
 	const MAX_ATTEMPTS = 10;
 	const WINDOW_SIZE = 1200;
-	private $step = 1;
+	const OPT_CONTINUE = 0;
+	const OPT_BACK = 1;
+	const OPT_RETRY = 2;
+	private $step;
+	private $htmlForm;
 	/**
 	 * @var Title
 	 */
@@ -24,68 +28,77 @@ class SpecialMlpEval extends SpecialPage {
 	private $mathTags;
 	private $revison;
 	private $lastError = false;
+	private $ready=false;
+	private $sessionTime;
 
 	function __construct() {
 		parent::__construct( 'MlpEval' );
+		$this->sessionTime = time();
 	}
 
 	/**
 	 * The main function
 	 */
 	public function execute( $par ) {
+		$req = $this->getRequest();
 		$this->setHeaders();
-		$this->displayForm();
+		$this->step = $req->getInt( 'step', 1 );
+		$this->runStep( $req );
+		$this->printSource( var_export( $req, true ) );
 	}
 
-
 	/**
-	 * Processes the submitted Form input
-	 * @param array $formData
-	 * @return bool
+	 * @param $req
 	 */
-	public function processInput( $formData ) {
+	private function runStep( WebRequest $req ) {
 		switch ( $this->step ) {
 			case 1:
-				$title = Title::newFromText( $formData['evalPage'] );
-				if ( $this->setPage( $title ) ) {
-					$this->step ++;
-					return false;
-				} else {
-					return $this->lastError;
-				}
+				$this->displayPageSelectionForm();
 				break;
 			case 2:
-				return false;
+				$title = Title::newFromText( $req->getVal( "wpevalPage" ) );
+				$this->setPage( $title );
+				$this->displaySelectFormulaForm();
+				break;
+			case 3;
+				switch ( $req->getInt( 'wpsnippetSelector' ) ){
+					case self::OPT_BACK;
+						$this->step = 1;
+						$this->runStep( $req );
+						break;
+					case self::OPT_RETRY:
+						$this->step = 2;
+						$this->runStep( $req );
+						break;
+					case self::OPT_CONTINUE:
+						$this->displayEvaluationForm();
+						$this->getOutput()->addWikiText( "You made it. All done!".
+							$req->getVal( 'wpsnippetSelector' ) );
+						break;
+					default:
+				}
+				break;
 		}
+
 	}
 
-	public function performSearch() {
-		$out = $this->getOutput();
-		$out->addWikiText( '==Results==' );
-		$out->addWikiText( 'You searched for the following terms:' );
-		return false;
-	}
-
-	/**
-	 *
-	 * @param String $src
-	 * @param String $lang the language of the source snippet
-	 */
-	private function printSource( $src, $lang = "xml" ) {
-		$out = $this->getOutput();
-		$out->addWikiText( '<source lang="' . $lang . '">' . $src . '</source>' );
-	}
-
-	private function enableMathStyles() {
-		$out = $this->getOutput();
-		$out->addModuleStyles(
-			array( 'ext.math.styles', 'ext.math.desktop.styles', 'ext.math.scripts' )
+	private function displayPageSelectionForm() {
+		$formDescriptor = array();
+		$this->getOutput()->addModules( 'ext.MathSearch.special' );
+		$formDescriptor['evalPage'] = array(
+				'label'   => 'Page to evaluate',
+				'class'   => 'HTMLTextField',
+				'default' => $this->getRandomPage()
 		);
-	}
 
+		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
+		$htmlForm->setSubmitText( 'Select' );
+		$htmlForm->addHiddenField( 'step', 2 );
+		$htmlForm->setSubmitCallback( array( $this, 'processPageInput' ) );
+		$htmlForm->setHeaderText( "<h2>Step 1: Select a page</h2>" );
+		$htmlForm->prepareForm();
+		$htmlForm->displayForm( '' );
 
-	protected function getGroupName() {
-		return 'mathsearch';
 	}
 
 	private function getRandomPage() {
@@ -102,40 +115,6 @@ class SpecialMlpEval extends SpecialPage {
 		return "";
 	}
 
-	private function displayForm() {
-		$startStep = $this->step;
-		switch ( $this->step ) {
-			case 1:
-				$this->getOutput()->addModules( 'ext.MathSearch.special' );
-				$formDescriptor = array(
-					'evalPage' => array(
-						'label'   => 'Page to evaluate',
-						'class'   => 'HTMLTextField',
-						'default' => $this->getRandomPage()
-					)
-				);
-				break;
-			case 2:
-				$this->enableMathStyles();
-				list( $tagCount, $formDescriptor, $wikiText ) = $this->displaySnipped();
-				break;
-		}
-		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
-		$htmlForm->setSubmitText( 'Select' );
-		$htmlForm->setSubmitCallback( array( $this, 'processInput' ) );
-		$htmlForm->setHeaderText( "<h2>Step {$this->step}: Select a page</h2>" );
-		$htmlForm->prepareForm();
-		$result = $htmlForm->tryAuthorizedSubmit();
-		if ( $this->step > $startStep ) {
-			$this->displayForm();
-		} else {
-			if ( $result === true || ( $result instanceof Status && $result->isGood() ) ) {
-				return $result;
-			}
-			$htmlForm->displayForm( $result );
-		}
-	}
-
 	private function setPage( Title $title ) {
 		if ( is_null( $title ) ) {
 			$this->lastError = "Title was null.";
@@ -147,30 +126,43 @@ class SpecialMlpEval extends SpecialPage {
 		}
 		$revision = $title->getLatestRevID();
 		if ( $revision ) {
-			$revision = Revision::newFromId( $revision );
-			if ( $revision->getContentModel() !== CONTENT_MODEL_WIKITEXT ) {
-				$this->lastError = "Has invalid format";
-				return false;
+			$retVal = $this->setRevision( $revision );
+			if ( $retVal ) {
+				$this->title = $title;
 			}
-			$handler = new WikitextContentHandler();
-			$wikiText = $handler->getContentText( $revision->getContent() );
-			$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
-			// Remove <nowiki /> tags to avoid confusion
-			$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
-			$wikiText = Parser::extractTagsAndParams( array( 'math' ), $wikiText, $mathTags );
-			$tagCount = count( $mathTags );
-			if ( $tagCount == 0 ) {
-				$this->lastError = "has no math tags";
-				return false;
-			}
-			$this->title = $title;
-			$this->wikitext = $wikiText;
-			$this->mathTags = $mathTags;
-			return true;
+			return $retVal;
 		} else {
 			$this->lastError = "invalid revision";
 			return false;
 		}
+	}
+
+	/**
+	 * @param $revisionId
+	 * @return bool
+	 * @throws MWException
+	 */
+	private function setRevision( $revisionId ) {
+		$revisionId = Revision::newFromId( $revisionId );
+		if ( $revisionId->getContentModel() !== CONTENT_MODEL_WIKITEXT ) {
+			$this->lastError = "Has invalid format";
+			return false;
+		}
+		$handler = new WikitextContentHandler();
+		$wikiText = $handler->getContentText( $revisionId->getContent() );
+		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
+		// Remove <nowiki /> tags to avoid confusion
+		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
+		$mathTags = null;
+		$wikiText = Parser::extractTagsAndParams( array( 'math' ), $wikiText, $mathTags );
+		$tagCount = count( $mathTags );
+		if ( $tagCount == 0 ) {
+			$this->lastError = "has no math tags";
+			return false;
+		}
+		$this->wikitext = $wikiText;
+		$this->mathTags = $mathTags;
+		return true;
 	}
 
 	/**
@@ -180,6 +172,36 @@ class SpecialMlpEval extends SpecialPage {
 		return LoggerFactory::getInstance( 'MathSearch' );
 	}
 
+	private function displaySelectFormulaForm() {
+		$formDescriptor = array();
+		$this->enableMathStyles();
+		$formDescriptor['snippetSelector'] = array(
+				'type' => 'radio',
+				'label' => 'Page to evaluate',
+				'options' => array(
+						'Continue with this snippet' => self::OPT_CONTINUE,
+						'Select another snippet from that page' => self::OPT_RETRY,
+						'Go Back to page selection' => self::OPT_BACK
+				),
+				'default' => self::OPT_CONTINUE # The option selected by default (identified by value)
+		);
+		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
+		$htmlForm->setSubmitText( 'Continue' );
+		$htmlForm->addHiddenField( 'step', 3 );
+		$htmlForm->addHiddenField( 'wpevalPage', $this->title->getText() );
+		$htmlForm->setSubmitCallback( array( $this, 'processFormulaInput' ) );
+		$htmlForm->setHeaderText( "<h2>Step 2: Select a formula</h2>" );
+		$htmlForm->prepareForm();
+		$htmlForm->displayForm( '' );
+		$this->displaySnipped();
+	}
+
+	private function enableMathStyles() {
+		$out = $this->getOutput();
+		$out->addModuleStyles(
+			array( 'ext.math.styles', 'ext.math.desktop.styles', 'ext.math.scripts' )
+		);
+	}
 
 	/**
 	 * @return array
@@ -248,6 +270,55 @@ class SpecialMlpEval extends SpecialPage {
 		} else {
 			return strlen( $wikiText );
 		}
+	}
+
+	/**
+	 *
+	 * @param String $src
+	 * @param String $lang the language of the source snippet
+	 */
+	private function printSource( $src, $lang = "xml" ) {
+		$out = $this->getOutput();
+		$out->addWikiText( '<source lang="' . $lang . '">' . $src . '</source>' );
+	}
+
+	/**
+	 * Processes the submitted Form input
+	 * @return true
+	 */
+	public function processFormulaInput() {
+		return true;
+	}
+
+	/**
+	 * Processes the submitted Form input
+	 * @param array $formData
+	 * @return bool
+	 */
+	public function processPageInput( $formData ) {
+		if ( gettype( $formData['evalPage'] ) !== "string" ) {
+			return "Please select a page";
+		}
+		$title = Title::newFromText( $formData['evalPage'] );
+		if ( $this->setPage( $title ) ) {
+			return true;
+		} else {
+			return $this->lastError;
+		}
+	}
+
+	public function performSearch() {
+		$out = $this->getOutput();
+		$out->addWikiText( '==Results==' );
+		$out->addWikiText( 'You searched for the following terms:' );
+		return false;
+	}
+
+	protected function getGroupName() {
+		return 'mathsearch';
+	}
+
+	private function displayEvaluationForm() {
 	}
 
 }
