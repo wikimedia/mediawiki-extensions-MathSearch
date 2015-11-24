@@ -28,12 +28,9 @@ class SpecialMlpEval extends SpecialPage {
 	private $mathTags;
 	private $revison;
 	private $lastError = false;
-	private $ready=false;
-	private $sessionTime;
 
 	function __construct() {
 		parent::__construct( 'MlpEval' );
-		$this->sessionTime = time();
 	}
 
 	/**
@@ -138,31 +135,22 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @param $revisionId
+	 * @param $revId
 	 * @return bool
 	 * @throws MWException
 	 */
-	private function setRevision( $revisionId ) {
-		$revisionId = Revision::newFromId( $revisionId );
-		if ( $revisionId->getContentModel() !== CONTENT_MODEL_WIKITEXT ) {
-			$this->lastError = "Has invalid format";
-			return false;
-		}
-		$handler = new WikitextContentHandler();
-		$wikiText = $handler->getContentText( $revisionId->getContent() );
-		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
-		// Remove <nowiki /> tags to avoid confusion
-		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
-		$mathTags = null;
-		$wikiText = Parser::extractTagsAndParams( array( 'math' ), $wikiText, $mathTags );
+	private function setRevision( $revId ) {
+		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
+		$mathTags = $idGenerator->getMathTags();
 		$tagCount = count( $mathTags );
 		if ( $tagCount == 0 ) {
 			$this->lastError = "has no math tags";
 			return false;
 		}
-		$this->wikitext = $wikiText;
+		$this->wikitext = $idGenerator->getWikiText();
 		$this->mathTags = $mathTags;
 		return true;
+
 	}
 
 	/**

@@ -93,4 +93,11 @@ class MathIdGenerator {
 	public function getMathTags() {
 		return $this->mathTags;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getWikiText() {
+		return $this->wikiText;
+	}
 }

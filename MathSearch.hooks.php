@@ -351,9 +351,9 @@ class MathSearchHooks {
 			)->warning( "Empty update for {$article->getTitle()->getFullText()}." );
 			return true;
 		}
-		$mathTags =
-			MathObject::extractMathTagsFromWikiText( ContentHandler::getContentText( $content ) );
 		$revId = $revision->getId();
+		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
+		$mathTags= $idGenerator->getMathTags();
 		$harvest = "";
 		if ( $mathTags ) {
 			$dw = new MwsDumpWriter();
