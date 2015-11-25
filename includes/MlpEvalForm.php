@@ -40,6 +40,9 @@ class MlpEvalForm extends OOUIHTMLForm {
 				$formDescriptor['evalPage'] = $s;
 				break;
 			case SpecialMlpEval::STEP_FORMULA:
+			case SpecialMlpEval::STEP_STYLE:
+			case SpecialMlpEval::STEP_IDENTIFIERS:
+			case SpecialMlpEval::STEP_DEFINITIONS:
 				$formDescriptor['snippetSelector'] = array(
 						'type'    => 'radio',
 						'label'   => 'Page to evaluate',

@@ -90,7 +90,8 @@ class SpecialMlpEval extends SpecialPage {
 		if ( $this->setFId( $fId ) === false ) {
 			return $this->setStep( 2 );
 		}
-		if ( $req->getInt( 'oldStep' ) === 2 ){
+		// @TODO: Switch back to === 2
+		if ( $req->getInt( 'oldStep' ) > 1 ){
 			switch ( $req->getInt( 'wpsnippetSelector' ) ){
 						case MlpEvalForm::OPT_BACK;
 						return $this->resetPage();
@@ -100,7 +101,7 @@ class SpecialMlpEval extends SpecialPage {
 						$this->writeLog( "pgRst: User selects formula $fId" );
 			}
 		}
-		return $this->setStep( 3 );
+		return $this->setStep( $req->getInt( 'oldStep' ) + 1 );
 	}
 
 	/**
@@ -203,16 +204,6 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 
-	/**
-	 *
-	 * @param String $src
-	 * @param String $lang the language of the source snippet
-	 */
-	public function printSource( $src, $lang = "xml" ) {
-		$out = $this->getOutput();
-		$out->addWikiText( '<source lang="' . $lang . '">' . $src . '</source>' );
-	}
-
 	protected function getGroupName() {
 		return 'mathsearch';
 	}
@@ -275,6 +266,14 @@ class SpecialMlpEval extends SpecialPage {
 				$this->getOutput()->addWikiText( $hl->getWikiText() );
 				break;
 			case self::STEP_STYLE:
+				$this->enableMathStyles();
+				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
+				$this->printSource( $mo->getUserInputTex(), 'TeX (original user input)', 'latex' );
+				$texInfo = $mo->getTexInfo();
+				$this->printSource( $texInfo->getChecked(), 'TeX (checked)', 'latex' );
+				$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
+				$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
+				$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
 				break;
 			case self::STEP_IDENTIFIERS:
 				break;
@@ -312,4 +311,28 @@ class SpecialMlpEval extends SpecialPage {
 		return $this->setStep( 2 );
 	}
 
+	private function printSource( $source, $description = "", $language = "text", $linestart = true ) {
+		if ( $description ) {
+			$description .= ": ";
+		}
+		$this->getOutput()->addWikiText( "$description<syntaxhighlight lang=\"$language\">" .
+				$source . '</syntaxhighlight>', $linestart );
+	}
+
+	private function DisplayRendering( $tex, $mode ) {
+		global $wgMathValidModes;
+		if ( !in_array( $mode, $wgMathValidModes ) ) {
+			return;
+		}
+		$out = $this->getOutput();
+		$names = MathHooks::getMathNames();
+		$name = $names[$mode];
+		$out->addWikiText( "=== $name rendering === " );
+		$renderer = MathRenderer::getRenderer( $tex, array(), $mode );
+		$renderer->checkTex();
+		$renderer->render();
+		$out->addHTML( $renderer->getHtmlOutput() );
+		$renderer->writeCache();
+
+	}
 }
