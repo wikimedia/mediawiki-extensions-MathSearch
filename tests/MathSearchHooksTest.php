@@ -11,8 +11,8 @@
  */
 class MathSearchHooksTest extends MediaWikiTestCase {
 
-    // @codingStandardsIgnoreStart
-	private $mathMLSample = <<<EOT
+	// @codingStandardsIgnoreStart
+	private $mathMLSample = <<<'EOT'
 <math xref="p1.1.m1.1.cmml" xml:id="p1.1.m1.1" display="inline" alttext="{\displaystyle\min\left(1;\exp\left(-\beta\cdot\Delta E\right)\right)}" class="ltx_Math" id="p1.1.m1.1" xmlns="http://www.w3.org/1998/Math/MathML">
   <semantics xref="p1.1.m1.1.cmml" xml:id="p1.1.m1.1a">
     <mrow xref="p1.1.m1.1.14.cmml" xml:id="p1.1.m1.1.14">
@@ -77,7 +77,7 @@ class MathSearchHooksTest extends MediaWikiTestCase {
   </semantics>
 </math>
 EOT;
-// @codingStandardsIgnoreEnd
+	// @codingStandardsIgnoreEnd
 
 	/**
 	 * Tests if ID's for math elements are replaced correctly
@@ -85,20 +85,17 @@ EOT;
 	 * @group ignore
 	 */
 	public function testNTCIRHook() {
-		// use Page-ID = 0 to avoid that the test tries to save something to the DB
 		$sample = $this->mathMLSample;
 		$parser = new Parser();
-		$parser->mLinkID = 5;
-		$parser->mRevisionId = 0;
+		$parser->mRevisionId = 42;
 		$renderer = MathRenderer::getRenderer( '' );
-		$this->assertEquals( 5, $parser->nextLinkID() );
+		$renderer->setID( 'math.42.0' );
 		$this->assertTrue(
 			MathSearchHooks::onMathFormulaRenderedNoLink(
 				$parser, $renderer, $sample
 			), 'Hook did not return true'
 		);
-		$this->assertContains( "math.0.0.14.1.cmml", $sample, "expected replaced id not found" );
-		$this->assertEquals( 6, $parser->nextLinkID() );
+		$this->assertContains( "math.42.0.14.1.cmml", $sample, "expected replaced id not found" );
 	}
 
 	public function testSetMathIdIdempotence() {

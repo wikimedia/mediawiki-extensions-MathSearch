@@ -8,22 +8,7 @@ use MediaWiki\Logger\LoggerFactory;
  * GPLv2 license; info in main package.
  */
 class MathSearchHooks {
-	public static $nextID = 0;
-
-	/**
-	 * @return int
-	 */
-	public static function getNextID() {
-		return self::$nextID;
-	}
-
-	/**
-	 * @param int $nextID
-	 */
-	public static function setNextID( $nextID ) {
-		self::$nextID = $nextID;
-	}
-
+	private static $idGenerators = array();
 	/**
 	 * LoadExtensionSchemaUpdates handler; set up math table on install/upgrade.
 	 *
@@ -89,32 +74,34 @@ class MathSearchHooks {
 	 * @param string $tex the user input hash
 	 */
 	private static function updateIndex( $revId, $eid, $inputHash, $tex ) {
-		try {
-			$dbr = wfGetDB( DB_SLAVE );
-			$exists = $dbr->selectRow( 'mathindex',
-				array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ),
-				array(
-					'mathindex_revision_id' => $revId,
-					'mathindex_anchor' => $eid,
-					'mathindex_inputhash' => $inputHash
-				)
-			);
-			if ( $exists ) {
-				LoggerFactory::getInstance(
-					'MathSearch'
-				)->warning( 'Index $' . $tex . '$ already in database.' );
-				LoggerFactory::getInstance(
-					'MathSearch'
-				)->warning( "$revId-$eid with hash " . bin2hex( $inputHash ) );
-			} else {
-				self::writeMathIndex( $revId, $eid, $inputHash, $tex );
+		if ( $revId>0 && $eid ) {
+			try {
+				$dbr = wfGetDB( DB_SLAVE );
+				$exists = $dbr->selectRow( 'mathindex',
+					array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ),
+					array(
+						'mathindex_revision_id' => $revId,
+						'mathindex_anchor' => $eid,
+						'mathindex_inputhash' => $inputHash
+					)
+				);
+				if ( $exists ) {
+					LoggerFactory::getInstance(
+						'MathSearch'
+					)->warning( 'Index $' . $tex . '$ already in database.' );
+					LoggerFactory::getInstance(
+						'MathSearch'
+					)->warning( "$revId-$eid with hash " . bin2hex( $inputHash ) );
+				} else {
+						self::writeMathIndex( $revId, $eid, $inputHash, $tex );
+				}
 			}
-		}
-		catch ( Exception $e ) {
-			LoggerFactory::getInstance( "MathSearch" )->error( 'Problem writing to math index!'
-				. ' You might want the rebuild the index by running:'
-				. '"php extensions/MathSearch/ReRenderMath.php". The error is'
-				. $e->getMessage() );
+			catch ( Exception $e ) {
+				LoggerFactory::getInstance( "MathSearch" )->error( 'Problem writing to math index!'
+					. ' You might want the rebuild the index by running:'
+					. '"php extensions/MathSearch/ReRenderMath.php". The error is'
+					. $e->getMessage() );
+			}
 		}
 	}
 
@@ -131,16 +118,18 @@ class MathSearchHooks {
 	 * false if the automatic fallback math{$id} was used.
 	 */
 	public static function setMathId( &$id, MathRenderer $renderer, $revId ) {
-		if ( $renderer->getID() ) {
-			$id = $renderer->getID();
-			return true;
-		} else {
-			if ( is_null( $id ) ) {
-				$id = self::$nextID ++;
-				$id = self::generateMathAnchorString( $revId, $id, '' );
-				$renderer->setID( $id );
+		if ( $revId > 0 ) {
+			if ( $renderer->getID() ) {
+				$id = $renderer->getID();
+				return true;
+			} else {
+				if ( is_null( $id ) ) {
+					$id = self::getRevIdGenerator( $revId )
+							->guessIdFromContent( $renderer->getUserInputTex() );
+					$renderer->setID( $id );
+				}
+				return false;
 			}
-			return false;
 		}
 	}
 
@@ -221,14 +210,15 @@ class MathSearchHooks {
 	static function onMathFormulaRenderedNoLink( Parser $parser, MathRenderer $renderer,
 		&$Result = null ) {
 		$revId = $parser->getRevisionId();
-		self::setMathId( $eid, $renderer, $revId );
+		if ( ! self::setMathId( $eid, $renderer, $revId ) ) {
+			return true;
+		}
 		if ( $revId > 0 ) { // Only store something if a pageid was set.
 			self::updateIndex( $revId, $eid, $renderer->getInputHash(), $renderer->getTex() );
 		}
 		if ( preg_match( '#<math(.*)?\sid="(?P<id>[\w\.]+)"#', $Result, $matches ) ) {
 			$rendererId = $matches['id'];
-			$newID = self::generateMathAnchorString( $revId, $eid, '' );
-			$Result = str_replace( $rendererId, $newID, $Result );
+			$Result = str_replace( $rendererId, $eid, $Result );
 		}
 		return true;
 	}
@@ -311,7 +301,7 @@ class MathSearchHooks {
 	}
 
 	static function onArticleDeleteComplete(
-		&$article, User &$user, $reason, $id, $content, $logEntry
+		Article &$article, User &$user, $reason, $id, $content, $logEntry
 	) {
 		$revId = $article->getTitle()->getLatestRevID();
 		$mathEngineBaseX = new MathEngineBaseX();
@@ -357,7 +347,6 @@ class MathSearchHooks {
 		$harvest = "";
 		if ( $mathTags ) {
 			$dw = new MwsDumpWriter();
-			self::resetId();
 			foreach ( $mathTags as $tag ) {
 				$id = null;
 				$tagContent = $tag[1];
@@ -393,10 +382,6 @@ class MathSearchHooks {
 		return true;
 	}
 
-	static function resetId() {
-		self::$nextID = 0;
-	}
-
 	/**
 	 * Enable latexml rendering mode as option by default
 	 */
@@ -405,5 +390,18 @@ class MathSearchHooks {
 		if ( ! in_array( 'latexml', $wgMathValidModes ) ) {
 			$wgMathValidModes[] = 'latexml';
 		}
+	}
+
+	/**
+	 * @param $revId int
+	 * @return MathIdGenerator
+	 * @throws MWException
+	 */
+	private static function getRevIdGenerator( $revId ) {
+		if ( !array_key_exists( $revId, MathSearchHooks::$idGenerators ) ) {
+			MathSearchHooks::$idGenerators[$revId] = MathIdGenerator::newFromRevisionId( $revId );
+		}
+		return MathSearchHooks::$idGenerators[$revId];
+
 	}
 }

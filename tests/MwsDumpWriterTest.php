@@ -28,7 +28,7 @@ WikiText;
 	private $expectedOutput = <<<'XML'
 <?xml version="1.0"?>
 <mws:harvest xmlns:mws="http://search.mathweb.org/ns" xmlns:m="http://www.w3.org/1998/Math/MathML">
-<mws:expr url="28378#math.28378.0">
+<mws:expr url="28378#math.28378.1">
 	<math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="{\displaystyle E=mc}" display="inline">
   <semantics id="p1.1.m1.1a">
     <mrow id="p1.1.m1.1.5" xref="p1.1.m1.1.5.cmml">
@@ -55,7 +55,7 @@ WikiText;
 </math>
 </mws:expr>
 
-<mws:expr url="28378#math.28378.1">
+<mws:expr url="28378#math.28378.2">
 	<math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="{\displaystyle E=mc^{2}}" display="inline">
   <semantics id="p1.1.m1.1a">
     <mrow id="p1.1.m1.1.6" xref="p1.1.m1.1.6.cmml">
@@ -123,7 +123,7 @@ WikiText;
 </math>
 </mws:expr>
 
-<mws:expr url="28378#math.28378.2">
+<mws:expr url="28378#math.28378.4">
 	<math xmlns="http://www.w3.org/1998/Math/MathML" id="p1.1.m1.1" class="ltx_Math" alttext="{\displaystyle E=mc^{4}}" display="inline">
   <semantics id="p1.1.m1.1a">
     <mrow id="p1.1.m1.1.6" xref="p1.1.m1.1.6.cmml">
@@ -161,10 +161,8 @@ XML;
 // @codingStandardsIgnoreEnd
 
 	public function testExtract() {
-		$mathTags = MathObject::extractMathTagsFromWikiText( $this->testWikiText );
 		$revId = 28378;
 		$dw = new MwsDumpWriter();
-		MathSearchHooks::resetId();
 		$this->setMwGlobals(
 			array(
 				'wgMathValidModes' => array( 'latexml' ),
@@ -192,15 +190,10 @@ XML;
 				)
 			)
 		);
-		foreach ( $mathTags as $tag ) {
-			$id = null;
-			$content = $tag[1];
-			$attributes = $tag[2];
-			$renderer = new MathLaTeXML( $content, $attributes );
-			$renderer->render( true );
-			MathSearchHooks::setMathId( $id, $renderer, $revId );
-			$dw->addMwsExpression( $renderer->getMathml(), $revId, $id );
-		}
+		$gen = new MathIdGenerator( $this->testWikiText, $revId );
+		$gen->setUseCustomIds( true );
+		$dw->addFromMathIdGenerator( $gen );
 		$this->assertEquals( $this->expectedOutput, $dw->getOutput() );
 	}
 }
+

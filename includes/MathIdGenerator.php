@@ -3,12 +3,25 @@
 class MathIdGenerator {
 
 	const CONTENT_POS = 1;
+	const ATTRIB_POS = 2;
 	private $parserRegexp;
 	private $wikiText;
 	private $mathTags;
 	private $revisionId;
 	private $contentAccessStats = array();
 	private $format = "math.%d.%d";
+	private $useCustomIds = false;
+	private $keys;
+
+	/**
+	 * @return mixed
+	 */
+	public function getKeys() {
+		if ( !isset( $this->keys ) ) {
+			$this->keys = array_flip( array_keys( $this->mathTags ) );
+		}
+		return $this->keys;
+	}
 
 	/**
 	 * MathIdGenerator constructor.
@@ -16,7 +29,7 @@ class MathIdGenerator {
 	 * @param $revisionId
 	 */
 	public function __construct( $wikiText, $revisionId = 0 ) {
-		$this->parserRegexp = Parser::MARKER_PREFIX . "-math-(\\d{8})" . Parser::MARKER_SUFFIX;
+		$this->parserRegexp = Parser::MARKER_PREFIX . "-math-([\\dA-F]{8})" . Parser::MARKER_SUFFIX;
 		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
 		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
 		$this->wikiText =
@@ -45,8 +58,14 @@ class MathIdGenerator {
 	}
 
 	public function parserKey2fId( $key ) {
-		if ( preg_match( '#' . $this->parserRegexp . "#", $key, $matches ) ) {
-			return sprintf( $this->format, $this->revisionId, $matches[1] );
+		if ( $this->useCustomIds ) {
+			if ( isset( $this->mathTags[$key][self::ATTRIB_POS]['id'] ) ) {
+				return $this->mathTags[$key][self::ATTRIB_POS]['id'];
+			}
+		}
+		if ( isset( $this->mathTags[$key] ) ) {
+			$keys = $this->getKeys();
+			return sprintf( $this->format, $this->revisionId, $keys[$key] + 1 );
 		};
 	}
 
@@ -102,5 +121,19 @@ class MathIdGenerator {
 	 */
 	public function getWikiText() {
 		return $this->wikiText;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getRevisionId() {
+		return $this->revisionId;
+	}
+
+	/**
+	 * @param boolean $useCustomIds
+	 */
+	public function setUseCustomIds( $useCustomIds ) {
+		$this->useCustomIds = $useCustomIds;
 	}
 }
