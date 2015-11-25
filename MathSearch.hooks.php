@@ -184,7 +184,9 @@ class MathSearchHooks {
 	static function addLinkToFormulaInfoPage( Parser $parser, MathRenderer $renderer,
 		&$Result = null ) {
 		$revId = $parser->getRevisionId();
-		self::setMathId( $eid, $renderer, $revId );
+		if ( $revId == 0 || self::setMathId( $eid, $renderer, $revId ) === false ) {
+			return true;
+		}
 		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( array(
 			'pid' => $revId,
 			'eid' => $eid
