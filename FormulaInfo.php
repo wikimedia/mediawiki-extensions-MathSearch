@@ -86,15 +86,7 @@ class FormulaInfo extends SpecialPage {
 		if ( !$mo ) {
 			$out->addWikiText( 'Cannot find the equation data in the database.'.
 				' Fetching from revision text.' );
-			$gen = MathIdGenerator::newFromRevisionId( $oldID );
-			$tag = $gen->getTagFromId( $eid );
-			if ( ! $tag ){
-				$out->addWikiText( 'Can not find equation in the db.' );
-				return false;
-			}
-			$mo = new MathObject( $tag[MathIdGenerator::CONTENT_POS],
-				$tag[MathIdGenerator::ATTRIB_POS] );
-			$mo->setRevisionID( $oldID );
+			$mo = MathObject::newFromRevisionText( $oldID, $eid );
 		}
 		$out->addWikiText( "Occurrences on the following pages:" );
 		$all = $mo->getAllOccurences();

@@ -78,6 +78,17 @@ class MathObject extends MathMathML {
 		return $o;
 	}
 
+	public static function newFromRevisionText( $oldId, $eid ) {
+		$gen = MathIdGenerator::newFromRevisionId( $oldId );
+		$tag = $gen->getTagFromId( $eid );
+		if ( !$tag ) {
+			throw new MWException( "$eid not found in revision text $oldId" );
+		}
+		$mo = new MathObject( $tag[MathIdGenerator::CONTENT_POS], $tag[MathIdGenerator::ATTRIB_POS] );
+		$mo->setRevisionID( $oldId );
+		return $mo;
+	}
+
 	/**
 	 * @return array
 	 */
