@@ -72,12 +72,27 @@ class SpecialMlpEval extends SpecialPage {
 		if ( $this->setRevision( $revId ) === false ) {
 			return $this->setStep( 1 );
 		}
+		if ( $req->getText( 'pgRst' ) ) {
+			return $this->resetPage();
+		} elseif ( $req->getInt( 'oldStep' ) === 1 ) {
+			$this->writeLog( "pgSelect: User selects page" . $revId );
+		}
 		$fId = $req->getText( 'fId' );
 		if ( $fId === '' ) {
 			return $this->setStep( 2 );
 		}
 		if ( $this->setFId( $fId ) === false ) {
 			return $this->setStep( 2 );
+		}
+		if ( $req->getInt( 'oldStep' ) === 2 ){
+			switch ( $req->getInt( 'wpsnippetSelector' ) ){
+						case MlpEvalForm::OPT_BACK;
+						return $this->resetPage();
+						case MlpEvalForm::OPT_RETRY:
+						return $this->resetFormula();
+						case MlpEvalForm::OPT_CONTINUE:
+						$this->writeLog( "pgRst: User selects formula $fId" );
+			}
 		}
 		return $this->setStep( 3 );
 	}
@@ -88,6 +103,9 @@ class SpecialMlpEval extends SpecialPage {
 	public function execute( $par ) {
 		$this->loadData();
 		$this->setHeaders();
+		$this->printIntorduction();
+		$this->printSnippet();
+		$this->printVisualEval();
 		$form = new MlpEvalForm( $this );
 		$form->prepareForm();
 		$form->show();
@@ -205,7 +223,7 @@ class SpecialMlpEval extends SpecialPage {
 	 * @param String $src
 	 * @param String $lang the language of the source snippet
 	 */
-	private function printSource( $src, $lang = "xml" ) {
+	public function printSource( $src, $lang = "xml" ) {
 		$out = $this->getOutput();
 		$out->addWikiText( '<source lang="' . $lang . '">' . $src . '</source>' );
 	}
@@ -221,8 +239,8 @@ class SpecialMlpEval extends SpecialPage {
 		} else {
 			$this->fId = $fId;
 		}
-
-		$this->selectedMathTag = $this->mathIdGen->getTagFromId( $fId );
+		return true;
+		// $this->selectedMathTag = $this->mathIdGen->getTagFromId( $fId );
 	}
 
 	/**
@@ -258,5 +276,69 @@ class SpecialMlpEval extends SpecialPage {
 	 */
 	public function getTitle() {
 		return $this->title;
+	}
+
+	private function printIntorduction() {
+		$out = $this->getOutput();
+		$out->addWikiText( "Welcome to the MLP evaluation. Your data will be recorded." );
+	}
+
+	private function writeLog( $string ) {
+		$out = $this->getOutput();
+		$out->addWikiText( "LOG:\n " . $string . "--END-LOG" );
+
+	}
+
+	private function printSnippet() {
+		if ( $this->step == 2 ) {
+			$this->fId = $this->getRandomFId();
+			$this->printSource( $this->fId );
+			$hl = new MathHighlighter( $this->fId, $this->oldId );
+			$this->getOutput()->addWikiText( $hl->getWikiText() );
+		}
+
+	}
+
+	private function resetPage() {
+		$req = $this->getRequest();
+		$this->writeLog( "pgRst: User selects another page" );
+		$req->unsetVal( 'wpevalPage' );
+		$req->unsetVal( 'oldId' );
+		$req->unsetVal( 'wpsnippetSelector' );
+		$req->unsetVal( 'fId' );
+		$req->unsetVal( 'oldStep' );
+		$this->fId = '';
+		return $this->setStep( 1 );
+	}
+	private function resetFormula() {
+		$req = $this->getRequest();
+		$this->writeLog( "pgRst: User selects another formula" );
+		$req->unsetVal( 'wpsnippetSelector' );
+		$req->unsetVal( 'fId' );
+		$req->unsetVal( 'oldStep' );
+		$this->fId = '';
+		return $this->setStep( 2 );
+	}
+
+	private function printVisualEval() {
+		$out = $this->getOutput();
+		if ( $this->step == 3 ){
+
+			$out->addWikiText( "Visual Evaluation" );
+		}
+	}
+	private function printSelectIdentifier() {
+		$out = $this->getOutput();
+		if ( $this->step == 4 ){
+
+			$out->addWikiText( "Visual Evaluation" );
+		}
+	}
+	private function printSelectMeaning() {
+		$out = $this->getOutput();
+		if ( $this->step == 5 ){
+
+			$out->addWikiText( "Visual Evaluation" );
+		}
 	}
 }
