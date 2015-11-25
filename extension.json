@@ -30,7 +30,9 @@
 		"SpecialMathDownloadResult": "SpecialMathDownloadResult.php",
 		"MathoidDriver": "includes/MathoidDriver.php",
 		"MathosphereDriver": "includes/MathosphereDriver.php",
-		"MathIdGenerator": "includes/MathIdGenerator.php"
+		"MathIdGenerator": "includes/MathIdGenerator.php",
+		"MathHighlighter": "includes/MathHighlighter.php",
+		"MlpEvalForm": "includes/MlpEvalForm.php"
 	},
 	"AvailableRights": [
 		"mathwmcsubmit"
@@ -85,17 +87,9 @@
 				"desktop",
 				"mobile"
 			]
-		},
-		"ext.MathSearch.special": {
-			"scripts": [
-				"ext.MathSearch.autocomplete.js"
-			],
-			"dependencies": [
-				"jquery.ui.autocomplete"
-			]
 		}
-
 	},
+
 	"ResourceFileModulePaths": {
 		"localBasePath": "modules",
 		"remoteExtPath": "MathSearch/modules"

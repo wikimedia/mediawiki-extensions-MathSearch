@@ -146,6 +146,16 @@ class MathIdGenerator {
 			}
 		}
 	}
+	public function getUniqueFromId( $eid ) {
+		foreach ( $this->mathTags as $key => $mathTag ) {
+			if ( $eid == $this->formatKey( $key ) ){
+				return $key;
+			}
+			if ( isset( $mathTag[self::ATTRIB_POS]['id'] ) && $eid == $mathTag[self::ATTRIB_POS]['id'] ){
+				return $key;
+			}
+		}
+	}
 
 	/**
 	 * @param $key
