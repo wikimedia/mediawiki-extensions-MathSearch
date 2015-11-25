@@ -64,8 +64,7 @@ class MathIdGenerator {
 			}
 		}
 		if ( isset( $this->mathTags[$key] ) ) {
-			$keys = $this->getKeys();
-			return sprintf( $this->format, $this->revisionId, $keys[$key] + 1 );
+			return $this->formatKey( $key );
 		};
 	}
 
@@ -135,5 +134,25 @@ class MathIdGenerator {
 	 */
 	public function setUseCustomIds( $useCustomIds ) {
 		$this->useCustomIds = $useCustomIds;
+	}
+
+	public function getTagFromId( $eid ) {
+		foreach ( $this->mathTags as $key => $mathTag ) {
+			if ( $eid == $this->formatKey( $key ) ){
+				return $mathTag;
+			}
+			if ( isset( $mathTag[self::ATTRIB_POS]['id'] ) && $eid == $mathTag[self::ATTRIB_POS]['id'] ){
+				return $mathTag;
+			}
+		}
+	}
+
+	/**
+	 * @param $key
+	 * @return string
+	 */
+	private function formatKey( $key ) {
+		$keys = $this->getKeys();
+		return sprintf( $this->format, $this->revisionId, $keys[$key] + 1 );
 	}
 }
