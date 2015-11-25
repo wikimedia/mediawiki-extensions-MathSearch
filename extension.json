@@ -48,7 +48,6 @@
 			"MathSearchHooks::onLoadExtensionSchemaUpdates"
 		],
 		"MathFormulaPostRender": {
-			"updateIndex": "MathSearchHooks::updateMathIndex",
 			"addLink": "MathSearchHooks::addLinkToFormulaInfoPage"
 		},
 		"UnitTestsList": [

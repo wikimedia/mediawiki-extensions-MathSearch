@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class MwsDumpWriter
+ */
 class MwsDumpWriter {
 	private $mwsns = 'mws:';
 	private $XMLHead;
@@ -57,6 +60,10 @@ class MwsDumpWriter {
 		return true;
 	}
 
+	public function addRevision( $revId ) {
+		$mathId = MathIdGenerator::newFromRevisionId( $revId );
+		$this->addFromMathIdGenerator( $mathId );
+	}
 
 	/**
 	 * @return string
@@ -74,5 +81,19 @@ class MwsDumpWriter {
 
 	public function getOutput() {
 		return $this->getHead() . $this->outBuffer . $this->getFooter();
+	}
+
+	/**
+	 * @param MathIdGenerator $generator
+	 */
+	public function addFromMathIdGenerator( MathIdGenerator $generator ) {
+		foreach ( $generator->getMathTags() as $key => $tag ) {
+			$mml = new MathLaTeXML( $tag[MathIdGenerator::CONTENT_POS],
+					$tag[MathIdGenerator::ATTRIB_POS] );
+			$mml->render();
+			$this->outBuffer .= $this->getMwsExpression( $mml->getMathml(),
+				$generator->getRevisionId(),
+				$generator->parserKey2fId( $key ) );
+		}
 	}
 }
