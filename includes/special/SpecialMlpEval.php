@@ -12,6 +12,12 @@ use MediaWiki\Logger\LoggerFactory;
  * @ingroup extensions
  */
 class SpecialMlpEval extends SpecialPage {
+	const STEP_PAGE = 1;
+	const STEP_FORMULA =2;
+	const STEP_STYLE = 3;
+	const STEP_IDENTIFIERS = 4;
+	const STEP_DEFINITIONS = 5;
+	const STEP_FINISHED = 6;
 	private $selectedMathTag;
 	/**
 	 *
@@ -104,14 +110,11 @@ class SpecialMlpEval extends SpecialPage {
 		$this->loadData();
 		$this->setHeaders();
 		$this->printIntorduction();
-		$this->printSnippet();
-		$this->printVisualEval();
 		$form = new MlpEvalForm( $this );
 		$form->prepareForm();
 		$form->show();
 		$this->printSource( var_export( $this->getStep(), true ) );
 		$this->printSource( var_export( $this->getRequest(), true ) );
-		return;
 	}
 
 	public function getStep() {
@@ -192,24 +195,6 @@ class SpecialMlpEval extends SpecialPage {
 		return LoggerFactory::getInstance( 'MathSearch' );
 	}
 
-	private function displaySelectFormulaForm() {
-		$formDescriptor = array();
-		$this->enableMathStyles();
-
-		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
-		$htmlForm->setSubmitText( 'Continue' );
-		$htmlForm->addHiddenField( 'step', 3 );
-// 		$htmlForm->addHiddenField( 'wpevalPage', $this->title->getText() );
-		$htmlForm->setSubmitCallback( array( $this, 'processFormulaInput' ) );
-		$htmlForm->setHeaderText( "<h2>Step 2: Select a formula</h2>" );
-		$htmlForm->prepareForm();
-		$htmlForm->displayForm( '' );
-		$this->fId = $this->getRandomFId();
-		$this->printSource( $this->fId );
-		$hl = new MathHighlighter( $this->fId, $this->oldId );
-		$this->getOutput()->addWikiText( $hl->getWikiText() );
-	}
-
 	private function enableMathStyles() {
 		$out = $this->getOutput();
 		$out->addModuleStyles(
@@ -281,21 +266,28 @@ class SpecialMlpEval extends SpecialPage {
 	private function printIntorduction() {
 		$out = $this->getOutput();
 		$out->addWikiText( "Welcome to the MLP evaluation. Your data will be recorded." );
+		$out->addWikiText( "You are in step {$this->step} of possible evaluation 5 steps" );
+		switch ( $this->step ) {
+			case self::STEP_FORMULA:
+				$this->fId = $this->getRandomFId();
+				$this->printSource( $this->fId );
+				$hl = new MathHighlighter( $this->fId, $this->oldId );
+				$this->getOutput()->addWikiText( $hl->getWikiText() );
+				break;
+			case self::STEP_STYLE:
+				break;
+			case self::STEP_IDENTIFIERS:
+				break;
+			case self::STEP_DEFINITIONS:
+				break;
+			case self::STEP_FINISHED:
+		}
+
 	}
 
 	private function writeLog( $string ) {
 		$out = $this->getOutput();
 		$out->addWikiText( "LOG:\n " . $string . "--END-LOG" );
-
-	}
-
-	private function printSnippet() {
-		if ( $this->step == 2 ) {
-			$this->fId = $this->getRandomFId();
-			$this->printSource( $this->fId );
-			$hl = new MathHighlighter( $this->fId, $this->oldId );
-			$this->getOutput()->addWikiText( $hl->getWikiText() );
-		}
 
 	}
 
@@ -320,25 +312,4 @@ class SpecialMlpEval extends SpecialPage {
 		return $this->setStep( 2 );
 	}
 
-	private function printVisualEval() {
-		$out = $this->getOutput();
-		if ( $this->step == 3 ){
-
-			$out->addWikiText( "Visual Evaluation" );
-		}
-	}
-	private function printSelectIdentifier() {
-		$out = $this->getOutput();
-		if ( $this->step == 4 ){
-
-			$out->addWikiText( "Visual Evaluation" );
-		}
-	}
-	private function printSelectMeaning() {
-		$out = $this->getOutput();
-		if ( $this->step == 5 ){
-
-			$out->addWikiText( "Visual Evaluation" );
-		}
-	}
 }
