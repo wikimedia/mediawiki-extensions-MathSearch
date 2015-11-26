@@ -276,10 +276,18 @@ class SpecialMlpEval extends SpecialPage {
 				$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
 				break;
 			case self::STEP_IDENTIFIERS:
+				$this->enableMathStyles();
+				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
+				$md = $mo->getTexInfo();
+				$this->printSource( var_export( $md->getIdentifiers(), true ) );
 				break;
 			case self::STEP_DEFINITIONS:
+				$this->enableMathStyles();
+				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
+				$this->printSource( var_export( $mo->getRelations(), true ) );
 				break;
 			case self::STEP_FINISHED:
+				$out->addWikiText( 'thank you' );
 		}
 
 	}
