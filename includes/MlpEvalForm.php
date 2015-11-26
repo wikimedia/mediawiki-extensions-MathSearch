@@ -40,8 +40,44 @@ class MlpEvalForm extends OOUIHTMLForm {
 				$formDescriptor['evalPage'] = $s;
 				break;
 			case SpecialMlpEval::STEP_FORMULA:
+				$formDescriptor['snippetSelector'] = array(
+						'type'    => 'radio',
+						'label'   => 'Page to evaluate',
+						'options' => array(
+								'Continue with this snippet'            => self::OPT_CONTINUE,
+								'Select another snippet from that page' => self::OPT_RETRY,
+								'Go Back to page selection'             => self::OPT_BACK
+						),
+						'default' => self::OPT_CONTINUE
+						# The option selected by default (identified by value)
+				);
+				break;
 			case SpecialMlpEval::STEP_STYLE:
+				$formDescriptor['snippetSelector'] = array(
+						'type'    => 'radio',
+						'label'   => 'Page to evaluate',
+						'options' => array(
+								'Continue with this snippet'            => self::OPT_CONTINUE,
+								'Select another snippet from that page' => self::OPT_RETRY,
+								'Go Back to page selection'             => self::OPT_BACK
+						),
+						'default' => self::OPT_CONTINUE
+						# The option selected by default (identified by value)
+				);
+				break;
 			case SpecialMlpEval::STEP_IDENTIFIERS:
+				$formDescriptor['snippetSelector'] = array(
+						'type'    => 'radio',
+						'label'   => 'Page to evaluate',
+						'options' => array(
+								'Continue with this snippet'            => self::OPT_CONTINUE,
+								'Select another snippet from that page' => self::OPT_RETRY,
+								'Go Back to page selection'             => self::OPT_BACK
+						),
+						'default' => self::OPT_CONTINUE
+						# The option selected by default (identified by value)
+				);
+				break;
 			case SpecialMlpEval::STEP_DEFINITIONS:
 				$formDescriptor['snippetSelector'] = array(
 						'type'    => 'radio',

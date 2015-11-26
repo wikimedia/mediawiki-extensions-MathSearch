@@ -261,7 +261,7 @@ class SpecialMlpEval extends SpecialPage {
 		switch ( $this->step ) {
 			case self::STEP_FORMULA:
 				$this->fId = $this->getRandomFId();
-				$this->printSource( $this->fId );
+				$this->printFormula();
 				$hl = new MathHighlighter( $this->fId, $this->oldId );
 				$this->getOutput()->addWikiText( $hl->getWikiText() );
 				break;
@@ -279,7 +279,8 @@ class SpecialMlpEval extends SpecialPage {
 				$this->enableMathStyles();
 				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
 				$md = $mo->getTexInfo();
-				$this->printSource( var_export( $md->getIdentifiers(), true ) );
+				$this->printFormula();
+				$this->printSource( var_export( array_unique( $md->getIdentifiers() ), true ) );
 				break;
 			case self::STEP_DEFINITIONS:
 				$this->enableMathStyles();
@@ -292,9 +293,15 @@ class SpecialMlpEval extends SpecialPage {
 
 	}
 
-	private function writeLog( $string ) {
-		$out = $this->getOutput();
-		$out->addWikiText( "LOG:\n " . $string . "--END-LOG" );
+	private function writeLog( $message ) {
+		$logObject = array(
+			'message' => $message,
+			'user' => $this->getUser()->getName(),
+			'step' => $this->step,
+			'oldId' => $this->oldId,
+			'fId' => $this->fId,
+		);
+		$this->printSource( json_encode( $logObject ), 'json' );
 
 	}
 
@@ -342,5 +349,11 @@ class SpecialMlpEval extends SpecialPage {
 		$out->addHTML( $renderer->getHtmlOutput() );
 		$renderer->writeCache();
 
+	}
+
+	private function printFormula() {
+		$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
+		$this->getOutput()->addHTML( MathRenderer::renderMath( $mo->getUserInputTex(), array(),
+				'mathml' ) );
 	}
 }
