@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Subi"
+		]
+	},
+	"latextranslator": "LaTeX-etik Mathematica-rako Itzultzailea",
+	"math-wmc-SelectRun": "Izena",
+	"math-wmc-FileLabel": "CSV fitxategia",
+	"math-wmc-importing": "Inportatzen...",
+	"math-search-relation-label": "Erlazioa:",
+	"math-search-relation-0": "eta",
+	"math-search-relation-1": "edo",
+	"math-search-relation-2": "eta ez"
+}
