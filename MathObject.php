@@ -470,4 +470,16 @@ class MathObject extends MathMathML {
 			return false;
 		}
 	}
+
+	public function getWikiText() {
+		$attributes = '';
+		foreach ( $this->params as $key=>$value ){
+			if ( $key ) {
+				$attributes .= " $key=\"$value\"";
+			} else {
+				$attributes .= " $value";
+			}
+		}
+		return "<math$attributes>{$this->userInputTex}</math>";
+	}
 }
