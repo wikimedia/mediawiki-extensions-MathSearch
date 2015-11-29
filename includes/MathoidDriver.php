@@ -75,18 +75,27 @@ class MathoidDriver {
 
 	protected function processResults( $res ) {
 		$jsonResult = json_decode( $res );
-		if ( $jsonResult &&
-			json_last_error() === JSON_ERROR_NONE &&
-			isset( $jsonResult->texvcinfo )
-		) {
-			$texvcinfo = $jsonResult->texvcinfo;
+		if ( $jsonResult && json_last_error() === JSON_ERROR_NONE ) {
+			if ( isset( $jsonResult->texvcinfo ) ){
+				// mathoid 0.2.9
+				$texvcinfo = $jsonResult->texvcinfo;
+			} else {
+				// mathoid 0.2.10
+				$texvcinfo = $jsonResult;
+			}
 			$this->success = $texvcinfo->success;
 			if ( $this->success ) {
 				$this->checked = $texvcinfo->checked;
 				$this->identifiers = $texvcinfo->identifiers;
 				$this->requiredPackages = $texvcinfo->requiredPackages;
 			} else {
-				$this->error = $texvcinfo->error;
+				if ( isset( $texvcinfo->error->error ) ) {
+					// mathoid 0.2.9
+					$this->error = $texvcinfo->error;
+				} else {
+					// mathoid 0.2.10
+					$this->error = $texvcinfo->detail->error;
+				}
 			}
 			return true;
 		} else {
@@ -103,7 +112,7 @@ class MathoidDriver {
 		$req = MWHttpRequest::factory( $url, $options, __METHOD__ );
 		$status = $req->execute();
 
-		if ( $status->isOK() ) {
+		if ( $status->isOK() || $req->getStatus() === 400 ) {
 			return $req->getContent();
 		} else {
 			$errors = $status->getErrorsByType( 'error' );
@@ -136,8 +145,7 @@ class MathoidDriver {
 			if ( $res && json_last_error() === JSON_ERROR_NONE ) {
 				if ( isset( $res->name ) && $res->name === 'mathoid' ) {
 					$this->version = $res->version;
-					// Mathoid 0.2.9 is only version currently supported
-					if ( $this->version === "0.2.9" ) {
+					if ( $this->version === "0.2.9" || $this->version === "0.2.10" ) {
 						return true;
 					} else {
 						return false;
