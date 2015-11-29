@@ -14,6 +14,19 @@ class MathIdGenerator {
 	private $keys;
 
 	/**
+	 * @param $revision
+	 * @return MathIdGenerator
+	 * @throws MWException
+	 */
+	public static function newFromRevision( Revision $revision ) {
+		if ( $revision->getContentModel() !== CONTENT_MODEL_WIKITEXT ) {
+			throw new MWException( "MathIdGenerator supports only CONTENT_MODEL_WIKITEXT" );
+		}
+		return new MathIdGenerator( ContentHandler::getContentText( $revision->getContent() ),
+			$revision->getId() );
+	}
+
+	/**
 	 * @return mixed
 	 */
 	public function getKeys() {
@@ -39,11 +52,7 @@ class MathIdGenerator {
 
 	public static function newFromRevisionId( $revId ) {
 		$revision = Revision::newFromId( $revId );
-		if ( $revision->getContentModel() !== CONTENT_MODEL_WIKITEXT ) {
-			throw new MWException( "MathIdGenerator supports only CONTENT_MODEL_WIKITEXT" );
-		}
-		return new MathIdGenerator( ContentHandler::getContentText( $revision->getContent() ),
-			$revId );
+		return self::newFromRevision( $revision );
 	}
 
 	public static function newFromTitle( Title $title ) {
