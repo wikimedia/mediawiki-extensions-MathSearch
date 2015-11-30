@@ -14,51 +14,42 @@ use MediaWiki\Logger\LoggerFactory;
 class SpecialMlpEval extends SpecialPage {
 	const STEP_PAGE = 1;
 	const STEP_FORMULA =2;
-	const STEP_STYLE = 3;
-	const STEP_IDENTIFIERS = 4;
-	const STEP_DEFINITIONS = 5;
-	const STEP_FINISHED = 6;
-	private $selectedMathTag;
-	/**
-	 *
-	 */
+	const STEP_TEX = 3;
+	const STEP_RENDERING = 4;
+	const STEP_IDENTIFIERS = 5;
+	const STEP_DEFINITIONS = 6;
+	const STEP_FINISHED = 7;
 	const MAX_ATTEMPTS = 10;
-	/**
-	 * @var
-	 */
+	/** @var  MathObject */
+	private $selectedMathTag;
+	/** @var int */
 	private $step;
-	/**
-	 * @var MathIdGenerator
-	 */
+	/**@var MathIdGenerator */
 	private $mathIdGen;
-	/**
-	 * @var Title
-	 */
-	private $title;
-	/**
-	 * @var
-	 */
-	private $wikitext;
-	/**
-	 * @var
-	 */
-	private $snippet;
-	/**
-	 * @var
-	 */
-	private $mathTags;
-	/**
-	 * @var
-	 */
+	/** @var int */
 	private $oldId;
-	/**
-	 * @var bool
-	 */
+	/** @var bool|string */
 	private $lastError = false;
-	/**
-	 * @var
-	 */
+	/** @var string */
 	private $fId;
+	/** @var  Revision */
+	private $revision;
+	private $texInputChanged = false;
+	private $identifiers = array();
+
+	/**
+	 * @return boolean
+	 */
+	public function isTexInputChanged() {
+		return $this->texInputChanged;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getIdentifiers() {
+		return $this->identifiers;
+	}
 
 	function __construct() {
 		parent::__construct( 'MlpEval' );
@@ -85,6 +76,7 @@ class SpecialMlpEval extends SpecialPage {
 		}
 		$fId = $req->getText( 'fId' );
 		if ( $fId === '' ) {
+			$this->setFId( $this->getRandomFId() );
 			return $this->setStep( 2 );
 		}
 		if ( $this->setFId( $fId ) === false ) {
@@ -112,9 +104,8 @@ class SpecialMlpEval extends SpecialPage {
 		$this->setHeaders();
 		$this->printIntorduction();
 		$form = new MlpEvalForm( $this );
-		$form->prepareForm();
 		$form->show();
-		$this->printSource( var_export( $this->getStep(), true ) );
+		// $this->printSource( var_export( $this->getStep(), true ) );
 		$this->printSource( var_export( $this->getRequest(), true ) );
 	}
 
@@ -149,9 +140,6 @@ class SpecialMlpEval extends SpecialPage {
 		$revision = $title->getLatestRevID();
 		if ( $revision ) {
 			$retVal = $this->setRevision( $revision );
-			if ( $retVal ) {
-				$this->title = $title;
-			}
 			return $retVal;
 		} else {
 			$this->lastError = "invalid revision";
@@ -174,19 +162,14 @@ class SpecialMlpEval extends SpecialPage {
 			$this->lastError = "no revision id given";
 			return false;
 		}
-		$gen = MathIdGenerator::newFromRevisionId( $revId );
-		$mathTags = $gen->getMathTags();
-		$tagCount = count( $mathTags );
+		$this->revision = Revision::newFromId( $revId );
+		$this->mathIdGen = MathIdGenerator::newFromRevision( $this->revision );
+		$tagCount = count( $this->mathIdGen->getMathTags() );
 		if ( $tagCount == 0 ) {
 			$this->lastError = "has no math tags";
 			return false;
 		}
-		$this->mathIdGen = $gen;
-		$this->title = Revision::newFromId( $revId )->getTitle();
-		$this->wikitext = $this->mathIdGen->getWikiText();
-		$this->mathTags = $mathTags;
 		return true;
-
 	}
 
 	/**
@@ -215,8 +198,8 @@ class SpecialMlpEval extends SpecialPage {
 		} else {
 			$this->fId = $fId;
 		}
+		$this->selectedMathTag = MathObject::newFromRevisionText( $this->oldId, $fId );
 		return true;
-		// $this->selectedMathTag = $this->mathIdGen->getTagFromId( $fId );
 	}
 
 	/**
@@ -224,13 +207,8 @@ class SpecialMlpEval extends SpecialPage {
 	 * @throws MWException
 	 */
 	private function getRandomFId() {
-		$unique = array_rand( $this->mathTags );
+		$unique = array_rand( $this->mathIdGen->getMathTags() );
 		return $this->mathIdGen->parserKey2fId( $unique );
-	}
-
-	public function filterPage( $simpleTextField, $allData ) {
-		$allData['revisionId'] = 'HERE AM I';
-		return $simpleTextField;
 	}
 
 	/**
@@ -251,44 +229,63 @@ class SpecialMlpEval extends SpecialPage {
 	 * @return Title
 	 */
 	public function getTitle() {
-		return $this->title;
+		return $this->revision->getTitle();
 	}
 
 	private function printIntorduction() {
+		$this->enableMathStyles();
 		$out = $this->getOutput();
-		$out->addWikiText( "Welcome to the MLP evaluation. Your data will be recorded." );
-		$out->addWikiText( "You are in step {$this->step} of possible evaluation 5 steps" );
+		// $out->addWikiText( "Welcome to the MLP evaluation. Your data will be recorded." );
+		// $out->addWikiText( "You are in step {$this->step} of possible evaluation 5 steps" );
+		$this->printPrefix();
 		switch ( $this->step ) {
-			case self::STEP_FORMULA:
-				$this->fId = $this->getRandomFId();
-				$this->printFormula();
-				$hl = new MathHighlighter( $this->fId, $this->oldId );
-				$this->getOutput()->addWikiText( $hl->getWikiText() );
+			case self::STEP_PAGE:
 				break;
-			case self::STEP_STYLE:
-				$this->enableMathStyles();
-				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
-				$this->printSource( $mo->getUserInputTex(), 'TeX (original user input)', 'latex' );
+			case self::STEP_FORMULA:
+				$hl = new MathHighlighter( $this->fId, $this->oldId );
+				$out->addHtml(
+						'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
+				);
+				$this->printFormula();
+				$out->addHtml( '<div class="mw-collapsible-content">' );
+				$this->getOutput()->addWikiText( $hl->getWikiText() );
+				$out->addHtml( '</div></div>' );
+
+				break;
+			case self::STEP_TEX:
+				$mo = $this->selectedMathTag;
+				$this->printSource( $mo->getUserInputTex(),
+					wfMessage( 'math-lp-3-pretty-option-1' )->text(), 'latex' );
 				$texInfo = $mo->getTexInfo();
-				$this->printSource( $texInfo->getChecked(), 'TeX (checked)', 'latex' );
+				if ( $texInfo ) {
+					if ( $texInfo->getChecked() !== $mo->getUserInputTex() ){
+						$this->printSource( $texInfo->getChecked(),
+							wfMessage( 'math-lp-3-pretty-option-2' )->text(), 'latex' );
+						$this->texInputChanged = true;
+					}
+				}
+				break;
+			case self::STEP_RENDERING:
+				$mo = $this->selectedMathTag;
 				$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
 				$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
 				$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
 				break;
 			case self::STEP_IDENTIFIERS:
-				$this->enableMathStyles();
 				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
 				$md = $mo->getTexInfo();
-				$this->printFormula();
-				$this->printSource( var_export( array_unique( $md->getIdentifiers() ), true ) );
-				break;
+				if ( $md ) {
+					// $this->printFormula();
+					$this->identifiers = array_unique( $md->getIdentifiers() );
+					// $this->getRequest()->setVal('wp5-identifiers',array('h','f'));
+					// $this->printSource( var_export( array_unique( $md->getIdentifiers() ), true ) );
+				}
+					break;
 			case self::STEP_DEFINITIONS:
 				$this->enableMathStyles();
 				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
 				$this->printSource( var_export( $mo->getRelations(), true ) );
 				break;
-			case self::STEP_FINISHED:
-				$out->addWikiText( 'thank you' );
 		}
 
 	}
@@ -301,14 +298,14 @@ class SpecialMlpEval extends SpecialPage {
 			'oldId' => $this->oldId,
 			'fId' => $this->fId,
 		);
-		$this->printSource( json_encode( $logObject ), 'json' );
+		// $this->printSource( json_encode( $logObject ), 'json' );
 
 	}
 
 	private function resetPage() {
 		$req = $this->getRequest();
 		$this->writeLog( "pgRst: User selects another page" );
-		$req->unsetVal( 'wpevalPage' );
+		$req->unsetVal( 'wp1-page' );
 		$req->unsetVal( 'oldId' );
 		$req->unsetVal( 'wpsnippetSelector' );
 		$req->unsetVal( 'fId' );
@@ -355,5 +352,37 @@ class SpecialMlpEval extends SpecialPage {
 		$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
 		$this->getOutput()->addHTML( MathRenderer::renderMath( $mo->getUserInputTex(), array(),
 				'mathml' ) );
+	}
+
+	private function printTitle() {
+		$sectionTitle = wfMessage( "math-lp-{$this->step}-head" )->text();
+		$this->getOutput()->addHTML( "<h2>$sectionTitle</h2>" );
+	}
+
+	private function printIntro() {
+		$msg = new Message( "math-lp-{$this->step}-intro", array( 'moritz','max' ) );
+		$this->getOutput()->addWikiText( $msg->text() );
+	}
+
+	private function getWikiTextLink() {
+		return "[[Special:Permalink/{$this->oldId}#{$this->fId}|{$this->getTitle()}#{$this->fId}]]";
+	}
+
+	private function printFormulaRef() {
+		$this->getOutput()->addWikiMsg( 'math-lp-formula-ref', $this->getWikiTextLink(),
+			$this->selectedMathTag->getWikiText(), $this->revision->getTimestamp() );
+	}
+
+	private function printPrefix() {
+		if ( $this->step > 1 ){
+			$this->printFormulaRef();
+		}
+		if ( $this->step === 1 ) {
+			$this->printIntro();
+			$this->printTitle();
+		} else {
+			$this->printTitle();
+			$this->printIntro();
+		}
 	}
 }

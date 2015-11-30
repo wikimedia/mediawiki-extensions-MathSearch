@@ -18,6 +18,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 		$this->step = $specialPage->getStep();
 		$formDescriptor = array();
 		$this->addControls( $formDescriptor );
+		$this->addOptions( $formDescriptor );
 		parent::__construct( $formDescriptor, $specialPage->getContext() );
 		$this->mWasSubmitted = false;
 		$this->addStateFields();
@@ -32,66 +33,80 @@ class MlpEvalForm extends OOUIHTMLForm {
 		switch ( $this->step ){
 			case SpecialMlpEval::STEP_PAGE:
 				$s = array(
-						'label'    => 'Select page to evaluate.',
-						'class'    => 'HTMLTitleTextField',
-						'readonly' => $this->specialPage->getStep() > 1 ? true : false,
-						'default'  => $this->specialPage->getRandomPage()->getText()
+					'class'         => 'HTMLTitleTextField',
+					'default'       => $this->specialPage->getRandomPage()->getText()
 				);
-				$formDescriptor['evalPage'] = $s;
+				$formDescriptor['1-page'] = $s;
 				break;
 			case SpecialMlpEval::STEP_FORMULA:
-				$formDescriptor['snippetSelector'] = array(
+				$formDescriptor['2-content'] = array(
 						'type'    => 'radio',
-						'label'   => 'Page to evaluate',
-						'options' => array(
-								'Continue with this snippet'            => self::OPT_CONTINUE,
-								'Select another snippet from that page' => self::OPT_RETRY,
-								'Go Back to page selection'             => self::OPT_BACK
-						),
-						'default' => self::OPT_CONTINUE
-						# The option selected by default (identified by value)
+						'default' => 1,
+				);
+				$formDescriptor['2-domain'] = array(
+						'type'    => 'radio',
+						'default' => 1,
 				);
 				break;
-			case SpecialMlpEval::STEP_STYLE:
-				$formDescriptor['snippetSelector'] = array(
+			case SpecialMlpEval::STEP_TEX:
+				$formDescriptor['3-pretty'] = array(
 						'type'    => 'radio',
-						'label'   => 'Page to evaluate',
-						'options' => array(
-								'Continue with this snippet'            => self::OPT_CONTINUE,
-								'Select another snippet from that page' => self::OPT_RETRY,
-								'Go Back to page selection'             => self::OPT_BACK
-						),
-						'default' => self::OPT_CONTINUE
-						# The option selected by default (identified by value)
+						'default' => 1,
+						'disabled'=>!$this->specialPage->isTexInputChanged()
+				);
+				$formDescriptor['3-assessment'] = array(
+						'type'    => 'radio',
+						'default' => 1,
+				);
+				$formDescriptor['3-problems'] = array(
+						'type'    => 'multiselect',
+				);
+				$formDescriptor['3-suggestion'] = array(
+						'type'    => 'text',
+						'required'=>false,
+				);
+				break;
+			case SpecialMlpEval::STEP_RENDERING:
+				$formDescriptor['4-best'] = array(
+					'type'    => 'radio',
+					'options-messages' => array(
+						'mw_math_mathml'=>'mathml',
+						'mw_math_latexml'=>'latexml',
+						'mw_math_png'=>'png'
+					),
+					'default' => 'mathml'
 				);
 				break;
 			case SpecialMlpEval::STEP_IDENTIFIERS:
-				$formDescriptor['snippetSelector'] = array(
-						'type'    => 'radio',
-						'label'   => 'Page to evaluate',
-						'options' => array(
-								'Continue with this snippet'            => self::OPT_CONTINUE,
-								'Select another snippet from that page' => self::OPT_RETRY,
-								'Go Back to page selection'             => self::OPT_BACK
-						),
-						'default' => self::OPT_CONTINUE
-						# The option selected by default (identified by value)
+				$options = array();
+				// TODO: defaults currently do not work because request->wasPosted() is set to true.
+				$default = array();
+				foreach ( $this->specialPage->getIdentifiers() as $id ) {
+					$rendered = MathRenderer::renderMath( $id, array(), 'mathml' );
+					$options[$rendered] = $id;
+					$default[] = $id;
+				}
+				$formDescriptor['5-identifiers'] = array(
+						'type'    => 'multiselect',
+						'options' => $options,
+						'default' => $default,
+						// 'invert'=> true,
+				);
+				$formDescriptor['5-missing'] = array(
+						'type' => 'textarea',
+						'rows' => 3, # Display height of field
+						// 'cols' => 30 # Display width of field
 				);
 				break;
 			case SpecialMlpEval::STEP_DEFINITIONS:
-				$formDescriptor['snippetSelector'] = array(
-						'type'    => 'radio',
-						'label'   => 'Page to evaluate',
-						'options' => array(
-								'Continue with this snippet'            => self::OPT_CONTINUE,
-								'Select another snippet from that page' => self::OPT_RETRY,
-								'Go Back to page selection'             => self::OPT_BACK
-						),
-						'default' => self::OPT_CONTINUE
-						# The option selected by default (identified by value)
-				);
 				break;
 		}
+		$formDescriptor['submit-info'] = array(
+				'type' => 'info',
+				// 'label-message' => 'math-lp-submit-info-label',
+				'default' => wfMessage( 'math-lp-submit-info' )->text(),
+				// 'raw' => true # if true, the above string won't be html-escaped.
+		);
 	}
 
 	private function addStateFields() {
@@ -102,6 +117,38 @@ class MlpEvalForm extends OOUIHTMLForm {
 	}
 
 	private function addButtons() {
-		$this->addButton( "pgRst", "Select another random page" );
+		$this->addButton( "pgRst", wfMessage( 'math-lp-new-article' )->text() );
+		if ( $this->step > 1 && $this->step < 7 ){
+			$this->addButton( "fRst", wfMessage( 'math-lp-new-formula' )->text() );
+		}
+		if ( $this->step < 7 ){
+			$this->setSubmitTextMsg( wfMessage( 'math-lp-submit-label' )->params( $this->step+1 ) );
+		} else {
+			$this->setSubmitTextMsg( wfMessage( 'math-lp-new-formula' ) );
+		}
+	}
+
+	private function addOptions( &$form ) {
+		static $elements = array( 'label','help' );
+		foreach ( $form as $key => $control ) {
+			foreach ( $elements as $element ){
+				$msg = "math-lp-$key-$element";
+				if ( wfMessage( $msg )->exists() ){
+					$form[$key]["$element-message"] = $msg;
+				}
+			}
+			if ( wfMessage( "math-lp-$key-option-1" )->exists() ){
+				$options = array();
+				for ( $i=1;$i<20;$i++ ){
+					$msg = "math-lp-$key-option-$i";
+					if ( wfMessage( "math-lp-$key-option-$i" )->exists() ) {
+						$options[$msg] = $i;
+					} else {
+						break;
+					}
+				}
+				$form[$key]["options-messages"] = $options;
+			}
+		}
 	}
 }
