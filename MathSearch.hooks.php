@@ -344,6 +344,10 @@ class MathSearchHooks {
 			return true;
 		}
 		$revId = $revision->getId();
+		if ( $revision->getContentModel() !== CONTENT_MODEL_WIKITEXT ){
+			// Skip pages that do not contain wikitext
+			return true;
+		}
 		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
 		$mathTags= $idGenerator->getMathTags();
 		$harvest = "";
