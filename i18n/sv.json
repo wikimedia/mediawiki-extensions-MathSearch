@@ -6,7 +6,8 @@
 			"Freked",
 			"Platinawolf",
 			"WikiPhoenix",
-			"Aaoo"
+			"Aaoo",
+			"Fader"
 		]
 	},
 	"mathsearch": "Matematiksökning",
@@ -18,6 +19,18 @@
 	"getequationsbyquery": "Få ekvationer genom att fråga",
 	"xquerygenerator": "XQuery-generatorn",
 	"mathdebug": "Testrenderare",
+	"math-lp-1-head": "Steg 1: Välj en artikel som du är bekant med",
+	"math-lp-1-page-label": "Artikelns titel",
+	"math-lp-2-content-option-6": "kemisk struktur (CO ₂ + C ⇌ 2 CO)",
+	"math-lp-2-domain-option-2": "fysik",
+	"math-lp-2-domain-option-3": "kemi",
+	"math-lp-2-domain-option-4": "biologi",
+	"math-lp-2-domain-option-6": "datavetenskap",
+	"math-lp-2-domain-option-7": "medicin",
+	"math-lp-2-domain-option-8": "ekonomi",
+	"math-lp-6-head": "Steg 6: kontextberoende semantik",
+	"math-lp-submit-label": "Fortsätt med steg $1",
+	"math-lp-new-article": "Fortsätt med en annan artikel",
 	"math-wmc-SectionRun": "Inlämningsinformation",
 	"math-wmc-SelectRun": "Namn",
 	"math-wmc-FileLabel": "CSV-fil",

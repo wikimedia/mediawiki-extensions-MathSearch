@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Shirayuki"
+			"Shirayuki",
+			"Sujiniku"
 		]
 	},
 	"mathsearch": "数式の検索",
@@ -10,6 +11,12 @@
 	"mathsearch-desc": "[http://search.mathweb.org/about.html MathWeb 検索]エンジンを統合する",
 	"getequationsbyquery": "クエリによる式の取得",
 	"xquerygenerator": "XQueryジェネレーター",
+	"math-lp-2-domain-option-2": "物理学",
+	"math-lp-2-domain-option-3": "化学",
+	"math-lp-2-domain-option-4": "生物学",
+	"math-lp-2-domain-option-5": "工学",
+	"math-lp-2-domain-option-6": "コンピューター科学",
+	"math-lp-2-domain-option-8": "経済学",
 	"math-wmc-SelectRun": "名前",
 	"math-wmc-FileLabel": "CSV ファイル",
 	"math-wmc-Warnings": "入力ファイルの以下の行は無視されます:",
