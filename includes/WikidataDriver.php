@@ -21,7 +21,8 @@ class WikidataDriver {
 		$request = array(
 			'method' => 'GET',
 			'url'    => $this->getBackendUrl() .
-				"/w/api.php?format=json&action=wbsearchentities&language={$this->lang}&search={$term}"
+				"/w/api.php?format=json&action=wbsearchentities&uselang={$this->lang}".
+				"&language={$this->lang}&search={$term}"
 		);
 		$serviceClient = new VirtualRESTServiceClient( new MultiHttpClient( array() ) );
 		$response = $serviceClient->run( $request );
