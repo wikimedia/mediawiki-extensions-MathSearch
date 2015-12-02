@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"아라",
-			"Hwangjy9"
+			"Hwangjy9",
+			"고솜"
 		]
 	},
 	"mathsearch": "수학 검색",
@@ -12,5 +13,11 @@
 	"getequationsbyquery": "쿼리로 방정식 얻기",
 	"xquerygenerator": "XQuery 생성기",
 	"mathdebug": "테스트 표시기",
+	"math-lp-1-page-label": "문서 제목",
+	"math-lp-2-domain-option-4": "생물학",
+	"math-lp-2-domain-option-6": "컴퓨터 과학",
+	"math-lp-2-domain-option-8": "경제학",
+	"math-lp-3-assessment-option-1": "입력이 올바릅니다",
+	"math-lp-7-head": "평가 완료됨",
 	"math-search-type-0": "핵심 단어"
 }

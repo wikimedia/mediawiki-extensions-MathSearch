@@ -14,6 +14,8 @@
 	"mathsearch-desc": "Integruje wyszukiwarkę [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Pobierz równania przez zapytania",
 	"math-lp-1-page-label": "Tytuł artykułu",
+	"math-lp-2-content-label": "Wybierz najodpowiedniejszy rodzaj wyrażenia",
+	"math-lp-2-content-option-1": "złożone wyrażenie matematyczne (a²+b²=c²)",
 	"math-lp-2-content-option-4": "pojedynczy symbol matematyczny (±)",
 	"math-lp-2-content-option-5": "symbol używany nie w kontekście matematycznym (♭ w muzyce)",
 	"math-lp-2-content-option-6": "struktura chemiczna (CO₂ + C ⇌ 2 CO)",
