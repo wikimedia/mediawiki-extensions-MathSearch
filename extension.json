@@ -32,7 +32,8 @@
 		"MathosphereDriver": "includes/MathosphereDriver.php",
 		"MathIdGenerator": "includes/MathIdGenerator.php",
 		"MathHighlighter": "includes/MathHighlighter.php",
-		"MlpEvalForm": "includes/MlpEvalForm.php"
+		"MlpEvalForm": "includes/MlpEvalForm.php",
+		"WikidataDriver": "includes/WikidataDriver.php"
 	},
 	"AvailableRights": [
 		"mathwmcsubmit"
@@ -73,7 +74,8 @@
 		"MathUpdateObservations": false,
 		"MathUploadEnabled": false,
 		"MathWmcMaxResults": 10000,
-		"MathWmcServer": false
+		"MathWmcServer": false,
+		"MathSearchWikidataUrl": "https://wikidata.org"
 	},
 	"MessagesDirs": {
 		"MathSearch": [
