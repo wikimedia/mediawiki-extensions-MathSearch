@@ -99,6 +99,27 @@ class MlpEvalForm extends OOUIHTMLForm {
 				);
 				break;
 			case SpecialMlpEval::STEP_DEFINITIONS:
+				foreach ( $this->specialPage->getIdentifiers() as $key => $id ) {
+					$options =array();
+					// $rendered = MathRenderer::renderMath( $id, array(), 'mathml' );
+					$rels = $this->specialPage->getRelations( $id );
+					foreach ( $rels as $rel ){
+						$options[$rel] = $rel;
+					}
+					$options['other'] = 'other';
+					if ( count( $rels ) ) {
+						$formDescriptor["6-id-$key"] = array(
+								'label' => "Select definitions for $id",
+								'type'      => 'multiselect',
+								'options'   => $options,
+								// 'raw' => true
+						);
+					}
+					$formDescriptor["6-id-$key-other"] = array(
+							'label' => "Other for $id",
+							'type'      => 'text'
+					);
+				}
 				break;
 		}
 		$formDescriptor['submit-info'] = array(

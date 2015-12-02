@@ -36,6 +36,7 @@ class SpecialMlpEval extends SpecialPage {
 	private $revision;
 	private $texInputChanged = false;
 	private $identifiers = array();
+	private $relations;
 
 	/**
 	 * @return boolean
@@ -91,6 +92,14 @@ class SpecialMlpEval extends SpecialPage {
 						return $this->resetFormula();
 						case MlpEvalForm::OPT_CONTINUE:
 						$this->writeLog( "pgRst: User selects formula $fId" );
+			}
+		}
+		if ( $req->getArray( 'wp5-identifiers' ) ){
+			$this->identifiers = $req->getArray( 'wp5-identifiers' );
+			$missing = $req->getText( 'wp5-missing' );
+			if ( $missing ){
+				// TODO: Check for invalid TeX
+				$this->identifiers = array_merge( $this->identifiers, preg_split( '/[\n\r]/', $missing ) );
 			}
 		}
 		return $this->setStep( $req->getInt( 'oldStep' ) + 1 );
@@ -242,14 +251,7 @@ class SpecialMlpEval extends SpecialPage {
 			case self::STEP_PAGE:
 				break;
 			case self::STEP_FORMULA:
-				$hl = new MathHighlighter( $this->fId, $this->oldId );
-				$out->addHtml(
-						'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
-				);
-				$this->printFormula();
-				$out->addHtml( '<div class="mw-collapsible-content">' );
-				$this->getOutput()->addWikiText( $hl->getWikiText() );
-				$out->addHtml( '</div></div>' );
+				$this->printMathObjectInContext();
 
 				break;
 			case self::STEP_TEX:
@@ -282,9 +284,19 @@ class SpecialMlpEval extends SpecialPage {
 				}
 					break;
 			case self::STEP_DEFINITIONS:
+				$this->printMathObjectInContext();
 				$this->enableMathStyles();
 				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
-				$this->printSource( var_export( $mo->getRelations(), true ) );
+				$this->relations = array();
+				$rels =  $mo->getRelations();
+				foreach ( $this->identifiers as $i ){
+					$this->relations[$i] = array();
+					if ( isset( $rels[$i] ) ){
+						foreach ( $rels[$i] as $rel ){
+							$this->relations[$i][] = $rel->definition;
+						}
+					}
+				}
 				break;
 		}
 
@@ -385,4 +397,30 @@ class SpecialMlpEval extends SpecialPage {
 			$this->printIntro();
 		}
 	}
+
+	/**
+	 * @throws MWException
+	 */
+	private function printMathObjectInContext() {
+		$out = $this->getOutput();
+		$hl = new MathHighlighter( $this->fId, $this->oldId );
+		$out->addHtml(
+				'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
+		);
+		$this->printFormula();
+		$out->addHtml( '<div class="mw-collapsible-content">' );
+		$out->addWikiText( $hl->getWikiText() );
+		$out->addHtml( '</div></div>' );
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getRelations( $key = null ) {
+		if ( $key ){
+			return $this->relations[$key];
+		}
+		return $this->relations;
+	}
+
 }
