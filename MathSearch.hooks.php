@@ -32,6 +32,7 @@ class MathSearchHooks {
 			$updater->addExtensionTable( 'mathperformance', $dir . 'mathperformance.sql' );
 			$updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
 			$updater->addExtensionTable( 'mathlog', $dir . 'mathlog.sql' );
+			$updater->addExtensionTable( 'math_mlp', $dir . 'math_mlp.sql' );
 			if ( $wgMathWmcServer ) {
 				$wmcDir = $dir . 'wmc/persistent/';
 				$updater->addExtensionTable( 'math_wmc_ref', $wmcDir . "math_wmc_ref.sql" );
