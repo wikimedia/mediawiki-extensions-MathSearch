@@ -482,4 +482,13 @@ class MathObject extends MathMathML {
 		}
 		return "<math$attributes>{$this->userInputTex}</math>";
 	}
+
+	public function getMathMlAltText() {
+		$mml = $this->getMathml();
+		preg_match( '/<math.+alttext="(.*?)".*>/', $mml, $res );
+		if ( count( $res ) ) {
+			return $res[1];
+		}
+		return '';
+	}
 }

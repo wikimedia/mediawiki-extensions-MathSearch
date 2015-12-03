@@ -41,4 +41,11 @@ EOT;
 		$second = array_shift( $longMatch );
 		$this->assertEquals( ' x^3 ', $second[1] );
 	}
+
+	public function testAlttext() {
+		$r = new MathMathML( 'E=mc^2' );
+		$r->render();
+		$mo = MathObject::cloneFromRenderer( $r );
+		$this->assertEquals( 'upper E equals m c squared', $mo->getMathMlAltText() );
+	}
 }
