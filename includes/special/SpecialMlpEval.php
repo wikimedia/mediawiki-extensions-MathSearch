@@ -37,6 +37,7 @@ class SpecialMlpEval extends SpecialPage {
 	private $texInputChanged = false;
 	private $identifiers = array();
 	private $relations;
+	private $speechRuleText;
 
 	/**
 	 * @return boolean
@@ -289,6 +290,19 @@ class SpecialMlpEval extends SpecialPage {
 				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
 				$this->relations = array();
 				$rels =  $mo->getRelations();
+				$srt = $mo->getMathMlAltText();
+				if ( !$srt ) {
+					// retry to get alltext might be a caching problem
+					$r = new MathMathML( $mo->getUserInputTex() );
+					$r->checkTex();
+					$r->render( true );
+					$mo = MathObject::cloneFromRenderer( $r );
+					$srt = $mo->getMathMlAltText();
+					if ( $srt ){
+						$r->writeCache();
+					}
+				}
+				$this->speechRuleText = $srt;
 				foreach ( $this->identifiers as $i ){
 					$this->relations[$i] = array();
 					if ( isset( $rels[$i] ) ){
@@ -422,5 +436,13 @@ class SpecialMlpEval extends SpecialPage {
 		}
 		return $this->relations;
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getSpeechRuleText() {
+		return $this->speechRuleText;
+	}
+
 
 }

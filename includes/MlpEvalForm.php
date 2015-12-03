@@ -125,6 +125,10 @@ class MlpEvalForm extends OOUIHTMLForm {
 							'type'      => 'text'
 					);
 				}
+				$formDescriptor["6-srt"] = array(
+						'type'    => 'info',
+						'default' => $this->specialPage->getSpeechRuleText()
+				);
 				break;
 		}
 		$formDescriptor['submit-info'] = array(
