@@ -5,7 +5,8 @@
 			"Ralgis",
 			"Macofe",
 			"Caliburn",
-			"Ryo567"
+			"Ryo567",
+			"SinNovedades"
 		]
 	},
 	"mathsearch": "Búsqueda matemática",
@@ -18,6 +19,8 @@
 	"getequationsbyquery": "Obtener ecuaciones por consulta",
 	"xquerygenerator": "Generador XQuery",
 	"mathdebug": "Renderizador de pruebas",
+	"math-lp-2-domain-option-6": "ciencia computacional",
+	"math-lp-7-head": "Querido participante, gracias por participar en la evaluación para mejorara el soporte matemático de Wikipedia y",
 	"math-wmc-download-button": "Descargar",
 	"math-wmc-SectionRun": "Información del envío",
 	"math-wmc-SelectRun": "Nombre",

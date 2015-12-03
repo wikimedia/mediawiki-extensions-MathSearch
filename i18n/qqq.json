@@ -75,7 +75,7 @@
 	"math-lp-6-separator-message": "Headline that separates identifier definition control groups. Wrapped inside header (<h3>).\n*$1 is the TeX code of the identifeir",
 	"math-lp-6-srt-help": "Label of the speech rule text info field",
 	"math-lp-6-srt-label": "Help text of the speech rule text info field",
-	"math-lp-6-srt-assessment-label":"Label of speech rule text assessment radio control",
+	"math-lp-6-srt-assessment-label": "Label of speech rule text assessment radio control",
 	"math-lp-6-srt-assessment-option-1": "option of math-lp-6-srt-assessment-label",
 	"math-lp-6-srt-assessment-option-2": "option of math-lp-6-srt-assessment-label",
 	"math-lp-6-srt-assessment-option-3": "option of math-lp-6-srt-assessment-label",

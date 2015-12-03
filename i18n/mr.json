@@ -1,8 +1,37 @@
 {
 	"@metadata": {
 		"authors": [
-			"अभय नातू"
+			"अभय नातू",
+			"V.narsikar"
 		]
 	},
+	"math-lp-1-page-label": "लेखाचे शीर्षक",
+	"math-lp-2-head": "पायरी २: गणितीय अभिव्यक्तिची वर्गवारी करा",
+	"math-lp-2-content-option-2": "एकल संख्या (३.१४)",
+	"math-lp-2-content-option-6": "रासायनिक जडणघडण (CO₂ + C ⇌ 2 CO)",
+	"math-lp-2-domain-option-1": "(शुद्ध) गणित",
+	"math-lp-2-domain-option-2": "भौतिकशास्त्र",
+	"math-lp-2-domain-option-3": "रसायनशास्त्र",
+	"math-lp-2-domain-option-4": "जीवशास्त्र",
+	"math-lp-2-domain-option-5": "अभियांत्रिकी",
+	"math-lp-2-domain-option-6": "संगणक विज्ञान",
+	"math-lp-2-domain-option-7": "औषधे",
+	"math-lp-2-domain-option-8": "अर्थशास्त्र",
+	"math-lp-2-domain-option-9": "इतर",
+	"math-lp-3-head": "पायरी ३:LaTeX संकेत",
+	"math-lp-3-intro": "या खाली आपण LaTeX स्रोत संकेताचे निर्धारण करल.",
+	"math-lp-3-pretty-option-1": "सदस्याद्वारे टाकलेला मूळ LaTeX संकेत",
+	"math-lp-3-assessment-option-1": "क्षेप ठिकठाक आहे",
+	"math-lp-3-assessment-option-3": "क्षेपनात मोठ्या अडचणी आहेत",
+	"math-lp-3-problems-label": "खालील प्रश्न आहेतच",
+	"math-lp-3-suggestion-label": "क्षेप हा ला बदलावयास हवा...",
+	"math-lp-3-suggestion-help": "ऐच्छिक, TeX दर्जा चांगला नसेल तेंव्हाच वापरा",
+	"math-lp-4-head": "पायरी ४:अनुलेखन(रेंडरिंग)",
+	"math-lp-4-intro": "खाली,आपण मिळालेल्या दर्जाचे निर्धारण कराल.",
+	"math-lp-7-head": "निर्धारण पूर्ण झाले",
+	"math-lp-formula-ref": "आपण $1 या गणितीय अभिव्यक्तिचे $2 म्हणून मिळालेले मुल्यमापन करीत आहात,शेवटचे संपादन <code>$3</code>",
+	"math-lp-submit-label": "$1 पायरीपासून पुढे चालू ठेवा",
+	"math-lp-new-article": "दुसऱ्या लेखापासून पुढे चालू ठेवा",
+	"math-lp-new-formula": "दुसऱ्या सूत्रापासून पुढे चालू ठेवा",
 	"math-search-relation-0": "आणि"
 }
