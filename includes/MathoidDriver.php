@@ -60,14 +60,6 @@ class MathoidDriver {
 		return $this->requiredPackages;
 	}
 
-	/**
-	 *
-	 * @return MathQueryObject
-	 */
-	public function getQuery() {
-		return $this->query;
-	}
-
 	public function texvcInfo() {
 		return $this->processResults( self::doPost( $this->getBackendUrl() . "/texvcinfo",
 			$this->getPostData() ) );
