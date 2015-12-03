@@ -32,11 +32,10 @@ class MlpEvalForm extends OOUIHTMLForm {
 	private function addControls( &$formDescriptor ) {
 		switch ( $this->step ){
 			case SpecialMlpEval::STEP_PAGE:
-				$s = array(
+				$formDescriptor['1-page'] = array(
 					'class'         => 'HTMLTitleTextField',
 					'default'       => $this->specialPage->getRandomPage()->getText()
 				);
-				$formDescriptor['1-page'] = $s;
 				break;
 			case SpecialMlpEval::STEP_FORMULA:
 				$formDescriptor['2-content'] = array(

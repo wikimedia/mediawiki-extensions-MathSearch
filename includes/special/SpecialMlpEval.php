@@ -13,7 +13,7 @@ use MediaWiki\Logger\LoggerFactory;
  */
 class SpecialMlpEval extends SpecialPage {
 	const STEP_PAGE = 1;
-	const STEP_FORMULA =2;
+	const STEP_FORMULA = 2;
 	const STEP_TEX = 3;
 	const STEP_RENDERING = 4;
 	const STEP_IDENTIFIERS = 5;
@@ -65,6 +65,15 @@ class SpecialMlpEval extends SpecialPage {
 	private function loadData() {
 		$req = $this->getRequest();
 		$revId = $req->getInt( 'oldId' );
+		if ( $req->getText( 'wp1-page' ) ){
+			$t = Title::newFromText( $req->getText( 'wp1-page' ) );
+			if ( $this->setPage( $t ) ){
+				if ( $revId && $revId != $this->getOldId() ) {
+					$this->writeLog( "$revId was not selected", - 1, $revId );
+				}
+			}
+			$revId = $this->getOldId();
+		}
 		if ( $revId === 0 ) {
 			return $this->setStep( 1 );
 		}
@@ -74,7 +83,7 @@ class SpecialMlpEval extends SpecialPage {
 		if ( $req->getText( 'pgRst' ) ) {
 			return $this->resetPage();
 		} elseif ( $req->getInt( 'oldStep' ) === 1 ) {
-			$this->writeLog( "pgSelect: User selects page" . $revId );
+			$this->writeLog( "pgSelect: User selects page" . $revId, 1 );
 		}
 		$fId = $req->getText( 'fId' );
 		if ( $fId === '' ) {
@@ -85,22 +94,23 @@ class SpecialMlpEval extends SpecialPage {
 			return $this->setStep( 2 );
 		}
 		// @TODO: Switch back to === 2
-		if ( $req->getInt( 'oldStep' ) > 1 ){
-			switch ( $req->getInt( 'wpsnippetSelector' ) ){
-						case MlpEvalForm::OPT_BACK;
-						return $this->resetPage();
-						case MlpEvalForm::OPT_RETRY:
-						return $this->resetFormula();
-						case MlpEvalForm::OPT_CONTINUE:
-						$this->writeLog( "pgRst: User selects formula $fId" );
+		if ( $req->getInt( 'oldStep' ) > 1 ) {
+			switch ( $req->getInt( 'wpsnippetSelector' ) ) {
+				case MlpEvalForm::OPT_BACK;
+					return $this->resetPage();
+				case MlpEvalForm::OPT_RETRY:
+					return $this->resetFormula();
+				case MlpEvalForm::OPT_CONTINUE:
+					$this->writeLog( "pgRst: User selects formula $fId", $req->getInt( 'oldStep' ) );
 			}
 		}
-		if ( $req->getArray( 'wp5-identifiers' ) ){
+		if ( $req->getArray( 'wp5-identifiers' ) ) {
 			$this->identifiers = $req->getArray( 'wp5-identifiers' );
 			$missing = $req->getText( 'wp5-missing' );
-			if ( $missing ){
+			if ( $missing ) {
 				// TODO: Check for invalid TeX
-				$this->identifiers = array_merge( $this->identifiers, preg_split( '/[\n\r]/', $missing ) );
+				$this->identifiers =
+					array_merge( $this->identifiers, preg_split( '/[\n\r]/', $missing ) );
 			}
 		}
 		return $this->setStep( $req->getInt( 'oldStep' ) + 1 );
@@ -261,7 +271,7 @@ class SpecialMlpEval extends SpecialPage {
 					wfMessage( 'math-lp-3-pretty-option-1' )->text(), 'latex' );
 				$texInfo = $mo->getTexInfo();
 				if ( $texInfo ) {
-					if ( $texInfo->getChecked() !== $mo->getUserInputTex() ){
+					if ( $texInfo->getChecked() !== $mo->getUserInputTex() ) {
 						$this->printSource( $texInfo->getChecked(),
 							wfMessage( 'math-lp-3-pretty-option-2' )->text(), 'latex' );
 						$this->texInputChanged = true;
@@ -283,13 +293,13 @@ class SpecialMlpEval extends SpecialPage {
 					// $this->getRequest()->setVal('wp5-identifiers',array('h','f'));
 					// $this->printSource( var_export( array_unique( $md->getIdentifiers() ), true ) );
 				}
-					break;
+				break;
 			case self::STEP_DEFINITIONS:
 				$this->printMathObjectInContext();
 				$this->enableMathStyles();
 				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
 				$this->relations = array();
-				$rels =  $mo->getRelations();
+				$rels = $mo->getRelations();
 				$srt = $mo->getMathMlAltText();
 				if ( !$srt ) {
 					// retry to get alltext might be a caching problem
@@ -298,15 +308,15 @@ class SpecialMlpEval extends SpecialPage {
 					$r->render( true );
 					$mo = MathObject::cloneFromRenderer( $r );
 					$srt = $mo->getMathMlAltText();
-					if ( $srt ){
+					if ( $srt ) {
 						$r->writeCache();
 					}
 				}
 				$this->speechRuleText = $srt;
-				foreach ( $this->identifiers as $i ){
+				foreach ( $this->identifiers as $i ) {
 					$this->relations[$i] = array();
-					if ( isset( $rels[$i] ) ){
-						foreach ( $rels[$i] as $rel ){
+					if ( isset( $rels[$i] ) ) {
+						foreach ( $rels[$i] as $rel ) {
 							$this->relations[$i][] = $rel->definition;
 						}
 					}
@@ -316,21 +326,39 @@ class SpecialMlpEval extends SpecialPage {
 
 	}
 
-	private function writeLog( $message ) {
-		$logObject = array(
-			'message' => $message,
-			'user' => $this->getUser()->getName(),
-			'step' => $this->step,
-			'oldId' => $this->oldId,
-			'fId' => $this->fId,
+	private function writeLog( $message, $step = 0, $revId = false ) {
+		$userId = $this->getUser()->getId();
+		$logData = array(
+			'data'   => $this->getRequest()->getValues(),
+			'header' => $this->getRequest()->getAllHeaders()
 		);
-		// $this->printSource( json_encode( $logObject ), 'json' );
-
+		$json = json_encode( $logData );
+		if ( !$revId ){
+			$revId = $this->oldId;
+		}
+		$row = array(
+			'user_id'     => $userId,
+			'step'        => $step,
+			'json_data'   => $json,
+			'revision_id' => $revId,
+			'anchor'      => $this->fId,
+			'comment'     => $message
+		);
+		if ( $userId == 0 ) {
+			$this->printSource( var_export( $message, true ), 'Error: No user found to store results.' );
+			return;
+		}
+		$dbw = wfGetDB( DB_WRITE );
+		$dbw->upsert( 'math_mlp', $row, array( 'user_id', 'revision_id', 'anchor', 'step' ), $row );
 	}
 
 	private function resetPage() {
 		$req = $this->getRequest();
-		$this->writeLog( "pgRst: User selects another page" );
+		$rndRev = $req->getInt( 'oldId' );
+		$oldStep = $req->getInt( 'oldStep' );
+		if ( $rndRev && $oldStep == 1 ) {
+			$this->writeLog( "$rndRev was not selected, by button", - 1, $rndRev );
+		}
 		$req->unsetVal( 'wp1-page' );
 		$req->unsetVal( 'oldId' );
 		$req->unsetVal( 'wpsnippetSelector' );
@@ -339,9 +367,10 @@ class SpecialMlpEval extends SpecialPage {
 		$this->fId = '';
 		return $this->setStep( 1 );
 	}
+
 	private function resetFormula() {
 		$req = $this->getRequest();
-		$this->writeLog( "pgRst: User selects another formula" );
+		$this->writeLog( "pgRst: User selects another formula", $req->getInt( 'oldStep' ) );
 		$req->unsetVal( 'wpsnippetSelector' );
 		$req->unsetVal( 'fId' );
 		$req->unsetVal( 'oldStep' );
@@ -354,7 +383,7 @@ class SpecialMlpEval extends SpecialPage {
 			$description .= ": ";
 		}
 		$this->getOutput()->addWikiText( "$description<syntaxhighlight lang=\"$language\">" .
-				$source . '</syntaxhighlight>', $linestart );
+			$source . '</syntaxhighlight>', $linestart );
 	}
 
 	private function DisplayRendering( $tex, $mode ) {
@@ -377,7 +406,7 @@ class SpecialMlpEval extends SpecialPage {
 	private function printFormula() {
 		$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
 		$this->getOutput()->addHTML( MathRenderer::renderMath( $mo->getUserInputTex(), array(),
-				'mathml' ) );
+			'mathml' ) );
 	}
 
 	private function printTitle() {
@@ -386,7 +415,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	private function printIntro() {
-		$msg = new Message( "math-lp-{$this->step}-intro", array( 'moritz','max' ) );
+		$msg = new Message( "math-lp-{$this->step}-intro", array( 'moritz', 'max' ) );
 		$this->getOutput()->addWikiText( $msg->text() );
 	}
 
@@ -400,7 +429,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	private function printPrefix() {
-		if ( $this->step > 1 ){
+		if ( $this->step > 1 ) {
 			$this->printFormulaRef();
 		}
 		if ( $this->step === 1 ) {
@@ -419,7 +448,7 @@ class SpecialMlpEval extends SpecialPage {
 		$out = $this->getOutput();
 		$hl = new MathHighlighter( $this->fId, $this->oldId );
 		$out->addHtml(
-				'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
+			'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
 		);
 		$this->printFormula();
 		$out->addHtml( '<div class="mw-collapsible-content">' );
@@ -431,7 +460,7 @@ class SpecialMlpEval extends SpecialPage {
 	 * @return mixed
 	 */
 	public function getRelations( $key = null ) {
-		if ( $key ){
+		if ( $key ) {
 			return $this->relations[$key];
 		}
 		return $this->relations;
