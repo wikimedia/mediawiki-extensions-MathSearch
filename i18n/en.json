@@ -78,6 +78,8 @@
 	"math-lp-6-srt-suggestion-label": "Suggest a better alternative text (optional)",
 	"math-lp-7-head": "Assessment completed",
 	"math-lp-7-intro": "Thank you for the assessment of one mathematical expression.\n\nYou can to access more mathematical expressions from the same article or continue with another article.",
+	"math-lp-feedback-label": "Additional comments (optional)",
+	"math-lp-feedback-help": "If there is important information you'd like to share regarding the current evaluation step enter it here.",
 	"math-lp-formula-ref": "You are evaluating mathematical expression $1 rendered as $2 last edited on <code>$3</code>.",
 	"math-lp-submit-info": "Press one of the buttons below to continue or close the window to terminate the survey.",
 	"math-lp-submit-label": "Continue with step $1",

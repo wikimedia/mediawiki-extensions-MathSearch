@@ -83,6 +83,8 @@
 	"math-lp-6-srt-suggestion-label": "Label of the a text field",
 	"math-lp-7-head": "Headline for survey final step 6",
 	"math-lp-7-intro": "Success message",
+	"math-lp-feedback-label": "Text field for general feedback",
+	"math-lp-feedback-help": "Help test for feedback text field",
 	"math-lp-formula-ref": "Wikitext snippet that describes, which mathematical object is currently evaluated",
 	"math-lp-submit-info": "Summarizing description of functionality of the different submit buttons.",
 	"math-lp-submit-label": "Button label to submit and continue with the next step:\n Parameter 1 next step.",

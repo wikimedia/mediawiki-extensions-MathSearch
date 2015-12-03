@@ -140,11 +140,14 @@ class MlpEvalForm extends OOUIHTMLForm {
 				);
 				break;
 		}
+		$formDescriptor['feedback'] = array(
+				'type' => 'text',
+		);
 		$formDescriptor['submit-info'] = array(
-				'type' => 'info',
-				// 'label-message' => 'math-lp-submit-info-label',
-				'default' => wfMessage( 'math-lp-submit-info' )->text(),
-				// 'raw' => true # if true, the above string won't be html-escaped.
+			'type' => 'info',
+			// 'label-message' => 'math-lp-submit-info-label',
+			'default' => wfMessage( 'math-lp-submit-info' )->text(),
+			// 'raw' => true # if true, the above string won't be html-escaped.
 		);
 	}
 
