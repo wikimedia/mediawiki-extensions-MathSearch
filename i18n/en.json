@@ -67,6 +67,7 @@
 	"math-lp-5-footer": "The prefilled values of this form were generated using a large variety of open source projects, e.g. LaTeXML, MathJax, Mathoid, Mathosphere, SpeechRuleEngine, texvc, texvcjs, texvcinfo. Acknowledgements to the contributors David Cervone, Deyan Ginev, Alexey Grigorev, Martin Líška, Bruce Miller, Robert Pagel, Michal Růžička, Volker Sorge, Frédéric Wang, Garbirel Wicke and may others.",
 	"math-lp-6-head": "Step 6: Context dependent semantics",
 	"math-lp-6-intro": "In the following, you will assess the quality of the definition extraction.",
+	"math-lp-6-separator-message": "Definition for identifier <math>$1</math> $<syntaxhighlight lang=\"latex\" inline>$1</syntaxhighlight>$",
 	"math-lp-7-head": "Assessment completed",
 	"math-lp-7-intro": "Thank you for the assessment of one mathematical expression.\n\nYou can to access more mathematical expressions from the same article or continue with another article.",
 	"math-lp-formula-ref": "You are evaluating mathematical expression $1 rendered as $2 last edited on <code>$3</code>.",

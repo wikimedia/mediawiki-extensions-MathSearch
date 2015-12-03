@@ -101,7 +101,12 @@ class MlpEvalForm extends OOUIHTMLForm {
 			case SpecialMlpEval::STEP_DEFINITIONS:
 				foreach ( $this->specialPage->getIdentifiers() as $key => $id ) {
 					$options =array();
-					// $rendered = MathRenderer::renderMath( $id, array(), 'mathml' );
+					$formDescriptor["6-separator-$key"] = array(
+						'type'    => 'info',
+						'default' => '<h3>' .
+							wfMessage( 'math-lp-6-separator-message', $id )->parseAsBlock() . '</h3>',
+						'raw'     => true
+					);
 					$rels = $this->specialPage->getRelations( $id );
 					foreach ( $rels as $rel ){
 						$options[$rel] = $rel;
