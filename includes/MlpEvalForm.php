@@ -139,10 +139,12 @@ class MlpEvalForm extends OOUIHTMLForm {
 					'required' => false,
 				);
 				break;
+			case SpecialMlpEval::STEP_FINISHED:
+				$formDescriptor['feedback'] = array(
+						'type' => 'text',
+				);
+				break;
 		}
-		$formDescriptor['feedback'] = array(
-				'type' => 'text',
-		);
 		$formDescriptor['submit-info'] = array(
 			'type' => 'info',
 			// 'label-message' => 'math-lp-submit-info-label',
