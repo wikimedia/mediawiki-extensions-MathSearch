@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Nike"
+		]
+	},
+	"math-lp-6-srt-assessment-option-1": "täydellinen",
+	"math-lp-6-srt-assessment-option-2": "ok",
+	"math-lp-6-srt-assessment-option-3": "tarvitsee parannusta",
+	"math-lp-6-srt-assessment-option-4": "ei ollenkaan hyödyllinen",
+	"math-lp-6-srt-suggestion-label": "Ehdota parempaa vaihtoehtoa (valinnainen)"
+}

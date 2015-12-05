@@ -29,6 +29,7 @@
 	"math-lp-3-head": "Krok 3: Kod LaTeX-u",
 	"math-lp-3-pretty-option-2": "Texvc sprawdził kod LaTeX-u",
 	"math-lp-7-head": "Ocena zakończona",
+	"math-lp-feedback-label": "Dodatkowe uwagi (opcjonalnie)",
 	"math-lp-submit-label": "Kontynuuj z krokiem $1",
 	"math-lp-new-formula": "Kontynuuj z innym wzorem",
 	"math-wmc-download-button": "Pobierz",

@@ -79,6 +79,8 @@
 	"math-lp-6-srt-suggestion-label": "Einen besseren Alternativtext vorschlagen (optional)",
 	"math-lp-7-head": "Beurteilung abgeschlossen",
 	"math-lp-7-intro": "Vielen Dank für die Beurteilung eines mathematischen Ausdrucks.\n\nDu kannst weitere mathematische Ausdrücke von dem gleichen Artikel beurteilen oder mit einem anderen Artikel fortfahren.",
+	"math-lp-feedback-label": "Zusätzliche Kommentare (optional)",
+	"math-lp-feedback-help": "Falls es wichtige Informationen gibt, die du bezüglich des aktuellen Bewertungsschrittes mit anderen teilen möchtest, gib sie hier ein.",
 	"math-lp-formula-ref": "Du bewertest den mathematischen Ausdruck $1, dargestellt als $2, zuletzt bearbeitet am <code>$3</code>.",
 	"math-lp-submit-info": "Klicke unten auf eine der Schaltflächen, um fortzufahren oder schließe das Fenster, um die Umfrage zu beenden.",
 	"math-lp-submit-label": "Mit Schritt $1 fortfahren",
