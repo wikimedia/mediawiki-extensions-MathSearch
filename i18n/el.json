@@ -2,9 +2,13 @@
 	"@metadata": {
 		"authors": [
 			"Geraki",
-			"Evropi"
+			"Evropi",
+			"Giorgos456"
 		]
 	},
+	"math-lp-6-srt-suggestion-label": "Προτείνω μια καλύτερη εναλλακτική λύση κειμένου (προαιρετικό)",
+	"math-lp-feedback-label": "Πρόσθετες παρατηρήσεις (προαιρετικό)",
+	"math-lp-feedback-help": "Αν υπάρχουν σημαντικές πληροφορίες που θα θέλατε να μοιραστείτε σχετικά με την τρέχουσα αξιολόγηση βήμα εισάγετε εδώ.",
 	"math-wmc-download-button": "Λήψη",
 	"math-wmc-importing": "Εισαγωγή...",
 	"math-wmc-display-formulae-label": "Προβολή της απόδοσης των υποβληθέντων τύπων"

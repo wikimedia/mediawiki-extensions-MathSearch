@@ -28,6 +28,8 @@
 	"math-lp-2-domain-option-8": "ekonomia",
 	"math-lp-3-head": "Krok 3: Kod LaTeX-u",
 	"math-lp-3-pretty-option-2": "Texvc sprawdził kod LaTeX-u",
+	"math-lp-6-separator-message": "Definicja identyfikatora <math>$1</math> $<syntaxhighlight lang=\"latex\" inline>$1</syntaxhighlight>$",
+	"math-lp-6-srt-assessment-option-2": "ok",
 	"math-lp-7-head": "Ocena zakończona",
 	"math-lp-feedback-label": "Dodatkowe uwagi (opcjonalnie)",
 	"math-lp-submit-label": "Kontynuuj z krokiem $1",
