@@ -137,7 +137,7 @@ class MathoidDriver {
 			if ( $res && json_last_error() === JSON_ERROR_NONE ) {
 				if ( isset( $res->name ) && $res->name === 'mathoid' ) {
 					$this->version = $res->version;
-					if ( $this->version === "0.2.9" || $this->version === "0.2.10" ) {
+					if ( preg_match( "/(0\\.2\\.(9|10)|1.0.0.*)/", $this->version ) ) {
 						return true;
 					} else {
 						return false;
@@ -149,6 +149,9 @@ class MathoidDriver {
 		$logger->warning( "Mathoid server backend does not point to mathoid.", array(
 			'detail' => $res ) );
 		return false;
+	}
 
+	public function getSpeech() {
+		return $this->doPost( $this->getBackendUrl().'/speech', $this->getPostData() );
 	}
 }

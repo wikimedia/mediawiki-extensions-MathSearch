@@ -10,7 +10,6 @@
  * Class MathSearchHooksTest
  */
 class MathoidDriverTest extends MediaWikiTestCase {
-
 	private static $hasMathoid;
 
 
@@ -38,6 +37,7 @@ class MathoidDriverTest extends MediaWikiTestCase {
 		$this->assertEquals( '\\sin(x^{2})', $m->getChecked() );
 		$this->assertEquals( array( 'x' ), $m->getIdentifiers() );
 		$this->assertEquals( array(), $m->getRequiredPackages() );
+		$this->assertEquals( 'sine left-parenthesis x squared right-parenthesis', $m->getSpeech() );
 	}
 
 	public function testFail() {
