@@ -89,6 +89,20 @@
 				"desktop",
 				"mobile"
 			]
+		},
+		"ext.math-svg.styles": {
+			"styles": "ext.math-svg.css",
+			"targets": [
+				"desktop",
+				"mobile"
+			]
+		},
+		"ext.math-mathml.styles": {
+			"styles": "ext.math-mathml.css",
+			"targets": [
+				"desktop",
+				"mobile"
+			]
 		}
 	},
 
