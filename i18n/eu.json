@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Subi"
+			"Subi",
+			"An13sa"
 		]
 	},
 	"latextranslator": "LaTeX-etik Mathematica-rako Itzultzailea",
@@ -22,7 +23,9 @@
 	"math-lp-2-domain-option-8": "ekonomia",
 	"math-lp-2-domain-option-9": "beste bat",
 	"math-lp-3-head": "3. urratsa: LaTeX kodea",
+	"math-lp-6-srt-assessment-option-1": "ados",
 	"math-lp-6-srt-assessment-option-4": "ez da batere lagungarria",
+	"math-lp-submit-label": "Jarraitu $1 urratsarekin",
 	"math-lp-new-article": "Jarraitu beste artikulu batekin",
 	"math-lp-new-formula": "Jarraitu beste formula batekin",
 	"math-wmc-SelectRun": "Izena",
