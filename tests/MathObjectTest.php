@@ -23,7 +23,23 @@ EOT;
 some more text
 <math> x^3 </math>
 EOT;
+	protected static $hasRestbase;
 
+	public static function setUpBeforeClass() {
+		$rbi = new MathRestbaseInterface();
+		self::$hasRestbase = $rbi->checkBackend( true );
+	}
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
+	 */
+	protected function setUp() {
+		parent::setUp();
+		if ( !self::$hasRestbase ) {
+			$this->markTestSkipped( "Can not connect to Restbase Math interface." );
+		}
+	}
 	public function test() {
 		$comment = MathObject::extractMathTagsFromWikiText( $this->HTMLComment );
 		$this->assertEquals( 0, count( $comment ), 'Math tags in comments should be ignored.' );
