@@ -53,7 +53,7 @@ class MathObject extends MathMathML {
 	}
 
 	public static function cloneFromRenderer( MathRenderer $renderer ) {
-		$instance = new MathObject( $renderer->getTex() );
+		$instance = new MathObject( $renderer->getUserInputTex() );
 		$instance->setMathml( $renderer->getMathml() );
 		$instance->setSvg( $renderer->getSvg() );
 		$instance->setMode( $renderer->getMode() );
@@ -490,5 +490,33 @@ class MathObject extends MathMathML {
 			return $res[1];
 		}
 		return '';
+	}
+
+	public function getSvgWidth() {
+		if ( preg_match( "/width=\"(.*?)(ex|px|em)?\"/", $this->getSvg(), $matches ) ) {
+			return $matches;
+		}
+		return 0;
+	}
+
+	public function getSvgHeight() {
+		if ( preg_match( "/height=\"(.*?)(ex|px|em)?\"/", $this->getSvg(), $matches ) ) {
+			return $matches;
+		}
+		return 0;
+	}
+
+	public function getReSizedSvgLink( $factor = 2 ) {
+		$width = $this->getSvgWidth();
+		$width = $width[1]*$factor.$width[2];
+		$height = $this->getSvgHeight();
+		$height = $height[1]*$factor.$height[2];
+		$reflector = new ReflectionObject( $this );
+		$method = $reflector->getMethod( 'getFallbackImage' );
+		$method->setAccessible( true );
+		$fbi =  $method->invoke( $this );
+		$fbi = preg_replace( "/width: (.*?)(ex|px|em)/", "width: $width", $fbi );
+		$fbi = preg_replace( "/height: (.*?)(ex|px|em)/", "height: $height", $fbi );
+		return $fbi;
 	}
 }
