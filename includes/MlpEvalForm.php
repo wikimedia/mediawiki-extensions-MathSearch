@@ -6,7 +6,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 	const OPT_BACK = 1;
 	const OPT_RETRY = 2;
 
-	private $specialPage;
+	private $eval;
 	private $step;
 
 	/**
@@ -14,13 +14,13 @@ class MlpEvalForm extends OOUIHTMLForm {
 	 * @param SpecialMlpEval $specialPage
 	 */
 	public function __construct( SpecialMlpEval $specialPage ) {
-		$this->specialPage = $specialPage;
+		$this->eval = $specialPage;
 		$this->step = $specialPage->getStep();
 		$formDescriptor = array();
 		$this->addControls( $formDescriptor );
 		$this->addOptions( $formDescriptor );
 		parent::__construct( $formDescriptor, $specialPage->getContext() );
-		$this->mWasSubmitted = false;
+		// $this->mWasSubmitted = false;
 		$this->addStateFields();
 		$this->addButtons();
 		$this->setSubmitCallback( function(){
@@ -34,7 +34,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 			case SpecialMlpEval::STEP_PAGE:
 				$formDescriptor['1-page'] = array(
 					'class'         => 'HTMLTitleTextField',
-					'default'       => $this->specialPage->getRandomPage()->getText()
+					'default'       => $this->eval->getRandomPage()->getText()
 				);
 				break;
 			case SpecialMlpEval::STEP_FORMULA:
@@ -48,14 +48,18 @@ class MlpEvalForm extends OOUIHTMLForm {
 				);
 				break;
 			case SpecialMlpEval::STEP_TEX:
+				$formDescriptor['3-skip'] = array(
+						'type' => 'submit',
+						'value' => 'Skip step.'
+				);
 				$formDescriptor['3-pretty'] = array(
 						'type'    => 'radio',
-						'default' => 1,
-						'disabled'=>!$this->specialPage->isTexInputChanged()
+						'default' => 3,
+						'disabled'=>!$this->eval->isTexInputChanged()
 				);
 				$formDescriptor['3-assessment'] = array(
 						'type'    => 'radio',
-						'default' => 1,
+						'default' => 4,
 				);
 				$formDescriptor['3-problems'] = array(
 						'type'    => 'multiselect',
@@ -66,21 +70,45 @@ class MlpEvalForm extends OOUIHTMLForm {
 				);
 				break;
 			case SpecialMlpEval::STEP_RENDERING:
-				$formDescriptor['4-best'] = array(
-					'type'    => 'radio',
-					'options-messages' => array(
-						'mw_math_mathml'=>'mathml',
-						'mw_math_latexml'=>'latexml',
-						'mw_math_png'=>'png'
-					),
-					'default' => 'mathml'
-				);
+				$subStep = $this->eval->getSubStep();
+				if ( $subStep == '4' ) {
+					$formDescriptor['4-best'] = array(
+							'type'    => 'radio',
+							'options' => array(
+									$this->eval->getMathMLRenderingAsHtmlFragment() => 'mathml',
+									$this->eval->getSvgRenderingAsHtmlFragment()    => 'svg',
+									$this->eval->getPngRenderingAsHtmlFragment()    => 'png'
+							),
+							'default' => 'mathml'
+					);
+				} else {
+					$formDescriptor['4-size'] = array(
+							'type'    => 'radio',
+							'default' => 1
+					);
+					$formDescriptor['4-spacing'] = array(
+							'type'    => 'radio',
+							'default' => 1
+					);
+					$formDescriptor['4-integration'] = array(
+							'type'    => 'radio',
+							'default' => 1
+					);
+					$formDescriptor['4-font'] = array(
+							'type'    => 'radio',
+							'default' => 1
+					);
+					$formDescriptor['4-absolute'] = array(
+								'type'    => 'radio',
+								'default' => 1
+						);
+				}
 				break;
 			case SpecialMlpEval::STEP_IDENTIFIERS:
 				$options = array();
 				// TODO: defaults currently do not work because request->wasPosted() is set to true.
 				$default = array();
-				foreach ( $this->specialPage->getIdentifiers() as $id ) {
+				foreach ( $this->eval->getIdentifiers() as $id ) {
 					$rendered = MathRenderer::renderMath( $id, array(), 'mathml' );
 					$options[$rendered] = $id;
 					$default[] = $id;
@@ -98,7 +126,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 				);
 				break;
 			case SpecialMlpEval::STEP_DEFINITIONS:
-				foreach ( $this->specialPage->getIdentifiers() as $key => $id ) {
+				foreach ( $this->eval->getIdentifiers() as $key => $id ) {
 					$options =array();
 					$formDescriptor["6-separator-$key"] = array(
 						'type'    => 'info',
@@ -106,7 +134,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 							wfMessage( 'math-lp-6-separator-message', $id )->parseAsBlock() . '</h3>',
 						'raw'     => true
 					);
-					$rels = $this->specialPage->getRelations( $id );
+					$rels = $this->eval->getRelations( $id );
 					foreach ( $rels as $rel ){
 						$options[$rel] = $rel;
 					}
@@ -124,7 +152,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 							'type'      => 'text'
 					);
 				}
-				$srt = $this->specialPage->getSpeechRuleText();
+				$srt = $this->eval->getSpeechRuleText();
 				$formDescriptor["6-srt"] = array(
 					'type'    => 'info',
 					'default' => "<pre>$srt</pre>",
@@ -134,7 +162,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 					'type'    => 'radio',
 					'default' => 2,
 				);
-				$formDescriptor['6-suggestion'] = array(
+				$formDescriptor['6-srt-suggestion'] = array(
 					'type'     => 'text',
 					'required' => false,
 				);
@@ -154,10 +182,17 @@ class MlpEvalForm extends OOUIHTMLForm {
 	}
 
 	private function addStateFields() {
-		$specialPage = $this->specialPage;
+		$specialPage = $this->eval;
 		$this->addHiddenField( 'oldId', $specialPage->getOldId() );
 		$this->addHiddenField( 'fId', $specialPage->getFId() );
 		$this->addHiddenField( 'oldStep', $this->step );
+		$this->addHiddenField( 'oldSubStep', $this->eval->getSubStep() );
+		if ( $this->step == 4 ){
+			$subFields = array( 'best','size','spacing','integration','font' );
+			foreach ( $subFields as $key ){
+				$this->saveSubstepField( $key );
+			}
+		}
 	}
 
 	private function addButtons() {
@@ -165,8 +200,11 @@ class MlpEvalForm extends OOUIHTMLForm {
 		if ( $this->step > 1 && $this->step < 7 ){
 			$this->addButton( "fRst", wfMessage( 'math-lp-new-formula' )->text() );
 		}
-		if ( $this->step < 7 ){
-			$this->setSubmitTextMsg( wfMessage( 'math-lp-submit-label' )->params( $this->step+1 ) );
+		if ( $this->step < 6 ){
+			$this->setSubmitTextMsg(
+				wfMessage( 'math-lp-submit-label' )->params( $this->eval->getNextStep() ) );
+		} elseif( $this->step == 6 ) {
+			$this->setSubmitTextMsg( wfMessage( 'math-lp-finish-label' ) );
 		} else {
 			$this->setSubmitTextMsg( wfMessage( 'math-lp-new-formula' ) );
 		}
@@ -186,12 +224,32 @@ class MlpEvalForm extends OOUIHTMLForm {
 				for ( $i=1;$i<20;$i++ ){
 					$msg = "math-lp-$key-option-$i";
 					if ( wfMessage( "math-lp-$key-option-$i" )->exists() ) {
-						$options[$msg] = $i;
+							$txt = wfMessage( "math-lp-$key-option-$i", $i )->parseAsBlock();
+							$options[$txt] = $i;
 					} else {
 						break;
 					}
 				}
-				$form[$key]["options-messages"] = $options;
+				$form[$key]["options"] = $options;
+			}
+		}
+	}
+
+	/**
+	 * @param $key
+	 */
+	private function saveSubstepField( $key ) {
+		$val = $this->getRequest()->getVal( "wp4-$key" );
+		$substep = $this->eval->getSubStep();
+		if ( $val ) {
+			$this->addHiddenField( "4-$key-$substep", $val );
+			$this->getRequest()->unsetVal( "wp4-$key" );
+		}
+		$substeps = array( '','4a','4b','4c' );
+		foreach ( $substeps as $substep ){
+			$val = $this->getRequest()->getVal( "4-$key-$substep" );
+			if ( $val ){
+				$this->addHiddenField( "4-$key-$substep", $val );
 			}
 		}
 	}

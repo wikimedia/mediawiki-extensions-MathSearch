@@ -10,8 +10,9 @@ class MathHighlighter {
 	 * MathHighlighter constructor.
 	 * @param $fId
 	 * @param $revId
+	 * @param bool $highlight
 	 */
-	public function __construct( $fId, $revId ) {
+	public function __construct( $fId, $revId, $highlight = true ) {
 		$gen = MathIdGenerator::newFromRevisionId( $revId );
 		$unique = $gen->getUniqueFromId( $fId );
 		$wikiText = $gen->getWikiText();
@@ -20,13 +21,14 @@ class MathHighlighter {
 		$length = $this->getEndPos( $tagPos, $wikiText ) - $startPos;
 		$wikiText = substr( $wikiText, $startPos, $length );
 		$tag = $gen->getTagFromId( $fId );
-		$wikiText = str_replace( $unique,
-			'<span id="theelement" style="background-color: yellow">' . $tag[3] . '</span>',
-			$wikiText );
+		if ( $highlight ) {
+			$wikiText = str_replace( $unique, '<span id="mathhighlight" style="background-color: yellow">'
+				. $tag[3] . '</span>', $wikiText );
+		}
 		foreach ( $gen->getMathTags() as $key => $content ) {
 			$wikiText = str_replace( $key, $content[3], $wikiText );
 		}
-		$this->wikiText = "== Extract ==\nStart of the extract...\n\n$wikiText\n\n...end of the extract";
+		$this->wikiText = $wikiText;
 	}
 
 	/**

@@ -20,6 +20,13 @@ class SpecialMlpEval extends SpecialPage {
 	const STEP_DEFINITIONS = 6;
 	const STEP_FINISHED = 7;
 	const MAX_ATTEMPTS = 10;
+	private $subStepNames = array(
+		''   => '',
+		'4'  => '',
+		'4a' => 'PNG-',
+		'4b' => 'SVG-',
+		'4c' => 'MathML-'
+	);
 	/** @var  MathObject */
 	private $selectedMathTag;
 	/** @var int */
@@ -38,6 +45,7 @@ class SpecialMlpEval extends SpecialPage {
 	private $identifiers = array();
 	private $relations;
 	private $speechRuleText;
+	private $subStep = '';
 
 	/**
 	 * @return boolean
@@ -65,9 +73,9 @@ class SpecialMlpEval extends SpecialPage {
 	private function loadData() {
 		$req = $this->getRequest();
 		$revId = $req->getInt( 'oldId' );
-		if ( $req->getText( 'wp1-page' ) ){
+		if ( $req->getText( 'wp1-page' ) ) {
 			$t = Title::newFromText( $req->getText( 'wp1-page' ) );
-			if ( $this->setPage( $t ) ){
+			if ( $this->setPage( $t ) ) {
 				if ( $revId && $revId != $this->getOldId() ) {
 					$this->writeLog( "$revId was not selected", - 1, $revId );
 				}
@@ -86,6 +94,12 @@ class SpecialMlpEval extends SpecialPage {
 			$this->writeLog( "pgSelect: User selects page" . $revId, 1 );
 		}
 		$fId = $req->getText( 'fId' );
+		$oldStep = $req->getInt( 'oldStep' );
+		$restButton = $req->getBool( 'fRst' );
+		if ( $oldStep >= self::STEP_FINISHED || $restButton ) {
+			$this->resetFormula();
+			$fId = '';
+		}
 		if ( $fId === '' ) {
 			$this->setFId( $this->getRandomFId() );
 			return $this->setStep( 2 );
@@ -93,15 +107,15 @@ class SpecialMlpEval extends SpecialPage {
 		if ( $this->setFId( $fId ) === false ) {
 			return $this->setStep( 2 );
 		}
-		// @TODO: Switch back to === 2
-		if ( $req->getInt( 'oldStep' ) > 1 ) {
-			switch ( $req->getInt( 'wpsnippetSelector' ) ) {
-				case MlpEvalForm::OPT_BACK;
-					return $this->resetPage();
-				case MlpEvalForm::OPT_RETRY:
-					return $this->resetFormula();
-				case MlpEvalForm::OPT_CONTINUE:
-					$this->writeLog( "pgRst: User selects formula $fId", $req->getInt( 'oldStep' ) );
+		if ( $req->getInt( 'oldStep' ) == 3 || $req->getInt( 'oldStep' ) == 4 ) {
+			$this->setStep( 4 );
+			$this->subStep = $req->getText( 'oldSubStep' );
+			$nextStep = $this->getNextStep();
+			if ( $nextStep !== 5 ) {
+				$this->subStep = $nextStep;
+				return 4;
+			} else {
+				return $this->setStep( 5 );
 			}
 		}
 		if ( $req->getArray( 'wp5-identifiers' ) ) {
@@ -125,8 +139,9 @@ class SpecialMlpEval extends SpecialPage {
 		$this->printIntorduction();
 		$form = new MlpEvalForm( $this );
 		$form->show();
-		// $this->printSource( var_export( $this->getStep(), true ) );
-		$this->printSource( var_export( $this->getRequest(), true ) );
+		if ( $this->step == 5 or $this->step == 6 ) {
+			$this->getOutput()->addWikiMsg( 'math-lp-5-footer' );
+		}
 	}
 
 	public function getStep() {
@@ -201,11 +216,39 @@ class SpecialMlpEval extends SpecialPage {
 
 	private function enableMathStyles() {
 		$out = $this->getOutput();
-		$out->addModuleStyles(
-			array( 'ext.math.styles', 'ext.math.desktop.styles', 'ext.math.scripts' )
-		);
+		$styles = array( 'ext.math.desktop.styles', 'ext.math.scripts' );
+		if ( $this->subStep == '4b' ){
+			$styles[] ='ext.math-svg.styles';
+		} elseif( $this->subStep ){
+			$styles[] ='ext.math-mathml.styles';
+		} else {
+			$styles[] = 'ext.math.styles';
+		}
+		$out->addModuleStyles( $styles );
 	}
 
+	public function getSubStep() {
+		return $this->subStep;
+	}
+
+	public function getNextStep() {
+		if ( $this->step == 4 ) {
+			switch ( $this->subStep ) {
+				case '':
+					return '4';
+				case '4':
+					return '4a';
+				case '4a':
+					return '4b';
+				case '4b':
+					return '4c';
+				default:
+					return 5;
+			}
+		} else {
+			return $this->step + 1;
+		}
+	}
 
 	protected function getGroupName() {
 		return 'mathsearch';
@@ -279,19 +322,32 @@ class SpecialMlpEval extends SpecialPage {
 				}
 				break;
 			case self::STEP_RENDERING:
-				$mo = $this->selectedMathTag;
-				$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
-				$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
-				$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
+				switch ( $this->subStep ) {
+					case '4a':
+						$this->getUser()->setOption( 'math', 'png' );
+						$this->printMathObjectInContext( false, false,
+							$this->getPngRenderingAsHtmlFragment() );
+						break;
+					case '4b':
+						$this->getUser()->setOption( 'math', 'mathml' );
+						$this->printMathObjectInContext( false, false,
+							$this->getSvgRenderingAsHtmlFragment() );
+						break;
+					case '4c':
+						$this->getUser()->setOption( 'math', 'mathml' );
+						$this->printMathObjectInContext( false, false,
+							$this->getMathMLRenderingAsHtmlFragment(),
+							"SpecialMlpEval::removeSVGs" );
+				}
 				break;
 			case self::STEP_IDENTIFIERS:
 				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
 				$md = $mo->getTexInfo();
 				if ( $md ) {
-					// $this->printFormula();
 					$this->identifiers = array_unique( $md->getIdentifiers() );
-					// $this->getRequest()->setVal('wp5-identifiers',array('h','f'));
-					// $this->printSource( var_export( array_unique( $md->getIdentifiers() ), true ) );
+					if ( $this->getRequest()->getArray( 'wp5-identifiers' ) == null ) {
+						$this->getRequest()->setVal( 'wp5-identifiers', $this->identifiers );
+					}
 				}
 				break;
 			case self::STEP_DEFINITIONS:
@@ -303,14 +359,8 @@ class SpecialMlpEval extends SpecialPage {
 				$srt = $mo->getMathMlAltText();
 				if ( !$srt ) {
 					// retry to get alltext might be a caching problem
-					$r = new MathMathML( $mo->getUserInputTex() );
-					$r->checkTex();
-					$r->render( true );
-					$mo = MathObject::cloneFromRenderer( $r );
-					$srt = $mo->getMathMlAltText();
-					if ( $srt ) {
-						$r->writeCache();
-					}
+					$r = new MathoidDriver( $mo->getUserInputTex() );
+					$srt = $r->getSpeech();
 				}
 				$this->speechRuleText = $srt;
 				foreach ( $this->identifiers as $i ) {
@@ -333,7 +383,7 @@ class SpecialMlpEval extends SpecialPage {
 			'header' => $this->getRequest()->getAllHeaders()
 		);
 		$json = json_encode( $logData );
-		if ( !$revId ){
+		if ( !$revId ) {
 			$revId = $this->oldId;
 		}
 		$row = array(
@@ -361,7 +411,6 @@ class SpecialMlpEval extends SpecialPage {
 		}
 		$req->unsetVal( 'wp1-page' );
 		$req->unsetVal( 'oldId' );
-		$req->unsetVal( 'wpsnippetSelector' );
 		$req->unsetVal( 'fId' );
 		$req->unsetVal( 'oldStep' );
 		$this->fId = '';
@@ -371,11 +420,11 @@ class SpecialMlpEval extends SpecialPage {
 	private function resetFormula() {
 		$req = $this->getRequest();
 		$this->writeLog( "pgRst: User selects another formula", $req->getInt( 'oldStep' ) );
-		$req->unsetVal( 'wpsnippetSelector' );
-		$req->unsetVal( 'fId' );
-		$req->unsetVal( 'oldStep' );
+		$valueNames = $req->getValueNames( array( 'oldId', 'wpEditToken' ) );
+		foreach ( $valueNames as $name ) {
+			$req->unsetVal( $name );
+		}
 		$this->fId = '';
-		return $this->setStep( 2 );
 	}
 
 	private function printSource( $source, $description = "", $language = "text", $linestart = true ) {
@@ -386,21 +435,33 @@ class SpecialMlpEval extends SpecialPage {
 			$source . '</syntaxhighlight>', $linestart );
 	}
 
-	private function DisplayRendering( $tex, $mode ) {
-		global $wgMathValidModes;
-		if ( !in_array( $mode, $wgMathValidModes ) ) {
-			return;
-		}
-		$out = $this->getOutput();
-		$names = MathHooks::getMathNames();
-		$name = $names[$mode];
-		$out->addWikiText( "=== $name rendering === " );
-		$renderer = MathRenderer::getRenderer( $tex, array(), $mode );
+	public function getSvgRenderingAsHtmlFragment( $factor = 2.4, $tex = false, $options = array() ) {
+		$renderer = $this->getMathMlRenderer( $tex, $options );
+		$mo = MathObject::cloneFromRenderer( $renderer );
+		return $mo->getReSizedSvgLink( $factor );
+	}
+
+	public function getMathMLRenderingAsHtmlFragment( $factor = 2, $tex = false, $options = array() ) {
+		$renderer = $this->getMathMlRenderer( $tex, $options );
+		$largeMathML = $renderer->getMathml();
+		$factor = round( $factor * 100 );
+		$largeMathML =
+			preg_replace( "/<math/", "<math style=\"font-size: {$factor}% !important;\"", $largeMathML );
+		return $largeMathML;
+	}
+
+
+	public function getPngRenderingAsHtmlFragment( $factor = 1.75, $tex = false, $options = array() ) {
+		$this->updateTex( $tex, $options );
+		$renderer = new MathTexvc( $tex, $options );
 		$renderer->checkTex();
 		$renderer->render();
-		$out->addHTML( $renderer->getHtmlOutput() );
-		$renderer->writeCache();
-
+		$dims = getimagesizefromstring( $renderer->getPng() );
+		return Html::element( 'img', array(
+			'src'    => $renderer->getMathImageUrl(),
+			'width'  => $dims[0] * $factor,
+			'height' => $dims[1] * $factor
+		) );
 	}
 
 	private function printFormula() {
@@ -410,12 +471,15 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	private function printTitle() {
-		$sectionTitle = wfMessage( "math-lp-{$this->step}-head" )->text();
+		$rendering = array( '' => '', '4' => '', '4a' => 'MathML-', '4b' => 'SVG-', '4c' => 'PNG-' );
+		$sectionTitle = wfMessage( "math-lp-{$this->step}-head" )->params( $rendering[$this->subStep],
+			$this->subStep );
 		$this->getOutput()->addHTML( "<h2>$sectionTitle</h2>" );
 	}
 
 	private function printIntro() {
-		$msg = new Message( "math-lp-{$this->step}-intro", array( 'moritz', 'max' ) );
+		$msg =
+			new Message( "math-lp-{$this->step}-intro", array( $this->subStepNames[$this->subStep] ) );
 		$this->getOutput()->addWikiText( $msg->text() );
 	}
 
@@ -444,15 +508,33 @@ class SpecialMlpEval extends SpecialPage {
 	/**
 	 * @throws MWException
 	 */
-	private function printMathObjectInContext() {
+	public function printMathObjectInContext(
+			$highlight = true, $collapsed = true, $formula = false, $filter = false ) {
+		if ( $collapsed ) {
+			$collapsed = "mw-collapsed";
+		}
 		$out = $this->getOutput();
-		$hl = new MathHighlighter( $this->fId, $this->oldId );
+		$hl = new MathHighlighter( $this->fId, $this->oldId, $highlight );
 		$out->addHtml(
-			'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
+			"<div class=\"toccolours mw-collapsible $collapsed\"  style=\"text-align: left\">"
 		);
-		$this->printFormula();
+		if ( !$formula ){
+			$this->printFormula();
+		} else {
+			$out->addHTML( $formula );
+		}
 		$out->addHtml( '<div class="mw-collapsible-content">' );
-		$out->addWikiText( $hl->getWikiText() );
+		global $wgParser;
+
+		$popts = $out->parserOptions();
+		$popts->setInterfaceMessage( false );
+
+		$parserOutput = $wgParser->getFreshParser()->parse(
+			$hl->getWikiText(), $this->getTitle(), $popts )->getText();
+		if ( $filter ){
+			call_user_func_array( $filter, array( &$parserOutput ) );
+		}
+		$out->addHTML( $parserOutput );
 		$out->addHtml( '</div></div>' );
 	}
 
@@ -473,5 +555,34 @@ class SpecialMlpEval extends SpecialPage {
 		return $this->speechRuleText;
 	}
 
+	/**
+	 * @param $tex
+	 * @param $options
+	 * @return MathMathML
+	 */
+	private function getMathMlRenderer( $tex, $options ) {
+		$this->updateTex( $tex, $options );
+		$renderer = new MathMathML( $tex, $options );
+		$renderer->checkTex();
+		$renderer->render();
+		$renderer->writeCache();
+		return $renderer;
+	}
+
+	/**
+	 * @param $tex
+	 * @param $options
+	 */
+	private function updateTex( &$tex, &$options ) {
+		if ( !$tex ) {
+			$tex = $this->selectedMathTag->getUserInputTex();
+			$options = $this->selectedMathTag->getParams();
+		}
+	}
+
+	public static function removeSVGs( &$html ) {
+		// $html = str_replace( 'style="display: none;"><math', '><math', $html );
+		// $html = preg_replace( '/<meta(.*?)mwe-math-fallback-image(.*?)>/', '', $html );
+	}
 
 }
