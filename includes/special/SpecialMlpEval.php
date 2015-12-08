@@ -46,6 +46,7 @@ class SpecialMlpEval extends SpecialPage {
 	private $relations;
 	private $speechRuleText;
 	private $subStep = '';
+	private $renderingFields =array( 'absolute', 'best', 'size', 'spacing', 'integration', 'font' );
 
 	/**
 	 * @return boolean
@@ -110,11 +111,21 @@ class SpecialMlpEval extends SpecialPage {
 		if ( $req->getInt( 'oldStep' ) == 3 || $req->getInt( 'oldStep' ) == 4 ) {
 			$this->setStep( 4 );
 			$this->subStep = $req->getText( 'oldSubStep' );
+			foreach ( $this->renderingFields as $key ) {
+				$val = $req->getVal( "wp4-$key" );
+				$substep = $this->subStep;
+				if ( $val ) {
+					$req->setVal( "4-$key-$substep", $val );
+					$req->unsetVal( "wp4-$key" );
+				}
+			}
 			$nextStep = $this->getNextStep();
 			if ( $nextStep !== 5 ) {
 				$this->subStep = $nextStep;
+				$this->writeLog( "User updates step 4." );
 				return 4;
 			} else {
+				$this->writeLog( "User completes step 4." );
 				return $this->setStep( 5 );
 			}
 		}
@@ -127,6 +138,7 @@ class SpecialMlpEval extends SpecialPage {
 					array_merge( $this->identifiers, preg_split( '/[\n\r]/', $missing ) );
 			}
 		}
+		$this->writeLog( "User completes step ".$req->getInt( 'oldStep' ) );
 		return $this->setStep( $req->getInt( 'oldStep' ) + 1 );
 	}
 
@@ -248,6 +260,35 @@ class SpecialMlpEval extends SpecialPage {
 		} else {
 			return $this->step + 1;
 		}
+	}
+	public function getPreviousStep( $step = false, $substep = '' ) {
+		if ( $step === false ){
+			$step = $this->step;
+			$substep = $this->subStep;
+		}
+		if ( $step == 5 ) {
+			return '4c';
+		}
+		if ( $step == 4 ) {
+			switch ( $substep ) {
+				case '4':
+					return '3';
+				case '4a':
+					return '4';
+				case '4b':
+					return '4a';
+				case '4c':
+					return '4b';
+				default:
+					return '3';
+			}
+		} else {
+			return $step - 1;
+		}
+	}
+
+	public function getRenderingFields() {
+		return $this->renderingFields;
 	}
 
 	protected function getGroupName() {
@@ -471,9 +512,8 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	private function printTitle() {
-		$rendering = array( '' => '', '4' => '', '4a' => 'MathML-', '4b' => 'SVG-', '4c' => 'PNG-' );
-		$sectionTitle = wfMessage( "math-lp-{$this->step}-head" )->params( $rendering[$this->subStep],
-			$this->subStep );
+		$sectionTitle = wfMessage( "math-lp-{$this->step}-head" )
+			->params( $this->subStepNames[$this->subStep], $this->subStep );
 		$this->getOutput()->addHTML( "<h2>$sectionTitle</h2>" );
 	}
 

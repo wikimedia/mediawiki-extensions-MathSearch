@@ -188,7 +188,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 		$this->addHiddenField( 'oldStep', $this->step );
 		$this->addHiddenField( 'oldSubStep', $this->eval->getSubStep() );
 		if ( $this->step == 4 ){
-			$subFields = array( 'best','size','spacing','integration','font' );
+			$subFields = $this->eval->getRenderingFields();
 			foreach ( $subFields as $key ){
 				$this->saveSubstepField( $key );
 			}
@@ -239,13 +239,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 	 * @param $key
 	 */
 	private function saveSubstepField( $key ) {
-		$val = $this->getRequest()->getVal( "wp4-$key" );
-		$substep = $this->eval->getSubStep();
-		if ( $val ) {
-			$this->addHiddenField( "4-$key-$substep", $val );
-			$this->getRequest()->unsetVal( "wp4-$key" );
-		}
-		$substeps = array( '','4a','4b','4c' );
+		$substeps = array( '4','4a','4b','4c' );
 		foreach ( $substeps as $substep ){
 			$val = $this->getRequest()->getVal( "4-$key-$substep" );
 			if ( $val ){
