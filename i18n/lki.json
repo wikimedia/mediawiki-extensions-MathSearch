@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hosseinblue"
+		]
+	},
+	"math-lp-1-intro": "Dear participant,\n\nthank you for participating in the evaluation for improving the math support in Wikipedia and other wikis that use mathematics. The study evaluates the quality of mathematical formulae in MediaWiki, the software that runs Wikipedia, with regard to three aspects:\n\n# LaTeX input: Is the formula source code typed correctly? (Using <syntaxhighlight lang=\"latex\" inline>\\sin</syntaxhighlight> instead of <syntaxhighlight lang=\"latex\" inline>sin</syntaxhighlight>)\n# Rendering: Is the formula displayed correctly? (Even correct LaTeX input might lead to unreadable formulae on certain devices.)\n# Semantics: Is the MediaWiki Math extension capable of capturing the formulae semantics correctly? (<math>f(a+b)</math> might stand for the \"function <math>f</math> applied the sum of <math>a</math> and <math>b</math>\" or \"variable <math>f</math> times the sum of <math>a</math> plus <math>b</math>\")\n\nIn the following, you will be guided through a five step evaluation process. Detailled information are provided in the infobox on the right. Note that questsions, with only one possible answer, always have the first possible option pre-selected.",
+	"math-lp-4-spacing-option-1": "خوب",
+	"math-lp-4-font-option-1": "تمیرکردن",
+	"math-lp-4-absolute-option-3": "بد/گۀن"
+}
