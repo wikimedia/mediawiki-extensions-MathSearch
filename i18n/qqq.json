@@ -112,7 +112,7 @@
 	"math-lp-formula-ref": "Wikitext snippet that describes, which mathematical object is currently evaluated",
 	"math-lp-submit-info": "Summarizing description of functionality of the different submit buttons.",
 	"math-lp-submit-label": "Button label to submit and continue with the next step:\n Parameter 1 next step.",
-	"math-lp-finish-label": "Submit text for the last step.",
+	"math-lp-finish-label": "Submit text for the last step.\n{{Identical|Finish}}",
 	"math-lp-new-article": "Button label to submit and continue with a new article.",
 	"math-lp-new-formula": "Button label to submit and continue with a new mathematical object from the same article",
 	"math-wmc-attach-results-help": "Form label help text",

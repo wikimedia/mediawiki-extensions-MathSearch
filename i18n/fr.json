@@ -8,7 +8,8 @@
 			"Caliburn",
 			"Ash Crow",
 			"Wladek92",
-			"Orlodrim"
+			"Orlodrim",
+			"Appleuseryu"
 		]
 	},
 	"mathsearch": "Recherche mathématique",
@@ -24,7 +25,7 @@
 	"getequationsbyquery": "Obtenir les équations par requête",
 	"xquerygenerator": "Générateur XQuery",
 	"mathdebug": "Rendu de test",
-	"math-lp-1-intro": "Cher participant,\n\nmerci de participer à l’évaluation pour améliorer le support mathématique dans Wikipédia et d’autres wikis utilisant les mathématiques. L’étude évalue la qualité des formules mathématiques dans MédiaWiki, le logiciel qui fait tourner Wikipédia, par rapport à trois aspects :\n\n# saisie LaTeX : Le code source de la formule est-il bien typé (En utilisant <syntaxhighlight lang=\"latex\" inline>\\sin</syntaxhighlight> au lieu de <syntaxhighlight lang=\"latex\" inline>sin</syntaxhighlight>) ?\n# Rendu : La formule est-elle bien affichée (même une saisie LaTeX correcte peut conduire à des formules illisibles sur certains appareils) ?\n# Sémantique : L’extension Math dde MédiaWiki est-elle capable de capter correctement la sémantique des formules (<math>f(a+b)</math> peut signifier la « fonction <math>f</math> appliquée à al somme de <math>a</math> et <math>b</math> »  ou « la variable <math>f</math> fois la somme de <math>a</math> plus <math>b</math> »)\n\nDans la suite, vous serez guidé à travers un processus d’évaluation en cinq étapes.",
+	"math-lp-1-intro": "Cher participant,\n\nmerci de participer à l’évaluation pour améliorer le support mathématique dans Wikipédia et d’autres wikis utilisant les mathématiques. L’étude évalue la qualité des formules mathématiques dans MédiaWiki, le logiciel qui fait tourner Wikipédia, par rapport à trois aspects :\n\n# saisie LaTeX : Le code source de la formule est-il bien typé (En utilisant <syntaxhighlight lang=\"latex\" inline>\\sin</syntaxhighlight> au lieu de <syntaxhighlight lang=\"latex\" inline>sin</syntaxhighlight>) ?\n# Rendu : La formule est-elle bien affichée (même une saisie LaTeX correcte peut conduire à des formules illisibles sur certains appareils) ?\n# Sémantique : L’extension Math dde MédiaWiki est-elle capable de capter correctement la sémantique des formules (<math>f(a+b)</math> peut signifier la « fonction <math>f</math> appliquée à al somme de <math>a</math> et <math>b</math> »  ou « la variable <math>f</math> fois la somme de <math>a</math> plus <math>b</math> »)\n\nDans la suite, vous serez guidé à travers un processus d’évaluation en cinq étapes. Des informations plus détaillées sont fournies dans l'encadré à droite. Notez que pour les questions où une réponse unique doit être choisie, la première option possible est toujours sélectionnée par défaut.",
 	"math-lp-1-head": "Étape 1 : Sélectionnez un article avec lequel vous êtes familier",
 	"math-lp-1-page-label": "Titre de l’article",
 	"math-lp-1-page-help": "Le champ de saisie ci-dessous est pré-rempli avec un article choisi au hasard contenant des formules mathématiques. Vous avez trois possibilités :\n# Cliquer sur « continuer » pour traiter cet article.\n# Taper le titre d’un article que vous voulez évaluer et cliquer ensuite sur « continuer ».\n# Cliquer sur « choisir un autre article aléatoirement » pour recharger cette page et obtenir un nouvel article sélectionné aléatoirement.",
@@ -53,6 +54,7 @@
 	"math-lp-3-pretty-help": "Évaluez la lisibilité du code LaTeX lui-même, et non son rendu. La question est grisée si le texte d’origine et le texte vérifié sont identiques.",
 	"math-lp-3-pretty-option-1": "Code LaTeX d’origine saisi par l’utilisateur",
 	"math-lp-3-pretty-option-2": "Code LaTeX vérifié par Texvc",
+	"math-lp-3-pretty-option-3": "Je ne peux pas dire.",
 	"math-lp-3-assessment-label": "Évaluation du code LaTeX d’origine saisi par l’utilisateur",
 	"math-lp-3-assessment-option-1": "la saisie est totalement correcte",
 	"math-lp-3-assessment-option-2": "la saisie est correcte mais a quelques problèmes mineurs",
@@ -67,6 +69,7 @@
 	"math-lp-4-head": "Étape 4 : Rendu",
 	"math-lp-4-intro": "Dans ce qui suit, vous évaluerez la qualité du rendu.",
 	"math-lp-4-best-label": "Quel rendu vous semble le meilleur",
+	"math-lp-4-integration-option-2": "(L'écriture) doit se distinguer des autres, sans êtant illisible.",
 	"math-lp-5-head": "Étape 5 : Sémantique indépendante du contexte",
 	"math-lp-5-intro": "Dans ce qui suit, vous évaluerez la qualité de la sémantique des formules.",
 	"math-lp-5-identifiers-label": "Les identifiants mathématiques suivants ont été extraits de la formule. Pour chacun d’eux, sélectionnez s’il s’agit d’un identifiant de l’expression.",
@@ -80,7 +83,7 @@
 	"math-lp-6-srt-assessment-label": "Note globale du texte de synthèse vocale",
 	"math-lp-6-srt-assessment-option-1": "parfait",
 	"math-lp-6-srt-assessment-option-2": "correct",
-	"math-lp-6-srt-assessment-option-3": "à améliorer",
+	"math-lp-6-srt-assessment-option-3": "plus ou moins utile",
 	"math-lp-6-srt-assessment-option-4": "totalement inutile",
 	"math-lp-6-srt-suggestion-label": "Suggérer une meilleure alternative textuelle (facultatif)",
 	"math-lp-7-head": "Évaluation terminée",
