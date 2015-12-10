@@ -332,7 +332,7 @@ class SpecialMlpEval extends SpecialPage {
 	/**
 	 * @return Title
 	 */
-	public function getTitle() {
+	public function getRevisionTitle() {
 		return $this->revision->getTitle();
 	}
 
@@ -524,7 +524,8 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	private function getWikiTextLink() {
-		return "[[Special:Permalink/{$this->oldId}#{$this->fId}|{$this->getTitle()}#{$this->fId}]]";
+		$description = "{$this->getRevisionTitle()}#{$this->fId}";
+		return "[[Special:Permalink/{$this->oldId}#{$this->fId}|$description]]";
 	}
 
 	private function printFormulaRef() {
@@ -570,7 +571,7 @@ class SpecialMlpEval extends SpecialPage {
 		$popts->setInterfaceMessage( false );
 
 		$parserOutput = $wgParser->getFreshParser()->parse(
-			$hl->getWikiText(), $this->getTitle(), $popts )->getText();
+			$hl->getWikiText(), $this->getRevisionTitle(), $popts )->getText();
 		if ( $filter ){
 			call_user_func_array( $filter, array( &$parserOutput ) );
 		}
