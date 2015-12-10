@@ -476,13 +476,14 @@ class SpecialMlpEval extends SpecialPage {
 			$source . '</syntaxhighlight>', $linestart );
 	}
 
-	public function getSvgRenderingAsHtmlFragment( $factor = 2.4, $tex = false, $options = array() ) {
+	public function getSvgRenderingAsHtmlFragment( $factor = 2, $tex = false, $options = array() ) {
 		$renderer = $this->getMathMlRenderer( $tex, $options );
-		$mo = MathObject::cloneFromRenderer( $renderer );
-		return $mo->getReSizedSvgLink( $factor );
+		return MathObject::getReSizedSvgLink( $renderer, $factor );
 	}
 
-	public function getMathMLRenderingAsHtmlFragment( $factor = 2, $tex = false, $options = array() ) {
+	public function getMathMLRenderingAsHtmlFragment(
+			$factor = 2.5, $tex = false, $options = array()
+	) {
 		$renderer = $this->getMathMlRenderer( $tex, $options );
 		$largeMathML = $renderer->getMathml();
 		$factor = round( $factor * 100 );

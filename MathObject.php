@@ -492,29 +492,29 @@ class MathObject extends MathMathML {
 		return '';
 	}
 
-	public function getSvgWidth() {
-		if ( preg_match( "/width=\"(.*?)(ex|px|em)?\"/", $this->getSvg(), $matches ) ) {
+	public static function getSvgWidth( $svg ) {
+		if ( preg_match( "/width=\"(.*?)(ex|px|em)?\"/", $svg, $matches ) ) {
 			return $matches;
 		}
 		return 0;
 	}
 
-	public function getSvgHeight() {
-		if ( preg_match( "/height=\"(.*?)(ex|px|em)?\"/", $this->getSvg(), $matches ) ) {
+	public static function getSvgHeight( $svg ) {
+		if ( preg_match( "/height=\"(.*?)(ex|px|em)?\"/", $svg, $matches ) ) {
 			return $matches;
 		}
 		return 0;
 	}
 
-	public function getReSizedSvgLink( $factor = 2 ) {
-		$width = $this->getSvgWidth();
-		$width = $width[1]*$factor.$width[2];
-		$height = $this->getSvgHeight();
-		$height = $height[1]*$factor.$height[2];
-		$reflector = new ReflectionObject( $this );
+	public static function getReSizedSvgLink( MathRenderer $renderer, $factor = 2 ) {
+		$width = self::getSvgWidth( $renderer->getSvg() );
+		$width = $width[1] * $factor . $width[2];
+		$height = self::getSvgHeight( $renderer->getSvg() );
+		$height = $height[1] * $factor . $height[2];
+		$reflector = new ReflectionObject( $renderer );
 		$method = $reflector->getMethod( 'getFallbackImage' );
 		$method->setAccessible( true );
-		$fbi =  $method->invoke( $this );
+		$fbi = $method->invoke( $renderer );
 		$fbi = preg_replace( "/width: (.*?)(ex|px|em)/", "width: $width", $fbi );
 		$fbi = preg_replace( "/height: (.*?)(ex|px|em)/", "height: $height", $fbi );
 		return $fbi;
