@@ -67,7 +67,8 @@ class MathPerformance extends Maintenance {
 				$this->actionBenchmark();
 				break;
 		}
-		$this->vPrint( "Done." );
+		$shareString = $this->getArg( 2, '' );
+		$this->vPrint( "{$shareString}Done." );
 	}
 
 	private function actionExport() {
@@ -125,19 +126,14 @@ class MathPerformance extends Maintenance {
 		foreach ( $formulae as $formula ) {
 			$this->currentHash = $formula->$hash;
 			$rbi = new MathRestbaseInterface( $formula->$tex, false );
-			$this->resetTimer();
-			$rbi->checkTeX();
-			$this->time( 'check' );
-			if ( round( rand( 0, 1 ) ) ) {
-				$rbi->getSvg();
-				$this->time( '1-svg' );
-				$rbi->getMathML();
-				$this->time( '2-mathml' );
-			} else {
-				$rbi->getMathML();
-				$this->time( '1-mathml' );
-				$rbi->getSvg();
-				$this->time( '2-svg' );
+			if ( $this->runTest( $rbi ) ) {
+				if ( round( rand( 0, 1 ) ) ) {
+					$this->runTest( $rbi, 'getSvg', '1-' ) &&
+					$this->runTest( $rbi, 'getMathML', '2-' );
+				} else {
+					$this->runTest( $rbi, 'getMathML', '1-' ) &&
+					$this->runTest( $rbi, 'getSvg', '2-' );
+				}
 			}
 		}
 	}
@@ -180,6 +176,20 @@ class MathPerformance extends Maintenance {
 	private function vPrint( $string ) {
 		if ( $this->verbose ) {
 			$this->output( $string . "\n" );
+		}
+	}
+
+	private function runTest( MathRestbaseInterface $rbi, $method = 'checkTeX', $prefix = '' ) {
+		try{
+			$this->resetTimer();
+			call_user_func( array( $rbi, $method ) );
+			$this->time( $prefix . $method );
+			return true;
+		} catch ( Exception $e ){
+			$this->vPrint( "Tex:{$rbi->getTex()}" );
+			$this->vPrint( $e->getMessage() );
+			$this->vPrint( $e->getTraceAsString() );
+			return false;
 		}
 	}
 }
