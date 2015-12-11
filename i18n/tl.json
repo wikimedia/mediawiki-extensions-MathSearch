@@ -1,0 +1,29 @@
+{
+	"@metadata": {
+		"authors": [
+			"Leeheonjin"
+		]
+	},
+	"mlpeval": "Pagsusuri ng Pagproseso ng Wikang Pangsipnayan (''Mathematical Language Processing evaluation'')",
+	"math-lp-1-page-label": "Pamagat ng artikulo",
+	"math-lp-2-domain-option-1": "(ganap) na sipnayan/matematiko",
+	"math-lp-2-domain-option-4": "aghambuhay (byolohiya)",
+	"math-lp-2-domain-option-6": "agham pang-kompyuter",
+	"math-lp-2-domain-option-7": "medisina",
+	"math-lp-2-domain-option-9": "iba pa",
+	"math-lp-3-pretty-option-3": "Hindi ko masasabi.",
+	"math-lp-3-assessment-option-4": "Hindi ko masasabi.",
+	"math-lp-4-size-option-2": "lubhang maliit",
+	"math-lp-4-size-option-3": "lubhang malaki",
+	"math-lp-4-spacing-option-1": "mabuti",
+	"math-lp-4-spacing-option-2": "katamtaman",
+	"math-lp-4-spacing-option-3": "di-mainam",
+	"math-lp-4-font-option-1": "hawiin",
+	"math-lp-4-font-option-2": "katamtaman",
+	"math-lp-4-font-option-3": "malabo",
+	"math-lp-4-absolute-option-1": "mabuti",
+	"math-lp-4-absolute-option-2": "katamtaman",
+	"math-lp-4-absolute-option-3": "di-mainam",
+	"math-lp-6-srt-suggestion-label": "Magmungkahi ng higit na alternatibong teksto (opsyonal)",
+	"math-lp-finish-label": "Tapos"
+}
