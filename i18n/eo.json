@@ -1,9 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
-			1490493253
+			1490493253,
+			"Robin van der Vliet"
 		]
 	},
+	"math-lp-2-domain-option-4": "biologio",
 	"math-lp-2-domain-option-6": "Komputila Scienco",
-	"math-lp-2-domain-option-9": "Alia"
+	"math-lp-2-domain-option-9": "Alia",
+	"math-lp-4-spacing-option-1": "bona",
+	"math-lp-4-spacing-option-3": "malbona",
+	"math-lp-4-absolute-option-1": "bona",
+	"math-lp-4-absolute-option-3": "malbona"
 }
