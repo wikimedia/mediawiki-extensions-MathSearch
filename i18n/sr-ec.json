@@ -4,6 +4,10 @@
 			"Milicevic01"
 		]
 	},
+	"math-lp-2-domain-option-2": "физика",
+	"math-lp-2-domain-option-3": "хемија",
+	"math-lp-2-domain-option-4": "биологија",
+	"math-lp-2-domain-option-6": "информатика",
 	"math-search-relation-0": "и",
 	"math-search-relation-1": "или",
 	"math-search-type-label": "Тип:"
