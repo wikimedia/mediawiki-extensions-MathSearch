@@ -122,10 +122,10 @@ class SpecialMlpEval extends SpecialPage {
 			$nextStep = $this->getNextStep();
 			if ( $nextStep !== 5 ) {
 				$this->subStep = $nextStep;
-				$this->writeLog( "User updates step 4." );
+				$this->writeLog( "User updates step 4.", 4 );
 				return 4;
 			} else {
-				$this->writeLog( "User completes step 4." );
+				$this->writeLog( "User completes step 4.", 4 );
 				return $this->setStep( 5 );
 			}
 		}
@@ -138,7 +138,7 @@ class SpecialMlpEval extends SpecialPage {
 					array_merge( $this->identifiers, preg_split( '/[\n\r]/', $missing ) );
 			}
 		}
-		$this->writeLog( "User completes step ".$req->getInt( 'oldStep' ) );
+		$this->writeLog( "User completes step ".$req->getInt( 'oldStep' ), $req->getInt( 'oldStep' ) );
 		return $this->setStep( $req->getInt( 'oldStep' ) + 1 );
 	}
 
@@ -451,13 +451,16 @@ class SpecialMlpEval extends SpecialPage {
 
 	}
 
-	private function writeLog( $message, $step = 0, $revId = false ) {
+	private function writeLog( $message, $step = false, $revId = false ) {
 		$userId = $this->getUser()->getId();
 		$logData = array(
 			'data'   => $this->getRequest()->getValues(),
 			'header' => $this->getRequest()->getAllHeaders()
 		);
 		$json = json_encode( $logData );
+		if ( $step == false ){
+			$step = $this->step;
+		}
 		if ( !$revId ) {
 			$revId = $this->oldId;
 		}
@@ -475,6 +478,24 @@ class SpecialMlpEval extends SpecialPage {
 		}
 		$dbw = wfGetDB( DB_WRITE );
 		$dbw->upsert( 'math_mlp', $row, array( 'user_id', 'revision_id', 'anchor', 'step' ), $row );
+		if ( $this->fId ) {
+			$dbw->begin();
+			$cnt = $dbw->selectField( 'math_mlp', 'count( distinct user_id)', array(
+				'revision_id' => $revId,
+				'anchor' => $this->fId
+			) );
+			if ( $cnt == 1 ){
+				$row = array(
+						'revision_id' => $revId,
+						'anchor'      => $this->fId,
+						'priority'    => 2
+				);
+				$dbw->upsert( 'math_review_list', $row, array( 'revision_id', 'anchor' ), $row );
+			} elseif( $cnt > 1 ) {
+				$dbw->delete( 'math_review_list', array( 'revision_id', 'anchor' ) );
+			}
+			$dbw->commit();
+		}
 	}
 
 	private function resetPage() {
