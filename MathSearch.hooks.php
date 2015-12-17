@@ -33,6 +33,7 @@ class MathSearchHooks {
 			$updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
 			$updater->addExtensionTable( 'mathlog', $dir . 'mathlog.sql' );
 			$updater->addExtensionTable( 'math_mlp', $dir . 'math_mlp.sql' );
+			$updater->addExtensionTable( 'math_review_list', "${dir}math_review_list.sql" );
 			if ( $wgMathWmcServer ) {
 				$wmcDir = $dir . 'wmc/persistent/';
 				$updater->addExtensionTable( 'math_wmc_ref', $wmcDir . "math_wmc_ref.sql" );
@@ -42,7 +43,7 @@ class MathSearchHooks {
 					$wmcDir . "math_wmc_assessed_formula.sql" );
 				$updater->addExtensionTable( 'math_wmc_assessed_revision',
 					$wmcDir . "math_wmc_assessed_revision.sql" );
-				$updater->addExtensionTable( 'math_review_list', "${wmcDir}math_review_list.sql" );
+
 			}
 			if ( $updater->tableExists( 'mathlatexml' ) ) {
 				// temporary workaround for T117659

@@ -162,6 +162,22 @@ class SpecialMlpEval extends SpecialPage {
 
 
 	public function getRandomPage() {
+		try {
+			$uid = $this->getUser()->getId();
+			$dbr = wfGetDB( DB_READ );
+			$results = $dbr->selectFieldValues( 'math_review_list', 'revision_id',
+					"revision_id not in (SELECT revision_id from math_mlp where user_id = $uid )",
+					__METHOD__, array(
+						'LIMIT'    => 1,
+						'ORDER BY' => 'priority desc'
+					) );
+			if ( $results ) {
+				$this->setRevision( $results[0] );
+				return $this->revision->getTitle();
+			}
+		} catch ( Exception $e ){
+			// empty
+		}
 		$rp = new RandomPage();
 		for ( $i = 0; $i < self::MAX_ATTEMPTS; $i ++ ) {
 			$title = $rp->getRandomTitle();
