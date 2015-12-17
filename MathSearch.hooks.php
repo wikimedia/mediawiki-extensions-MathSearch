@@ -42,6 +42,7 @@ class MathSearchHooks {
 					$wmcDir . "math_wmc_assessed_formula.sql" );
 				$updater->addExtensionTable( 'math_wmc_assessed_revision',
 					$wmcDir . "math_wmc_assessed_revision.sql" );
+				$updater->addExtensionTable( 'math_review_list', "${wmcDir}math_review_list.sql" );
 			}
 			if ( $updater->tableExists( 'mathlatexml' ) ) {
 				// temporary workaround for T117659
