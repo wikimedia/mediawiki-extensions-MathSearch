@@ -327,6 +327,24 @@ class SpecialMlpEval extends SpecialPage {
 	 * @throws MWException
 	 */
 	private function getRandomFId() {
+		try{
+			$uid = $this->getUser()->getId();
+			$rid = $this->revision->getId();
+			$dbr = wfGetDB( DB_READ );
+			// Note that the math anchor is globally unique
+			$results = $dbr->selectFieldValues( 'math_review_list', 'anchor',
+				"anchor not in (SELECT anchor from math_mlp where user_id = $uid ".
+				"and anchor is not NULL) and revision_id = $rid",
+				__METHOD__, array(
+					'LIMIT'    => 1,
+					'ORDER BY' => 'priority desc'
+				) );
+			if ( $results ) {
+				return $results[0];
+			}
+		} catch ( Exception $e ){
+			// empty
+		}
 		$unique = array_rand( $this->mathIdGen->getMathTags() );
 		return $this->mathIdGen->parserKey2fId( $unique );
 	}
