@@ -306,7 +306,7 @@ class MathSearchHooks {
 	}
 
 	static function onArticleDeleteComplete(
-		Article &$article, User &$user, $reason, $id, $content, $logEntry
+		&$article, User &$user, $reason, $id, $content, $logEntry
 	) {
 		$revId = $article->getTitle()->getLatestRevID();
 		$mathEngineBaseX = new MathEngineBaseX();
