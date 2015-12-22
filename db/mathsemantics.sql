@@ -1,8 +1,8 @@
-CREATE TABLE `mathsemantics` (
-  `pageId` int(5) NOT NULL,
-  `identifier` varchar(4) NOT NULL,
+CREATE TABLE /*_*/mathsemantics (
+  `revision_id` int(10) UNSIGNED NOT NULL,
+  `identifier` varchar(20) NOT NULL,
   `evidence` double NOT NULL,
   `noun` varchar(20) NOT NULL,
-  `sentence` text NOT NULL,
-  KEY `pageId` (`pageId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `sentence` text NULL,
+  KEY `revision_id` (`revision_id`)
+) /*$wgDBTableOptions*/;
