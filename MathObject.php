@@ -16,7 +16,7 @@ class MathObject extends MathMathML {
 	protected $anchorID = 0;
 	protected $revisionID = 0;
 	protected $index_timestamp = null;
-	protected $dbLoadTime= 0;
+	protected $dbLoadTime = 0;
 	protected $mathTableName = null;
 
 	public static function hash2md5( $hash ) {
@@ -32,7 +32,11 @@ class MathObject extends MathMathML {
 		$dbr = wfGetDB( DB_SLAVE );
 		try {
 			$res = $dbr->select( 'mathpagesimilarity',
-				array( 'pagesimilarity_A as A', 'pagesimilarity_B as B', 'pagesimilarity_Value as V' ),
+				array(
+					'pagesimilarity_A as A',
+					'pagesimilarity_B as B',
+					'pagesimilarity_Value as V'
+				),
 				"pagesimilarity_A=$pid OR pagesimilarity_B=$pid", __METHOD__,
 				array( "ORDER BY" => 'V DESC', "LIMIT" => 10 )
 			);
@@ -47,7 +51,8 @@ class MathObject extends MathMathML {
 				// .' ( pageid'.$other.'/'.$row->A.')' );
 			}
 			$wgOut->addWikiText( $out );
-		} catch ( Exception $e ) {
+		}
+		catch ( Exception $e ) {
 			return "DatabaseProblem";
 		}
 	}
@@ -74,7 +79,8 @@ class MathObject extends MathMathML {
 			. ' AND mathindex_anchor= "' . $eid . '"' );
 		$start = microtime( true );
 		$o = self::constructformpagerow( $res );
-		LoggerFactory::getInstance( 'MathSearch' )->warning( 'Fetched in '. microtime( true ) - $start );
+		LoggerFactory::getInstance( 'MathSearch' )->warning( 'Fetched in ' . microtime( true ) -
+			$start );
 		return $o;
 	}
 
@@ -84,7 +90,8 @@ class MathObject extends MathMathML {
 		if ( !$tag ) {
 			throw new MWException( "$eid not found in revision text $oldId" );
 		}
-		$mo = new MathObject( $tag[MathIdGenerator::CONTENT_POS], $tag[MathIdGenerator::ATTRIB_POS] );
+		$mo =
+			new MathObject( $tag[MathIdGenerator::CONTENT_POS], $tag[MathIdGenerator::ATTRIB_POS] );
 		$mo->setRevisionID( $oldId );
 		return $mo;
 	}
@@ -97,10 +104,12 @@ class MathObject extends MathMathML {
 		$in = array(
 			'mathindex_revision_id',
 			'mathindex_anchor',
-			'mathindex_inputhash' );
+			'mathindex_inputhash'
+		);
 		if ( $wgMathDebug ) {
 			$debug_in = array(
-				'mathindex_timestamp' );
+				'mathindex_timestamp'
+			);
 			$in = array_merge( $in, $debug_in );
 		}
 		return $in;
@@ -145,7 +154,8 @@ class MathObject extends MathMathML {
 		$dbw->query( 'TRUNCATE TABLE `mathvarstat`' );
 		// @codingStandardsIgnoreStart
 		$dbw->query( "INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`) "
-			. "SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT "
+			.
+			"SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT "
 			. "FROM `mathobservation` "
 			. "JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash "
 			. "GROUP BY `mathobservation_featurename` , `mathobservation_featuretype` "
@@ -154,8 +164,10 @@ class MathObject extends MathMathML {
 		$dbw->query( 'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`) '
 			. 'SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` '
 			. 'JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash '
-			. 'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype` '
-			. 'GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_revision_id ORDER BY CNT DESC' );
+			.
+			'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype` '
+			.
+			'GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_revision_id ORDER BY CNT DESC' );
 		// @codingStandardsIgnoreEnd
 	}
 
@@ -216,21 +228,30 @@ class MathObject extends MathMathML {
 		$dbr = wfGetDB( DB_SLAVE );
 		try {
 			$res = $dbr->select( array( "mathobservation", "mathvarstat", 'mathrevisionstat' ),
-				array( "mathobservation_featurename", "mathobservation_featuretype", 'varstat_featurecount',
-					'revstat_featurecount', "count(*) as localcnt" ),
-				array( "mathobservation_inputhash" => $this->getInputHash(),
+				array(
+					"mathobservation_featurename",
+					"mathobservation_featuretype",
+					'varstat_featurecount',
+					'revstat_featurecount',
+					"count(*) as localcnt"
+				),
+				array(
+					"mathobservation_inputhash" => $this->getInputHash(),
 					'varstat_featurename = mathobservation_featurename',
 					'varstat_featuretype = mathobservation_featuretype',
-					'revstat_revid' => $this->getRevisionID(),
+					'revstat_revid'             => $this->getRevisionID(),
 					'revstat_featureid = varstat_id'
 				),
-				__METHOD__, array( 'GROUP BY' => 'mathobservation_featurename',
-					'ORDER BY' => 'varstat_featurecount' )
+				__METHOD__, array(
+					'GROUP BY' => 'mathobservation_featurename',
+					'ORDER BY' => 'varstat_featurecount'
+				)
 			);
-		} catch ( Exception $e ) {
+		}
+		catch ( Exception $e ) {
 			return "Database problem";
 		}
-		$wgOut->addWikiText( $res->numRows(). 'results' );
+		$wgOut->addWikiText( $res->numRows() . 'results' );
 		if ( $res->numRows() == 0 ) {
 			if ( $update ) {
 				$this->updateObservations();
@@ -241,21 +262,22 @@ class MathObject extends MathMathML {
 				);
 			}
 		}
-		$wgOut->addWikiText( $res->numRows(). ' results' );
+		$wgOut->addWikiText( $res->numRows() . ' results' );
 		if ( $res ) {
 			foreach ( $res as $row ) {
 				$featureName = utf8_decode( $row->mathobservation_featurename );
-				if ( bin2hex( $featureName )==  'e281a2' ) {
+				if ( bin2hex( $featureName ) == 'e281a2' ) {
 					$featureName = 'invisibe-times';
 				}
 				$wgOut->addWikiText( '*' . $row->mathobservation_featuretype . ' <code>' .
-					$featureName . '</code> (' . $row->localcnt . '/' . $row->pagestat_featurecount .
+					$featureName . '</code> (' . $row->localcnt . '/' .
+					$row->pagestat_featurecount .
 					"/" . $row->varstat_featurecount . ')' );
 				$identifiers = $this->getNouns( $row->mathobservation_featurename );
 				if ( $identifiers ) {
 					foreach ( $identifiers as $identifier ) {
 						$wgOut->addWikiText( '**' . $identifier->noun . '(' .
-											 $identifier->evidence . ')' );
+							$identifier->evidence . ')' );
 					}
 				} else {
 					$wgOut->addWikiText( '** not found' );
@@ -292,20 +314,21 @@ class MathObject extends MathMathML {
 		} else {
 			$dbgiven = true;
 		}
-		$dbw->delete( "mathobservation", array( "mathobservation_inputhash" => $this->getInputHash() ) );
+		$dbw->delete( "mathobservation",
+			array( "mathobservation_inputhash" => $this->getInputHash() ) );
 		LoggerFactory::getInstance(
 			'MathSearch'
 		)->warning( 'delete obervations for ' . bin2hex( $this->getInputHash() ) );
 		foreach ( $rule as $feature ) {
 			$dbw->insert( "mathobservation", array(
-				"mathobservation_inputhash" => $this->getInputHash(),
-				"mathobservation_featurename" => utf8_encode( trim( $feature[ 4 ] ) ),
-				"mathobservation_featuretype" => utf8_encode( $feature[ 1 ] ),
+				"mathobservation_inputhash"   => $this->getInputHash(),
+				"mathobservation_featurename" => utf8_encode( trim( $feature[4] ) ),
+				"mathobservation_featuretype" => utf8_encode( $feature[1] ),
 			) );
 			LoggerFactory::getInstance(
 				'MathSearch'
 			)->warning( 'insert observation for ' . bin2hex( $this->getInputHash() )
-			. utf8_encode( trim( $feature[ 4 ] ) ) );
+				. utf8_encode( trim( $feature[4] ) ) );
 		}
 		if ( !$dbgiven ) {
 			$dbw->commit();
@@ -335,7 +358,7 @@ class MathObject extends MathMathML {
 	public function getPageTitle() {
 		$revision = Revision::newFromId( $this->getRevisionID() );
 		if ( $revision ) {
-			return (string) $revision->getTitle();
+			return (string)$revision->getTitle();
 		} else {
 			return false;
 		}
@@ -352,14 +375,15 @@ class MathObject extends MathMathML {
 		$out = array();
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
-			'mathindex', self::dbIndexFieldsArray(), array( 'mathindex_inputhash' => $this->getInputHash() )
+			'mathindex', self::dbIndexFieldsArray(),
+			array( 'mathindex_inputhash' => $this->getInputHash() )
 		);
 
 		foreach ( $res as $row ) {
 			$var = self::constructformpagerow( $row );
 			if ( $var ) {
 				if ( $currentOnly === false || $var->isCurrent() ) {
-				array_push( $out, $var );
+					array_push( $out, $var );
 				}
 			}
 		}
@@ -417,12 +441,13 @@ class MathObject extends MathMathML {
 		$title = 'not set';
 		if ( $nouns ) {
 			foreach ( $nouns as $identifier ) {
-				$title .= '**'.$identifier->noun .'('.$identifier->evidence.')';
+				$title .= '**' . $identifier->noun . '(' . $identifier->evidence . ')';
 			}
 		} else {
 			$title = '** not found';
 		}
-		return '<'.$arg[1]." title=\"$title\"".$attribs.'>'.$arg[4].'</'.$arg[1].'>';
+		return '<' . $arg[1] . " title=\"$title\"" . $attribs . '>' . $arg[4] . '</' . $arg[1] .
+		'>';
 	}
 
 	/**
@@ -433,14 +458,30 @@ class MathObject extends MathMathML {
 	}
 
 	public function getRelations() {
-		$m = new MathosphereDriver( $this->revisionID );
-		if ( $m->analyze() ) {
-			return $m->getRelations();
+		$dbr = wfGetDB( DB_SLAVE );
+		$selection = $dbr->select( 'mathsemantics', array( 'identifier', 'evidence', 'noun' ),
+			array( 'revision_id' => $this->revisionID ), __METHOD__,
+			array( 'ORDER BY' => 'evidence desc' ) );
+		if ( $selection ) {
+			$result = array();
+			foreach ( $selection as $row ) {
+				$key = $row->identifier;
+				if ( !isset( $result[$key] ) ) {
+					$result[$key] = array();
+				}
+				$result[$key][] = (object) array( 'definition' => $row->noun );
+			}
+			return $result;
 		} else {
-			LoggerFactory::getInstance( 'MathSearch' )->error( 'Error contacting mathosphere.' );
-			return array();
+			$m = new MathosphereDriver( $this->revisionID );
+			if ( $m->analyze() ) {
+				return $m->getRelations();
+			} else {
+				LoggerFactory::getInstance( 'MathSearch' )
+					->error( 'Error contacting mathosphere.' );
+				return array();
+			}
 		}
-
 	}
 
 	protected function getMathTableName() {
@@ -464,7 +505,7 @@ class MathObject extends MathMathML {
 	 */
 	public function getTexInfo() {
 		$m = new MathoidDriver( $this->userInputTex );
-		if ( $m->texvcInfo() ){
+		if ( $m->texvcInfo() ) {
 			return $m;
 		} else {
 			return false;
@@ -473,7 +514,7 @@ class MathObject extends MathMathML {
 
 	public function getWikiText() {
 		$attributes = '';
-		foreach ( $this->params as $key=>$value ){
+		foreach ( $this->params as $key => $value ) {
 			if ( $key ) {
 				$attributes .= " $key=\"$value\"";
 			} else {
