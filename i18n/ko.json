@@ -3,7 +3,8 @@
 		"authors": [
 			"아라",
 			"Hwangjy9",
-			"고솜"
+			"고솜",
+			"Priviet"
 		]
 	},
 	"mathsearch": "수학 검색",
@@ -14,8 +15,15 @@
 	"xquerygenerator": "XQuery 생성기",
 	"mathdebug": "테스트 표시기",
 	"math-lp-1-page-label": "문서 제목",
+	"math-lp-2-content-option-3": "하나의 식별자 (a, π, c₀)",
+	"math-lp-2-content-option-4": "하나의 수학 기호 (±)",
+	"math-lp-2-domain-option-1": "(순수) 수학",
+	"math-lp-2-domain-option-2": "물리학",
+	"math-lp-2-domain-option-3": "화학",
 	"math-lp-2-domain-option-4": "생물학",
+	"math-lp-2-domain-option-5": "공학",
 	"math-lp-2-domain-option-6": "컴퓨터 과학",
+	"math-lp-2-domain-option-7": "의학",
 	"math-lp-2-domain-option-8": "경제학",
 	"math-lp-3-assessment-option-1": "입력이 올바릅니다",
 	"math-lp-7-head": "평가 완료됨",
