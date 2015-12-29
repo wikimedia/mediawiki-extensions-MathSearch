@@ -438,11 +438,19 @@ class SpecialMlpEval extends SpecialPage {
 					$srt = $r->getSpeech();
 				}
 				$this->speechRuleText = $srt;
+				$wd = new WikidataDriver();
 				foreach ( $this->identifiers as $i ) {
 					$this->relations[$i] = array();
 					if ( isset( $rels[$i] ) ) {
 						foreach ( $rels[$i] as $rel ) {
-							$this->relations[$i][] = $rel->definition;
+							if ( preg_match( '/\[\[(.*)\]\]/', $rel->definition, $m ) ) {
+								if ( $wd->search( $m[1] ) ){
+									$res = $wd->getResults();
+									$this->relations[$i][] = $res[1];
+								}
+							} else {
+								$this->relations[$i][] = $rel->definition;
+							}
 						}
 					}
 				}
