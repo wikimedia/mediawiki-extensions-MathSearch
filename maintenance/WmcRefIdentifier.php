@@ -35,7 +35,28 @@ class WmcRefIdentifier extends Maintenance {
 		foreach ( $res as $row ) {
 			$md = new MathoidDriver( $row->math_inputtex );
 			$md->texvcInfo();
-			$output[] = (object)array( 'identifiers' => $md->getIdentifiers(), $row );
+			$identifiers = array_unique( $md->getIdentifiers() );
+			$fId = "math.{$row->oldId}.{$row->fid}";
+			$mo = MathObject::newFromRevisionText( $row->oldId, $fId );
+			$relations = array();
+			$rels = $mo->getRelations();
+			$wd = new WikidataDriver();
+			foreach ( $identifiers as $i ) {
+				$relations[$i] = array();
+				if ( isset( $rels[$i] ) ) {
+					foreach ( $rels[$i] as $rel ) {
+						if ( preg_match( '/\[\[(.*)\]\]/', $rel->definition, $m ) ) {
+							if ( $wd->search( $m[1] ) ){
+								$res = $wd->getResults();
+								$relations[$i][] = $res;
+							}
+						} else {
+							$relations[$i][] = $rel->definition;
+						}
+					}
+				}
+			}
+			$output[] = (object)array( 'definitions' => $relations, 'formula' => $row );
 		}
 		$this->output( json_encode( $output ) );
 	}
