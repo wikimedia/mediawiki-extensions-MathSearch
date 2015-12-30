@@ -130,6 +130,7 @@ class MathSearchHooks {
 					$id = self::getRevIdGenerator( $revId )
 							->guessIdFromContent( $renderer->getUserInputTex() );
 					$renderer->setID( $id );
+					return true;
 				}
 				return false;
 			}
