@@ -19,8 +19,8 @@ wikiText;
 		$id2 = $idGen->guessIdFromContent( 'E=mc^2' );
 		$id3 = $idGen->guessIdFromContent( 'E=mc^2' );
 		$this->assertEquals( $id1, $id3 );
-		$this->assertNotEquals( $id1, $id2, "1 and 2 shoud not be equal" );
-		$this->assertEquals( "math.42.3", $id2 );
+		$this->assertNotEquals( $id1, $id2, "1 and 2 should not be equal" );
+		$this->assertEquals( "math.42.2", $id2 );
 	}
 	/**
 	 * @outputBuffering disabled
@@ -36,7 +36,7 @@ wikiText;
 		$id2 = $idGen->guessIdFromContent( 'E=mc^2' );
 		$id3 = $idGen->guessIdFromContent( 'E=mc^2' );
 		$this->assertEquals( $id1, $id3 );
-		$this->assertNotEquals( $id1, $id2, "1 and 2 shoud not be equal" );
+		$this->assertNotEquals( $id1, $id2, "1 and 2 should not be equal" );
 		$this->assertEquals( "CustomId", $id2 );
 	}
 }

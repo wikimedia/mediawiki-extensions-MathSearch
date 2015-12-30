@@ -172,6 +172,6 @@ class MathIdGenerator {
 	 */
 	private function formatKey( $key ) {
 		$keys = $this->getKeys();
-		return sprintf( $this->format, $this->revisionId, $keys[$key] + 1 );
+		return sprintf( $this->format, $this->revisionId, $keys[$key] );
 	}
 }
