@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 /**
  * Class CleanMathTable
@@ -64,4 +64,4 @@ class CleanMathTable extends Maintenance {
 
 $maintClass = 'CleanMathTable';
 /** @noinspection PhpIncludeInspection */
-require_once ( RUN_MAINTENANCE_IF_MAIN );
+require_once RUN_MAINTENANCE_IF_MAIN;

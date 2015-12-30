@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ExportMathCache extends Maintenance {
 	const DEFAULT_TABLE = 'mathoid';
@@ -104,4 +104,4 @@ class ExportMathCache extends Maintenance {
 }
 
 $maintClass = "ExportMathCache";
-require_once ( RUN_MAINTENANCE_IF_MAIN );
+require_once RUN_MAINTENANCE_IF_MAIN;

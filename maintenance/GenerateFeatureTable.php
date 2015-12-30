@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class GenerateFeatureTable extends Maintenance {
 	const RTI_CHUNK_SIZE = 100000;
@@ -128,4 +128,4 @@ class GenerateFeatureTable extends Maintenance {
 
 $maintClass = "GenerateFeatureTable";
 /** @noinspection PhpIncludeInspection */
-require_once ( RUN_MAINTENANCE_IF_MAIN );
+require_once RUN_MAINTENANCE_IF_MAIN;

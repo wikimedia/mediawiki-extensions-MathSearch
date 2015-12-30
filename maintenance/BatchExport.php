@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 /**
  * Class BatchExport
@@ -68,4 +68,4 @@ class BatchExport extends Maintenance {
 
 $maintClass = 'BatchExport';
 /** @noinspection PhpIncludeInspection */
-require_once ( RUN_MAINTENANCE_IF_MAIN );
+require_once RUN_MAINTENANCE_IF_MAIN;

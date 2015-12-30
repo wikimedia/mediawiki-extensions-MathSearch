@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 /**
  * Class UpdateMath
@@ -231,4 +231,4 @@ class UpdateMath extends Maintenance {
 
 $maintClass = "UpdateMath";
 /** @noinspection PhpIncludeInspection */
-require_once ( RUN_MAINTENANCE_IF_MAIN );
+require_once RUN_MAINTENANCE_IF_MAIN;

@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once ( __DIR__. '/IndexBase.php' );
+require_once __DIR__. '/IndexBase.php';
 
 /**
  * @author Moritz Schubotz
@@ -108,4 +108,4 @@ class CreateDB2MathTable extends IndexBase {
 
 $maintClass = 'CreateDB2MathTable';
 /** @noinspection PhpIncludeInspection */
-require_once ( RUN_MAINTENANCE_IF_MAIN );
+require_once RUN_MAINTENANCE_IF_MAIN;

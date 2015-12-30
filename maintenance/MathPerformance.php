@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once ( __DIR__ . '/../../../maintenance/Maintenance.php' );
+require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class MathPerformance extends Maintenance {
 	const RTI_CHUNK_SIZE = 10000;
@@ -196,4 +196,4 @@ class MathPerformance extends Maintenance {
 
 $maintClass = "MathPerformance";
 /** @noinspection PhpIncludeInspection */
-require_once ( RUN_MAINTENANCE_IF_MAIN );
+require_once RUN_MAINTENANCE_IF_MAIN;
