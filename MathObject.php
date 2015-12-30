@@ -77,10 +77,7 @@ class MathObject extends MathMathML {
 		$res = $dbr->selectRow(
 			array( 'mathindex' ), self::dbIndexFieldsArray(), 'mathindex_revision_id = ' . $pid
 			. ' AND mathindex_anchor= "' . $eid . '"' );
-		$start = microtime( true );
 		$o = self::constructformpagerow( $res );
-		LoggerFactory::getInstance( 'MathSearch' )->warning( 'Fetched in ' . microtime( true ) -
-			$start );
 		return $o;
 	}
 
