@@ -307,7 +307,7 @@ class MathObject extends MathMathML {
 		if ( $dbw == null ) {
 			$dbgiven = false;
 			$dbw = wfGetDB( DB_MASTER );
-			$dbw->begin();
+			$dbw->begin( __METHOD__ );
 		} else {
 			$dbgiven = true;
 		}
@@ -328,7 +328,7 @@ class MathObject extends MathMathML {
 				. utf8_encode( trim( $feature[4] ) ) );
 		}
 		if ( !$dbgiven ) {
-			$dbw->commit();
+			$dbw->commit( __METHOD__ );
 		}
 	}
 
