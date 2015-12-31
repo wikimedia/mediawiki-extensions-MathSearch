@@ -487,7 +487,7 @@ class SpecialMlpEval extends SpecialPage {
 		$dbw = wfGetDB( DB_WRITE );
 		$dbw->upsert( 'math_mlp', $row, array( 'user_id', 'revision_id', 'anchor', 'step' ), $row );
 		if ( $this->fId ) {
-			$dbw->begin();
+			$dbw->begin( __METHOD__ );
 			$cnt = $dbw->selectField( 'math_mlp', 'count( distinct user_id)', array(
 				'revision_id' => $revId,
 				'anchor' => $this->fId
@@ -502,7 +502,7 @@ class SpecialMlpEval extends SpecialPage {
 			} elseif( $cnt > 1 ) {
 				$dbw->delete( 'math_review_list', array( 'revision_id', 'anchor' ) );
 			}
-			$dbw->commit();
+			$dbw->commit( __METHOD__ );
 		}
 	}
 
