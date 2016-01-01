@@ -59,6 +59,7 @@
 	"math-lp-3-problems-option-3": "多字母的函数名称（使用<syntaxhighlight lang=\"latex\" inline>sin</syntaxhighlight>，而不是<syntaxhighlight lang=\"latex\" inline>\\sin</syntaxhighlight>）",
 	"math-lp-3-problems-option-4": "预先定义概念的重新定义（<syntaxhighlight lang=\"latex\" inline>\\operatorname{sin}</syntaxhighlight>而不是<syntaxhighlight lang=\"latex\" inline>\\sin</syntaxhighlight>，或<syntaxhighlight lang=\"latex\" inline>\\mathbb{R}</syntaxhighlight>而不是<syntaxhighlight lang=\"latex\" inline>\\reals</syntaxhighlight>）",
 	"math-lp-3-skip-label": "要跳过这一步，请点击下方的绿色按钮",
+	"math-lp-3-skip-help": "如果您对评估LaTeX代码感到不适，我们建议跳过这一步骤。",
 	"math-lp-3-suggestion-label": "用户输入修正：",
 	"math-lp-3-suggestion-help": "可选，当TeX质量不是很好时使用",
 	"math-lp-4-head": "第$2步：$1正在渲染",
