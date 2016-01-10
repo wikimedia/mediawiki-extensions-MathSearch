@@ -110,7 +110,7 @@
 	"math-wmc-SelectRunHelp": "为您的提交指定一个名称，或覆盖现有的的提案",
 	"math-wmc-FileLabel": "CSV文件",
 	"math-wmc-FileHelp": "归类上传您的结果，以逗号分隔的列表 （queryId，formulaId）-成对。列标题窗体的 <code>queryId,formulaId</code> 是必需的。",
-	"math-wmc-RunAdded": "添加了提交“$1”，ID为“$2”",
+	"math-wmc-RunAdded": "已添加提交物“$1”，带有ID“$2”",
 	"math-wmc-RunAddError": "错误：不能添加提交“$1”。",
 	"math-wmc-RunAddExist": "名为“$1”的提交已存在，带有ID“$2”",
 	"math-wmc-Warnings": "输入文件的以下几行字被忽略：",
