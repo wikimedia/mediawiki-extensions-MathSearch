@@ -80,7 +80,7 @@ class ExtractFeatures extends Maintenance {
 						'page_latest = rev_id',
 						'rev_text_id = old_id'
 					), __METHOD__ );
-			$this->dbw->begin();
+			$this->dbw->begin( __METHOD__ );
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
 				$revtext = Revision::getRevisionText( $s );
@@ -89,7 +89,7 @@ class ExtractFeatures extends Maintenance {
 			}
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$start = microtime( true );
-			$this->dbw->commit();
+			$this->dbw->commit( __METHOD__ );
 			echo " committed in " . ( microtime( true ) - $start ) . "s\n\n";
 			// echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$n += self::RTI_CHUNK_SIZE;
