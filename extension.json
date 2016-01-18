@@ -4,6 +4,7 @@
 	"author": "Moritz Schubotz",
 	"url": "https://www.mediawiki.org/wiki/Extension:MathSearch",
 	"descriptionmsg": "mathsearch-desc",
+	"license-name": "GPL-2.0+",
 	"callback": "MathSearchHooks::registerExtension",
 	"type": "specialpage",
 	"AutoloadClasses": {
