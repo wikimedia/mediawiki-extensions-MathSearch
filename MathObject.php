@@ -304,13 +304,10 @@ class MathObject extends MathMathML {
 		preg_match_all(
 			"#<(mi|mo|mtext)( ([^>].*?))?>(.*?)</\\1>#u", $this->getMathml(), $rule, PREG_SET_ORDER
 		);
-		if ( $dbw == null ) {
-			$dbgiven = false;
-			$dbw = wfGetDB( DB_MASTER );
-			$dbw->begin( __METHOD__ );
-		} else {
-			$dbgiven = true;
-		}
+
+		$dbw = $dbw ?: wfGetDB( DB_MASTER );
+
+		$dbw->startAtomic( __METHOD__ );
 		$dbw->delete( "mathobservation",
 			array( "mathobservation_inputhash" => $this->getInputHash() ) );
 		LoggerFactory::getInstance(
@@ -327,9 +324,7 @@ class MathObject extends MathMathML {
 			)->warning( 'insert observation for ' . bin2hex( $this->getInputHash() )
 				. utf8_encode( trim( $feature[4] ) ) );
 		}
-		if ( !$dbgiven ) {
-			$dbw->commit( __METHOD__ );
-		}
+		$dbw->endAtomic( __METHOD__ );
 	}
 
 	/**
