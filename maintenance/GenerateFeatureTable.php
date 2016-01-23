@@ -72,12 +72,13 @@ class GenerateFeatureTable extends Maintenance {
 						'page_latest = rev_id',
 						'rev_text_id = old_id'
 					), __METHOD__ );
-			$this->dbw->begin();
+			$this->dbw->begin( __METHOD__ );
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
 				// $revtext = Revision::getRevisionText( $s );
 				$fcount += $this->doUpdate( $s->page_id );
 			}
+			$this->dbw->commit( __METHOD__ );
 			$n += self::RTI_CHUNK_SIZE;
 		}
 		// $this->output( "Updated {$fcount} formulae!\n" );

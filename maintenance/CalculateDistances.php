@@ -88,7 +88,7 @@ class CalculateDistances extends Maintenance {
 			if ( $n ) {
 				$this->output( $n . " of $count \n" );
 			}
-			$this->dbw->begin();
+			$this->dbw->begin( __METHOD__ );
 			for ( $j = 0; $j < self::RTI_CHUNK_SIZE; $j ++ ) {
 				// TODO: USE PREPARED STATEMENTS
 				$pid = $this->pagelist[$n];
@@ -111,7 +111,7 @@ class CalculateDistances extends Maintenance {
 				$n ++;
 			}
 			$start = microtime( true );
-			$this->dbw->commit();
+			$this->dbw->commit( __METHOD__ );
 			echo ' committed in ' . ( microtime( true ) - $start ) . "s\n\n";
 		}
 	}
