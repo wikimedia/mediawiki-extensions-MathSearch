@@ -109,7 +109,7 @@
 	"math-lp-7-intro": "Success message",
 	"math-lp-feedback-label": "Text field for general feedback",
 	"math-lp-feedback-help": "Help test for feedback text field",
-	"math-lp-formula-ref": "Wikitext snippet that describes, which mathematical object is currently evaluated",
+	"math-lp-formula-ref": "Wikitext snippet that describes, which mathematical object is currently evaluated\nParameters:\n* $1 - The mathematical expression that is being evaluated\n* $2 - The mathematical expression as rendered\n* $3 - Timestamp of the last edit of the mathematical expression",
 	"math-lp-submit-info": "Summarizing description of functionality of the different submit buttons.",
 	"math-lp-submit-label": "Button label to submit and continue with the next step:\n Parameter 1 next step.",
 	"math-lp-finish-label": "Submit text for the last step.\n{{Identical|Finish}}",
