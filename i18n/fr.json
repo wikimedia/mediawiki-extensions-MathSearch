@@ -112,7 +112,7 @@
 	"math-lp-7-intro": "Merci d’avoir évalué une expression mathématique.\n\nVous pouvez accéder à davantage d’expressions mathématiques du même article ou continuer avec un autre.",
 	"math-lp-feedback-label": "Autres remarques (facultatif)",
 	"math-lp-feedback-help": "S’il y a des informations importantes que vous aimeriez partager concernant cette étape d’évaluation, saisissez-les ici.",
-	"math-lp-formula-ref": "Vous êtes en train d’évaluer l’expression mathématique $1 rendue sous la forme $2, modifiée pour la dernière fois le <code>$3</code>.",
+	"math-lp-formula-ref": "Vous êtes en train d’évaluer l’expression mathématique $1, rendue sous la forme $2, modifiée pour la dernière fois le <code>$3</code>.",
 	"math-lp-submit-info": "Appuyez sur un des boutons ci-dessous pour continuer, ou fermez la fenêtre pour terminer le sondage.",
 	"math-lp-submit-label": "Continuer à l’étape $1",
 	"math-lp-finish-label": "Terminer",

@@ -94,7 +94,7 @@
 	"math-lp-6-srt-suggestion-label": "建议更好的替代文本（可选）",
 	"math-lp-7-head": "评估完成",
 	"math-lp-feedback-label": "附加注释（可选）",
-	"math-lp-formula-ref": "您正在评估数学表达式$1渲染为$2最后编辑于<code>$3</code>。",
+	"math-lp-formula-ref": "您正在评估数学表达式$1，渲染为$2，最后编辑于<code>$3</code>。",
 	"math-lp-submit-info": "点击下面的按钮之一，继续或关闭窗口以终止调查。",
 	"math-lp-submit-label": "通过第$1步继续",
 	"math-lp-finish-label": "结束",

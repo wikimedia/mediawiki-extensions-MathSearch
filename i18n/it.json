@@ -49,6 +49,7 @@
 	"math-lp-6-srt-assessment-option-4": "non utile",
 	"math-lp-7-head": "Valutazione completata",
 	"math-lp-feedback-label": "Ulteriori commenti (opzionale)",
+	"math-lp-formula-ref": "Stai valutando l'espressione matematica $1, rappresentata come $2, ultima modifica il <code>$3</code>.",
 	"math-lp-new-article": "Continua con un'altra voce",
 	"math-lp-new-formula": "Continua con un'altra formula",
 	"math-wmc-download-button": "Scarica",
