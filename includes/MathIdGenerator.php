@@ -4,7 +4,6 @@ class MathIdGenerator {
 
 	const CONTENT_POS = 1;
 	const ATTRIB_POS = 2;
-	private $parserRegexp;
 	private $wikiText;
 	private $mathTags;
 	private $revisionId;
@@ -12,6 +11,7 @@ class MathIdGenerator {
 	private $format = "math.%d.%d";
 	private $useCustomIds = false;
 	private $keys;
+	private $contentIdMap;
 
 	/**
 	 * @param $revision
@@ -42,7 +42,6 @@ class MathIdGenerator {
 	 * @param $revisionId
 	 */
 	public function __construct( $wikiText, $revisionId = 0 ) {
-		$this->parserRegexp = Parser::MARKER_PREFIX . "-math-([\\dA-F]{8})" . Parser::MARKER_SUFFIX;
 		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
 		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
 		$this->wikiText =
@@ -81,22 +80,25 @@ class MathIdGenerator {
 		return pack( "H32", md5( $inputTex ) );
 	}
 
-
-	/**
-	 * Decode binary packed hash from the database to md5 of input_tex
-	 * @param string $hash (binary)
-	 * @return string md5
-	 */
-	private static function dbHash2md5( $hash ) {
-		$xhash = unpack( 'H32md5', $hash . "                " );
-		return $xhash['md5'];
+	public function getIdsFromContent( $content ) {
+		$contentIdMap = $this->getContentIdMap();
+		return $contentIdMap[$content];
 	}
 
-	public function getIdsFromContent( $content ) {
-		return $this->formatIds( array_filter( $this->mathTags,
-			function ( $v ) use ( $content ) {
-				return $content == $v[MathIdGenerator::CONTENT_POS];
-			} ) );
+	public function getContentIdMap() {
+		if ( !$this->contentIdMap ) {
+			$this->contentIdMap = array();
+			foreach ( $this->mathTags as $key => $tag ) {
+				if ( !array_key_exists( $tag[MathIdGenerator::CONTENT_POS],
+						$this->contentIdMap )
+				) {
+					$this->contentIdMap[$tag[MathIdGenerator::CONTENT_POS]] = array();
+				}
+				$this->contentIdMap[$tag[MathIdGenerator::CONTENT_POS]][] =
+					$this->parserKey2fId( $key );
+			}
+		}
+		return $this->contentIdMap;
 	}
 
 	public function guessIdFromContent( $content ) {
