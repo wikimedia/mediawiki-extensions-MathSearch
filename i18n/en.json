@@ -148,5 +148,8 @@
 	"math-tex2nb-intro": "This mock up is supposed to demonstrate the idea of TeX to Mathematica conversion.\n\nThe demo-application converts LaTeX functions which directly translate to Mathematica counterparts.\n\nFunctions without explicit Mathematica support are available for translation via a DRMF package (under development).",
 	"math-tex2nb-input": "Input",
 	"math-tex2nb-latex": "The following LaTeX input ...",
-	"math-tex2nb-mathematica": "... is translated to the Mathematica output ..."
+	"math-tex2nb-mathematica": "... is translated to the Mathematica output ...",
+	"datatypes-type-contentmath": "Mathematical expression (content)",
+	"wikibase-listdatatypes-contentmath-head": "Mathematical expression (content)",
+	"wikibase-listdatatypes-contentmath-body": "Literal data field for mathematical expressions, formula, equations and such, expressed in the DRMF/DLMF variant of LaTeX."
 }

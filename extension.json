@@ -34,7 +34,11 @@
 		"MathIdGenerator": "includes/MathIdGenerator.php",
 		"MathHighlighter": "includes/MathHighlighter.php",
 		"MlpEvalForm": "includes/MlpEvalForm.php",
-		"WikidataDriver": "includes/WikidataDriver.php"
+		"WikidataDriver": "includes/WikidataDriver.php",
+		"ContentMathValidator": "ContentMathValidator.php",
+		"ContentMathFormatter": "ContentMathFormatter.php",
+		"ContentMathWikidataHook": "ContentMathWikidataHook.php",
+		"ContentMathMLRdfBuilder": "ContentMathMLRdfBuilder.php"
 	},
 	"AvailableRights": [
 		"mathwmcsubmit"
@@ -65,6 +69,12 @@
 		],
 		"PageContentSaveComplete": [
 			"MathSearchHooks::onPageContentSaveComplete"
+		],
+		"WikibaseClientDataTypes": [
+			"ContentMathWikidataHook::onWikibaseClientDataTypes"
+		],
+		"WikibaseRepoDataTypes": [
+			"ContentMathWikidataHook::onWikibaseRepoDataTypes"
 		]
 	},
 	"config": {
@@ -76,7 +86,8 @@
 		"MathUploadEnabled": false,
 		"MathWmcMaxResults": 10000,
 		"MathWmcServer": false,
-		"MathSearchWikidataUrl": "https://wikidata.org"
+		"MathSearchWikidataUrl": "https://wikidata.org",
+		"ContentMathEnableWikibaseDataType" : true
 	},
 	"MessagesDirs": {
 		"MathSearch": [
