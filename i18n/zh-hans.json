@@ -65,6 +65,7 @@
 	"math-lp-4-head": "第$2步：$1正在渲染",
 	"math-lp-4-intro": "接下来，您将评估$1渲染质量。此步骤有4小步。首先您将比较不同效果，此后在4a至4c间您将单独访问每种渲染方式。请注意您的浏览器可能不支持SVG或MathML渲染。For productive on Wikipedia.org or private wikis a fallback would automatically select a rendering that is suitable for your browser. However, for this evaluation this functionality was disabled, and you see exactly the rendering specified.",
 	"math-lp-4-best-label": "哪种渲染方式对您而言最好？",
+	"math-lp-4-size-label": "数学表达式的大小与文本相比是否合适？",
 	"math-lp-4-size-option-1": "很好",
 	"math-lp-4-size-option-2": "太小",
 	"math-lp-4-size-option-3": "太大",
@@ -76,6 +77,7 @@
 	"math-lp-4-font-option-1": "清楚",
 	"math-lp-4-font-option-2": "中等",
 	"math-lp-4-font-option-3": "模糊",
+	"math-lp-4-integration-label": "公式与文本结合有多好？",
 	"math-lp-4-integration-option-1": "它很好的与文本相符合。",
 	"math-lp-4-integration-option-2": "问题突出，但不会妨碍到阅读流。",
 	"math-lp-4-integration-option-3": "扰乱阅读流。",
@@ -138,5 +140,8 @@
 	"math-tex2nb-intro": "此实体模型应该展示TeX至Mathematica转换的主意。\n\nDemo应用程序会转换LaTeX函数，它们会直接翻译至Mathematica副本。\n\n没有明确Mathematica支持的功能可用于通过DRMF包翻译（正在开发中）。",
 	"math-tex2nb-input": "输入",
 	"math-tex2nb-latex": "以下LaTeX输入...",
-	"math-tex2nb-mathematica": "...被翻译至Mathematica输出..."
+	"math-tex2nb-mathematica": "...被翻译至Mathematica输出...",
+	"datatypes-type-contentmath": "数学表达式（内容）",
+	"wikibase-listdatatypes-contentmath-head": "数学表达式（内容）",
+	"wikibase-listdatatypes-contentmath-body": "用于数学表达式、公式、方程等的文字数据字段，以LaTeX的DRMF/DLMF变体表达。"
 }

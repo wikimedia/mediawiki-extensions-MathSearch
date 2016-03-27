@@ -151,5 +151,8 @@
 	"math-tex2nb-intro": "Цей макет повинен продемонструвати ідею перетворення з TeX у Mathematica.\n\nДемо-додаток перетворює функції LaTeX, які безпосередньо перекладає на аналог Mathematica.\n\nФункції без явної підтримки системи Mathematica доступні для перекладу через DRMF-пакет (у розробці).",
 	"math-tex2nb-input": "Вхід",
 	"math-tex2nb-latex": "Наступний вхід LaTeX …",
-	"math-tex2nb-mathematica": "… перекладено на вихід Mathematica …"
+	"math-tex2nb-mathematica": "… перекладено на вихід Mathematica …",
+	"datatypes-type-contentmath": "Математичний вираз (вміст)",
+	"wikibase-listdatatypes-contentmath-head": "Математичний вираз (вміст)",
+	"wikibase-listdatatypes-contentmath-body": "Символьне поле даних для математичних виразів, формул, рівнянь та подібного, виражених у DRMF/DLMF-варіанті LaTeX."
 }

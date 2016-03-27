@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"datatypes-type-contentmath": "Expression mathematic (contento)",
+	"wikibase-listdatatypes-contentmath-head": "Expression mathematic (contento)",
+	"wikibase-listdatatypes-contentmath-body": "Campo de datos litteral pro expressiones mathematic, formulas, equationes, etc., exprimite in le variante DRMF/DLMF de LaTeX."
+}

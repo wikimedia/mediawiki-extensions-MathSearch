@@ -48,5 +48,7 @@
 	"math-search-type-label": "Typ:",
 	"math-search-type-0": "Schlësselwuert",
 	"math-search-type-1": "TeX-Muster",
-	"math-search-expression-label": "Ausdrock:"
+	"math-search-expression-label": "Ausdrock:",
+	"datatypes-type-contentmath": "Mathemateschen Ausdrock (Inhalt)",
+	"wikibase-listdatatypes-contentmath-head": "Mathemateschen Ausdrock (Inhalt)"
 }

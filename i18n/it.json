@@ -67,5 +67,8 @@
 	"math-search-type-1": "Modello TeX",
 	"math-search-type-2": "Espressione xQuery",
 	"math-search-expression-label": "Espressione:",
-	"math-tex2nb-header": "Specifica il tuo input"
+	"math-tex2nb-header": "Specifica il tuo input",
+	"datatypes-type-contentmath": "Espressione matematica (contenuto)",
+	"wikibase-listdatatypes-contentmath-head": "Espressione matematica (contenuto)",
+	"wikibase-listdatatypes-contentmath-body": "Campo dati letterale per espressioni matematiche, formule, equazioni e simili, espresse nella variante DRMF/DLMF di LaTeX."
 }

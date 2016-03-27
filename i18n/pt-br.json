@@ -1,8 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Cainamarques"
+			"Cainamarques",
+			"Luk3"
 		]
 	},
-	"mathsearch-desc": "Integra o motor de busca [http://search.mathweb.org/about.html MathWeb]"
+	"mathsearch-desc": "Integra o motor de busca [http://search.mathweb.org/about.html MathWeb]",
+	"datatypes-type-contentmath": "Expressão matemática (conteúdo)",
+	"wikibase-listdatatypes-contentmath-head": "Expressão matemática (conteúdo)"
 }
