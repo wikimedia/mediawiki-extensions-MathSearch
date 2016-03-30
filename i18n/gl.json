@@ -145,5 +145,8 @@
 	"math-tex2nb-intro": "Este prototipo está pensado para demostrar a idea da conversión dende TeX á Mathematica.\n\nA aplicación de mostra converte funcións LaTeX que se traducen directamente as súas equivalentes en Mathematica.\n\nAs funcións sen soporte explícito para Mathematica poden traducirse via paquetes DRMF (en desenvolvemento)",
 	"math-tex2nb-input": "Entrada",
 	"math-tex2nb-latex": "A seguinte entrada LaTeX...",
-	"math-tex2nb-mathematica": "...tradúcese á saída de Mathematica..."
+	"math-tex2nb-mathematica": "...tradúcese á saída de Mathematica...",
+	"datatypes-type-contentmath": "Expresión matemática (contido)",
+	"wikibase-listdatatypes-contentmath-head": "Expresión matemática (contido)",
+	"wikibase-listdatatypes-contentmath-body": "Campo de datos literal para as expresións matemáticas, as fórmulas, as ecuacións e outros, expresadas na variante DRMF/DLMF de LaTeX."
 }
