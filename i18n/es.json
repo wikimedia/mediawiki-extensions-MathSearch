@@ -103,5 +103,6 @@
 	"math-tex2nb-latex": "La siguiente entrada en LaTeX...",
 	"math-tex2nb-mathematica": "... se traduce al formato de salida de Mathematica ...",
 	"datatypes-type-contentmath": "Expresión matemática (contenido)",
-	"wikibase-listdatatypes-contentmath-head": "Expresión matemática (contenido)"
+	"wikibase-listdatatypes-contentmath-head": "Expresión matemática (contenido)",
+	"wikibase-listdatatypes-contentmath-body": "Campo de datos literales para expresiones matemáticas, fórmulas, ecuaciones y similares, expresado en la variante DRMF/DLMF de LaTeX."
 }
