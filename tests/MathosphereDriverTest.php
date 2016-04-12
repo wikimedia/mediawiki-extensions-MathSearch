@@ -13,7 +13,6 @@ class MathosphereDriverTest extends MediaWikiTestCase {
 
 	private static $hasMathosphere;
 
-
 	public static function setUpBeforeClass() {
 		$m = new MathosphereDriver();
 		self::$hasMathosphere = $m->checkBackend();

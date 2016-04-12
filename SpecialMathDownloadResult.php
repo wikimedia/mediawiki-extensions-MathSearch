@@ -16,10 +16,10 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 		$out = ImportCsv::getCsvColumnHeader() . "\n";
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select( 'math_wmc_results',
-			array( 'qId' , 'oldId' , 'fId' ),
-			array( 'runId' => $runId ),
+			[ 'qId' , 'oldId' , 'fId' ],
+			[ 'runId' => $runId ],
 			__METHOD__,
-			array( 'ORDER BY' => array( 'qId' , 'rank' ) ) );
+			[ 'ORDER BY' => [ 'qId' , 'rank' ] ] );
 		if ( $res !== false ) {
 			foreach ( $res as $row ) {
 				$fId = $row->fId == null ? 0 : $row->fId;
@@ -39,7 +39,7 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 		$formDescriptor = $this->printRunSelector( 'select' );
 		$formDescriptor['run']['help-message'] = '';
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
-		$htmlForm->setSubmitCallback( array( $this, 'processInput' ) );
+		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
 		$htmlForm->setSubmitTextMsg( 'math-wmc-download-button' );
 		$htmlForm->show();
 

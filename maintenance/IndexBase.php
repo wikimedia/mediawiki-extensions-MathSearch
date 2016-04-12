@@ -93,20 +93,20 @@ abstract class IndexBase extends Maintenance {
 		$db = wfGetDB( DB_SLAVE );
 		echo "getting list of all equations from the database\n";
 		$this->res =
-			$db->select( array( 'mathindex', 'mathlatexml' ), array(
+			$db->select( [ 'mathindex', 'mathlatexml' ], [
 					'mathindex_revision_id',
 					'mathindex_anchor',
 					'math_mathml',
 					'math_inputhash',
 					'mathindex_inputhash'
-				), array(
+			], [
 					'math_inputhash = mathindex_inputhash',
 					'mathindex_revision_id >= ' . $this->getArg( 2, 0 ),
 					'mathindex_revision_id <= ' . $this->getArg( 3, PHP_INT_MAX )
-				), __METHOD__, array(
+			], __METHOD__, [
 					'LIMIT' => $this->getOption( 'limit', PHP_INT_MAX ),
 					'ORDER BY' => 'mathindex_revision_id'
-				) );
+			] );
 		echo "write " . $this->res->numRows() . " results to index\n";
 		$dir = $this->getArg( 0 );
 		if ( !file_exists( $dir ) ){

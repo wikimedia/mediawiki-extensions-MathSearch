@@ -26,10 +26,9 @@ class SpecialMathSearch extends SpecialPage {
 	private $mathBackend;
 	private $resultID = 0;
 	private $noTerms = 4;
-	private $terms = array();
+	private $terms = [];
 	private $relevanceMap;
 	private $defaults;
-
 
 	public static function exception_error_handler( $errno, $errstr, $errfile, $errline ) {
 		if ( !( error_reporting() & $errno ) ) {
@@ -95,40 +94,39 @@ class SpecialMathSearch extends SpecialPage {
 	 */
 	private function searchForm() {
 		# A formDescriptor Array to tell HTMLForm what to build
-		$formDescriptor = array(
-			'mathEngine' => array(
+		$formDescriptor = [
+			'mathEngine' => [
 				'label' => 'Math engine',
 				'class' => 'HTMLSelectField',
-				'options' => array(
+				'options' => [
 					'MathWebSearch' => 'mws',
 					'BaseX' => 'basex'
-				),
+				],
 				'default' => $this->mathEngine,
-			),
-			'displayQuery' => array(
+			],
+			'displayQuery' => [
 				'label' => 'Display search query',
 				'type' => 'check',
 				'default' => $this->displayQuery,
-			),
-			'noTerms' => array(
+			],
+			'noTerms' => [
 				'label' => 'Number of search terms',
 				'type' => 'int',
 				'min' => 1,
 				'default' =>  $this->noTerms,
-			),
-		);
+			],
+		];
 		$formDescriptor = array_merge( $formDescriptor, $this->getSearchRows( $this->noTerms ) );
 		$htmlForm =	new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Search' );
-		$htmlForm->setSubmitCallback( array( $this, 'processInput' ) );
+		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
 		$htmlForm->setHeaderText( "<h2>Input</h2>" );
 		// $htmlForm->show();
 		return $htmlForm;
 	}
 
-
 	private function getSearchRows( $cnt ) {
-		$out = array();
+		$out = [];
 		for ( $i = 1; $i <= $cnt; $i ++ ) {
 			if ( $i == 1 ) {
 				// Hide the meaningless first relation from the user
@@ -136,35 +134,35 @@ class SpecialMathSearch extends SpecialPage {
 			} else {
 				$relType = 'select';
 			}
-			$out["rel-$i"] = array(
+			$out["rel-$i"] = [
 				'label-message' => 'math-search-relation-label',
-				'options' => array(
+				'options' => [
 					wfMessage( 'math-search-relation-0' )->text() => 0,
 					wfMessage( 'math-search-relation-1' )->text() => 1,
 					wfMessage( 'math-search-relation-2' )->text() => 2 // ,
 					// 'nor' => 3
-				),
+				],
 				'type' => $relType,
 				'default' => $this->getDefault( $i, 'rel' ),
 				'section' => "term $i" // TODO: figure out how to localize section with parameter
-			);
-			$out["type-$i"] = array(
+			];
+			$out["type-$i"] = [
 				'label-message' => 'math-search-type-label',
-				'options' => array(
+				'options' => [
 					wfMessage( 'math-search-type-0' )->text() => 0,
 					wfMessage( 'math-search-type-1' )->text() => 1,
 					wfMessage( 'math-search-type-2' )->text() => 2
-				),
+				],
 				'type' => 'select',
 				'section' => "term $i",
 				'default' => $this->getDefault( $i, 'type' )
-			);
-			$out["expr-$i"] = array(
+			];
+			$out["expr-$i"] = [
 				'label-message' => 'math-search-expression-label',
 				'type' => 'text',
 				'section' => "term $i",
 				'default' => $this->getDefault( $i, 'expr' )
-			);
+			];
 		}
 		return $out;
 	}
@@ -288,7 +286,7 @@ class SpecialMathSearch extends SpecialPage {
 				}
 			}
 			if ( $mml != $res->getMathml() ) {
-				$renderer = new MathMathML( $mml, array( 'type' => 'pmml' ) );
+				$renderer = new MathMathML( $mml, [ 'type' => 'pmml' ] );
 				$renderer->setMathml( $mml );
 				$renderer->render();
 				$out->addHtml( $renderer->getHtmlOutput() );
@@ -389,8 +387,8 @@ class SpecialMathSearch extends SpecialPage {
 			return false;
 		}
 		$pagename = (string)$revision->getTitle();
-		$mathElements = array();
-		$textElements = array();
+		$mathElements = [];
+		$textElements = [];
 		/** @var MathSearchTerm $term */
 		foreach ( $this->terms as $term ) {
 			if ( $term->getExpr()=="" ) {
@@ -402,7 +400,7 @@ class SpecialMathSearch extends SpecialPage {
 				/** @var SearchResult $textResult */
 				$textResult = $term->getRevisionResult( $revisionID );
 				// see: T90976
-				$textElements[] = $textResult->getTextSnippet( array( $term->getExpr() ) );
+				$textElements[] = $textResult->getTextSnippet( [ $term->getExpr() ] );
 				// $textElements[]=$textResult->getSectionSnippet();
 			}
 		}
@@ -422,7 +420,7 @@ class SpecialMathSearch extends SpecialPage {
 	function render() {
 		$renderer = new MathLaTeXML( $this->mathpattern );
 		$renderer->setLaTeXMLSettings( 'profile=mwsquery' );
-		$renderer->setAllowedRootElments( array( 'query' ) );
+		$renderer->setAllowedRootElments( [ 'query' ] );
 		$renderer->render( true );
 		$this->mathmlquery = $renderer->getMathml();
 		if ( strlen( $this->mathmlquery ) == 0 ) {
@@ -445,7 +443,7 @@ class SpecialMathSearch extends SpecialPage {
 	private function enableMathStyles() {
 		$out = $this->getOutput();
 		$out->addModuleStyles(
-			array( 'ext.math.styles' , 'ext.math.desktop.styles', 'ext.math.scripts' )
+			[ 'ext.math.styles' , 'ext.math.desktop.styles', 'ext.math.scripts' ]
 		);
 	}
 

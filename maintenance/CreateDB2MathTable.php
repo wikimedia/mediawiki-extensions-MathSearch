@@ -50,15 +50,15 @@ class CreateDB2MathTable extends IndexBase {
 		$out .= ',"' . $mo->getTex() . '"';
 		$out .= ',' . $row->mathindex_revision_id . '';
 		$out .= ',' . $row->mathindex_anchor . '';
-		$out .= ',"' . str_replace( array( '"', "\n" ), array( '"', ' ' ), $mo->getMathml() ) . '"';
+		$out .= ',"' . str_replace( [ '"', "\n" ], [ '"', ' ' ], $mo->getMathml() ) . '"';
 		$res =
-			db2_execute( $this->statment, array(
+			db2_execute( $this->statment, [
 				$mo->getMd5(),
 				$mo->getTex(),
 				$row->mathindex_revision_id,
 				$row->mathindex_anchor,
 				$mo->getMathml()
-			) );
+			] );
 		if ( !$res ) {
 			echo db2_stmt_errormsg();
 		}

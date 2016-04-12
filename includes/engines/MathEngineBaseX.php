@@ -69,10 +69,10 @@ class MathEngineBaseX extends MathEngineRest {
 			$revisionID = $uri[0];
 			$AnchorID = $uri[1];
 			$this->relevanceMap[] = $revisionID;
-			$substarr = array();
+			$substarr = [];
 			// TODO: Add hit support.
 			$this->resultSet[(string) $revisionID][(string) $AnchorID][] =
-				array( "xpath" => (string) $attrs["xpath"], "mappings" => $substarr );
+				[ "xpath" => (string) $attrs["xpath"], "mappings" => $substarr ];
 		}
 		$this->relevanceMap = array_unique( $this->relevanceMap );
 	}
@@ -82,12 +82,12 @@ class MathEngineBaseX extends MathEngineRest {
 	 *
 	 */
 	function getPostData( $numProcess ) {
-		return json_encode( array( "type" => $this->type, "query" => $this->query->getCQuery() ) );
+		return json_encode( [ "type" => $this->type, "query" => $this->query->getCQuery() ] );
 	}
 
-	function update( $harvest = "", array $delte=array() ) {
+	function update( $harvest = "", array $delte=[] ) {
 		global $wgMathSearchBaseXBackendUrl;
-		$json_payload = json_encode( array( "harvest" => $harvest, "delete" => $delte ) );
+		$json_payload = json_encode( [ "harvest" => $harvest, "delete" => $delte ] );
 		$res = self::doPost( $wgMathSearchBaseXBackendUrl. 'api/update', $json_payload );
 		if ( $res ) {
 			$resJson = json_decode( $res );

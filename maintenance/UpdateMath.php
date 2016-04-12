@@ -36,7 +36,7 @@ class UpdateMath extends Maintenance {
 	/** @var MathRenderer  */
 	private $current;
 	private $time = 0.0; // microtime( true );
-	private $performance = array();
+	private $performance = [];
 	private $renderingMode = 'latexml';
 
 	/**
@@ -73,12 +73,12 @@ class UpdateMath extends Maintenance {
 			$this->performance[$category] = $delta;
 		}
 		if ( $wgMathDebug ) {
-			$this->db->insert( 'mathperformance', array(
+			$this->db->insert( 'mathperformance', [
 				'math_inputhash' => $this->current->getInputHash(),
 				'mathperformance_name' => substr( $category, 0, 10 ),
 				'mathperformance_time' => $delta,
 				'mathperformance_mode' => $this->renderingMode
-			) );
+			] );
 		}
 		$this->time = microtime( true );
 
@@ -111,9 +111,9 @@ class UpdateMath extends Maintenance {
 			}
 			$end = min( $n + self::RTI_CHUNK_SIZE - 1, $count );
 
-			$res = $this->db->select( array( 'page', 'revision', 'text' ),
-					array( 'page_id', 'page_namespace', 'page_title', 'old_flags', 'old_text', 'rev_id' ),
-					array( "rev_id BETWEEN $n AND $end", 'page_latest = rev_id', 'rev_text_id = old_id' ),
+			$res = $this->db->select( [ 'page', 'revision', 'text' ],
+					[ 'page_id', 'page_namespace', 'page_title', 'old_flags', 'old_text', 'rev_id' ],
+					[ "rev_id BETWEEN $n AND $end", 'page_latest = rev_id', 'rev_text_id = old_id' ],
 					__METHOD__
 			);
 			$this->dbw->begin( __METHOD__ );
@@ -193,7 +193,7 @@ class UpdateMath extends Maintenance {
 				$this->time( "write Cache" );
 				MathSearchHooks::setNextID( $eId, $renderer, $pid );
 				if ( !$this->getOption( "hooks", false ) ) {
-					Hooks::run( 'MathFormulaPostRender', array( $parser, &$renderer, &$notused ) );
+					Hooks::run( 'MathFormulaPostRender', [ $parser, &$renderer, &$notused ] );
 					$this->time( "hooks" );
 				} else {
 					MathSearchHooks::writeMathIndex( $revId, $eId, $renderer->getInputHash(), '' );

@@ -31,18 +31,18 @@ class WmcRefIdentifier extends Maintenance {
 		$res = $dbr->query( 'SELECT qID, oldId, fid, math_inputtex FROM math_wmc_ref r' .
 			' JOIN mathlatexml l WHERE  r.math_inputhash = l.math_inputhash;' );
 
-		$output = array();
+		$output = [];
 		foreach ( $res as $row ) {
 			$md = new MathoidDriver( $row->math_inputtex );
 			$md->texvcInfo();
 			$identifiers = array_unique( $md->getIdentifiers() );
 			$fId = "math.{$row->oldId}.{$row->fid}";
 			$mo = MathObject::newFromRevisionText( $row->oldId, $fId );
-			$relations = array();
+			$relations = [];
 			$rels = $mo->getRelations();
 			$wd = new WikidataDriver();
 			foreach ( $identifiers as $i ) {
-				$relations[$i] = array();
+				$relations[$i] = [];
 				if ( isset( $rels[$i] ) ) {
 					foreach ( $rels[$i] as $rel ) {
 						if ( preg_match( '/\[\[(.*)\]\]/', $rel->definition, $m ) ) {
@@ -56,7 +56,7 @@ class WmcRefIdentifier extends Maintenance {
 					}
 				}
 			}
-			$output[] = (object)array( 'definitions' => $relations, 'formula' => $row );
+			$output[] = (object)[ 'definitions' => $relations, 'formula' => $row ];
 		}
 		$this->output( json_encode( $output ) );
 	}

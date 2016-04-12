@@ -41,7 +41,7 @@ class SpecialDisplayTopics extends SpecialPage {
 
 	private function displayOverview( $filter = 1 ) {
 		$dbw = wfGetDB( DB_MASTER );
-		$cols = array( '#', 'fId', '#Var', '#matches', 'query', 'reference' );
+		$cols = [ '#', 'fId', '#Var', '#matches', 'query', 'reference' ];
 		// @codingStandardsIgnoreStart
 		$res = $dbw->query( <<<SQL
 SELECT
@@ -67,7 +67,7 @@ SQL
 	private function displayTopic( $query ) {
 		$out = $this->getOutput();
 		$dbr = wfGetDB( DB_SLAVE );
-		$qId = $dbr->selectField( 'math_wmc_ref', 'qId', array( 'qID' => $query ) );
+		$qId = $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qID' => $query ] );
 		if ( !$qId ) {
 			$out->addWikiText( "Topic $query does not exist." );
 			return;
@@ -161,7 +161,7 @@ SQL
 		if ( !$dbr->tableExists( 'math_wmc_page_ranks' ) ) {
 			MathSearchUtils::createEvaluationTables();
 		}
-		$res = $dbr->select( 'math_wmc_page_ranks', '*', array( 'qId' => $qId ) );
+		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId' => $qId ] );
 		foreach ( $res as $rank ) {
 			$out->addWikiText( $rank->runId . ': ' . $rank->rank );
 		}

@@ -12,8 +12,8 @@ class MathSearchTerm {
 	private $rel = 0;
 	private $type = 0;
 	private $expr = '';
-	private $relevanceMap = array();
-	private $resultSet =array();
+	private $relevanceMap = [];
+	private $resultSet =[];
 
 	/**
 	 * @param int $i
@@ -146,7 +146,7 @@ class MathSearchTerm {
 		if ( array_key_exists( (string) $revisionId, $this->resultSet ) ) {
 			return $this->resultSet[(string) $revisionId];
 		} else {
-			return array();
+			return [];
 		}
 	}
 

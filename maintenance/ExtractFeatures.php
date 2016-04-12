@@ -73,13 +73,13 @@ class ExtractFeatures extends Maintenance {
 			$end = $n + self::RTI_CHUNK_SIZE - 1;
 
 			$res =
-				$this->db->select( array( 'page', 'revision', 'text' ),
-					array( 'page_id', 'page_namespace', 'page_title', 'old_flags', 'old_text' ),
-					array(
+				$this->db->select( [ 'page', 'revision', 'text' ],
+					[ 'page_id', 'page_namespace', 'page_title', 'old_flags', 'old_text' ],
+					[
 						"page_id BETWEEN $n AND $end",
 						'page_latest = rev_id',
 						'rev_text_id = old_id'
-					), __METHOD__ );
+					], __METHOD__ );
 			$this->dbw->begin( __METHOD__ );
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {

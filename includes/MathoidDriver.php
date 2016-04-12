@@ -96,11 +96,11 @@ class MathoidDriver {
 	}
 
 	protected static function doPost( $url, $postData ) {
-		$options = array(
+		$options = [
 			"postData" => $postData,
 			"timeout"  => 60,
 			"method"   => 'POST'
-		);
+		];
 		$req = MWHttpRequest::factory( $url, $options, __METHOD__ );
 		$status = $req->execute();
 
@@ -110,7 +110,7 @@ class MathoidDriver {
 			$errors = $status->getErrorsByType( 'error' );
 			$logger = LoggerFactory::getInstance( 'http' );
 			$logger->warning( $status->getWikiText(),
-				array( 'error' => $errors, 'caller' => __METHOD__, 'content' => $req->getContent() ) );
+				[ 'error' => $errors, 'caller' => __METHOD__, 'content' => $req->getContent() ] );
 			return false;
 		}
 	}
@@ -124,9 +124,9 @@ class MathoidDriver {
 	}
 
 	protected function getPostData() {
-		$post = array(
+		$post = [
 			"q" => $this->q
-		);
+		];
 		return wfArrayToCgi( $post );
 	}
 
@@ -146,8 +146,9 @@ class MathoidDriver {
 			}
 		}
 		$logger = LoggerFactory::getInstance( 'MathSearch' );
-		$logger->warning( "Mathoid server backend does not point to mathoid.", array(
-			'detail' => $res ) );
+		$logger->warning( "Mathoid server backend does not point to mathoid.", [
+			'detail' => $res
+		] );
 		return false;
 	}
 

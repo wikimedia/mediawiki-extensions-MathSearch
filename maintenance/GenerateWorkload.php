@@ -79,12 +79,12 @@ class GenerateWorkload extends IndexBase {
 		$db = wfGetDB( DB_SLAVE );
 		echo "getting list of all equations from the database\n";
 		$this->res =
-			$db->select( array( 'mathindex' ),
-				array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ), true,
-				__METHOD__, array(
+			$db->select( [ 'mathindex' ],
+				[ 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ], true,
+				__METHOD__, [
 					'LIMIT' => $this->getOption( 'limit', (int)( 100 / $sel ) ),
 					'ORDER BY' => 'mathindex_inputhash'
-				) );
+				] );
 		do {
 			$fn = $this->getArg( 0 ) . '/math' . sprintf( '%012d', $i ) . '.tex';
 			$res = $this->wFile( $fn, $i, $inc );

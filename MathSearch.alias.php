@@ -7,188 +7,188 @@
  */
 // @codingStandardsIgnoreFile
 
-$specialPageAliases = array();
+$specialPageAliases = [];
 
 /** English (English) */
-$specialPageAliases['en'] = array(
-	'MathSearch' => array( 'MathSearch', 'Math Search' ),
-	'MlpEval' => array( 'MlpEval', 'Mathematical Language Processing Evaluation' ),
-	'MathDebug' => array( 'MathDebug', 'Math Debug' ),
-	'FormulaInfo' => array( 'FormulaInfo', 'Formula Info' ),
-	'GetEquationsByQuery' => array( 'GetEquationsByQuery', 'Get Formulae by Query' ),
-	'MathIndex' => array( 'MathIndex', 'Math Index' ),
-	'MathUpload' => array( 'MathUpload', 'Math Upload' ),
-	'MathDownload' => array( 'MathDownload', 'Math Download' ),
-	'LaTeXTranslator' => array( 'LaTeXTranslator', 'LaTeX Translator' ),
-);
+$specialPageAliases['en'] = [
+	'MathSearch' => [ 'MathSearch', 'Math Search' ],
+	'MlpEval' => [ 'MlpEval', 'Mathematical Language Processing Evaluation' ],
+	'MathDebug' => [ 'MathDebug', 'Math Debug' ],
+	'FormulaInfo' => [ 'FormulaInfo', 'Formula Info' ],
+	'GetEquationsByQuery' => [ 'GetEquationsByQuery', 'Get Formulae by Query' ],
+	'MathIndex' => [ 'MathIndex', 'Math Index' ],
+	'MathUpload' => [ 'MathUpload', 'Math Upload' ],
+	'MathDownload' => [ 'MathDownload', 'Math Download' ],
+	'LaTeXTranslator' => [ 'LaTeXTranslator', 'LaTeX Translator' ],
+];
 
 /** Arabic (العربية) */
-$specialPageAliases['ar'] = array(
-	'MathSearch' => array( 'بحث_رياضيات' ),
-	'MathDebug' => array( 'تصحيح_رياضيات' ),
-	'FormulaInfo' => array( 'معلومات_المعادلة' ),
-	'GetEquationsByQuery' => array( 'المعادلات_بواسطة_الاستعلام', 'الصيغ_بواسطة_الاستعلام' ),
-	'MathIndex' => array( 'فهرس_الرياضيات' ),
-	'MathUpload' => array( 'رفع_الرياضيات' ),
-	'MathDownload' => array( 'تحميل_رياضيات' ),
-);
+$specialPageAliases['ar'] = [
+	'MathSearch' => [ 'بحث_رياضيات' ],
+	'MathDebug' => [ 'تصحيح_رياضيات' ],
+	'FormulaInfo' => [ 'معلومات_المعادلة' ],
+	'GetEquationsByQuery' => [ 'المعادلات_بواسطة_الاستعلام', 'الصيغ_بواسطة_الاستعلام' ],
+	'MathIndex' => [ 'فهرس_الرياضيات' ],
+	'MathUpload' => [ 'رفع_الرياضيات' ],
+	'MathDownload' => [ 'تحميل_رياضيات' ],
+];
 
 /** Egyptian Arabic (مصرى) */
-$specialPageAliases['arz'] = array(
-	'MathSearch' => array( 'بحث-رياضه' ),
-	'MathDebug' => array( 'ديبج_رياضه' ),
-	'FormulaInfo' => array( 'معلومات_المعادله' ),
-	'GetEquationsByQuery' => array( 'هات_المعادلات_عن_طريق_الكويرى' ),
-);
+$specialPageAliases['arz'] = [
+	'MathSearch' => [ 'بحث-رياضه' ],
+	'MathDebug' => [ 'ديبج_رياضه' ],
+	'FormulaInfo' => [ 'معلومات_المعادله' ],
+	'GetEquationsByQuery' => [ 'هات_المعادلات_عن_طريق_الكويرى' ],
+];
 
 /** Western Balochi (بلوچی رخشانی) */
-$specialPageAliases['bgn'] = array(
-	'MathSearch' => array( 'ریازی_ئی_گشتین' ),
-	'MathDebug' => array( 'ریازی_ئی_اشکال_زدایی' ),
-	'FormulaInfo' => array( 'پورمول_ئی_مالومات' ),
-	'GetEquationsByQuery' => array( 'مئادل_ئی_گیپتین_گۆ_درخواستا' ),
-	'MathIndex' => array( 'ریازی_ئی_نمایگ' ),
-	'MathUpload' => array( 'ریازی_ئی_بُرز_کورتین' ),
-	'MathDownload' => array( 'ریازی_ئی_ائیرکورتین' ),
-);
+$specialPageAliases['bgn'] = [
+	'MathSearch' => [ 'ریازی_ئی_گشتین' ],
+	'MathDebug' => [ 'ریازی_ئی_اشکال_زدایی' ],
+	'FormulaInfo' => [ 'پورمول_ئی_مالومات' ],
+	'GetEquationsByQuery' => [ 'مئادل_ئی_گیپتین_گۆ_درخواستا' ],
+	'MathIndex' => [ 'ریازی_ئی_نمایگ' ],
+	'MathUpload' => [ 'ریازی_ئی_بُرز_کورتین' ],
+	'MathDownload' => [ 'ریازی_ئی_ائیرکورتین' ],
+];
 
 /** Min Dong Chinese (Mìng-dĕ̤ng-ngṳ̄) */
-$specialPageAliases['cdo'] = array(
-	'MathSearch' => array( '數學尋討' ),
-	'MathDebug' => array( '數學調試' ),
-	'FormulaInfo' => array( '公式信息' ),
-);
+$specialPageAliases['cdo'] = [
+	'MathSearch' => [ '數學尋討' ],
+	'MathDebug' => [ '數學調試' ],
+	'FormulaInfo' => [ '公式信息' ],
+];
 
 /** German (Deutsch) */
-$specialPageAliases['de'] = array(
-	'MathSearch' => array( 'MathWeb-Suche' ),
-	'MathDebug' => array( 'MathWeb-Fehlerprotokoll' ),
-	'FormulaInfo' => array( 'Formelinformation' ),
-	'GetEquationsByQuery' => array( 'Gleichungen_durch_Abfrage' ),
-	'MathIndex' => array( 'Math-Index' ),
-	'MathUpload' => array( 'Math_hochladen' ),
-	'MathDownload' => array( 'Math_herunterladen' ),
-);
+$specialPageAliases['de'] = [
+	'MathSearch' => [ 'MathWeb-Suche' ],
+	'MathDebug' => [ 'MathWeb-Fehlerprotokoll' ],
+	'FormulaInfo' => [ 'Formelinformation' ],
+	'GetEquationsByQuery' => [ 'Gleichungen_durch_Abfrage' ],
+	'MathIndex' => [ 'Math-Index' ],
+	'MathUpload' => [ 'Math_hochladen' ],
+	'MathDownload' => [ 'Math_herunterladen' ],
+];
 
 /** Zazaki (Zazaki) */
-$specialPageAliases['diq'] = array(
-	'MathSearch' => array( 'CebirCıgeyren', 'Cebir_Cıgeyren' ),
-	'MathDebug' => array( 'CebirWeçinen', 'Cebir_Weçinen' ),
-	'FormulaInfo' => array( 'MalumataFormuler', 'Malumata_Formuler' ),
-	'GetEquationsByQuery' => array( 'NeticeyaDenklemerBıgi', 'Neticeya_Denklemer_Bıgi' ),
-);
+$specialPageAliases['diq'] = [
+	'MathSearch' => [ 'CebirCıgeyren', 'Cebir_Cıgeyren' ],
+	'MathDebug' => [ 'CebirWeçinen', 'Cebir_Weçinen' ],
+	'FormulaInfo' => [ 'MalumataFormuler', 'Malumata_Formuler' ],
+	'GetEquationsByQuery' => [ 'NeticeyaDenklemerBıgi', 'Neticeya_Denklemer_Bıgi' ],
+];
 
 /** Persian (فارسی) */
-$specialPageAliases['fa'] = array(
-	'MathSearch' => array( 'جستجوی_ریاضیات' ),
-	'MathDebug' => array( 'اشکال‌زدایی_ریاضیات' ),
-	'FormulaInfo' => array( 'اطلاعات_فرمول' ),
-	'GetEquationsByQuery' => array( 'گرفتن_معادل_با_درخواست' ),
-	'MathIndex' => array( 'نمایهٔ_ریاضی' ),
-	'MathUpload' => array( 'بارگذاری_ریاضی' ),
-);
+$specialPageAliases['fa'] = [
+	'MathSearch' => [ 'جستجوی_ریاضیات' ],
+	'MathDebug' => [ 'اشکال‌زدایی_ریاضیات' ],
+	'FormulaInfo' => [ 'اطلاعات_فرمول' ],
+	'GetEquationsByQuery' => [ 'گرفتن_معادل_با_درخواست' ],
+	'MathIndex' => [ 'نمایهٔ_ریاضی' ],
+	'MathUpload' => [ 'بارگذاری_ریاضی' ],
+];
 
 /** Galician (galego) */
-$specialPageAliases['gl'] = array(
-	'MathSearch' => array( 'Procura_matemática' ),
-	'MathDebug' => array( 'Depuración_matemática' ),
-	'FormulaInfo' => array( 'Información_de_fórmula' ),
-);
+$specialPageAliases['gl'] = [
+	'MathSearch' => [ 'Procura_matemática' ],
+	'MathDebug' => [ 'Depuración_matemática' ],
+	'FormulaInfo' => [ 'Información_de_fórmula' ],
+];
 
 /** Hebrew (עברית) */
-$specialPageAliases['he'] = array(
-	'MathSearch' => array( 'חיפוש_נוסחה' ),
-	'MathDebug' => array( 'בדיקת_נוסחה' ),
-	'FormulaInfo' => array( 'מידע_על_נוסחה' ),
-	'GetEquationsByQuery' => array( 'קבלת_נוסחה_לפי_שאילתה' ),
-	'MathIndex' => array( 'מפתח_מתמטיקה' ),
-	'MathUpload' => array( 'העלאת_מתמטיקה' ),
-	'MathDownload' => array( 'הורדת_מתמטיקה' ),
-);
+$specialPageAliases['he'] = [
+	'MathSearch' => [ 'חיפוש_נוסחה' ],
+	'MathDebug' => [ 'בדיקת_נוסחה' ],
+	'FormulaInfo' => [ 'מידע_על_נוסחה' ],
+	'GetEquationsByQuery' => [ 'קבלת_נוסחה_לפי_שאילתה' ],
+	'MathIndex' => [ 'מפתח_מתמטיקה' ],
+	'MathUpload' => [ 'העלאת_מתמטיקה' ],
+	'MathDownload' => [ 'הורדת_מתמטיקה' ],
+];
 
 /** Italian (italiano) */
-$specialPageAliases['it'] = array(
-	'MathSearch' => array( 'RicercaMat' ),
-);
+$specialPageAliases['it'] = [
+	'MathSearch' => [ 'RicercaMat' ],
+];
 
 /** Japanese (日本語) */
-$specialPageAliases['ja'] = array(
-	'FormulaInfo' => array( '数式情報' ),
-);
+$specialPageAliases['ja'] = [
+	'FormulaInfo' => [ '数式情報' ],
+];
 
 /** Korean (한국어) */
-$specialPageAliases['ko'] = array(
-	'MathSearch' => array( '수학검색', '수학_검색', '수학찾기', '수학_찾기' ),
-	'MathDebug' => array( '수학디버그', '수학_디버그' ),
-	'FormulaInfo' => array( '수식정보', '수식_정보' ),
-	'GetEquationsByQuery' => array( '쿼리별수식얻기', '퀴리별_수식_얻기' ),
-	'MathIndex' => array( '수학색인', '수학_색인' ),
-	'MathUpload' => array( '수학올리기', '수학_올리기' ),
-);
+$specialPageAliases['ko'] = [
+	'MathSearch' => [ '수학검색', '수학_검색', '수학찾기', '수학_찾기' ],
+	'MathDebug' => [ '수학디버그', '수학_디버그' ],
+	'FormulaInfo' => [ '수식정보', '수식_정보' ],
+	'GetEquationsByQuery' => [ '쿼리별수식얻기', '퀴리별_수식_얻기' ],
+	'MathIndex' => [ '수학색인', '수학_색인' ],
+	'MathUpload' => [ '수학올리기', '수학_올리기' ],
+];
 
 /** Macedonian (македонски) */
-$specialPageAliases['mk'] = array(
-	'MathSearch' => array( 'МатПребарување' ),
-	'MathDebug' => array( 'МатИсправкаГрешки' ),
-	'FormulaInfo' => array( 'ФормулаИнфо' ),
-	'GetEquationsByQuery' => array( 'ДајРавенкиПоБарање' ),
-	'MathIndex' => array( 'МатИндекс' ),
-	'MathUpload' => array( 'МатПодигање' ),
-	'MathDownload' => array( 'МатПреземање' ),
-);
+$specialPageAliases['mk'] = [
+	'MathSearch' => [ 'МатПребарување' ],
+	'MathDebug' => [ 'МатИсправкаГрешки' ],
+	'FormulaInfo' => [ 'ФормулаИнфо' ],
+	'GetEquationsByQuery' => [ 'ДајРавенкиПоБарање' ],
+	'MathIndex' => [ 'МатИндекс' ],
+	'MathUpload' => [ 'МатПодигање' ],
+	'MathDownload' => [ 'МатПреземање' ],
+];
 
 /** Dutch (Nederlands) */
-$specialPageAliases['nl'] = array(
-	'MathSearch' => array( 'Mathzoeken' ),
-	'FormulaInfo' => array( 'Formulegegevens' ),
-);
+$specialPageAliases['nl'] = [
+	'MathSearch' => [ 'Mathzoeken' ],
+	'FormulaInfo' => [ 'Formulegegevens' ],
+];
 
 /** Norwegian Nynorsk (norsk nynorsk) */
-$specialPageAliases['nn'] = array(
-	'MathSearch' => array( 'Mattesøk' ),
-);
+$specialPageAliases['nn'] = [
+	'MathSearch' => [ 'Mattesøk' ],
+];
 
 /** Punjabi (ਪੰਜਾਬੀ) */
-$specialPageAliases['pa'] = array(
-	'MathSearch' => array( 'ਮੋਬਾਈਲ_ਖੋਜ', 'ਹਿਸਾਬ_ਖੋਜੋ' ),
-);
+$specialPageAliases['pa'] = [
+	'MathSearch' => [ 'ਮੋਬਾਈਲ_ਖੋਜ', 'ਹਿਸਾਬ_ਖੋਜੋ' ],
+];
 
 /** Sicilian (sicilianu) */
-$specialPageAliases['scn'] = array(
-	'MathSearch' => array( 'RicercaMat' ),
-);
+$specialPageAliases['scn'] = [
+	'MathSearch' => [ 'RicercaMat' ],
+];
 
 /** Vietnamese (Tiếng Việt) */
-$specialPageAliases['vi'] = array(
-	'MathSearch' => array( 'Tìm_kiếm_toán_học' ),
-	'MathDebug' => array( 'Gỡ_lỗi_toán_học' ),
-	'FormulaInfo' => array( 'Thông_tin_công_thức' ),
-	'MathUpload' => array( 'Tải_lên_toán_học' ),
-);
+$specialPageAliases['vi'] = [
+	'MathSearch' => [ 'Tìm_kiếm_toán_học' ],
+	'MathDebug' => [ 'Gỡ_lỗi_toán_học' ],
+	'FormulaInfo' => [ 'Thông_tin_công_thức' ],
+	'MathUpload' => [ 'Tải_lên_toán_học' ],
+];
 
 /** Chinese (中文) */
-$specialPageAliases['zh'] = array(
-	'MathSearch' => array( '数学搜索', '數學搜尋' ),
-);
+$specialPageAliases['zh'] = [
+	'MathSearch' => [ '数学搜索', '數學搜尋' ],
+];
 
 /** Simplified Chinese (中文（简体）‎) */
-$specialPageAliases['zh-hans'] = array(
-	'MathSearch' => array( '数学搜索' ),
-	'MathDebug' => array( '数学调试', '数学除错' ),
-	'FormulaInfo' => array( '公式信息' ),
-	'GetEquationsByQuery' => array( '通过查询获取方程' ),
-	'MathIndex' => array( '数学公式索引' ),
-	'MathUpload' => array( '数学上传' ),
-	'MathDownload' => array( '数学下载' ),
-);
+$specialPageAliases['zh-hans'] = [
+	'MathSearch' => [ '数学搜索' ],
+	'MathDebug' => [ '数学调试', '数学除错' ],
+	'FormulaInfo' => [ '公式信息' ],
+	'GetEquationsByQuery' => [ '通过查询获取方程' ],
+	'MathIndex' => [ '数学公式索引' ],
+	'MathUpload' => [ '数学上传' ],
+	'MathDownload' => [ '数学下载' ],
+];
 
 /** Traditional Chinese (中文（繁體）‎) */
-$specialPageAliases['zh-hant'] = array(
-	'MathSearch' => array( '數學搜尋' ),
-	'MathDebug' => array( '數學除錯' ),
-	'FormulaInfo' => array( '公式資訊' ),
-	'GetEquationsByQuery' => array( '查詢取得方程式' ),
-	'MathIndex' => array( '數學索引' ),
-	'MathUpload' => array( '數學上傳' ),
-	'MathDownload' => array( '數學下載' ),
-);
+$specialPageAliases['zh-hant'] = [
+	'MathSearch' => [ '數學搜尋' ],
+	'MathDebug' => [ '數學除錯' ],
+	'FormulaInfo' => [ '公式資訊' ],
+	'GetEquationsByQuery' => [ '查詢取得方程式' ],
+	'MathIndex' => [ '數學索引' ],
+	'MathUpload' => [ '數學上傳' ],
+	'MathDownload' => [ '數學下載' ],
+];

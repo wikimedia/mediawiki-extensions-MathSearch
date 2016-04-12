@@ -47,7 +47,7 @@ EOT;
 		$this->assertEquals( 0, count( $noWiki ) );
 		$attributeTest = MathObject::extractMathTagsFromWikiText( $this->attributes );
 		$this->assertEquals( 1, count( $attributeTest ) );
-		$expected = array( 'x' => 'x1', 'y' => 'y1' );
+		$expected = [ 'x' => 'x1', 'y' => 'y1' ];
 		$first = array_shift( $attributeTest );
 		$this->assertEquals( $expected, $first[2] );
 		$longMatch = MathObject::extractMathTagsFromWikiText( $this->longSample );

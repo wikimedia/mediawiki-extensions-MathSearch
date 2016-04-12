@@ -10,7 +10,7 @@ class ImportCsv {
 	/**
 	 * @var array
 	 */
-	private static $columnHeaders = array( 'queryId', 'formulaId' );
+	private static $columnHeaders = [ 'queryId', 'formulaId' ];
 	/**
 	 * @var int
 	 */
@@ -18,15 +18,15 @@ class ImportCsv {
 	/**
 	 * @var array
 	 */
-	private $warnings = array();
+	private $warnings = [];
 	/**
 	 * @var array
 	 */
-	private $results = array();
+	private $results = [];
 	/**
 	 * @var array
 	 */
-	private $validQIds = array();
+	private $validQIds = [];
 	/**
 	 * @var bool
 	 */
@@ -75,17 +75,17 @@ class ImportCsv {
 		$uID = $this->getUser()->getId();
 		if ( is_int( $run ) ) {
 			$runId = $dbw->selectField( 'math_wmc_runs', 'runId',
-				array( 'isDraft' => true, 'userID' => $uID, 'runId' => $run ) );
+				[ 'isDraft' => true, 'userID' => $uID, 'runId' => $run ] );
 		} else {
 			$runId = $dbw->selectField( 'math_wmc_runs', 'runId',
-				array( 'isDraft' => true, 'userID' => $uID, 'runName' => $run ) );
+				[ 'isDraft' => true, 'userID' => $uID, 'runName' => $run ] );
 		}
 		if ( !$runId ) {
 			$exists = $dbw->selectField( 'math_wmc_runs', 'runId',
-					array( 'userID' => $uID, 'runName' => $run ) );
+					[ 'userID' => $uID, 'runName' => $run ] );
 			if ( !$exists ) {
 				$success = $dbw->insert( 'math_wmc_runs',
-						array( 'isDraft' => true, 'userID' => $uID, 'runName' => $run ) );
+						[ 'isDraft' => true, 'userID' => $uID, 'runName' => $run ] );
 				if ( $success ) {
 					$this->runId = $dbw->insertId();
 					$this->warnings[] = wfMessage( 'math-wmc-RunAdded', $run, $this->runId )->text();
@@ -127,7 +127,7 @@ class ImportCsv {
 			return wfMessage( 'emptyfile' )->text();
 		}
 
-		$table = array();
+		$table = [];
 
 		$line = fgetcsv( $csv_file );
 		if ( $line === null ) {
@@ -226,7 +226,7 @@ class ImportCsv {
 			return $this->validQIds[$qId];
 		}
 		$dbr = wfGetDB( DB_SLAVE );
-		if ( $dbr->selectField( 'math_wmc_ref', 'qId', array( 'qId' => $qId ) ) ) {
+		if ( $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qId' => $qId ] ) ) {
 			$this->validQIds[$qId] = true;
 			return true;
 		} else {
@@ -243,7 +243,7 @@ class ImportCsv {
 	private function  getInputHash( $pId, $eId ) {
 		$dbr = wfGetDB( DB_SLAVE );
 		return $dbr->selectField( 'mathindex', 'mathindex_inputhash',
-			array( 'mathindex_revision_id' => $pId, 'mathindex_anchor' => $eId ) );
+			[ 'mathindex_revision_id' => $pId, 'mathindex_anchor' => $eId ] );
 	}
 
 	/**
@@ -254,14 +254,14 @@ class ImportCsv {
 	 * @param $rank
 	 */
 	private function addValidatedResult( $qId, $pId, $eId, $fHash, $rank ) {
-		$this->results[] = array(
+		$this->results[] = [
 			'runId' => $this->runId,
 			'qId' => $qId,
 			'oldId' => $pId,
 			'fId' => $eId,
 			'rank' => $rank,
 			'math_inputhash' => $fHash
-		);
+		];
 	}
 
 	/**
@@ -293,7 +293,7 @@ class ImportCsv {
 	public function deleteRun( $runID ) {
 		if ( $this->overwrite ) {
 			$dbw = wfGetDB( DB_MASTER );
-			$dbw->delete( 'math_wmc_results', array( 'runId' => $runID ) );
+			$dbw->delete( 'math_wmc_results', [ 'runId' => $runID ] );
 		}
 	}
 

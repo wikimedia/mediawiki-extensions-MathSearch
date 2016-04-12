@@ -181,16 +181,16 @@ XML;
 		$revId = 28378;
 		$dw = new MwsDumpWriter();
 		$this->setMwGlobals(
-			array(
-				'wgMathValidModes' => array( 'latexml' ),
-				'wgMathDefaultLaTeXMLSetting' => array(
+			[
+				'wgMathValidModes' => [ 'latexml' ],
+				'wgMathDefaultLaTeXMLSetting' => [
 					'format' => 'xhtml',
 					'whatsin' => 'math',
 					'whatsout' => 'math',
 					'pmml',
 					'cmml',
 					'nodefaultresources',
-					'preload' => array(
+					'preload' => [
 						'LaTeX.pool',
 						'article.cls',
 						'amsmath.sty',
@@ -203,9 +203,9 @@ XML;
 						'hyperref.sty',
 						'[ids]latexml.sty',
 						'texvc'
-					)
-				)
-			)
+					]
+				]
+			]
 		);
 		$gen = new MathIdGenerator( $this->testWikiText, $revId );
 		$gen->setUseCustomIds( true );

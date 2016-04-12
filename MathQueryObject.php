@@ -21,13 +21,13 @@ class MathQueryObject extends MathObject {
 	</code> see http://kwarc.info/kohlhase/event/NTCIR11/
 	*/
 
-	private $pmmlSettings = array(
+	private $pmmlSettings = [
 		'format' => 'xml',
 		'whatsin' => 'math',
 		'whatsout' => 'math',
 		'pmml',
 		'nodefaultresources',
-		'preload' => array(
+		'preload' => [
 			'LaTeX.pool',
 			'article.cls',
 			'amsmath.sty',
@@ -41,8 +41,8 @@ class MathQueryObject extends MathObject {
 			'mws.sty',
 			// '[ids]latexml.sty',
 			'texvc'
-		),
-	);
+		],
+	];
 
 	/**
 	 * @param string $texquery the TeX-like search input
@@ -65,20 +65,21 @@ class MathQueryObject extends MathObject {
 	 * @return bool
 	 */
 	public function saveToDatabase( $overwrite = false ) {
-		$fields = array(
+		$fields = [
 			'qId' => $this->queryID,
 			'oldId' => $this->getRevisionID(),
 			'fId' => $this->getAnchorID(),
 			'texQuery' => $this->getTeXQuery(),
 			'qVarCount' => $this->qVarCount,
 			'isDraft' => true,
-			'math_inputhash' => $this->getInputHash() ); // Store the inputhash just to be sure.
+			'math_inputhash' => $this->getInputHash()
+		]; // Store the inputhash just to be sure.
 		$dbw = wfGetDB( DB_MASTER );
 		// Overwrite draft queries only.
 		if ( $dbw->selectField(
-			'math_wmc_ref', 'isDraft', array( 'qId' =>  $this->queryID )
+			'math_wmc_ref', 'isDraft', [ 'qId' =>  $this->queryID ]
 		) && $overwrite ) {
-			return $dbw->update( 'math_wmc_ref', $fields, array( 'qId' => $this->queryID ) );
+			return $dbw->update( 'math_wmc_ref', $fields, [ 'qId' => $this->queryID ] );
 		} else {
 			return $dbw->insert( 'math_wmc_ref', $fields );
 		}
@@ -89,7 +90,7 @@ class MathQueryObject extends MathObject {
 		$texInputComment = preg_replace( "/[\n\r]/", "\n%", $texInput );
 		$title = Title::newFromId( $this->getRevisionID() );
 		$absUrl =
-			$title->getFullURL( array( "oldid" => $title->getLatestRevID() ) ) .
+			$title->getFullURL( [ "oldid" => $title->getLatestRevID() ] ) .
 			MathSearchHooks::generateMathAnchorString( $title->getLatestRevID(), $this->getAnchorID(), '' );
 		return <<<TeX
 \begin{topic}{{$this->getPageTitle()}-{$this->getAnchorID()}}
@@ -168,7 +169,6 @@ TeX;
 		return $this->pquery;
 	}
 
-
 	public function injectQvar() {
 		$out = "";
 		$level = 0;
@@ -219,7 +219,7 @@ TeX;
 
 	public function getLaTeXMLPMLSettings() {
 		global $wgMathDefaultLaTeXMLSetting;
-		$cSettings = array_diff( $wgMathDefaultLaTeXMLSetting, array( 'cmml' ) );
+		$cSettings = array_diff( $wgMathDefaultLaTeXMLSetting, [ 'cmml' ] );
 		$cSettings['preload'][] = 'mws.sty';
 		$cSettings['stylesheet'] = 'MWSquery.xsl';
 		return $cSettings;
@@ -228,7 +228,7 @@ TeX;
 	public function generateContentQueryString() {
 		$renderer = new MathLaTeXML( $this->getTexQuery() );
 		$renderer->setLaTeXMLSettings( $this->getLaTeXMLCMMLSettings() );
-		$renderer->setAllowedRootElements( array( 'query' ) );
+		$renderer->setAllowedRootElements( [ 'query' ] );
 		if ( $renderer->render( true ) ) {
 			$this->cquery = $renderer->getMathml();
 			return $this->cquery;

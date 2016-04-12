@@ -1,5 +1,4 @@
 <?php
-use MediaWiki\Logger\LoggerFactory;
 
 class WikidataDriver {
 
@@ -15,16 +14,15 @@ class WikidataDriver {
 		return $config->get( "MathSearchWikidataUrl" );
 	}
 
-
 	public function search( $term ) {
 		$term = urlencode( $term );
-		$request = array(
+		$request = [
 			'method' => 'GET',
 			'url'    => $this->getBackendUrl() .
 				"/w/api.php?format=json&action=wbsearchentities&uselang={$this->lang}".
 				"&language={$this->lang}&search={$term}"
-		);
-		$serviceClient = new VirtualRESTServiceClient( new MultiHttpClient( array() ) );
+		];
+		$serviceClient = new VirtualRESTServiceClient( new MultiHttpClient( [] ) );
 		$response = $serviceClient->run( $request );
 		if ( $response['code'] === 200 ) {
 			$json = json_decode( $response['body'] );
@@ -46,7 +44,7 @@ class WikidataDriver {
 	}
 
 	public function getResults( $links = false, $desc = true ) {
-		$res = array();
+		$res = [];
 		if ( $this->data ) {
 			foreach ( $this->data->search as $d ) {
 				if ( $links ) {

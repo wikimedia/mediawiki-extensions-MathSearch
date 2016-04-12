@@ -26,11 +26,11 @@ class ExportMathCache extends Maintenance {
 	const ERROR_CODE_TABLE_NAME = 1;
 	const ERROR_CODE_DB_ERROR = 2;
 	const ERROR_CODE_JSON = 3;
-	private static $allowedTables = array( 'mathoid' , 'mathlatexml' );
-	private static $inputColumns = array(
+	private static $allowedTables = [ 'mathoid' , 'mathlatexml' ];
+	private static $inputColumns = [
 		'mathoid' => 'math_input' ,
 		'mathlatexml' => 'math_inputtex'
-	);
+	];
 
 	public function __construct() {
 		parent::__construct();
@@ -56,18 +56,19 @@ class ExportMathCache extends Maintenance {
 	 * @return bool|ResultWrapper
 	 */
 	private static function getMathTagsFromDatabase( $table , $offset , $length , $sort ) {
-		$out = array();
+		$out = [];
 		$dbr = wfGetDB( DB_SLAVE );
 		$inputColumn = self::$inputColumns[ $table ];
-		$options = array(
+		$options = [
 			'OFFSET'   => $offset,
-			'LIMIT'    => $length );
+			'LIMIT'    => $length
+		];
 		if ( $sort === true ) {
 			$options['ORDER BY'] = $inputColumn;
 		}
 		$res =  $dbr->select(
 			$table,
-			array( 'math_inputhash', $inputColumn ),
+			[ 'math_inputhash', $inputColumn ],
 			'',
 			__METHOD__,
 			$options );
@@ -75,10 +76,11 @@ class ExportMathCache extends Maintenance {
 	 }
 		// Convert result wrapper to array
 		foreach ( $res as $row ){
-			$out[] = array(
+			$out[] = [
 				// the binary encoded input-hash is no valid json output
 				'inputhash' => MathObject::hash2md5( $row->math_inputhash ),
-				'input'     => $row->$inputColumn );
+				'input'     => $row->$inputColumn
+			];
 		}
 		return $out;
 	}

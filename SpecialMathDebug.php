@@ -97,7 +97,7 @@ class SpecialMathDebug extends SpecialPage {
 				$stringA = $renderer->render( true );
 				$wgMathLaTeXMLUrl = $parserB;
 				$stringB = $renderer->render( true );
-				$diff = new Diff( array( $stringA ), array( $stringB ) );
+				$diff = new Diff( [ $stringA ], [ $stringB ] );
 				if ( $diff->isEmpty() ) {
 					$out->addWikiText( 'Output is identical' );
 				} else {
@@ -154,12 +154,12 @@ class SpecialMathDebug extends SpecialPage {
 
 		$out = $this->getOutput();
 		$out->setArticleBodyOnly( true );
-		$parserTests = array();
+		$parserTests = [];
 		foreach (
 			array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $input
 		) {
-			$output = MathRenderer::renderMath( $input, array(), 'png' );
-			$parserTests[]= array( (string) $input , $output );
+			$output = MathRenderer::renderMath( $input, [], 'png' );
+			$parserTests[]= [ (string) $input , $output ];
 		}
 		$out->addHTML( serialize( $parserTests ) );
 	}
@@ -194,7 +194,7 @@ class SpecialMathDebug extends SpecialPage {
 
 	private static function render( $t, $mode, $purge = true ) {
 		$modeInt= (int) substr( $mode, 0, 1 );
-		$renderer = MathRenderer::getRenderer( $t, array(), $modeInt );
+		$renderer = MathRenderer::getRenderer( $t, [], $modeInt );
 		$renderer->setPurge( $purge );
 		$renderer->render();
 		$fragment = $renderer->getHtmlOutput();
@@ -214,7 +214,7 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	private function getTexvcTex( $tex ) {
-		$renderer = MathRenderer::getRenderer( $tex, array(), 'source' );
+		$renderer = MathRenderer::getRenderer( $tex, [], 'source' );
 		$renderer->checkTex();
 		return $renderer->getTex();
 	}

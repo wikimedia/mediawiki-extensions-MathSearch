@@ -7,7 +7,7 @@ class MathIdGenerator {
 	private $wikiText;
 	private $mathTags;
 	private $revisionId;
-	private $contentAccessStats = array();
+	private $contentAccessStats = [];
 	private $format = "math.%d.%d";
 	private $useCustomIds = false;
 	private $keys;
@@ -45,7 +45,7 @@ class MathIdGenerator {
 		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
 		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
 		$this->wikiText =
-			Parser::extractTagsAndParams( array( 'math' ), $wikiText, $this->mathTags );
+			Parser::extractTagsAndParams( [ 'math' ], $wikiText, $this->mathTags );
 		$this->revisionId = $revisionId;
 	}
 
@@ -62,7 +62,7 @@ class MathIdGenerator {
 	}
 
 	public function formatIds( $mathTags ) {
-		return array_map( array( $this, 'parserKey2fId' ), array_keys( $mathTags ) );
+		return array_map( [ $this, 'parserKey2fId' ], array_keys( $mathTags ) );
 	}
 
 	public function parserKey2fId( $key ) {
@@ -87,12 +87,12 @@ class MathIdGenerator {
 
 	public function getContentIdMap() {
 		if ( !$this->contentIdMap ) {
-			$this->contentIdMap = array();
+			$this->contentIdMap = [];
 			foreach ( $this->mathTags as $key => $tag ) {
 				if ( !array_key_exists( $tag[MathIdGenerator::CONTENT_POS],
 						$this->contentIdMap )
 				) {
-					$this->contentIdMap[$tag[MathIdGenerator::CONTENT_POS]] = array();
+					$this->contentIdMap[$tag[MathIdGenerator::CONTENT_POS]] = [];
 				}
 				$this->contentIdMap[$tag[MathIdGenerator::CONTENT_POS]][] =
 					$this->parserKey2fId( $key );

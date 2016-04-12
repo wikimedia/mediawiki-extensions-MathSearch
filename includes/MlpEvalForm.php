@@ -16,7 +16,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 	public function __construct( SpecialMlpEval $specialPage ) {
 		$this->eval = $specialPage;
 		$this->step = $specialPage->getStep();
-		$formDescriptor = array();
+		$formDescriptor = [];
 		$this->addControls( $formDescriptor );
 		$this->addOptions( $formDescriptor );
 		parent::__construct( $formDescriptor, $specialPage->getContext() );
@@ -32,153 +32,153 @@ class MlpEvalForm extends OOUIHTMLForm {
 	private function addControls( &$formDescriptor ) {
 		switch ( $this->step ){
 			case SpecialMlpEval::STEP_PAGE:
-				$formDescriptor['1-page'] = array(
+				$formDescriptor['1-page'] = [
 					'class'         => 'HTMLTitleTextField',
 					'default'       => $this->eval->getRandomPage()->getText()
-				);
+				];
 				break;
 			case SpecialMlpEval::STEP_FORMULA:
-				$formDescriptor['2-content'] = array(
+				$formDescriptor['2-content'] = [
 						'type'    => 'radio',
 						'default' => 1,
-				);
-				$formDescriptor['2-domain'] = array(
+				];
+				$formDescriptor['2-domain'] = [
 						'type'    => 'radio',
 						'default' => 1,
-				);
+				];
 				break;
 			case SpecialMlpEval::STEP_TEX:
-				$formDescriptor['3-skip'] = array(
+				$formDescriptor['3-skip'] = [
 						'type' => 'submit',
 						'value' => 'Skip step.'
-				);
-				$formDescriptor['3-pretty'] = array(
+				];
+				$formDescriptor['3-pretty'] = [
 						'type'    => 'radio',
 						'default' => 3,
 						'disabled'=>!$this->eval->isTexInputChanged()
-				);
-				$formDescriptor['3-assessment'] = array(
+				];
+				$formDescriptor['3-assessment'] = [
 						'type'    => 'radio',
 						'default' => 4,
-				);
-				$formDescriptor['3-problems'] = array(
+				];
+				$formDescriptor['3-problems'] = [
 						'type'    => 'multiselect',
-				);
-				$formDescriptor['3-suggestion'] = array(
+				];
+				$formDescriptor['3-suggestion'] = [
 						'type'    => 'text',
 						'required'=>false,
-				);
+				];
 				break;
 			case SpecialMlpEval::STEP_RENDERING:
 				$subStep = $this->eval->getSubStep();
 				if ( $subStep == '4' ) {
-					$formDescriptor['4-best'] = array(
+					$formDescriptor['4-best'] = [
 							'type'    => 'radio',
-							'options' => array(
+							'options' => [
 									$this->eval->getMathMLRenderingAsHtmlFragment() => 'mathml',
 									$this->eval->getSvgRenderingAsHtmlFragment()    => 'svg',
 									$this->eval->getPngRenderingAsHtmlFragment()    => 'png'
-							),
+							],
 							'default' => 'mathml'
-					);
+					];
 				} else {
-					$formDescriptor['4-size'] = array(
+					$formDescriptor['4-size'] = [
 							'type'    => 'radio',
 							'default' => 1
-					);
-					$formDescriptor['4-spacing'] = array(
+					];
+					$formDescriptor['4-spacing'] = [
 							'type'    => 'radio',
 							'default' => 1
-					);
-					$formDescriptor['4-integration'] = array(
+					];
+					$formDescriptor['4-integration'] = [
 							'type'    => 'radio',
 							'default' => 1
-					);
-					$formDescriptor['4-font'] = array(
+					];
+					$formDescriptor['4-font'] = [
 							'type'    => 'radio',
 							'default' => 1
-					);
-					$formDescriptor['4-absolute'] = array(
+					];
+					$formDescriptor['4-absolute'] = [
 								'type'    => 'radio',
 								'default' => 1
-						);
+					];
 				}
 				break;
 			case SpecialMlpEval::STEP_IDENTIFIERS:
-				$options = array();
+				$options = [];
 				// TODO: defaults currently do not work because request->wasPosted() is set to true.
-				$default = array();
+				$default = [];
 				foreach ( $this->eval->getIdentifiers() as $id ) {
-					$rendered = MathRenderer::renderMath( $id, array(), 'mathml' );
+					$rendered = MathRenderer::renderMath( $id, [], 'mathml' );
 					$options[$rendered] = $id;
 					$default[] = $id;
 				}
-				$formDescriptor['5-identifiers'] = array(
+				$formDescriptor['5-identifiers'] = [
 						'type'    => 'multiselect',
 						'options' => $options,
 						'default' => $default,
 						// 'invert'=> true,
-				);
-				$formDescriptor['5-missing'] = array(
+				];
+				$formDescriptor['5-missing'] = [
 						'type' => 'textarea',
 						'rows' => 3, # Display height of field
 						// 'cols' => 30 # Display width of field
-				);
+				];
 				break;
 			case SpecialMlpEval::STEP_DEFINITIONS:
 				foreach ( $this->eval->getIdentifiers() as $key => $id ) {
-					$options =array();
-					$formDescriptor["6-separator-$key"] = array(
+					$options =[];
+					$formDescriptor["6-separator-$key"] = [
 						'type'    => 'info',
 						'default' => '<h3>' .
 							wfMessage( 'math-lp-6-separator-message', $id )->parseAsBlock() . '</h3>',
 						'raw'     => true
-					);
+					];
 					$rels = $this->eval->getRelations( $id );
 					foreach ( $rels as $rel ){
 						$options[$rel] = $rel;
 					}
 					$options['other'] = 'other';
 					if ( count( $rels ) ) {
-						$formDescriptor["6-id-$key"] = array(
+						$formDescriptor["6-id-$key"] = [
 								'label' => "Select definitions for $id",
 								'type'      => 'multiselect',
 								'options'   => $options,
 								// 'raw' => true
-						);
+						];
 					}
-					$formDescriptor["6-id-$key-other"] = array(
+					$formDescriptor["6-id-$key-other"] = [
 							'label' => "Other for $id",
 							'type'      => 'text'
-					);
+					];
 				}
 				$srt = $this->eval->getSpeechRuleText();
-				$formDescriptor["6-srt"] = array(
+				$formDescriptor["6-srt"] = [
 					'type'    => 'info',
 					'default' => "<pre>$srt</pre>",
 					'raw'     => true
-				);
-				$formDescriptor['6-srt-assessment'] = array(
+				];
+				$formDescriptor['6-srt-assessment'] = [
 					'type'    => 'radio',
 					'default' => 2,
-				);
-				$formDescriptor['6-srt-suggestion'] = array(
+				];
+				$formDescriptor['6-srt-suggestion'] = [
 					'type'     => 'text',
 					'required' => false,
-				);
+				];
 				break;
 			case SpecialMlpEval::STEP_FINISHED:
-				$formDescriptor['feedback'] = array(
+				$formDescriptor['feedback'] = [
 						'type' => 'text',
-				);
+				];
 				break;
 		}
-		$formDescriptor['submit-info'] = array(
+		$formDescriptor['submit-info'] = [
 			'type' => 'info',
 			// 'label-message' => 'math-lp-submit-info-label',
 			'default' => wfMessage( 'math-lp-submit-info' )->text(),
 			// 'raw' => true # if true, the above string won't be html-escaped.
-		);
+		];
 	}
 
 	private function addStateFields() {
@@ -211,7 +211,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 	}
 
 	private function addOptions( &$form ) {
-		static $elements = array( 'label','help' );
+		static $elements = [ 'label','help' ];
 		foreach ( $form as $key => $control ) {
 			foreach ( $elements as $element ){
 				$msg = "math-lp-$key-$element";
@@ -220,7 +220,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 				}
 			}
 			if ( wfMessage( "math-lp-$key-option-1" )->exists() ){
-				$options = array();
+				$options = [];
 				for ( $i=1;$i<20;$i++ ){
 					$msg = "math-lp-$key-option-$i";
 					if ( wfMessage( "math-lp-$key-option-$i" )->exists() ) {
@@ -239,7 +239,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 	 * @param $key
 	 */
 	private function saveSubstepField( $key ) {
-		$substeps = array( '4','4a','4b','4c' );
+		$substeps = [ '4','4a','4b','4c' ];
 		foreach ( $substeps as $substep ){
 			$val = $this->getRequest()->getVal( "4-$key-$substep" );
 			if ( $val ){

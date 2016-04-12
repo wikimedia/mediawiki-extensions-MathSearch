@@ -16,20 +16,20 @@ abstract class MathEngineRest {
 	protected $query;
 	protected $type = "mws";
 	protected $size = false;
-	protected $resultSet = array();
-	protected $relevanceMap = array();
+	protected $resultSet = [];
+	protected $relevanceMap = [];
 	/** @type string */
 	protected $backendUrl = "http://localhost:9090";
 
 	protected static function doPost( $url, $postData ) {
-		$res = Http::post( $url, array( "postData" => $postData, "timeout" => 60 ) );
+		$res = Http::post( $url, [ "postData" => $postData, "timeout" => 60 ] );
 		if ( $res === false ) {
 			if ( function_exists( 'curl_init' ) ) {
 				$handle = curl_init();
-				$options = array(
+				$options = [
 					CURLOPT_URL => $url,
 					CURLOPT_CUSTOMREQUEST => 'POST', // GET POST PUT PATCH DELETE HEAD OPTIONS
-				);
+				];
 				// TODO: Figure out how not to write the error in a message and not in top of the output page
 				curl_setopt_array( $handle, $options );
 				$details = curl_exec( $handle );
@@ -163,15 +163,15 @@ abstract class MathEngineRest {
 		if ( $this->size == 0 ) {
 			return true;
 		}
-		$this->relevanceMap = array();
-		$this->resultSet = array();
+		$this->relevanceMap = [];
+		$this->resultSet = [];
 		$this->processMathResults( $xres );
 		if ( $this->size >= $numProcess ) {
 			ini_set( 'memory_limit', '256M' );
 			for ( $i = $numProcess; $i <= $this->size; $i += $numProcess ) {
 				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $this->postData );
 				$res =
-					Http::post( $this->backendUrl, array( "postData" => $query, "timeout" => 60 ) );
+					Http::post( $this->backendUrl, [ "postData" => $query, "timeout" => 60 ] );
 				LoggerFactory::getInstance( 'mathsearch' )->debug( 'MWS query:' . $query );
 				if ( $res == false ) {
 					LoggerFactory::getInstance(
@@ -202,9 +202,8 @@ abstract class MathEngineRest {
 
 	public function resetResults() {
 		$this->size = false;
-		$this->resultSet = array();
-		$this->relevanceMap = array();
+		$this->resultSet = [];
+		$this->relevanceMap = [];
 	}
-
 
 }

@@ -32,13 +32,13 @@ class MathObject extends MathMathML {
 		$dbr = wfGetDB( DB_SLAVE );
 		try {
 			$res = $dbr->select( 'mathpagesimilarity',
-				array(
+				[
 					'pagesimilarity_A as A',
 					'pagesimilarity_B as B',
 					'pagesimilarity_Value as V'
-				),
+				],
 				"pagesimilarity_A=$pid OR pagesimilarity_B=$pid", __METHOD__,
-				array( "ORDER BY" => 'V DESC', "LIMIT" => 10 )
+				[ "ORDER BY" => 'V DESC', "LIMIT" => 10 ]
 			);
 			foreach ( $res as $row ) {
 				if ( $row->A == $pid ) {
@@ -75,7 +75,7 @@ class MathObject extends MathMathML {
 	public static function constructformpage( $pid, $eid ) {
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->selectRow(
-			array( 'mathindex' ), self::dbIndexFieldsArray(), 'mathindex_revision_id = ' . $pid
+			[ 'mathindex' ], self::dbIndexFieldsArray(), 'mathindex_revision_id = ' . $pid
 			. ' AND mathindex_anchor= "' . $eid . '"' );
 		$o = self::constructformpagerow( $res );
 		return $o;
@@ -98,15 +98,15 @@ class MathObject extends MathMathML {
 	 */
 	private static function dbIndexFieldsArray() {
 		global $wgMathDebug;
-		$in = array(
+		$in = [
 			'mathindex_revision_id',
 			'mathindex_anchor',
 			'mathindex_inputhash'
-		);
+		];
 		if ( $wgMathDebug ) {
-			$debug_in = array(
+			$debug_in = [
 				'mathindex_timestamp'
-			);
+			];
 			$in = array_merge( $in, $debug_in );
 		}
 		return $in;
@@ -224,25 +224,25 @@ class MathObject extends MathMathML {
 		global $wgOut;
 		$dbr = wfGetDB( DB_SLAVE );
 		try {
-			$res = $dbr->select( array( "mathobservation", "mathvarstat", 'mathrevisionstat' ),
-				array(
+			$res = $dbr->select( [ "mathobservation", "mathvarstat", 'mathrevisionstat' ],
+				[
 					"mathobservation_featurename",
 					"mathobservation_featuretype",
 					'varstat_featurecount',
 					'revstat_featurecount',
 					"count(*) as localcnt"
-				),
-				array(
+				],
+				[
 					"mathobservation_inputhash" => $this->getInputHash(),
 					'varstat_featurename = mathobservation_featurename',
 					'varstat_featuretype = mathobservation_featuretype',
 					'revstat_revid'             => $this->getRevisionID(),
 					'revstat_featureid = varstat_id'
-				),
-				__METHOD__, array(
+				],
+				__METHOD__, [
 					'GROUP BY' => 'mathobservation_featurename',
 					'ORDER BY' => 'varstat_featurecount'
-				)
+				]
 			);
 		}
 		catch ( Exception $e ) {
@@ -309,16 +309,16 @@ class MathObject extends MathMathML {
 
 		$dbw->startAtomic( __METHOD__ );
 		$dbw->delete( "mathobservation",
-			array( "mathobservation_inputhash" => $this->getInputHash() ) );
+			[ "mathobservation_inputhash" => $this->getInputHash() ] );
 		LoggerFactory::getInstance(
 			'MathSearch'
 		)->warning( 'delete obervations for ' . bin2hex( $this->getInputHash() ) );
 		foreach ( $rule as $feature ) {
-			$dbw->insert( "mathobservation", array(
+			$dbw->insert( "mathobservation", [
 				"mathobservation_inputhash"   => $this->getInputHash(),
 				"mathobservation_featurename" => utf8_encode( trim( $feature[4] ) ),
 				"mathobservation_featuretype" => utf8_encode( $feature[1] ),
-			) );
+			] );
 			LoggerFactory::getInstance(
 				'MathSearch'
 			)->warning( 'insert observation for ' . bin2hex( $this->getInputHash() )
@@ -338,10 +338,10 @@ class MathObject extends MathMathML {
 			return false;
 		}
 		$identifiers = $dbr->select( 'mathidentifier',
-			array( 'noun', 'evidence' ),
-			array( 'pageTitle' => $pageName, 'identifier' => utf8_encode( $identifier ) ),
+			[ 'noun', 'evidence' ],
+			[ 'pageTitle' => $pageName, 'identifier' => utf8_encode( $identifier ) ],
 			__METHOD__,
-			array( 'ORDER BY' => 'evidence DESC', 'LIMIT' => 5 )
+			[ 'ORDER BY' => 'evidence DESC', 'LIMIT' => 5 ]
 		);
 		return $identifiers;
 
@@ -364,11 +364,11 @@ class MathObject extends MathMathML {
 	 * @return array
 	 */
 	public function getAllOccurences( $currentOnly = true ) {
-		$out = array();
+		$out = [];
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
 			'mathindex', self::dbIndexFieldsArray(),
-			array( 'mathindex_inputhash' => $this->getInputHash() )
+			[ 'mathindex_inputhash' => $this->getInputHash() ]
 		);
 
 		foreach ( $res as $row ) {
@@ -451,17 +451,17 @@ class MathObject extends MathMathML {
 
 	public function getRelations() {
 		$dbr = wfGetDB( DB_SLAVE );
-		$selection = $dbr->select( 'mathsemantics', array( 'identifier', 'evidence', 'noun' ),
-			array( 'revision_id' => $this->revisionID ), __METHOD__,
-			array( 'ORDER BY' => 'evidence desc' ) );
+		$selection = $dbr->select( 'mathsemantics', [ 'identifier', 'evidence', 'noun' ],
+			[ 'revision_id' => $this->revisionID ], __METHOD__,
+			[ 'ORDER BY' => 'evidence desc' ] );
 		if ( $selection ) {
-			$result = array();
+			$result = [];
 			foreach ( $selection as $row ) {
 				$key = $row->identifier;
 				if ( !isset( $result[$key] ) ) {
-					$result[$key] = array();
+					$result[$key] = [];
 				}
-				$result[$key][] = (object) array( 'definition' => $row->noun );
+				$result[$key][] = (object) [ 'definition' => $row->noun ];
 			}
 			return $result;
 		} else {
@@ -471,7 +471,7 @@ class MathObject extends MathMathML {
 			} else {
 				LoggerFactory::getInstance( 'MathSearch' )
 					->error( 'Error contacting mathosphere.' );
-				return array();
+				return [];
 			}
 		}
 	}

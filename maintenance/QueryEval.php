@@ -81,17 +81,17 @@ class QueryEval extends Maintenance {
 	/** @noinspection PhpExpressionResultUnusedInspection */
 	private function createTopicTex( $row ) {
 		$qId = $row->qId;
-		$row->title = str_replace( array( 'π','ő' ), array( '$\\pi$', 'ö' ), $row->title );
+		$row->title = str_replace( [ 'π','ő' ], [ '$\\pi$', 'ö' ], $row->title );
 		$tName = $row->qId. ': {\\wikiLink{' . $row->title .'}{' . $row->oldId. '}{'.$row->fId.'}}';
 		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select( 'math_wmc_freq_hits',
-			array( 'cntRun', 'cntUser' , 'links', 'minRank', 'rendering' ),
-			array( 'qId' => $qId ) );
+			[ 'cntRun', 'cntUser' , 'links', 'minRank', 'rendering' ],
+			[ 'qId' => $qId ] );
 		$mostFrequent = "\\subsection*{Most frequent results}\n \\begin{enumerate}\n";
 		foreach ( $res as $hit ) {
 			$hit->rendering = str_replace( // TODO: preg_match replaces for by f\lor
-				array( '\\or ','%','$\\begin{align}','\\end{align}$' ),
-				array( '\\lor ', '\\%','\\begin{align}','\\end{align}' ), $hit->rendering );
+				[ '\\or ','%','$\\begin{align}','\\end{align}$' ],
+				[ '\\lor ', '\\%','\\begin{align}','\\end{align}' ], $hit->rendering );
 			$mostFrequent .= "\\item {$hit->rendering} was found by {$hit->cntUser} users in ".
 				" {$hit->cntRun} runs with minimal rank of {$hit->minRank}. \n".
 				"For example in the context of the following pages: {$hit->links}\n";
@@ -105,7 +105,7 @@ class QueryEval extends Maintenance {
 			$relevance = '';
 		}
 		$individualResults='';
-		$res = $dbr->select( 'math_wmc_page_ranks', '*', array( 'qId'=>$row->qId ) );
+		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId'=>$row->qId ] );
 		foreach ( $res as $rank ) {
 			$individualResults .= $rank->runId . ': '.$rank->rank.'; ';
 		}
@@ -152,7 +152,7 @@ TEX;
 		}
 		MathSearchUtils::createEvaluationTables();
 		$this->addExtensionTable( 'math_wmc_udf_create' );
-		$this->dbu->doUpdates( array( "extensions" ) );
+		$this->dbu->doUpdates( [ "extensions" ] );
 		$dbr = wfGetDB( DB_SLAVE );
 		// runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 		// runName VARCHAR(45),

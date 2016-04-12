@@ -8,8 +8,8 @@ class MathosphereDriver {
 	private $version;
 	private $error;
 	private $success;
-	private $relations = array();
-	private $identifiers = array();
+	private $relations = [];
+	private $identifiers = [];
 
 	function __construct( $revisionId = null ) {
 		if ( $revisionId !== null ) {
@@ -102,17 +102,17 @@ class MathosphereDriver {
 
 	private function addIdentifierDefinitionTuple( $r ) {
 		if ( ! isset( $this->relations[$r->identifier] ) ){
-			$this->relations[$r->identifier] = array();
+			$this->relations[$r->identifier] = [];
 		}
 		$this->relations[$r->identifier][] = $r;
 	}
 
 	protected static function doPost( $url, $postData ) {
-		$options = array(
+		$options = [
 			"postData" => $postData,
 			"timeout"  => 60,
 			"method"   => 'POST'
-		);
+		];
 		$req = MWHttpRequest::factory( $url, $options, __METHOD__ );
 		$status = $req->execute();
 
@@ -122,7 +122,7 @@ class MathosphereDriver {
 			$errors = $status->getErrorsByType( 'error' );
 			$logger = LoggerFactory::getInstance( 'http' );
 			$logger->warning( $status->getWikiText(),
-				array( 'error' => $errors, 'caller' => __METHOD__, 'content' => $req->getContent() ) );
+				[ 'error' => $errors, 'caller' => __METHOD__, 'content' => $req->getContent() ] );
 			return false;
 		}
 	}
@@ -136,10 +136,10 @@ class MathosphereDriver {
 	}
 
 	protected function getPostData() {
-		$post = array(
+		$post = [
 			"wikitext" => $this->wikiText,
 			"title" => $this->title
-		);
+		];
 		return json_encode( $post );
 	}
 
@@ -160,8 +160,9 @@ class MathosphereDriver {
 			}
 		}
 		$logger = LoggerFactory::getInstance( 'MathSearch' );
-		$logger->warning( "Mathosphere Backend server backend does not point to mathosphere.", array(
-			'detail' => $res ) );
+		$logger->warning( "Mathosphere Backend server backend does not point to mathosphere.", [
+			'detail' => $res
+		] );
 		return false;
 	}
 

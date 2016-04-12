@@ -8,7 +8,7 @@ use MediaWiki\Logger\LoggerFactory;
  * GPLv2 license; info in main package.
  */
 class MathSearchHooks {
-	private static $idGenerators = array();
+	private static $idGenerators = [];
 	/**
 	 * LoadExtensionSchemaUpdates handler; set up math table on install/upgrade.
 	 *
@@ -81,12 +81,12 @@ class MathSearchHooks {
 			try {
 				$dbr = wfGetDB( DB_SLAVE );
 				$exists = $dbr->selectRow( 'mathindex',
-					array( 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ),
-					array(
+					[ 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ],
+					[
 						'mathindex_revision_id' => $revId,
 						'mathindex_anchor' => $eid,
 						'mathindex_inputhash' => $inputHash
-					)
+					]
 				);
 				if ( $exists ) {
 					LoggerFactory::getInstance(
@@ -174,7 +174,7 @@ class MathSearchHooks {
 		$mo->setRevisionID( $revId );
 		$mo->setID( $eid );
 		$Result = preg_replace_callback( "#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u",
-			array( $mo, 'addIdentifierTitle' ), $Result );
+			[ $mo, 'addIdentifierTitle' ], $Result );
 		return true;
 	}
 
@@ -191,10 +191,10 @@ class MathSearchHooks {
 		if ( $revId == 0 || self::setMathId( $eid, $renderer, $revId ) === false ) {
 			return true;
 		}
-		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( array(
+		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( [
 			'pid' => $revId,
 			'eid' => $eid
-		) );
+		] );
 		$Result = "<span><a href=\"$url\" id=\"$eid\" style=\"color:inherit;\">$Result</a></span>";
 		return true;
 	}
@@ -244,7 +244,7 @@ class MathSearchHooks {
 	static function generateMathAnchorString( $revId, $anchorID, $prefix = "#" ) {
 		$result = "{$prefix}math.$revId.$anchorID";
 		Hooks::run( "MathSearchGenerateAnchorString",
-			array( $revId, $anchorID, $prefix, &$result ) );
+			[ $revId, $anchorID, $prefix, &$result ] );
 		return $result;
 	}
 
@@ -259,11 +259,11 @@ class MathSearchHooks {
 			"Store index for \$$tex\$ in database with id $eid for revision $oldID." );
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->onTransactionIdle( function () use ( $oldID, $eid, $inputHash, $dbw ) {
-			$dbw->replace( 'mathindex', array( 'mathindex_revision_id', 'mathindex_anchor' ), array(
+			$dbw->replace( 'mathindex', [ 'mathindex_revision_id', 'mathindex_anchor' ], [
 				'mathindex_revision_id' => $oldID,
 				'mathindex_anchor' => $eid,
 				'mathindex_inputhash' => $inputHash
-			) );
+			] );
 		} );
 	}
 
@@ -274,7 +274,7 @@ class MathSearchHooks {
 	 * @return Boolean: true
 	 */
 	static function onParserFirstCallInit( $parser ) {
-		$parser->setHook( 'mquery', array( 'MathSearchHooks', 'mQueryTagHook' ) );
+		$parser->setHook( 'mquery', [ 'MathSearchHooks', 'mQueryTagHook' ] );
 		LoggerFactory::getInstance( 'MathSearch' )->warning( 'mquery tag registered' );
 		return true;
 	}
@@ -303,7 +303,7 @@ class MathSearchHooks {
 		$renderedMath = $renderer->getHtmlOutput();
 		$renderer->writeCache();
 
-		return array( $renderedMath, "markerType" => 'nowiki' );
+		return [ $renderedMath, "markerType" => 'nowiki' ];
 	}
 
 	static function onArticleDeleteComplete(
@@ -311,14 +311,12 @@ class MathSearchHooks {
 	) {
 		$revId = $article->getTitle()->getLatestRevID();
 		$mathEngineBaseX = new MathEngineBaseX();
-		if ( $mathEngineBaseX->update( "", array( $revId ) ) ){
+		if ( $mathEngineBaseX->update( "", [ $revId ] ) ){
 			LoggerFactory::getInstance( 'MathSearch' )->warning( "Deletion of $revId was successful." );
 		} else {
 			LoggerFactory::getInstance( 'MathSearch' )->warning( "Deletion of $revId failed." );
 		}
 	}
-
-
 
 	/**
 	 * Occurs after the save page request has been processed.
@@ -374,7 +372,7 @@ class MathSearchHooks {
 		if ( $previousRev != null ) {
 			$prevRevId = $previousRev->getId();
 			$baseXUpdater = new MathEngineBaseX();
-			$res = $baseXUpdater->update( $harvest, array( $prevRevId ) );
+			$res = $baseXUpdater->update( $harvest, [ $prevRevId ] );
 		} else {
 			$prevRevId = -1;
 			$res = false;

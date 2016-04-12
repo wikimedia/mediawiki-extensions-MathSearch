@@ -33,7 +33,7 @@ class CalculateDistances extends Maintenance {
 	 * @var DatabaseBase
 	 */
 	private $db;
-	private $pagelist = array();
+	private $pagelist = [];
 
 	/**
 	 *
@@ -53,7 +53,7 @@ class CalculateDistances extends Maintenance {
 	public function execute() {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->db = wfGetDB( DB_MASTER );
-		$this->pagelist = array();
+		$this->pagelist = [];
 		$min = $this->getArg( 0, 0 );
 		$max = $this->getArg( 1, PHP_INT_MAX );
 		$conds = "revstat_revid >= $min";
@@ -62,13 +62,13 @@ class CalculateDistances extends Maintenance {
 		}
 		if ( $this->getOption( 'page9', false ) ) {
 			$res =
-				$this->db->select( array( 'mathpage9', 'mathrevisionstat' ),
-					array( 'page_id', 'revstat_revid' ),
-					$conds . ' AND revstat_revid = page_id', __METHOD__, array( 'DISTINCT' ) );
+				$this->db->select( [ 'mathpage9', 'mathrevisionstat' ],
+					[ 'page_id', 'revstat_revid' ],
+					$conds . ' AND revstat_revid = page_id', __METHOD__, [ 'DISTINCT' ] );
 		} else {
 			$res =
 				$this->db->select( 'mathrevisionstat', 'revstat_revid', $conds, __METHOD__,
-					array( 'DISTINCT' ) );
+					[ 'DISTINCT' ] );
 		}
 		foreach ( $res as $row ) {
 			array_push( $this->pagelist, $row->pagestat_pageid );

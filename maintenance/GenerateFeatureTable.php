@@ -67,11 +67,11 @@ class GenerateFeatureTable extends Maintenance {
 			$end = $n + self::RTI_CHUNK_SIZE - 1;
 
 			$res =
-				$this->db->select( array( 'page', 'revision', 'text' ), array( 'page_id' ), array(
+				$this->db->select( [ 'page', 'revision', 'text' ], [ 'page_id' ], [
 						"page_id BETWEEN $n AND $end",
 						'page_latest = rev_id',
 						'rev_text_id = old_id'
-					), __METHOD__ );
+				], __METHOD__ );
 			$this->dbw->begin( __METHOD__ );
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
@@ -96,18 +96,18 @@ class GenerateFeatureTable extends Maintenance {
 	private function doUpdate( $pid ) {
 		// TODO: fix link id problem
 		$res =
-			$this->db->select( array( 'mathrevisionstat', 'mathvarstat' ), array(
+			$this->db->select( [ 'mathrevisionstat', 'mathvarstat' ], [
 					'revstat_revid',
 					'pagestat_featurename',
 					'pagestat_featuretype',
 					'revstat_featurecount',
 					'varstat_id',
 					'varstat_featurecount'
-				), array(
+			], [
 					'revstat_revid' => $pid,
 					'pagestat_featurename = varstat_featurename',
 					'pagestat_featuretype=varstat_featuretype'
-				), __METHOD__ );
+			], __METHOD__ );
 		foreach ( $res as $row ) {
 			$this->output( $pid . ',' . $row->varstat_id . ',' . $row->pagestat_featurecount
 						   /// $row->varstat_featurecount

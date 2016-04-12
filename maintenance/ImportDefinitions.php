@@ -67,12 +67,12 @@ class ImportDefinitions extends Maintenance {
 					if ( $title->exists() ) {
 						$revId = $title->getLatestRevID();
 						foreach ( $oJson->relations as $relation ) {
-							$dbw->insert( 'mathsemantics', array(
+							$dbw->insert( 'mathsemantics', [
 								'revision_id' => $revId,
 								'identifier'  => $relation->identifier,
 								'noun'        => $relation->definition,
 								'evidence'    => $relation->score
-							) );
+							] );
 							$this->output( "{$title->getText()}: $relation->identifier is ".
 								"$relation->definition certainty $relation->score\n" );
 						}

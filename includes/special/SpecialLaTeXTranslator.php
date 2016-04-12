@@ -18,16 +18,16 @@ class SpecialLaTeXTranslator extends SpecialPage {
 		$this->setHeaders();
 		$output = $this->getOutput();
 		$output->addWikiMsg( 'math-tex2nb-intro' );
-		$formDescriptor = array(
-			'input' => array(
+		$formDescriptor = [
+			'input' => [
 				'label-message' => 'math-tex2nb-input',
 				'class' => 'HTMLTextAreaField',
 				'default' => '\log x'
-			)
-		);
+			]
+		];
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Translate' );
-		$htmlForm->setSubmitCallback( array( $this, 'processInput' ) );
+		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
 		$htmlForm->setHeaderText( '<h2>' . wfMessage( 'math-tex2nb-header' )->toString() . '</h2>' );
 		$htmlForm->show();
 	}

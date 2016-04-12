@@ -20,7 +20,7 @@ class ContentMathWikidataHook {
 			return;
 		}
 
-		$dataTypeDefinitions['PT:contentmath'] = array(
+		$dataTypeDefinitions['PT:contentmath'] = [
 			'value-type'                 => 'string',
 			'validator-factory-callback' => function() {
 				// load validator builders
@@ -40,7 +40,7 @@ class ContentMathWikidataHook {
 			},
 			'formatter-factory-callback' => function( $format, FormatterOptions $options ) {
 				global $wgOut;
-				$styles = array( 'ext.math.desktop.styles', 'ext.math.scripts', 'ext.math.styles' );
+				$styles = [ 'ext.math.desktop.styles', 'ext.math.scripts', 'ext.math.styles' ];
 				$wgOut->addModuleStyles( $styles );
 				return new ContentMathFormatter( $format );
 			},
@@ -53,7 +53,7 @@ class ContentMathWikidataHook {
 			) {
 				return new ContentMathMLRdfBuilder();
 			},
-		);
+		];
 	}
 
 	/*
@@ -66,15 +66,15 @@ class ContentMathWikidataHook {
 			return;
 		}
 
-		$dataTypeDefinitions['PT:contentmath'] = array(
+		$dataTypeDefinitions['PT:contentmath'] = [
 			'value-type'                 => 'string',
 			'formatter-factory-callback' => function( $format, FormatterOptions $options ) {
 				global $wgOut;
-				$styles = array( 'ext.math.desktop.styles', 'ext.math.scripts', 'ext.math.styles' );
+				$styles = [ 'ext.math.desktop.styles', 'ext.math.scripts', 'ext.math.styles' ];
 				$wgOut->addModuleStyles( $styles );
 				return new ContentMathFormatter( $format );
 			},
-		);
+		];
 	}
 
 }

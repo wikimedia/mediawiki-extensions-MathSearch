@@ -12,7 +12,6 @@
 class MathoidDriverTest extends MediaWikiTestCase {
 	private static $hasMathoid;
 
-
 	public static function setUpBeforeClass() {
 		$m = new MathoidDriver();
 		self::$hasMathoid = $m->checkBackend();
@@ -35,8 +34,8 @@ class MathoidDriverTest extends MediaWikiTestCase {
 		$this->assertTrue( $m->texvcInfo() );
 		$this->assertTrue( $m->getSuccess() );
 		$this->assertEquals( '\\sin(x^{2})', $m->getChecked() );
-		$this->assertEquals( array( 'x' ), $m->getIdentifiers() );
-		$this->assertEquals( array(), $m->getRequiredPackages() );
+		$this->assertEquals( [ 'x' ], $m->getIdentifiers() );
+		$this->assertEquals( [], $m->getRequiredPackages() );
 		$this->assertEquals( 'sine left-parenthesis x squared right-parenthesis', $m->getSpeech() );
 	}
 

@@ -20,13 +20,13 @@ class SpecialMlpEval extends SpecialPage {
 	const STEP_DEFINITIONS = 6;
 	const STEP_FINISHED = 7;
 	const MAX_ATTEMPTS = 10;
-	private $subStepNames = array(
+	private $subStepNames = [
 		''   => '',
 		'4'  => '',
 		'4a' => 'PNG-',
 		'4b' => 'SVG-',
 		'4c' => 'MathML-'
-	);
+	];
 	/** @var  MathObject */
 	private $selectedMathTag;
 	/** @var int */
@@ -42,11 +42,11 @@ class SpecialMlpEval extends SpecialPage {
 	/** @var  Revision */
 	private $revision;
 	private $texInputChanged = false;
-	private $identifiers = array();
+	private $identifiers = [];
 	private $relations;
 	private $speechRuleText;
 	private $subStep = '';
-	private $renderingFields =array( 'absolute', 'best', 'size', 'spacing', 'integration', 'font' );
+	private $renderingFields = [ 'absolute', 'best', 'size', 'spacing', 'integration', 'font' ];
 
 	/**
 	 * @return boolean
@@ -160,17 +160,16 @@ class SpecialMlpEval extends SpecialPage {
 		return $this->step;
 	}
 
-
 	public function getRandomPage() {
 		try {
 			$uid = $this->getUser()->getId();
 			$dbr = wfGetDB( DB_READ );
 			$results = $dbr->selectFieldValues( 'math_review_list', 'revision_id',
 					"revision_id not in (SELECT revision_id from math_mlp where user_id = $uid )",
-					__METHOD__, array(
+					__METHOD__, [
 						'LIMIT'    => 1,
 						'ORDER BY' => 'priority desc'
-					) );
+				] );
 			if ( $results ) {
 				$this->setRevision( $results[0] );
 				return $this->revision->getTitle();
@@ -244,7 +243,7 @@ class SpecialMlpEval extends SpecialPage {
 
 	private function enableMathStyles() {
 		$out = $this->getOutput();
-		$styles = array( 'ext.math.desktop.styles', 'ext.math.scripts' );
+		$styles = [ 'ext.math.desktop.styles', 'ext.math.scripts' ];
 		if ( $this->subStep == '4b' ){
 			$styles[] ='ext.math-svg.styles';
 		} elseif( $this->subStep ){
@@ -311,7 +310,6 @@ class SpecialMlpEval extends SpecialPage {
 		return 'mathsearch';
 	}
 
-
 	private function setFId( $fId = '' ) {
 		if ( $fId == '' && $this->fId != '' ) {
 			$fId = $this->fId;
@@ -335,10 +333,10 @@ class SpecialMlpEval extends SpecialPage {
 			$results = $dbr->selectFieldValues( 'math_review_list', 'anchor',
 				"anchor not in (SELECT anchor from math_mlp where user_id = $uid ".
 				"and anchor is not NULL) and revision_id = $rid",
-				__METHOD__, array(
+				__METHOD__, [
 					'LIMIT'    => 1,
 					'ORDER BY' => 'priority desc'
-				) );
+				] );
 			if ( $results ) {
 				return $results[0];
 			}
@@ -429,7 +427,7 @@ class SpecialMlpEval extends SpecialPage {
 				$this->printMathObjectInContext();
 				$this->enableMathStyles();
 				$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
-				$this->relations = array();
+				$this->relations = [];
 				$rels = $mo->getRelations();
 				$srt = $mo->getMathMlAltText();
 				if ( !$srt ) {
@@ -440,7 +438,7 @@ class SpecialMlpEval extends SpecialPage {
 				$this->speechRuleText = $srt;
 				$wd = new WikidataDriver();
 				foreach ( $this->identifiers as $i ) {
-					$this->relations[$i] = array();
+					$this->relations[$i] = [];
 					if ( isset( $rels[$i] ) ) {
 						foreach ( $rels[$i] as $rel ) {
 							if ( preg_match( '/\[\[(.*)\]\]/', $rel->definition, $m ) ) {
@@ -461,10 +459,10 @@ class SpecialMlpEval extends SpecialPage {
 
 	private function writeLog( $message, $step = false, $revId = false ) {
 		$userId = $this->getUser()->getId();
-		$logData = array(
+		$logData = [
 			'data'   => $this->getRequest()->getValues(),
 			'header' => $this->getRequest()->getAllHeaders()
-		);
+		];
 		$json = json_encode( $logData );
 		if ( $step == false ){
 			$step = $this->step;
@@ -472,35 +470,35 @@ class SpecialMlpEval extends SpecialPage {
 		if ( !$revId ) {
 			$revId = $this->oldId;
 		}
-		$row = array(
+		$row = [
 			'user_id'     => $userId,
 			'step'        => $step,
 			'json_data'   => $json,
 			'revision_id' => $revId,
 			'anchor'      => $this->fId,
 			'comment'     => $message
-		);
+		];
 		if ( $userId == 0 ) {
 			$this->printSource( var_export( $message, true ), 'Error: No user found to store results.' );
 			return;
 		}
 		$dbw = wfGetDB( DB_WRITE );
-		$dbw->upsert( 'math_mlp', $row, array( 'user_id', 'revision_id', 'anchor', 'step' ), $row );
+		$dbw->upsert( 'math_mlp', $row, [ 'user_id', 'revision_id', 'anchor', 'step' ], $row );
 		if ( $this->fId ) {
 			$dbw->begin( __METHOD__ );
-			$cnt = $dbw->selectField( 'math_mlp', 'count( distinct user_id)', array(
+			$cnt = $dbw->selectField( 'math_mlp', 'count( distinct user_id)', [
 				'revision_id' => $revId,
 				'anchor' => $this->fId
-			) );
+			] );
 			if ( $cnt == 1 ){
-				$row = array(
+				$row = [
 						'revision_id' => $revId,
 						'anchor'      => $this->fId,
 						'priority'    => 2
-				);
-				$dbw->upsert( 'math_review_list', $row, array( 'revision_id', 'anchor' ), $row );
+				];
+				$dbw->upsert( 'math_review_list', $row, [ 'revision_id', 'anchor' ], $row );
 			} elseif( $cnt > 1 ) {
-				$dbw->delete( 'math_review_list', array( 'revision_id', 'anchor' ) );
+				$dbw->delete( 'math_review_list', [ 'revision_id', 'anchor' ] );
 			}
 			$dbw->commit( __METHOD__ );
 		}
@@ -524,7 +522,7 @@ class SpecialMlpEval extends SpecialPage {
 	private function resetFormula() {
 		$req = $this->getRequest();
 		$this->writeLog( "pgRst: User selects another formula", $req->getInt( 'oldStep' ) );
-		$valueNames = $req->getValueNames( array( 'oldId', 'wpEditToken' ) );
+		$valueNames = $req->getValueNames( [ 'oldId', 'wpEditToken' ] );
 		foreach ( $valueNames as $name ) {
 			$req->unsetVal( $name );
 		}
@@ -539,13 +537,13 @@ class SpecialMlpEval extends SpecialPage {
 			$source . '</syntaxhighlight>', $linestart );
 	}
 
-	public function getSvgRenderingAsHtmlFragment( $factor = 2, $tex = false, $options = array() ) {
+	public function getSvgRenderingAsHtmlFragment( $factor = 2, $tex = false, $options = [] ) {
 		$renderer = $this->getMathMlRenderer( $tex, $options );
 		return MathObject::getReSizedSvgLink( $renderer, $factor );
 	}
 
 	public function getMathMLRenderingAsHtmlFragment(
-			$factor = 2.5, $tex = false, $options = array()
+			$factor = 2.5, $tex = false, $options = []
 	) {
 		$renderer = $this->getMathMlRenderer( $tex, $options );
 		$largeMathML = $renderer->getMathml();
@@ -555,23 +553,22 @@ class SpecialMlpEval extends SpecialPage {
 		return $largeMathML;
 	}
 
-
-	public function getPngRenderingAsHtmlFragment( $factor = 1.75, $tex = false, $options = array() ) {
+	public function getPngRenderingAsHtmlFragment( $factor = 1.75, $tex = false, $options = [] ) {
 		$this->updateTex( $tex, $options );
 		$renderer = new MathTexvc( $tex, $options );
 		$renderer->checkTex();
 		$renderer->render();
 		$dims = getimagesizefromstring( $renderer->getPng() );
-		return Html::element( 'img', array(
+		return Html::element( 'img', [
 			'src'    => $renderer->getMathImageUrl(),
 			'width'  => $dims[0] * $factor,
 			'height' => $dims[1] * $factor
-		) );
+		] );
 	}
 
 	private function printFormula() {
 		$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
-		$this->getOutput()->addHTML( MathRenderer::renderMath( $mo->getUserInputTex(), array(),
+		$this->getOutput()->addHTML( MathRenderer::renderMath( $mo->getUserInputTex(), [],
 			'mathml' ) );
 	}
 
@@ -583,7 +580,7 @@ class SpecialMlpEval extends SpecialPage {
 
 	private function printIntro() {
 		$msg =
-			new Message( "math-lp-{$this->step}-intro", array( $this->subStepNames[$this->subStep] ) );
+			new Message( "math-lp-{$this->step}-intro", [ $this->subStepNames[$this->subStep] ] );
 		$this->getOutput()->addWikiText( $msg->text() );
 	}
 
@@ -637,7 +634,7 @@ class SpecialMlpEval extends SpecialPage {
 		$parserOutput = $wgParser->getFreshParser()->parse(
 			$hl->getWikiText(), $this->getRevisionTitle(), $popts )->getText();
 		if ( $filter ){
-			call_user_func_array( $filter, array( &$parserOutput ) );
+			call_user_func_array( $filter, [ &$parserOutput ] );
 		}
 		$out->addHTML( $parserOutput );
 		$out->addHtml( '</div></div>' );

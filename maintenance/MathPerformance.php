@@ -32,7 +32,7 @@ class MathPerformance extends Maintenance {
 	private $db;
 	private $currentHash;
 	private $time = 0.0; // microtime( true );
-	private $performance = array();
+	private $performance = [];
 	private $renderingMode = 'mathml';
 
 	public function __construct() {
@@ -75,9 +75,9 @@ class MathPerformance extends Maintenance {
 		$tex = $this->getOption( 'input', 'math_input' );
 		$hash = $this->getOption( 'hash', 'math_inputhash' );
 		$formulae = $this->getFormulae( $hash, $tex );
-		$out = array();
+		$out = [];
 		foreach ( $formulae as $formula ) {
-			$out[] = array( $hash => base64_encode( $formula->$hash ), $tex => $formula->$tex );
+			$out[] = [ $hash => base64_encode( $formula->$hash ), $tex => $formula->$tex ];
 		}
 		$output = $this->getOption( 'output', 'php://stdout' );
 		file_put_contents( $output, json_encode( $out, JSON_PRETTY_PRINT ) );
@@ -92,7 +92,7 @@ class MathPerformance extends Maintenance {
 	private function getFormulae( $hash, $tex ) {
 		$min = $this->getOption( 'min', 0 );
 		$max = $this->getOption( 'max', 0 );
-		$options = array();
+		$options = [];
 		if ( $max ) {
 			$options['LIMIT'] = $max - $min;
 			$options['OFFSET'] = $min;
@@ -111,7 +111,7 @@ class MathPerformance extends Maintenance {
 		}
 		$formulae = $this->db->select(
 			$table,
-			array( $hash, $tex ),
+			[ $hash, $tex ],
 			'',
 			__METHOD__,
 			$options
@@ -153,12 +153,12 @@ class MathPerformance extends Maintenance {
 		} else {
 			$this->performance[$category] = $delta;
 		}
-		$logData = array(
+		$logData = [
 			'math_inputhash'       => $this->currentHash,
 			'mathperformance_name' => substr( $category, 0, 10 ),
 			'mathperformance_time' => $delta,
 			'mathperformance_mode' => MathHooks::mathModeToHashKey( $this->renderingMode )
-		);
+		];
 		if ( $wgMathDebug ) {
 			$this->db->insert( 'mathperformance', $logData );
 		} else {
@@ -182,7 +182,7 @@ class MathPerformance extends Maintenance {
 	private function runTest( MathRestbaseInterface $rbi, $method = 'checkTeX', $prefix = '' ) {
 		try{
 			$this->resetTimer();
-			call_user_func( array( $rbi, $method ) );
+			call_user_func( [ $rbi, $method ] );
 			$this->time( $prefix . $method );
 			return true;
 		} catch ( Exception $e ){

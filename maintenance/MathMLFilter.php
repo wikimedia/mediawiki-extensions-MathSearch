@@ -50,7 +50,7 @@ class MathMLFilter extends DumpFilter {
 	 */
 	private static function renderMath( $match ) {
 		$formula = $match[1];
-		$renderer = MathRenderer::getRenderer( $formula, array(), 'latexml' );
+		$renderer = MathRenderer::getRenderer( $formula, [], 'latexml' );
 		$renderer->render();
 		// TODO: check if there is a Mediawiki function for that
 		$res = htmlspecialchars( $renderer->getMathml() );
@@ -69,7 +69,6 @@ class MathMLFilter extends DumpFilter {
 		return preg_replace_callback( '#&lt;math&gt;(.*?)&lt;/math&gt;#s', 'self::renderMath',
 			$pText );
 	}
-
 
 	/**
 	 * @param object $rev

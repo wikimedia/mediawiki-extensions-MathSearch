@@ -33,9 +33,9 @@ class ContentMathValidator implements ValueValidator {
 
 		// TeX string is not valid
 		return Result::newError(
-			array(
-				Error::newError( null, null, 'malformed-value', array( $checker->getLastError() ) )
-			)
+			[
+				Error::newError( null, null, 'malformed-value', [ $checker->getLastError() ] )
+			]
 		);
 	}
 

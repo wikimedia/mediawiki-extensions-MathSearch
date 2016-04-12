@@ -65,7 +65,7 @@ class FormulaInfo extends SpecialPage {
 	public function DisplayInfo( $oldID, $eid ) {
 		global $wgMathDebug;
 		$out = $this->getOutput();
-		$out->addModuleStyles( array( 'ext.mathsearch.styles' ) );
+		$out->addModuleStyles( [ 'ext.mathsearch.styles' ] );
 		$out->addWikiText( '==General==' );
 		$out->addWikiText( 'Display information for equation id:' . $eid . ' on revision:' . $oldID );
 		$revision = Revision::newFromId( $oldID );
@@ -76,10 +76,10 @@ class FormulaInfo extends SpecialPage {
 
 		$pageName = (string)$revision->getTitle();
 		$out->addWikiText( "* Page found: [[$pageName#$eid|$pageName]] (eq $eid)  ", false );
-		$link = $revision->getTitle()->getLinkURL( array(
+		$link = $revision->getTitle()->getLinkURL( [
 				'action' => 'purge',
 				'mathpurge' => 'true'
-		) );
+		] );
 		$out->addHtml( "<a href=\"$link\">(force rerendering)</a>" );
 		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $oldID, $eid );
@@ -146,7 +146,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	private static function formatBytes( $bytes, $precision = 3 ) {
-		$units = array( 'B', 'KB', 'MB', 'GB', 'TB' );
+		$units = [ 'B', 'KB', 'MB', 'GB', 'TB' ];
 
 		$bytes = max( $bytes, 0 );
 		$pow = floor( ( $bytes ? log( $bytes ) : 0 ) / log( 1024 ) );
@@ -201,7 +201,7 @@ class FormulaInfo extends SpecialPage {
 		$names = MathHooks::getMathNames();
 		$name = $names[$mode];
 		$out->addWikiText( "=== $name rendering === " );
-		$renderer = MathRenderer::getRenderer( $tex, array(), $mode );
+		$renderer = MathRenderer::getRenderer( $tex, [], $mode );
 		if ( $this->purge ) {
 			$renderer->render( true );
 		} elseif ( $mode == 'mathml' || ! $renderer->isInDatabase() ) {
@@ -216,7 +216,7 @@ class FormulaInfo extends SpecialPage {
 			$out->addWikiText( 'MathML (' . self::getlengh( $renderer->getMathml() ) . ') :', false );
 			$imgUrl = $wgExtensionAssetsPath . "/MathSearch/images/math_search_logo.png";
 			$mathSearchImg = Html::element(
-				'img', array( 'src' => $imgUrl, 'width' => 15, 'height' => 15 )
+				'img', [ 'src' => $imgUrl, 'width' => 15, 'height' => 15 ]
 			);
 			$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $tex ) .
 				'&searchx=Search">' . $mathSearchImg . '</a>' );
