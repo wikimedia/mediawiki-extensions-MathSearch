@@ -23,6 +23,7 @@
 	"math-lp-1-page-label": "Título do artigo",
 	"math-lp-1-page-help": "O campo de entrada de abaixo está preenchido cun artigo escollido aleatoriamente que contén matemáticas. Ten tres opcións\n#Premer \"continuar\" para tratar este artigo.\n#Teclear o título dun artigo que queira avaliar e premer \"continuar\"\n#Premer \"seleccionar aleatoriamente outro artigo\" para recargar esta páxina e obter un artigo novo seleccionado aleatoriamente.",
 	"math-lp-2-head": "Paso 2: Clasificar a expresión matemática",
+	"math-lp-2-intro": "No que segue, verá unha expresión matemática que foi engadida usando as etiquetas matemáticas de MediaWiki e é tratada como unha expresión matemática polo software MediaWiki.\n\nNeste paso vostede ten que clasificar o tipo e dominio da expresión porque a non se usa a notación matemática matemáticas puras.\n\nSe a expresión que ve non é unha expresión matemática complexa, recomendámoslle que envíe o formulario premendo en ''{{int:math-lp-new-formula}}''.\n\nDebaixo verá unha caixa gris que é expansible. A expresión que está sendo avaliada móstrase na cabeceira. Se preme en \"Expandir\", verá un extracto do artigo do que se obtivo a expresión. Para ver todo o artigo pode abrir a ligazón na parte superior da páxina nunha xanela nova.",
 	"math-lp-2-content-label": "Seleccione o tipo de expresión máis axeitado",
 	"math-lp-2-content-option-1": "expresión matemática complexa (a²+b²=c²)",
 	"math-lp-2-content-option-2": "número só (3.14)",
