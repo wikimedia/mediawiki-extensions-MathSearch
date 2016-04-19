@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /**
  *
@@ -25,7 +26,6 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
  * Class UpdateMath
  */
 class UpdateMath extends Maintenance {
-	const RTI_CHUNK_SIZE = 10000;
 	public $purge = false;
 	/** @var boolean */
 	private $verbose;
@@ -38,23 +38,31 @@ class UpdateMath extends Maintenance {
 	private $time = 0.0; // microtime( true );
 	private $performance = [];
 	private $renderingMode = 'latexml';
+	private $chunkSize = 1000;
 
 	/**
 	 *
 	 */
 	public function __construct() {
-		// @codingStandardsIgnoreStart
 		parent::__construct();
 		$this->mDescription = 'Updates the index of Mathematical formulae.';
-		$this->addOption( 'purge', "If set all formulae are rendered again without using caches. (Very time consuming!)", false, false, "f" );
-		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false );
-		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
-		$this->addOption( 'verbose', "If set output for successful rendering will produced",false,false,'v' );
+		$this->addOption( 'purge',
+			"If set all formulae are rendered again without using caches. (Very time consuming!)",
+			false, false, "f" );
+		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min",
+			false );
+		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max",
+			false );
+		$this->addOption( 'verbose', "If set output for successful rendering will produced", false,
+			false, 'v' );
 		$this->addOption( 'SVG', "If set SVG images will be produced", false, false );
-		$this->addOption( 'hooks', "If set hooks will be skipped, but index will be updated.", false, false );
+		$this->addOption( 'hooks', "If set hooks will be skipped, but index will be updated.",
+			false, false );
 		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
-		$this->addOption( 'mode' , 'Rendering mode to be used (png, mathml, latexml)',false,true,'m');
-		// @codingStandardsIgnoreEnd
+		$this->addOption( 'mode', 'Rendering mode to be used (png, mathml, latexml)', false, true,
+			'm' );
+		$this->addOption( 'chunk-size',
+			'Determines how many pages are updated in one database transaction.', false, true );
 	}
 
 	/**
@@ -109,7 +117,7 @@ class UpdateMath extends Maintenance {
 			if ( $n ) {
 				$this->output( $n . " of $count \n" );
 			}
-			$end = min( $n + self::RTI_CHUNK_SIZE - 1, $count );
+			$end = min( $n + $this->chunkSize - 1, $count );
 
 			$res = $this->db->select( [ 'page', 'revision', 'text' ],
 					[ 'page_id', 'page_namespace', 'page_title', 'old_flags', 'old_text', 'rev_id' ],
@@ -129,7 +137,7 @@ class UpdateMath extends Maintenance {
 			echo " committed in " . ( microtime( true ) -$start ) . "s\n\n";
 			var_dump( $this->performance );
 			// echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
-			$n += self::RTI_CHUNK_SIZE;
+			$n += $this->chunkSize;
 		}
 		$this->output( "Updated {$fCount} formulae!\n" );
 	}
@@ -153,7 +161,6 @@ class UpdateMath extends Maintenance {
 		$matches = count( $math );
 		if ( $matches ) {
 			echo ( "\t processing $matches math fields for {$pTitle} page\n" );
-			MathSearchHooks::setNextID( 0 );
 			foreach ( $math as $formula ) {
 				$this->time = microtime( true );
 				$renderer = MathRenderer::getRenderer( $formula[1], $formula[2], $this->renderingMode );
@@ -191,7 +198,6 @@ class UpdateMath extends Maintenance {
 				}
 				$renderer->writeCache( $this->dbw );
 				$this->time( "write Cache" );
-				MathSearchHooks::setNextID( $eId, $renderer, $pid );
 				if ( !$this->getOption( "hooks", false ) ) {
 					Hooks::run( 'MathFormulaPostRender', [ $parser, &$renderer, &$notused ] );
 					$this->time( "hooks" );
@@ -221,6 +227,7 @@ class UpdateMath extends Maintenance {
 		$this->purge = $this->getOption( "purge", false );
 		$this->verbose = $this->getOption( "verbose", false );
 		$this->renderingMode = $this->getOption( "mode", 'latexml' );
+		$this->chunkSize = $this->getOption( 'chunk-size', $this->chunkSize );
 		$this->db = wfGetDB( DB_MASTER );
 		$wgMathValidModes[] = $this->renderingMode;
 		$this->output( "Loaded.\n" );
