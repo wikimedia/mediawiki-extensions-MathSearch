@@ -63,6 +63,7 @@ class MathObject extends MathMathML {
 		$instance->setSvg( $renderer->getSvg() );
 		$instance->setMode( $renderer->getMode() );
 		$instance->setMathStyle( $renderer->getMathStyle() );
+		$instance->setRestbaseInterface( $renderer->rbi );
 		return $instance;
 	}
 
@@ -551,5 +552,9 @@ class MathObject extends MathMathML {
 		$fbi = preg_replace( "/width: (.*?)(ex|px|em)/", "width: $width", $fbi );
 		$fbi = preg_replace( "/height: (.*?)(ex|px|em)/", "height: $height", $fbi );
 		return $fbi;
+	}
+
+	public function getRbi() {
+		return $this->rbi;
 	}
 }

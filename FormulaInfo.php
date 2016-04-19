@@ -176,7 +176,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasPngSupport( $mode ) {
-		if ( $mode === 'png' ) {
+		if ( $mode === 'png' or $mode === 'mathml' ) {
 			return true;
 		} else {
 			return false;
@@ -237,9 +237,19 @@ class FormulaInfo extends SpecialPage {
 			$out->addHtml( "<br />\n" );
 		}
 		if ( self::hasPngSupport( $mode ) ) {
-			$out->addWikiText( 'PNG (' . self::getlengh( $renderer->getPng() ) . ') :', false );
-			$out->addHtml( $renderer->getHtmlOutput() );
-			$out->addHtml( "<br />\n" );
+			if ( method_exists( $renderer, 'getPng' ) ) {
+				$out->addWikiText( 'PNG (' . self::getlengh( $renderer->getPng() ) . ') :', false );
+				$out->addHtml( $renderer->getHtmlOutput() );
+				$out->addHtml( "<br />\n" );
+			} else {
+				$renderer = MathObject::cloneFromRenderer( $renderer );
+				$rbi = $renderer->getRbi();
+				$pngUrl = preg_replace( '#/svg/#', '/png/', $rbi->getFullSvgUrl() );
+				$png = file_get_contents( $pngUrl );
+				$out->addWikiText( 'PNG (' . self::getlengh( $png ) . ') :', false );
+				$out->addHtml( "<img src='$pngUrl' />" );
+				$out->addHtml( "<br />\n" );
+			}
 		}
 		$renderer->writeCache();
 	}
