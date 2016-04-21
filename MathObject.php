@@ -421,6 +421,10 @@ class MathObject extends MathMathML {
 	}
 
 	public function getPng() {
+		if ( $this->mode == 'mathml' ){
+			$pngUrl = preg_replace( '#/svg/#', '/png/', $this->getRbi()->getFullSvgUrl() );
+			return file_get_contents( $pngUrl );
+		}
 		$texvc = MathTexvc::newFromMd5( $this->getMd5() );
 		$texvc->readFromDatabase();
 		return $texvc->getPng();
