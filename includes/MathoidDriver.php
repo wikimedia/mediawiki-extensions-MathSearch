@@ -7,6 +7,7 @@ class MathoidDriver {
 	private $identifiers;
 	private $requiredPackages;
 	private $q;
+	private $type;
 	private $version;
 	private $error;
 
@@ -28,8 +29,12 @@ class MathoidDriver {
 	 * MathoidDriver constructor.
 	 * @param $q
 	 */
-	function __construct( $q = '' ) {
+	function __construct( $q = '', $type = 'tex' ) {
 		$this->q = $q;
+		if ( $type === 'pmml' ) {
+			$type = 'mml';
+		}
+		$this->type = $type;
 	}
 
 	/**
@@ -125,7 +130,8 @@ class MathoidDriver {
 
 	protected function getPostData() {
 		$post = [
-			"q" => $this->q
+			'q' => $this->q,
+			'type' => $this->type
 		];
 		return wfArrayToCgi( $post );
 	}
@@ -137,9 +143,10 @@ class MathoidDriver {
 			if ( $res && json_last_error() === JSON_ERROR_NONE ) {
 				if ( isset( $res->name ) && $res->name === 'mathoid' ) {
 					$this->version = $res->version;
-					if ( preg_match( "/(0\\.2\\.(9|10)|1.0.0.*)/", $this->version ) ) {
+					if ( preg_match( "/(0\\.2\\.(9|10)|1.0.0.*|0.6.1)/", $this->version ) ) {
 						return true;
 					} else {
+						echo $this->version;
 						return false;
 					}
 				}
@@ -153,6 +160,22 @@ class MathoidDriver {
 	}
 
 	public function getSpeech() {
-		return $this->doPost( $this->getBackendUrl().'/speech', $this->getPostData() );
+		return $this->getFormat( 'speech' );
+	}
+
+	public function getSvg() {
+		return $this->getFormat( 'svg' );
+	}
+
+	public function getPng() {
+		return $this->getFormat( 'png' );
+	}
+
+	/**
+	 * @param $format
+	 * @return bool|string
+	 */
+	private function getFormat( $format ) {
+		return $this->doPost( $this->getBackendUrl() . '/' . $format, $this->getPostData() );
 	}
 }

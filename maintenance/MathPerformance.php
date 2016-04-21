@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /**
  *
@@ -18,6 +19,8 @@
  *
  * @ingroup Maintenance
  */
+
+use MediaWiki\Logger\LoggerFactory;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
@@ -66,6 +69,8 @@ class MathPerformance extends Maintenance {
 			case "benchmark":
 				$this->actionBenchmark();
 				break;
+			case 'png':
+				$this->actionPng();
 		}
 		$shareString = $this->getArg( 2, '' );
 		$this->vPrint( "{$shareString}Done." );
@@ -192,6 +197,95 @@ class MathPerformance extends Maintenance {
 			return false;
 		}
 	}
+
+	private function actionPng() {
+		$tex = $this->getOption( 'input', 'math_input' );
+		$hash = $this->getOption( 'hash', 'math_inputhash' );
+		$folder = $this->getOption( 'output', '/tmp/math' );
+		$formulae = $this->getFormulae( $hash, $tex );
+		foreach ( $formulae as $formula ) {
+			$this->currentHash = $formula->$hash;
+			self::processImage( $folder, $formula->$tex );
+		}
+	}
+	/**
+	 * @param $folder
+	 * @param $input
+	 */
+	private static function processImage( $folder, $input ) {
+		$log =  LoggerFactory::getInstance( 'MathSearch-maint' );
+		$texvc = new MathTexvc( $input );
+		$texvc->render();
+		$texvc->writeCache();
+		$mathML = new MathMathML( $input );
+		$md5 = $mathML->getMd5();
+		$path = self::makePath( $folder, $md5 );
+		$log->debug( 'process image', [
+			'tex' => $input,
+			'path' => $path
+		] );
+		file_put_contents( "$path/old.png", $texvc->getPng() );
+
+		// Mathoid
+		if ( ! $mathML->render() ) {
+			$log->error( 'MathML rendering returned false', [
+				'mathml' => $mathML,
+				'tex' => $input,
+				'path' => $path
+			] );
+			return;
+		}
+		$o = MathObject::cloneFromRenderer( $mathML );
+		file_put_contents( "$path/new.png", $o->getPng() );
+		file_put_contents( "$path/new.mml", $o->getMathml() );
+		file_put_contents( "$path/new.svg", $o->getSvg() );
+		file_put_contents( "$path/tex.tex", $o->getUserInputTex() );
+
+		// Mathoid eating it's MathML
+		$mathML = new MathMathML( $o->getMathml(), [ 'type' => 'pmml' ] );
+		if ( ! $mathML->render() ) {
+			$log->error( 'MathML rendering returned false', [
+				'mathml' => $mathML,
+				'tex' => $input,
+				'path' => $path
+				] );
+			return;
+		}
+
+		$o = MathObject::cloneFromRenderer( $mathML );
+		file_put_contents( "$path/new-mathml.png", $o->getPng() );
+		file_put_contents( "$path/new-mathml.svg", $o->getSvg( 'force' ) );
+
+		// LaTeXML */
+		$mathML = new MathLaTeXML( $input );
+		if ( ! $mathML->readFromDatabase() ) {
+			$log->error( 'LaTeXML rendering returned false', [
+				'mathml' => $mathML,
+				'tex' => $input,
+				'path' => $path
+			] );
+			return;
+		}
+
+		$o = MathObject::cloneFromRenderer( $mathML );
+		file_put_contents( "$path/new-latexml.png", $o->getPng() );
+		file_put_contents( "$path/new-latexml.svg", $o->getSvg( 'force' ) );
+		file_put_contents( "$path/new-latexml.mml", $mathML->getMathml() );
+
+	}
+
+	/**
+	 * @param $folder
+	 * @param $md5
+	 * @return string
+	 */
+	private static function makePath( $folder, $md5 ) {
+		$subPath = join( '/', str_split( substr( $md5, 0, 3 ) ) );
+		$path = $folder . '/' . $subPath . '/' . $md5;
+		mkdir( $path, '0755', true );
+		return $path;
+	}
+
 }
 
 $maintClass = "MathPerformance";

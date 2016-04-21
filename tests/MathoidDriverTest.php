@@ -45,4 +45,10 @@ class MathoidDriverTest extends MediaWikiTestCase {
 		$this->assertFalse( $m->getSuccess() );
 		$this->assertObjectHasAttribute( 'message', $m->getError() );
 	}
+
+	public function testFormats() {
+		$m = new MathoidDriver( '\\sin(x^2)' );
+		$this->assertContains( '<svg', $m->getSvg() );
+		$this->assertGreaterThan( count( $m->getPng() ), 100 );
+	}
 }
