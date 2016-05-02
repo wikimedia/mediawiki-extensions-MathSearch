@@ -143,13 +143,21 @@ class SpecialMathDebug extends SpecialPage {
 		}
 	}
 
+	/**
+	 * Generates test cases for texvcjs
+	 *
+	 * @param int $offset
+	 * @param int $length
+	 * @param string $page
+	 * @param bool $purge
+	 * @return bool
+	 */
 	public function generateParserTests(
 		$offset = 0, $length = 10, $page = 'Testpage' , $purge = true
 	) {
 		$res = $this->getRequest()->response();
-		$res->header( 'Content-Type: application/octet-stream' );
-		$res->header( 'charset=utf-8' );
-		$res->header( 'Content-Disposition: attachment;filename=ParserTest.data' );
+		$res->header( 'Content-Type: application/json' );
+		$res->header( 'Content-Disposition: attachment;filename=ParserTest.json' );
 
 		$out = $this->getOutput();
 		$out->setArticleBodyOnly( true );
@@ -157,10 +165,12 @@ class SpecialMathDebug extends SpecialPage {
 		foreach (
 			array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $input
 		) {
-			$output = MathRenderer::renderMath( $input, [], 'png' );
-			$parserTests[]= [ (string) $input , $output ];
+			$m = new MathMathML( $input );
+			$m->checkTeX();
+			$parserTests[] = [ 'id' => $key, 'input' => (string) $input, 'texvcjs' => $m->getTex() ];
 		}
-		$out->addHTML( serialize( $parserTests ) );
+		$out->addHTML( json_encode( $parserTests ) );
+		return true;
 	}
 
 	function generateLaTeXMLOutput( $offset = 0, $length = 10, $page = 'Testpage' ) {
@@ -216,7 +226,7 @@ class SpecialMathDebug extends SpecialPage {
 
 	private function getTexvcTex( $tex ) {
 		$renderer = MathRenderer::getRenderer( $tex, [], 'source' );
-		$renderer->checkTex();
+		$renderer->checkTeX();
 		return $renderer->getTex();
 	}
 

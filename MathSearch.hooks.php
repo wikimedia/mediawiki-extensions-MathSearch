@@ -351,15 +351,14 @@ class MathSearchHooks {
 			return true;
 		}
 		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
-		$mathTags= $idGenerator->getMathTags();
+		$mathTags = $idGenerator->getMathTags();
 		$harvest = "";
 		if ( $mathTags ) {
 			$dw = new MwsDumpWriter();
 			foreach ( $mathTags as $tag ) {
 				$id = null;
-				$tagContent = $tag[1];
-				$attributes = $tag[2];
-				// $fullElement = $tag[3];
+				$tagContent = $tag[ MathIdGenerator::CONTENT_POS ];
+				$attributes = $tag[ MathIdGenerator::ATTRIB_POS ];
 				$renderer = MathRenderer::getRenderer( $tagContent, $attributes, 'latexml' );
 				$renderer->render();
 				self::setMathId( $id, $renderer, $revId );
