@@ -206,7 +206,9 @@ class SpecialMathDebug extends SpecialPage {
 		$title = Title::newFromText( $titleString );
 		if ( $title->exists() ) {
 			$idGenerator = MathIdGenerator::newFromTitle( $title );
-			return $idGenerator->getMathTags();
+			$tags = $idGenerator->getMathTags();
+			$keys = $idGenerator->formatIds( $tags );
+			return array_combine( $keys, array_column( $tags, MathIdGenerator::CONTENT_POS ) );
 		} else {
 			return 'Page does not exist';
 		}
