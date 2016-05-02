@@ -141,7 +141,6 @@ class SpecialMathDebug extends SpecialPage {
 				$out->addHTML( self::render( $t, 'latexml', $purge ) );
 			}
 		}
-		echo $i;
 	}
 
 	public function generateParserTests(
