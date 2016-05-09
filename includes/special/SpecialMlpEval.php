@@ -246,7 +246,7 @@ class SpecialMlpEval extends SpecialPage {
 		$styles = [ 'ext.math.desktop.styles', 'ext.math.scripts' ];
 		if ( $this->subStep == '4b' ){
 			$styles[] ='ext.math-svg.styles';
-		} elseif( $this->subStep ){
+		} elseif ( $this->subStep ){
 			$styles[] ='ext.math-mathml.styles';
 		} else {
 			$styles[] = 'ext.math.styles';
@@ -497,7 +497,7 @@ class SpecialMlpEval extends SpecialPage {
 						'priority'    => 2
 				];
 				$dbw->upsert( 'math_review_list', $row, [ 'revision_id', 'anchor' ], $row );
-			} elseif( $cnt > 1 ) {
+			} elseif ( $cnt > 1 ) {
 				$dbw->delete( 'math_review_list', [ 'revision_id', 'anchor' ] );
 			}
 			$dbw->commit( __METHOD__ );

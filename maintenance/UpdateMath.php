@@ -210,7 +210,7 @@ class UpdateMath extends Maintenance {
 					echo "\nF:\t\t".$renderer->getMd5()." equation " . ( $eId ) .
 						"-failed beginning with\n\t\t'" . substr( $formula, 0, 100 )
 						. "'\n\t\tmathml:" . substr( $renderer->getMathml(), 0, 10 ) ."\n ";
-				} else{
+				} else {
 					if ( $this->verbose ) {
 						echo "\nS:\t\t".$renderer->getMd5();
 					}

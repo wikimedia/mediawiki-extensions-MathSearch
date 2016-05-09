@@ -203,7 +203,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 		if ( $this->step < 6 ){
 			$this->setSubmitTextMsg(
 				wfMessage( 'math-lp-submit-label' )->params( $this->eval->getNextStep() ) );
-		} elseif( $this->step == 6 ) {
+		} elseif ( $this->step == 6 ) {
 			$this->setSubmitTextMsg( wfMessage( 'math-lp-finish-label' ) );
 		} else {
 			$this->setSubmitTextMsg( wfMessage( 'math-lp-new-formula' ) );
