@@ -9,7 +9,8 @@
 			"Ash Crow",
 			"Wladek92",
 			"Orlodrim",
-			"Appleuseryu"
+			"Appleuseryu",
+			"Urhixidur"
 		]
 	},
 	"mathsearch": "Recherche mathématique",
@@ -70,7 +71,7 @@
 	"math-lp-3-suggestion-label": "Correction de l’entrée utilisateur :",
 	"math-lp-3-suggestion-help": "Facultatif, à utiliser si la qualité de TeX n’est pas très bonne",
 	"math-lp-4-head": "Étape $2 : Rendu $1",
-	"math-lp-4-intro": "Dans ce qui suit, vous évaluerez la qualité du rendu $1. Cette étape a 4 sous-étapes. Tout d’abord, vous comparerez les différents rendus et, par la suite, dans les étapes 4a à 4c, vous évaluerez chaque rendu individuellement. Notez que votre navigateur peut ne pas supporter le rendu SVG ou MathML. Pour être efficace sur Wikipedia.org ou des wikis privés, une solution de repli sélectionne automatiquement un rendu approprié pour votre navigateur. Toutefois, pour cette évaluation, cette fonctionnalité sera désactivée, et vous verrez exactement le rendu spécifié.",
+	"math-lp-4-intro": "Dans ce qui suit, vous évaluerez la qualité du rendu $1. Cette étape a quatre sous-étapes. Tout d’abord, vous comparerez les différents rendus et, par la suite, dans les étapes 4a à 4c, vous évaluerez chaque rendu individuellement. Notez que votre navigateur peut ne pas prendre en charge le rendu SVG ou MathML. Pour être efficace sur Wikipedia.org ou des wikis privés, une solution de repli sélectionne automatiquement un rendu approprié pour votre navigateur. Toutefois, pour cette évaluation, cette fonctionnalité sera désactivée, et vous verrez exactement le rendu spécifié.",
 	"math-lp-4-best-label": "Quel rendu vous semble le meilleur ?",
 	"math-lp-4-size-label": "Comment est la taille de l’expression mathématique par rapport au texte ?",
 	"math-lp-4-size-option-1": "correcte",
