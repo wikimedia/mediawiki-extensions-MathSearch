@@ -163,7 +163,7 @@ class SpecialMlpEval extends SpecialPage {
 	public function getRandomPage() {
 		try {
 			$uid = $this->getUser()->getId();
-			$dbr = wfGetDB( DB_READ );
+			$dbr = wfGetDB( DB_REPLICA );
 			$results = $dbr->selectFieldValues( 'math_review_list', 'revision_id',
 					"revision_id not in (SELECT revision_id from math_mlp where user_id = $uid )",
 					__METHOD__, [
@@ -328,7 +328,7 @@ class SpecialMlpEval extends SpecialPage {
 		try{
 			$uid = $this->getUser()->getId();
 			$rid = $this->revision->getId();
-			$dbr = wfGetDB( DB_READ );
+			$dbr = wfGetDB( DB_REPLICA );
 			// Note that the math anchor is globally unique
 			$results = $dbr->selectFieldValues( 'math_review_list', 'anchor',
 				"anchor not in (SELECT anchor from math_mlp where user_id = $uid ".
@@ -482,7 +482,7 @@ class SpecialMlpEval extends SpecialPage {
 			$this->printSource( var_export( $message, true ), 'Error: No user found to store results.' );
 			return;
 		}
-		$dbw = wfGetDB( DB_WRITE );
+		$dbw = wfGetDB( DB_MASTER );
 		$dbw->upsert( 'math_mlp', $row, [ 'user_id', 'revision_id', 'anchor', 'step' ], $row );
 		if ( $this->fId ) {
 			$dbw->begin( __METHOD__ );
