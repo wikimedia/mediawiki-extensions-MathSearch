@@ -43,9 +43,12 @@ class MathIdGenerator {
 	 */
 	public function __construct( $wikiText, $revisionId = 0 ) {
 		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
-		$wikiText = preg_replace( '#<nowiki>(.*)</nowiki>#', '', $wikiText );
 		$this->wikiText =
-			Parser::extractTagsAndParams( [ 'math' ], $wikiText, $this->mathTags );
+			Parser::extractTagsAndParams( [ 'nowki', 'syntaxhighlight', 'math' ], $wikiText,
+				$tags );
+		$this->mathTags = array_filter( $tags, function ( $v ) {
+			return $v[0] === 'math';
+		} );
 		$this->revisionId = $revisionId;
 	}
 
