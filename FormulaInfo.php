@@ -228,13 +228,20 @@ class FormulaInfo extends SpecialPage {
 			$out->addHtml( '</div></div>' );
 		}
 		if ( self::hasSvgSupport( $mode ) ) {
-			if ( $renderer->getSvg( 'cached' ) === '' ) {
-				$out->addWikiText( 'SVG image empty. Force Re-Rendering' );
-				$renderer->render( true );
+			try {
+				$svg = $renderer->getSvg( 'cached' );
+				if ( $svg === '' ) {
+					$out->addWikiText( 'SVG image empty. Force Re-Rendering' );
+					$renderer->render( true );
+				} else {
+					$svg =  $renderer->getSvg( 'render' );
+				}
+				$out->addWikiText( 'SVG (' . self::getlengh( $svg ) . ') :', false );
+				$out->addHtml( $svg ); // FALSE, 'mwe-math-demo' ) );
+				$out->addHtml( "<br />\n" );
+			} catch ( Exception $e ) {
+				$out->addHTML( 'Failed to get svg.' );
 			}
-			$out->addWikiText( 'SVG (' . self::getlengh( $renderer->getSvg( 'render' ) ) . ') :', false );
-			$out->addHtml( $renderer->getSvg() ); // FALSE, 'mwe-math-demo' ) );
-			$out->addHtml( "<br />\n" );
 		}
 		if ( self::hasPngSupport( $mode ) ) {
 			if ( method_exists( $renderer, 'getPng' ) ) {
@@ -242,13 +249,17 @@ class FormulaInfo extends SpecialPage {
 				$out->addHtml( $renderer->getHtmlOutput() );
 				$out->addHtml( "<br />\n" );
 			} else {
-				$renderer = MathObject::cloneFromRenderer( $renderer );
-				$rbi = $renderer->getRbi();
-				$pngUrl = preg_replace( '#/svg/#', '/png/', $rbi->getFullSvgUrl() );
-				$png = file_get_contents( $pngUrl );
-				$out->addWikiText( 'PNG (' . self::getlengh( $png ) . ') :', false );
-				$out->addHtml( "<img src='$pngUrl' />" );
-				$out->addHtml( "<br />\n" );
+				try {
+					$renderer = MathObject::cloneFromRenderer( $renderer );
+					$rbi = $renderer->getRbi();
+					$pngUrl = preg_replace( '#/svg/#', '/png/', $rbi->getFullSvgUrl() );
+					$png = file_get_contents( $pngUrl );
+					$out->addWikiText( 'PNG (' . self::getlengh( $png ) . ') :', false );
+					$out->addHtml( "<img src='$pngUrl' />" );
+					$out->addHtml( "<br />\n" );
+				} catch ( Exception $e ) {
+					$out->addHTML( 'Failed to get png.' );
+				}
 			}
 		}
 		$renderer->writeCache();
