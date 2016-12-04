@@ -52,6 +52,7 @@ class MathPerformance extends Maintenance {
 		$this->addOption( 'output', 'The destination of the output defaults to stdout.', false );
 		$this->addOption( 'verbose', 'If set, output for successful rendering will produced', false,
 			false, 'v' );
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	public function execute() {

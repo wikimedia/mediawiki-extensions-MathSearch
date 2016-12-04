@@ -35,6 +35,7 @@ class BatchExport extends Maintenance {
 			"Exports  submissions to a folder. \n Each run is named after the following convention: \n \$userName-\$runName-\$runId.csv";
 		// @codingStandardsIgnoreEnd
 		$this->addArg( 'dir', 'The output directory', true );
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	/**

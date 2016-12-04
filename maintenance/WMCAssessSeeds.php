@@ -36,6 +36,7 @@ class WMCAssessSeeds extends Maintenance {
 			'Automatically creates assessment for formulae and revisions that have been used to create the topics.';
 		// @codingStandardsIgnoreEnd
 		$this->addArg( 'user', 'The user that is marked as assessor.', true );
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	/**

@@ -45,6 +45,7 @@ abstract class IndexBase extends Maintenance {
 			false );
 		$this->addOption( 'limit', 'The maximal number of database entries to be considered', false,
 			true, "L" );
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	/**

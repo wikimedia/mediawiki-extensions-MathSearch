@@ -43,6 +43,7 @@ class GenerateFeatureTable extends Maintenance {
 		);
 		$this->addArg( 'min', "If set processing is started at the page with rank(pageID)>min", false );
 		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
+		$this->requireExtension( 'MathSearch' );
 	}
 	/**
 	 * Populates the search index with content from all pages

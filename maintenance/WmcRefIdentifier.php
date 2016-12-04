@@ -22,6 +22,10 @@
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class WmcRefIdentifier extends Maintenance {
+	public function __construct() {
+		parent::__construct();
+		$this->requireExtension( 'MathSearch' );
+	}
 
 	/**
 	 *

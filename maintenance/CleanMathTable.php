@@ -42,6 +42,7 @@ class CleanMathTable extends Maintenance {
 		$this->addOption( 'purge',
 			'If set all formulae are rendered again from strech. (Very time consuming!)', false,
 			false, 'f' );
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	// @codingStandardsIgnoreStart

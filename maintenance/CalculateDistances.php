@@ -45,6 +45,7 @@ class CalculateDistances extends Maintenance {
 			'9' );
 		$this->addArg( 'min', 'If set processing is started at the page with curid>min', false );
 		$this->addArg( 'max', 'If set processing is stopped at the page with curid<=max', false );
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	/**

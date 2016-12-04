@@ -39,6 +39,7 @@ class ImportDefinitions extends Maintenance {
 		$this->addOption(
 			'overwrite', 'Overwrite existing definitions with the same name.', false, false, "o"
 		);
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	/**

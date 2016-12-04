@@ -63,6 +63,7 @@ class UpdateMath extends Maintenance {
 			'm' );
 		$this->addOption( 'chunk-size',
 			'Determines how many pages are updated in one database transaction.', false, true );
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	/**

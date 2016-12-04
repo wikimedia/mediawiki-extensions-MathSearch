@@ -48,6 +48,7 @@ class ExportMathCache extends Maintenance {
 		$this->addOption(
 			'sort', 'If set the result is sorted according to the input', false, false, 's'
 		);
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	/**

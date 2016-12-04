@@ -48,6 +48,7 @@ class ExtractFeatures extends Maintenance {
 			false );
 		$this->addArg( 'max', 'If set processing is stopped at the page with rank(pageID)<=max',
 			false );
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	/**

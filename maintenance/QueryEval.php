@@ -64,6 +64,7 @@ class QueryEval extends Maintenance {
 		$this->mDescription = "Exports submissions to a folder. \n Each run is named after the following convention: \n \$userName-\$runName-\$runId.csv";
 		// @codingStandardsIgnoreEnd
 		$this->addArg( "dir", "The output directory", true );
+		$this->requireExtension( 'MathSearch' );
 	}
 	private function addExtensionTable( $name, $folder = '' ) {
 		if ( is_null( $this->dbu ) ) {

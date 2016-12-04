@@ -41,6 +41,7 @@ class BatchImport extends Maintenance {
 		$this->addOption(
 			'overwrite', 'Overwrite existing runs with the same name.', false, false, "o"
 		);
+		$this->requireExtension( 'MathSearch' );
 	}
 
 	/**
