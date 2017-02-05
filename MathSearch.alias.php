@@ -20,6 +20,7 @@ $specialPageAliases['en'] = [
 	'MathUpload' => [ 'MathUpload', 'Math Upload' ],
 	'MathDownload' => [ 'MathDownload', 'Math Download' ],
 	'LaTeXTranslator' => [ 'LaTeXTranslator', 'LaTeX Translator' ],
+	'DisplayTopics' => [ 'DisplayTopics' ],
 ];
 
 /** Arabic (العربية) */
