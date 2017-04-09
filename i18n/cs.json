@@ -1,8 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
-			"Vojtěch Dostál"
+			"Vojtěch Dostál",
+			"Dvorapa"
 		]
 	},
-	"math-lp-2-content-option-6": "chemická struktura (CO₂ + C ⇌ 2, CO)"
+	"math-lp-2-content-option-6": "chemická struktura (CO₂ + C ⇌ 2 CO)"
 }
