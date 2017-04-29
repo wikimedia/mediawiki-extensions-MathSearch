@@ -2,10 +2,12 @@
 	"@metadata": {
 		"authors": [
 			"Cainamarques",
-			"Luk3"
+			"Luk3",
+			"Felipe L. Ewald"
 		]
 	},
 	"mathsearch-desc": "Integra o motor de busca [http://search.mathweb.org/about.html MathWeb]",
+	"math-search-type-label": "Tipo:",
 	"datatypes-type-contentmath": "Expressão matemática (conteúdo)",
 	"wikibase-listdatatypes-contentmath-head": "Expressão matemática (conteúdo)"
 }
