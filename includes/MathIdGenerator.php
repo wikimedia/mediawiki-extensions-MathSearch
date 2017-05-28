@@ -85,7 +85,10 @@ class MathIdGenerator {
 
 	public function getIdsFromContent( $content ) {
 		$contentIdMap = $this->getContentIdMap();
-		return $contentIdMap[$content];
+		if ( array_key_exists( $content, $contentIdMap ) ) {
+			return $contentIdMap[$content];
+		}
+		return [];
 	}
 
 	public function getContentIdMap() {
