@@ -6,7 +6,8 @@
 			"Striking Blue",
 			"Oashnic",
 			"Kaganer",
-			"Alexey"
+			"Alexey",
+			"Facenapalm"
 		]
 	},
 	"mathsearch": "Математический поиск",
@@ -153,5 +154,8 @@
 	"math-tex2nb-intro": "Данная страница показывает как TeX может быть переведен в выражение Mathematica. Наше ПО переводит функцию LaTeX напрямую в Mathematica. \n\nФункции без поддержки Mathematica могут быть переведены с помощью пакета DRMF (находится в разработке)",
 	"math-tex2nb-input": "Ввод",
 	"math-tex2nb-latex": "Следующее выражение LaTeX ...",
-	"math-tex2nb-mathematica": "... переведено в выражение Mathematica ..."
+	"math-tex2nb-mathematica": "... переведено в выражение Mathematica ...",
+	"datatypes-type-contentmath": "Математическое выражение (содержимое)",
+	"wikibase-listdatatypes-contentmath-head": "Математическое выражение (содержимое)",
+	"wikibase-listdatatypes-contentmath-body": "Литеральное поле данных для математических выражений, уравнений и так далее, выраженных в DRMF/DLMF варианте LaTeX."
 }
