@@ -153,7 +153,6 @@ class UpdateMath extends Maintenance {
 	 */
 	private function doUpdate( $pid, $pText, $pTitle = "", $revId = 0 ) {
 		$notused = '';
-		$eId=0;
 		$parser = new Parser();
 		$parser->mLinkID = 0;
 		$parser->mRevisionId = $revId;
@@ -203,6 +202,8 @@ class UpdateMath extends Maintenance {
 					Hooks::run( 'MathFormulaPostRender', [ $parser, &$renderer, &$notused ] );
 					$this->time( "hooks" );
 				} else {
+				    $eId = null;
+				    MathSearchHooks::setMathId( $eId, $renderer, $revId );
 					MathSearchHooks::writeMathIndex( $revId, $eId, $renderer->getInputHash(), '' );
 					$this->time( "index" );
 				}
