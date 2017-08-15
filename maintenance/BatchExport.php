@@ -19,6 +19,8 @@
  * @ingroup Maintenance
  */
 
+use UtfNormal\Utils;
+
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 /**
@@ -57,7 +59,7 @@ class BatchExport extends Maintenance {
 		foreach ( $res as $row ) {
 			$user = User::newFromId( $row->userId );
 			$username = $user->getName();
-			$runName = preg_replace( "#/#", "_", escapeSingleString( $row->runName ) );
+			$runName = preg_replace( "#/#", "_", Utils::escapeSingleString( $row->runName ) );
 			$fn = "$dir/$username-$runName-{$row->runId}.csv";
 			$this->output( "Export to file $fn.\n" );
 			$fh = fopen( $fn, 'w' );
