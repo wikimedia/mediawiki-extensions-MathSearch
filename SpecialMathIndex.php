@@ -1,7 +1,7 @@
 <?php
 class SpecialMathIndex extends SpecialPage {
-	const SCRIPT_UPDATE_MATH=0;
-	const SCRIPT_WRITE_INDEX=1;
+	const SCRIPT_UPDATE_MATH = 0;
+	const SCRIPT_WRITE_INDEX = 1;
 
 	function __construct() {
 		parent::__construct( 'MathIndex', 'edit', true );
@@ -64,13 +64,13 @@ class SpecialMathIndex extends SpecialPage {
 			case self::SCRIPT_UPDATE_MATH:
 				require_once __DIR__ .'/maintenance/UpdateMath.php';
 				$updater = new UpdateMath();
-				$updater->loadParamsAndArgs( null, [ "max"=>1 ], null );
+				$updater->loadParamsAndArgs( null, [ "max" => 1 ], null );
 				$updater->execute();
 				break;
 			case self::SCRIPT_WRITE_INDEX:
 				require_once __DIR__ .'/maintenance/CreateMathIndex.php';
 				$updater = new CreateMathIndex();
-				$updater->loadParamsAndArgs( null, [ "mwsns"=>'mws:' ],
+				$updater->loadParamsAndArgs( null, [ "mwsns" => 'mws:' ],
 					[ __DIR__ .'/mws/data/wiki' ]
 				);
 				$updater->execute();
@@ -78,7 +78,6 @@ class SpecialMathIndex extends SpecialPage {
 			default:
 				break;
 		}
-
 	}
 
 	protected function getGroupName() {

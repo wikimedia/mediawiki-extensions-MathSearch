@@ -8,8 +8,8 @@ class MathHighlighter {
 
 	/**
 	 * MathHighlighter constructor.
-	 * @param $fId
-	 * @param $revId
+	 * @param string $fId
+	 * @param int $revId
 	 * @param bool $highlight
 	 */
 	public function __construct( $fId, $revId, $highlight = true ) {

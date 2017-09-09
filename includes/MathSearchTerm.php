@@ -3,7 +3,7 @@
 class MathSearchTerm {
 	const TYPE_TEXT = 0;
 	const TYPE_MATH = 1;
-	const TYPE_XMATH =2;
+	const TYPE_XMATH = 2;
 	const REL_AND = 0;
 	const REL_OR = 1;
 	const REL_NAND = 2;
@@ -13,7 +13,7 @@ class MathSearchTerm {
 	private $type = 0;
 	private $expr = '';
 	private $relevanceMap = [];
-	private $resultSet =[];
+	private $resultSet = [];
 
 	/**
 	 * @param int $i
@@ -143,8 +143,8 @@ class MathSearchTerm {
 	}
 
 	public function getRevisionResult( $revisionId ) {
-		if ( array_key_exists( (string) $revisionId, $this->resultSet ) ) {
-			return $this->resultSet[(string) $revisionId];
+		if ( array_key_exists( (string)$revisionId, $this->resultSet ) ) {
+			return $this->resultSet[(string)$revisionId];
 		} else {
 			return [];
 		}

@@ -67,8 +67,8 @@ class CreateDB2MathTable extends IndexBase {
 
 	/**
 	 * @param string $fn
-	 * @param int    $min
-	 * @param int    $inc
+	 * @param int $min
+	 * @param int $inc
 	 *
 	 * @return bool
 	 */

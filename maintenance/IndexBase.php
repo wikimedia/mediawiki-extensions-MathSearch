@@ -57,10 +57,10 @@ abstract class IndexBase extends Maintenance {
 
 	/**
 	 * @param string $fn
-	 * @param int    $min
-	 * @param int    $inc
+	 * @param int $min
+	 * @param int $inc
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function wFile( $fn, $min, $inc ) {
 		$out = $this->getHead();
@@ -110,7 +110,7 @@ abstract class IndexBase extends Maintenance {
 			] );
 		echo "write " . $this->res->numRows() . " results to index\n";
 		$dir = $this->getArg( 0 );
-		if ( !file_exists( $dir ) ){
+		if ( !file_exists( $dir ) ) {
 			mkdir( $dir, '0755', true );
 		}
 		do {

@@ -3,8 +3,8 @@ use MediaWiki\Logger\LoggerFactory;
 
 class MathQueryObject extends MathObject {
 	const MIN_DEPTH = 0;
-	const SELECTIVITY_QVAR = .1;
-	/**@var int */
+	const SELECTIVITY_QVAR = 0.1;
+	/** @var int */
 	private $queryID = false;
 	private $texquery = false;
 	private $cquery = false;
@@ -77,7 +77,7 @@ class MathQueryObject extends MathObject {
 		$dbw = wfGetDB( DB_MASTER );
 		// Overwrite draft queries only.
 		if ( $dbw->selectField(
-			'math_wmc_ref', 'isDraft', [ 'qId' =>  $this->queryID ]
+			'math_wmc_ref', 'isDraft', [ 'qId' => $this->queryID ]
 		) && $overwrite ) {
 			return $dbw->update( 'math_wmc_ref', $fields, [ 'qId' => $this->queryID ] );
 		} else {
@@ -106,7 +106,6 @@ class MathQueryObject extends MathObject {
 \end{topic}
 
 TeX;
-
 	}
 
 	/**

@@ -21,8 +21,8 @@ class MathEngineBaseX extends MathEngineRest {
 
 	/**
 	 * TODO: Add error handling.
-	 * @param $res
-	 * @param $numProcess
+	 * @param string $res
+	 * @param int $numProcess
 	 * @return bool
 	 */
 	protected function processResults( $res, $numProcess ) {
@@ -71,16 +71,12 @@ class MathEngineBaseX extends MathEngineRest {
 			$this->relevanceMap[] = $revisionID;
 			$substarr = [];
 			// TODO: Add hit support.
-			$this->resultSet[(string) $revisionID][(string) $AnchorID][] =
-				[ "xpath" => (string) $attrs["xpath"], "mappings" => $substarr ];
+			$this->resultSet[(string)$revisionID][(string)$AnchorID][] =
+				[ "xpath" => (string)$attrs["xpath"], "mappings" => $substarr ];
 		}
 		$this->relevanceMap = array_unique( $this->relevanceMap );
 	}
 
-	/**
-	 *
-	 *
-	 */
 	function getPostData( $numProcess ) {
 		return json_encode( [ "type" => $this->type, "query" => $this->query->getCQuery() ] );
 	}
@@ -91,7 +87,7 @@ class MathEngineBaseX extends MathEngineRest {
 		$res = self::doPost( $wgMathSearchBaseXBackendUrl. 'api/update', $json_payload );
 		if ( $res ) {
 			$resJson = json_decode( $res );
-			if ( $resJson->success==true ) {
+			if ( $resJson->success == true ) {
 				return true;
 			} else {
 				LoggerFactory::getInstance(

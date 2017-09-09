@@ -47,6 +47,7 @@ class SpecialMathSearch extends SpecialPage {
 
 	/**
 	 * The main function
+	 * @param string|null $par
 	 */
 	public function execute( $par ) {
 		set_error_handler( "SpecialMathSearch::exception_error_handler" );
@@ -113,7 +114,7 @@ class SpecialMathSearch extends SpecialPage {
 				'label' => 'Number of search terms',
 				'type' => 'int',
 				'min' => 1,
-				'default' =>  $this->noTerms,
+				'default' => $this->noTerms,
 			],
 		];
 		$formDescriptor = array_merge( $formDescriptor, $this->getSearchRows( $this->noTerms ) );
@@ -202,7 +203,7 @@ class SpecialMathSearch extends SpecialPage {
 		}
 		/** @var MathSearchTerm $term */
 		foreach ( $this->terms as $term ) {
-			if ( $term->getExpr()=="" ) {
+			if ( $term->getExpr() == "" ) {
 				continue;
 			}
 			$term->doSearch( $this->mathBackend );
@@ -239,9 +240,9 @@ class SpecialMathSearch extends SpecialPage {
 	}
 
 	/**
-	 * @param $revisionID
-	 * @param $mathElements
-	 * @param $pagename
+	 * @param int $revisionID
+	 * @param array $mathElements
+	 * @param string $pagename
 	 * @internal param $out
 	 */
 	public function displayMathElements( $revisionID, $mathElements, $pagename ) {
@@ -257,7 +258,7 @@ class SpecialMathSearch extends SpecialPage {
 				return;
 			}
 			$mml = $res->getMathml();
-			if ( ! $mml ) {
+			if ( !$mml ) {
 				LoggerFactory::getInstance( 'MathSearch' )
 					->error( "Failure: Could not get MathML $anchorID for page $pagename (id $revisionID)" );
 				continue;
@@ -336,7 +337,7 @@ class SpecialMathSearch extends SpecialPage {
 	/**
 	 * @param DOMNode $node
 	 * @param DOMDocument $dom
-	 * @param string $mml
+	 * @param string &$mml
 	 */
 	protected function highlightHit( $node, $dom, &$mml ) {
 		if ( $node == null || !$node->hasAttributes() ) {
@@ -377,7 +378,7 @@ class SpecialMathSearch extends SpecialPage {
 	 *
 	 * @param int $revisionID
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function displayRevisionResults( $revisionID ) {
 		$out = $this->getOutput();
@@ -391,7 +392,7 @@ class SpecialMathSearch extends SpecialPage {
 		$textElements = [];
 		/** @var MathSearchTerm $term */
 		foreach ( $this->terms as $term ) {
-			if ( $term->getExpr()=="" ) {
+			if ( $term->getExpr() == "" ) {
 				continue;
 			}
 			if ( $term->getType() == MathSearchTerm::TYPE_MATH ) {
@@ -415,7 +416,7 @@ class SpecialMathSearch extends SpecialPage {
 
 	/**
 	 * Renders the math search input to mathml
-	 * @return boolean
+	 * @return bool
 	 */
 	function render() {
 		$renderer = new MathLaTeXML( $this->mathpattern );
@@ -448,7 +449,7 @@ class SpecialMathSearch extends SpecialPage {
 	}
 
 	private function addFormData( $mathpattern, $i, $TYPE_MATH, $REL_AND ) {
-		$this->defaults[$i]['type']= $TYPE_MATH;
+		$this->defaults[$i]['type'] = $TYPE_MATH;
 		$this->defaults[$i]['rel'] = $REL_AND;
 		$this->defaults[$i]['expr'] = $mathpattern;
 	}

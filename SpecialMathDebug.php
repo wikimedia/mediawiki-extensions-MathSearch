@@ -43,7 +43,7 @@ class SpecialMathDebug extends SpecialPage {
 					$this->generateParserTests( $offset, $length, $page );
 					break;
 				default:
-					$this->testParser( $offset, $length, $page, $purge=='checked'?true:false );
+					$this->testParser( $offset, $length, $page, $purge == 'checked' ? true : false );
 			}
 		}
 		return;
@@ -167,7 +167,7 @@ class SpecialMathDebug extends SpecialPage {
 		) {
 			$m = new MathMathML( $input );
 			$m->checkTeX();
-			$parserTests[] = [ 'id' => $key, 'input' => (string) $input, 'texvcjs' => $m->getTex() ];
+			$parserTests[] = [ 'id' => $key, 'input' => (string)$input, 'texvcjs' => $m->getTex() ];
 		}
 		$out->addHTML( json_encode( $parserTests ) );
 		return true;
@@ -202,7 +202,7 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	private static function render( $t, $mode, $purge = true ) {
-		$modeInt= (int) substr( $mode, 0, 1 );
+		$modeInt = (int)substr( $mode, 0, 1 );
 		$renderer = MathRenderer::getRenderer( $t, [], $modeInt );
 		$renderer->setPurge( $purge );
 		$renderer->render();

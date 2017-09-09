@@ -29,7 +29,7 @@ function createMySqlFunctionDropperClass() {
 // @codingStandardsIgnoreEnd
 	class MySqlFunctionDropper extends MysqlUpdater {
 		/**
-		 * @param $db
+		 * @param IDatabase $db
 		 *
 		 * @return MySqlFunctionDropper
 		 */
@@ -40,9 +40,9 @@ function createMySqlFunctionDropperClass() {
 		/**
 		 * Applies a SQL patch
 		 *
-		 * @param string $path       Path to the patch file
-		 * @param bool   $isFullPath Whether to treat $path as a relative or not
-		 * @param string $msg        Description of the patch
+		 * @param string $path Path to the patch file
+		 * @param bool $isFullPath Whether to treat $path as a relative or not
+		 * @param string $msg Description of the patch
 		 *
 		 * @return bool False if patch is skipped.
 		 */
@@ -105,8 +105,8 @@ class QueryEval extends Maintenance {
 		} else {
 			$relevance = '';
 		}
-		$individualResults='';
-		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId'=>$row->qId ] );
+		$individualResults = '';
+		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId' => $row->qId ] );
 		foreach ( $res as $rank ) {
 			$individualResults .= $rank->runId . ': '.$rank->rank.'; ';
 		}
@@ -166,7 +166,7 @@ TEX;
 		foreach ( $res as $row ) {
 			$all .= $this->createTopicTex( $row ) . "\n\n";
 		}
-		$fh =  fopen( $dir . '/all.tex', 'w' );
+		$fh = fopen( $dir . '/all.tex', 'w' );
 		fwrite( $fh, $all );
 		fclose( $fh );
 		echo "all done";

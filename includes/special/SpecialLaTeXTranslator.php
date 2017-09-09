@@ -12,7 +12,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 
 	/**
 	 * Returns corresponding Mathematica translations of LaTeX functions
-	 * @param $par
+	 * @param string|null $par
 	 */
 	function execute( $par ) {
 		$this->setHeaders();

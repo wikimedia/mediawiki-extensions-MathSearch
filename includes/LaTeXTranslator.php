@@ -25,8 +25,8 @@ class LaTeXTranslator {
 				'replace' => function ( array $m ) {
 					return ( $m[1][0] == 'a' ? 'Arc' . ucfirst( strtolower( substr( $m[1], 1 ) ) )
 						: ucfirst( strtolower( $m[1] ) ) ) .
-						   ( strlen( $m[2] ) > 0 ? 'Integral' : '' ) . '[' .
-						   LaTeXTranslator::brackR( $m[3] ) . ']';
+							( strlen( $m[2] ) > 0 ? 'Integral' : '' ) . '[' .
+							LaTeXTranslator::brackR( $m[3] ) . ']';
 				}
 			],
 			[
@@ -37,7 +37,7 @@ class LaTeXTranslator {
 				# Logarithm: Log[x]
 				'replace' => function ( array $m ) {
 					return 'Log[' . ( strlen( $m[1] ) > 0 ? $m[1] . ',' : '' ) .
-						   LaTeXTranslator::brackR( $m[2] ) . ']';
+						LaTeXTranslator::brackR( $m[2] ) . ']';
 				}
 			],
 			[
@@ -54,7 +54,7 @@ class LaTeXTranslator {
 				# Airy Modulus M: Sqrt[AiryAi[x]^2+AiryBi[x]^2]
 				'replace' => function ( array $m ) {
 					return 'Sqrt[AiryAi[' . LaTeXTranslator::brackR( $m[1] ) . ']^2+AiryBi[' .
-						   LaTeXTranslator::brackR( $m[1] ) . ']^2]';
+						LaTeXTranslator::brackR( $m[1] ) . ']^2]';
 				}
 			],
 			[
@@ -65,7 +65,7 @@ class LaTeXTranslator {
 				# Arithmetic Geometric Mean: ArithmeticGeometricMean[a,b]
 				'replace' => function ( array $m ) {
 					return 'ArithmeticGeometricMean[' . LaTeXTranslator::brackR( $m[1] ) . ',' .
-						   LaTeXTranslator::brackR( $m[4] ) . ']';
+						LaTeXTranslator::brackR( $m[4] ) . ']';
 				}
 			],
 			[
@@ -105,7 +105,7 @@ class LaTeXTranslator {
 				# BesselJ: BesselJ[n,z]
 				'replace' => function ( array $m ) {
 					return 'Bessel' . $m[1] . '[' . LaTeXTranslator::brackR( $m[2] ) .
-						   ( strlen( $m[3] ) > 0 ? ',' . LaTeXTranslator::brackR( $m[3] ) : ',0' ) . ']';
+						( strlen( $m[3] ) > 0 ? ',' . LaTeXTranslator::brackR( $m[3] ) : ',0' ) . ']';
 				}
 			],
 			[
@@ -114,7 +114,7 @@ class LaTeXTranslator {
 				# Binomial Coefficient: Binomial[n,m]
 				'replace' => function ( array $m ) {
 					return 'Binomial[' . LaTeXTranslator::brackR( $m[2] ) . ',' . LaTeXTranslator::brackR( $m[1] ) .
-						   ']';
+						']';
 				}
 			],
 			[
@@ -139,7 +139,7 @@ class LaTeXTranslator {
 				# Chebyshev: ChebyshevT[n,x]
 				'replace' => function ( array $m ) {
 					return 'Chebyshev' . $m[1] . '[' . LaTeXTranslator::brackR( $m[2] ) .
-						   ( strlen( $m[3] ) > 0 ? ',' . LaTeXTranslator::brackR( $m[3] ) : ',0' ) . ']';
+						( strlen( $m[3] ) > 0 ? ',' . LaTeXTranslator::brackR( $m[3] ) : ',0' ) . ']';
 				}
 			],
 			[
@@ -158,7 +158,7 @@ class LaTeXTranslator {
 				# Cylinder: ParabolicCylinderD[\nu,z]
 				'replace' => function ( array $m ) {
 					return 'ParabolicCylinderD[' . LaTeXTranslator::brackR( $m[1] ) . ',' .
-						   LaTeXTranslator::brackR( $m[2] ) . ']';
+						LaTeXTranslator::brackR( $m[2] ) . ']';
 				}
 			],
 			[
@@ -228,8 +228,8 @@ class LaTeXTranslator {
 				# Euler Beta & Gamma: Beta[a,b]
 				'replace' => function ( array $m ) {
 					return $m[1] . '[' . LaTeXTranslator::brackR( $m[2] ) .
-						   ( strlen( $m[5] ) > 0 && strtolower( $m[1] ) == 'beta' ?
-							   ',' . LaTeXTranslator::brackR( $m[5] ) : '' ) . ']';
+						( strlen( $m[5] ) > 0 && strtolower( $m[1] ) == 'beta' ?
+							',' . LaTeXTranslator::brackR( $m[5] ) : '' ) . ']';
 				}
 			],
 			[
@@ -247,8 +247,8 @@ class LaTeXTranslator {
 				# Exponential Integral: ExpIntegralEi[z]
 				'replace' => function ( array $m ) {
 					return 'ExpIntegralE' . ( $m[1] == 'i' ? 'i' : '' ) . '[' .
-						   ( strlen( $m[2] ) > 0 ? LaTeXTranslator::brackR( $m[2] ) . ',' : '' ) .
-						   LaTeXTranslator::brackR( $m[3] ) . ']';
+						( strlen( $m[2] ) > 0 ? LaTeXTranslator::brackR( $m[2] ) . ',' : '' ) .
+						LaTeXTranslator::brackR( $m[3] ) . ']';
 				}
 			],
 			[
@@ -267,8 +267,8 @@ class LaTeXTranslator {
 				'replace' => function ( array $m ) {
 					return ( strlen( $m[3] ) > 0 ? '(' . LaTeXTranslator::brackR( $m[1] ) . ')'
 						: LaTeXTranslator::brackR( $m[1] ) ) . '/' .
-						   ( count( $m ) > 6 ? '(' . LaTeXTranslator::brackR( $m[4] ) . ')'
-							   : LaTeXTranslator::brackR( $m[4] ) );
+							( count( $m ) > 6 ? '(' . LaTeXTranslator::brackR( $m[4] ) . ')'
+								: LaTeXTranslator::brackR( $m[4] ) );
 				}
 			],
 			[
@@ -285,7 +285,7 @@ class LaTeXTranslator {
 				# Greek Letter: \[CapitalAlpha]
 				'replace' => function ( array $m ) {
 					return '\\[' . ( strtolower( $m[1] ) != $m[1] ? 'Capital' : '' ) .
-						   ucfirst( $m[1] ) . ']';
+						ucfirst( $m[1] ) . ']';
 				}
 			],
 			[
@@ -305,7 +305,7 @@ class LaTeXTranslator {
 				# Gudermannian: Gudermannian[z]
 				'replace' => function ( array $m ) {
 					return ( strlen( $m[1] ) > 0 ? 'Inverse' : '' ) . 'Gudermannian[' .
-						   LaTeXTranslator::brackR( $m[2] ) . ']';
+						LaTeXTranslator::brackR( $m[2] ) . ']';
 				}
 			],
 			[
@@ -316,7 +316,7 @@ class LaTeXTranslator {
 				# Hermite: HermiteH[n,x]
 				'replace' => function ( array $m ) {
 					return 'HermiteH[' . LaTeXTranslator::brackR( $m[1] ) . ',' . LaTeXTranslator::brackR( $m[2] ) .
-						   ']';
+						']';
 				}
 			],
 			[
@@ -327,7 +327,7 @@ class LaTeXTranslator {
 				# HurwitzZeta: HurwitzZeta[s,a]
 				'replace' => function ( array $m ) {
 					return 'HurwitzZeta[' . LaTeXTranslator::brackR( $m[1] ) . ',' . LaTeXTranslator::brackR( $m[4] ) .
-						   ']';
+						']';
 				}
 			],
 			[
@@ -338,7 +338,7 @@ class LaTeXTranslator {
 				# Hypergeometric: Hypergeometric2F1[a,b,c,d]
 				'replace' => function ( array $m ) {
 					return 'Hypergeometric2F1[' . $m[2] . ',' . $m[3] . ',' . $m[4] . ',' . $m[5] .
-						   ']';
+						']';
 				}
 			],
 			[
@@ -350,7 +350,7 @@ class LaTeXTranslator {
 				# Hypergeometric (Generalized): HypergeometricPFQ[a,b,c]
 				'replace' => function ( array $m ) {
 					return 'HypergeometricPFQ[' . $m[7] . ',' . $m[10] . ',' .
-						   LaTeXTranslator::brackR( $m[13] ) . ']';
+						LaTeXTranslator::brackR( $m[13] ) . ']';
 				}
 			],
 			[
@@ -388,8 +388,8 @@ class LaTeXTranslator {
 				# Jacobi Elliptics: JacobiSD[u,m]
 				'replace' => function ( array $m ) {
 					return ( strlen( $m[1] ) > 0 ? 'Inverse' : '' ) . 'Jacobi' .
-						   ( strlen( $m[2] ) == 2 ? strtoupper( $m[2] ) : 'Zeta' ) . '[' .
-						   LaTeXTranslator::brackR( $m[3] ) . ', Sqrt[' . LaTeXTranslator::brackR( $m[6] ) . ']]';
+						( strlen( $m[2] ) == 2 ? strtoupper( $m[2] ) : 'Zeta' ) . '[' .
+						LaTeXTranslator::brackR( $m[3] ) . ', Sqrt[' . LaTeXTranslator::brackR( $m[6] ) . ']]';
 				}
 			],
 			[
@@ -411,8 +411,8 @@ class LaTeXTranslator {
 				# Kelvin: KelvinBer[n,z]
 				'replace' => function ( array $m ) {
 					return 'Kelvin' . ucfirst( $m[1] ) . '[' . LaTeXTranslator::brackR( $m[2] ) .
-						   ( strlen( LaTeXTranslator::brackR( $m[4] ) ) > 0 ? ',' . LaTeXTranslator::brackR( $m[4] )
-							   : '' ) . ']';
+						( strlen( LaTeXTranslator::brackR( $m[4] ) ) > 0 ? ',' . LaTeXTranslator::brackR( $m[4] )
+							: '' ) . ']';
 				}
 			],
 			[
@@ -441,8 +441,8 @@ class LaTeXTranslator {
 				# LaguerreL: LaguerreL[n,a,x]
 				'replace' => function ( array $m ) {
 					return 'LaguerreL[' . LaTeXTranslator::brackR( $m[2] ) . ',' .
-						   ( strlen( LaTeXTranslator::brackR( $m[1] ) ) > 0 ? LaTeXTranslator::brackR( $m[1] ) . ','
-							   : '' ) . LaTeXTranslator::brackR( $m[3] ) . ']';
+						( strlen( LaTeXTranslator::brackR( $m[1] ) ) > 0 ? LaTeXTranslator::brackR( $m[1] ) . ','
+							: '' ) . LaTeXTranslator::brackR( $m[3] ) . ']';
 				}
 			],
 			[
@@ -453,8 +453,8 @@ class LaTeXTranslator {
 				# Legendre/Ferrers: LegendreP[\nu,x] | LegendreP[\nu,\mu,x]
 				'replace' => function ( array $m ) {
 					return 'Legendre' . $m[1] . '[' . LaTeXTranslator::brackR( $m[3] ) . ',' .
-						   ( strlen( LaTeXTranslator::brackR( $m[2] ) ) > 0 ? LaTeXTranslator::brackR( $m[2] ) . ','
-							   : '' ) . LaTeXTranslator::brackR( $m[5] ) . ']';
+						( strlen( LaTeXTranslator::brackR( $m[2] ) ) > 0 ? LaTeXTranslator::brackR( $m[2] ) . ','
+							: '' ) . LaTeXTranslator::brackR( $m[5] ) . ']';
 				}
 			],
 			[
@@ -513,7 +513,7 @@ class LaTeXTranslator {
 				# Pochhammer: Pochhammer[a,n]
 				'replace' => function ( array $m ) {
 					return 'Pochhammer[' . LaTeXTranslator::brackR( $m[1] ) . ',' . LaTeXTranslator::brackR( $m[2] ) .
-						   ']';
+						']';
 				}
 			],
 			[
@@ -542,13 +542,13 @@ class LaTeXTranslator {
 				# Q Factorial: QFactorial[a,q,n]
 				'replace' => function ( array $m ) {
 					return 'QFactorial[' . LaTeXTranslator::brackR( $m[2] ) . ',' . LaTeXTranslator::brackR( $m[3] ) .
-						   ']';
+						']';
 				}
 			],
 			[
 				# Q Gamma: \qGamma{q}@{z}
 				'search' => "~\\\\qGamma" . $this->par . "@{0,2}(" . $this->arg . "|" . $this->par .
-							")~i",
+					")~i",
 				# Q Gamma: QGamma[z,q]
 				'replace' => function ( array $m ) {
 					return 'QGamma[' . LaTeXTranslator::brackR( $m[2] ) . ',' . LaTeXTranslator::brackR( $m[1] ) . ']';
@@ -611,7 +611,7 @@ class LaTeXTranslator {
 				'replace' => function ( array $m ) {
 					return 'Spherical' . $m[1] . '' . ( substr( $m[2], 0, 2 ) !== 'Hi'
 						? $m[2] : 'H' . ( strlen( $m[2] ) - 1 ) ) . '[' . LaTeXTranslator::brackR( $m[3] ) .
-						   ',' . LaTeXTranslator::brackR( $m[4] ) . ']';
+							',' . LaTeXTranslator::brackR( $m[4] ) . ']';
 				}
 			],
 			[
@@ -622,8 +622,8 @@ class LaTeXTranslator {
 				# Spherical Harmonic: SphericalHarmonicY[l,m,\theta,\phi]
 				'replace' => function ( array $m ) {
 					return 'SphericalHarmonicY[' . LaTeXTranslator::brackR( $m[1] ) . ',' .
-						   LaTeXTranslator::brackR( $m[2] ) . ',' . LaTeXTranslator::brackR( $m[3] ) . ',' .
-						   LaTeXTranslator::brackR( $m[6] ) . ']';
+						LaTeXTranslator::brackR( $m[2] ) . ',' . LaTeXTranslator::brackR( $m[3] ) . ',' .
+						LaTeXTranslator::brackR( $m[6] ) . ']';
 				}
 			],
 			[
@@ -633,7 +633,7 @@ class LaTeXTranslator {
 				# Spheroidal Eigenvalue: SpheroidalEigenvalue[n,m,\gamma]
 				'replace' => function ( array $m ) {
 					return 'SpheroidalEigenvalue[' . LaTeXTranslator::brackR( $m[1] ) . ',' .
-						   LaTeXTranslator::brackR( $m[2] ) . ',' . LaTeXTranslator::brackR( $m[3] ) . ']';
+						LaTeXTranslator::brackR( $m[2] ) . ',' . LaTeXTranslator::brackR( $m[3] ) . ']';
 				}
 			],
 			[
@@ -644,8 +644,8 @@ class LaTeXTranslator {
 				# Spheroidal Ps: SpheroidalPs[n,m,\gamma,z]
 				'replace' => function ( array $m ) {
 					return 'Spheroidal' . $m[1] . 'S[' . LaTeXTranslator::brackR( $m[2] ) . ',' .
-						   LaTeXTranslator::brackR( $m[3] ) . ',Sqrt[' . LaTeXTranslator::brackR( $m[7] ) . '],' .
-						   LaTeXTranslator::brackR( $m[4] ) . ']';
+						LaTeXTranslator::brackR( $m[3] ) . ',Sqrt[' . LaTeXTranslator::brackR( $m[7] ) . '],' .
+						LaTeXTranslator::brackR( $m[4] ) . ']';
 				}
 			],
 			[
@@ -664,7 +664,7 @@ class LaTeXTranslator {
 				# StruveH: StruveH[n,z]
 				'replace' => function ( array $m ) {
 					return 'Struve' . $m[1] . '[' . LaTeXTranslator::brackR( $m[2] ) . ',' .
-						   LaTeXTranslator::brackR( $m[3] ) . ']';
+						LaTeXTranslator::brackR( $m[3] ) . ']';
 				}
 			],
 			[
@@ -684,7 +684,7 @@ class LaTeXTranslator {
 				# Whittaker: WhittakerW[k,m,z]
 				'replace' => function ( array $m ) {
 					return 'Whittaker' . $m[1] . '[' . LaTeXTranslator::brackR( $m[2] ) . ',' .
-						   LaTeXTranslator::brackR( $m[3] ) . ',' . LaTeXTranslator::brackR( $m[4] ) . ']';
+						LaTeXTranslator::brackR( $m[3] ) . ',' . LaTeXTranslator::brackR( $m[4] ) . ']';
 				}
 			]
 		];
@@ -696,7 +696,7 @@ class LaTeXTranslator {
 
 	/**
 	 * Returns LaTeX arguments without curly brackets
-	 * @param $arg
+	 * @param string $arg
 	 * @return string
 	 */
 	public static function brackR( $arg ) {

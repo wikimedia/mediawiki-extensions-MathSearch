@@ -81,10 +81,10 @@ class CreateBaseXMathTable extends IndexBase {
 
 	/**
 	 * @param string $fn
-	 * @param int    $min
-	 * @param int    $inc
+	 * @param int $min
+	 * @param int $inc
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function wFile( $fn, $min, $inc ) {
 		$retval = parent::wFile( $fn, $min, $inc );

@@ -91,7 +91,7 @@ class UpdateMath extends Maintenance {
 		}
 		$this->time = microtime( true );
 
-		return (int) $delta;
+		return (int)$delta;
 	}
 
 	/**
@@ -135,7 +135,7 @@ class UpdateMath extends Maintenance {
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$start = microtime( true );
 			$this->dbw->commit( __METHOD__ );
-			echo " committed in " . ( microtime( true ) -$start ) . "s\n\n";
+			echo " committed in " . ( microtime( true ) - $start ) . "s\n\n";
 			var_dump( $this->performance );
 			// echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$n += $this->chunkSize;
@@ -202,8 +202,8 @@ class UpdateMath extends Maintenance {
 					Hooks::run( 'MathFormulaPostRender', [ $parser, &$renderer, &$notused ] );
 					$this->time( "hooks" );
 				} else {
-				    $eId = null;
-				    MathSearchHooks::setMathId( $eId, $renderer, $revId );
+					$eId = null;
+					MathSearchHooks::setMathId( $eId, $renderer, $revId );
 					MathSearchHooks::writeMathIndex( $revId, $eId, $renderer->getInputHash(), '' );
 					$this->time( "index" );
 				}

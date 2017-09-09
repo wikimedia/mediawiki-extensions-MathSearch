@@ -25,7 +25,7 @@ class FormulaInfo extends SpecialPage {
 		$pid = $wgRequest->getVal( 'pid' );// Page ID
 		$eid = $wgRequest->getVal( 'eid' );// Equation ID
 		$this->purge = $wgRequest->getVal( 'purge', false );
-		if ( is_null( $pid ) or is_null( $eid ) ) {
+		if ( is_null( $pid ) || is_null( $eid ) ) {
 			$tex = $wgRequest->getVal( 'tex', '' );
 			if ( $tex == '' ) {
 				$wgOut->addHTML( '<b>Please specify page and equation id</b>' );
@@ -56,8 +56,8 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	/**
-	 * @param $oldID
-	 * @param $eid
+	 * @param int $oldID
+	 * @param string $eid
 	 *
 	 * @return bool
 	 * @throws MWException
@@ -109,10 +109,10 @@ class FormulaInfo extends SpecialPage {
 		$mo->findSimilarPages( $pid );
 		$out->addWikiText( '==Identifiers==' );
 		$relations = $mo->getRelations();
-		foreach ( $texInfo->getIdentifiers() as $x ){
+		foreach ( $texInfo->getIdentifiers() as $x ) {
 			$line = '* <math>'.$x.'</math>';
-			if ( isset( $relations[$x] ) ){
-				foreach ( $relations[$x] as $r ){
+			if ( isset( $relations[$x] ) ) {
+				foreach ( $relations[$x] as $r ) {
 					$line .= ", {$r->definition} ($r->score)";
 				}
 			}
@@ -160,7 +160,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasMathMLSupport( $mode ) {
-		if ( $mode === 'latexml' or $mode === 'mathml' ) {
+		if ( $mode === 'latexml' || $mode === 'mathml' ) {
 			return true;
 		} else {
 			return false;
@@ -168,7 +168,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasSvgSupport( $mode ) {
-		if ( $mode === 'latexml' or $mode === 'mathml' ) {
+		if ( $mode === 'latexml' || $mode === 'mathml' ) {
 			return true;
 		} else {
 			return false;
@@ -176,7 +176,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasPngSupport( $mode ) {
-		if ( $mode === 'png' or $mode === 'mathml' ) {
+		if ( $mode === 'png' || $mode === 'mathml' ) {
 			return true;
 		} else {
 			return false;
@@ -204,7 +204,7 @@ class FormulaInfo extends SpecialPage {
 		$renderer = MathRenderer::getRenderer( $tex, [], $mode );
 		if ( $this->purge ) {
 			$renderer->render( true );
-		} elseif ( $mode == 'mathml' || ! $renderer->isInDatabase() ) {
+		} elseif ( $mode == 'mathml' || !$renderer->isInDatabase() ) {
 			// workaround for restbase mathml mode that does not support database access
 			// $out->addWikiText( "No database entry. Start rendering" );
 			$renderer->render();
@@ -234,7 +234,7 @@ class FormulaInfo extends SpecialPage {
 					$out->addWikiText( 'SVG image empty. Force Re-Rendering' );
 					$renderer->render( true );
 				} else {
-					$svg =  $renderer->getSvg( 'render' );
+					$svg = $renderer->getSvg( 'render' );
 				}
 				$out->addWikiText( 'SVG (' . self::getlengh( $svg ) . ') :', false );
 				$out->addHtml( $svg ); // FALSE, 'mwe-math-demo' ) );

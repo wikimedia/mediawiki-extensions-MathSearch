@@ -31,7 +31,7 @@ class SpecialMlpEval extends SpecialPage {
 	private $selectedMathTag;
 	/** @var int */
 	private $step;
-	/**@var MathIdGenerator */
+	/** @var MathIdGenerator */
 	private $mathIdGen;
 	/** @var int */
 	private $oldId;
@@ -49,7 +49,7 @@ class SpecialMlpEval extends SpecialPage {
 	private $renderingFields = [ 'absolute', 'best', 'size', 'spacing', 'integration', 'font' ];
 
 	/**
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isTexInputChanged() {
 		return $this->texInputChanged;
@@ -144,6 +144,7 @@ class SpecialMlpEval extends SpecialPage {
 
 	/**
 	 * The main function
+	 * @param string|null $par
 	 */
 	public function execute( $par ) {
 		$this->loadData();
@@ -151,7 +152,7 @@ class SpecialMlpEval extends SpecialPage {
 		$this->printIntorduction();
 		$form = new MlpEvalForm( $this );
 		$form->show();
-		if ( $this->step == 5 or $this->step == 6 ) {
+		if ( $this->step == 5 || $this->step == 6 ) {
 			$this->getOutput()->addWikiMsg( 'math-lp-5-footer' );
 		}
 	}
@@ -174,7 +175,7 @@ class SpecialMlpEval extends SpecialPage {
 				$this->setRevision( $results[0] );
 				return $this->revision->getTitle();
 			}
-		} catch ( Exception $e ){
+		} catch ( Exception $e ) {
 			// empty
 		}
 		$rp = new RandomPage();
@@ -244,10 +245,10 @@ class SpecialMlpEval extends SpecialPage {
 	private function enableMathStyles() {
 		$out = $this->getOutput();
 		$styles = [ 'ext.math.desktop.styles', 'ext.math.scripts' ];
-		if ( $this->subStep == '4b' ){
-			$styles[] ='ext.math-svg.styles';
-		} elseif ( $this->subStep ){
-			$styles[] ='ext.math-mathml.styles';
+		if ( $this->subStep == '4b' ) {
+			$styles[] = 'ext.math-svg.styles';
+		} elseif ( $this->subStep ) {
+			$styles[] = 'ext.math-mathml.styles';
 		} else {
 			$styles[] = 'ext.math.styles';
 		}
@@ -277,7 +278,7 @@ class SpecialMlpEval extends SpecialPage {
 		}
 	}
 	public function getPreviousStep( $step = false, $substep = '' ) {
-		if ( $step === false ){
+		if ( $step === false ) {
 			$step = $this->step;
 			$substep = $this->subStep;
 		}
@@ -340,7 +341,7 @@ class SpecialMlpEval extends SpecialPage {
 			if ( $results ) {
 				return $results[0];
 			}
-		} catch ( Exception $e ){
+		} catch ( Exception $e ) {
 			// empty
 		}
 		$unique = array_rand( $this->mathIdGen->getMathTags() );
@@ -442,7 +443,7 @@ class SpecialMlpEval extends SpecialPage {
 					if ( isset( $rels[$i] ) ) {
 						foreach ( $rels[$i] as $rel ) {
 							if ( preg_match( '/\[\[(.*)\]\]/', $rel->definition, $m ) ) {
-								if ( $wd->search( $m[1] ) ){
+								if ( $wd->search( $m[1] ) ) {
 									$res = $wd->getResults();
 									$this->relations[$i][] = $res[1];
 								}
@@ -454,7 +455,6 @@ class SpecialMlpEval extends SpecialPage {
 				}
 				break;
 		}
-
 	}
 
 	private function writeLog( $message, $step = false, $revId = false ) {
@@ -464,7 +464,7 @@ class SpecialMlpEval extends SpecialPage {
 			'header' => $this->getRequest()->getAllHeaders()
 		];
 		$json = json_encode( $logData );
-		if ( $step == false ){
+		if ( $step == false ) {
 			$step = $this->step;
 		}
 		if ( !$revId ) {
@@ -490,7 +490,7 @@ class SpecialMlpEval extends SpecialPage {
 				'revision_id' => $revId,
 				'anchor' => $this->fId
 			] );
-			if ( $cnt == 1 ){
+			if ( $cnt == 1 ) {
 				$row = [
 						'revision_id' => $revId,
 						'anchor'      => $this->fId,
@@ -608,10 +608,15 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
+	 * @param bool $highlight
+	 * @param bool $collapsed
+	 * @param bool $formula
+	 * @param bool $filter
 	 * @throws MWException
 	 */
 	public function printMathObjectInContext(
-			$highlight = true, $collapsed = true, $formula = false, $filter = false ) {
+		$highlight = true, $collapsed = true, $formula = false, $filter = false
+	) {
 		if ( $collapsed ) {
 			$collapsed = "mw-collapsed";
 		}
@@ -620,7 +625,7 @@ class SpecialMlpEval extends SpecialPage {
 		$out->addHtml(
 			"<div class=\"toccolours mw-collapsible $collapsed\"  style=\"text-align: left\">"
 		);
-		if ( !$formula ){
+		if ( !$formula ) {
 			$this->printFormula();
 		} else {
 			$out->addHTML( $formula );
@@ -633,7 +638,7 @@ class SpecialMlpEval extends SpecialPage {
 
 		$parserOutput = $wgParser->getFreshParser()->parse(
 			$hl->getWikiText(), $this->getRevisionTitle(), $popts )->getText();
-		if ( $filter ){
+		if ( $filter ) {
 			call_user_func_array( $filter, [ &$parserOutput ] );
 		}
 		$out->addHTML( $parserOutput );
@@ -641,6 +646,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
+	 * @param mixed $key
 	 * @return mixed
 	 */
 	public function getRelations( $key = null ) {
@@ -658,8 +664,8 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @param $tex
-	 * @param $options
+	 * @param string $tex
+	 * @param array $options
 	 * @return MathMathML
 	 */
 	private function getMathMlRenderer( $tex, $options ) {

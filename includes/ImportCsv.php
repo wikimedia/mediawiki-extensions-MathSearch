@@ -44,18 +44,18 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param      $csvFile
-	 * @param int  $runId
+	 * @param string $csvFile
+	 * @param int $runId
 	 * @param bool $overwrite
 	 *
-	 * @return string|boolean
+	 * @return string|bool
 	 */
 	public function execute( $csvFile, $runId = null, $overwrite = false ) {
 		$this->overwrite = $overwrite;
 		$runId = $this->validateRunId( $runId );
 		if ( $runId !== false ) {
 			$success = $this->importFromFile( $csvFile );
-			if ( $success == true ){
+			if ( $success == true ) {
 				return $this->processInput();
 			}
 		} else {
@@ -64,7 +64,7 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param $run
+	 * @param string $run
 	 * @return bool|int|string
 	 */
 	function validateRunId( $run ) {
@@ -118,7 +118,7 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param $csv_file
+	 * @param string|null $csv_file
 	 * @return null
 	 * @throws Exception
 	 */
@@ -152,11 +152,10 @@ class ImportCsv {
 			$table[0][0] = trim( $table[0][0], '"' );
 		}
 		return $this->importFromArray( $table );
-
 	}
 
 	/**
-	 * @param $table
+	 * @param array $table
 	 * @return null|string
 	 */
 	public function importFromArray( $table ) {
@@ -287,7 +286,7 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param $runID
+	 * @param string $runID
 	 * @throws DBUnexpectedError
 	 */
 	public function deleteRun( $runID ) {
@@ -305,14 +304,14 @@ class ImportCsv {
 	}
 
 	/**
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isOverwrite() {
 		return $this->overwrite;
 	}
 
 	/**
-	 * @param boolean $overwrite
+	 * @param bool $overwrite
 	 */
 	public function setOverwrite( $overwrite ) {
 		$this->overwrite = $overwrite;

@@ -68,16 +68,17 @@ class ExportMathCache extends Maintenance {
 		if ( $sort === true ) {
 			$options['ORDER BY'] = $inputColumn;
 		}
-		$res =  $dbr->select(
+		$res = $dbr->select(
 			$table,
 			[ 'math_inputhash', $inputColumn ],
 			'',
 			__METHOD__,
 			$options );
-		if ( $res === false ) { return false;
-	 }
+		if ( $res === false ) {
+			return false;
+		}
 		// Convert result wrapper to array
-		foreach ( $res as $row ){
+		foreach ( $res as $row ) {
 			$out[] = [
 				// the binary encoded input-hash is no valid json output
 				'inputhash' => MathObject::hash2md5( $row->math_inputhash ),

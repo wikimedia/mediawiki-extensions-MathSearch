@@ -27,7 +27,8 @@ class MathoidDriver {
 
 	/**
 	 * MathoidDriver constructor.
-	 * @param $q
+	 * @param string $q
+	 * @param string $type
 	 */
 	function __construct( $q = '', $type = 'tex' ) {
 		$this->q = $q;
@@ -73,7 +74,7 @@ class MathoidDriver {
 	protected function processResults( $res ) {
 		$jsonResult = json_decode( $res );
 		if ( $jsonResult && json_last_error() === JSON_ERROR_NONE ) {
-			if ( isset( $jsonResult->texvcinfo ) ){
+			if ( isset( $jsonResult->texvcinfo ) ) {
 				// mathoid 0.2.9
 				$texvcinfo = $jsonResult->texvcinfo;
 			} else {

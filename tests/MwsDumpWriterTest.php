@@ -213,4 +213,3 @@ XML;
 		$this->assertEquals( $this->expectedOutput, $dw->getOutput() );
 	}
 }
-

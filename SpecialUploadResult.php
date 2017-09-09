@@ -40,7 +40,7 @@ class SpecialUploadResult extends SpecialPage {
 	function execute( $query ) {
 		global $wgMathUploadEnabled;
 		$this->setHeaders();
-		if ( ! ( $this->getUser()->isAllowed( 'mathwmcsubmit' ) && $wgMathUploadEnabled === true ) ) {
+		if ( !( $this->getUser()->isAllowed( 'mathwmcsubmit' ) && $wgMathUploadEnabled === true ) ) {
 			throw new PermissionsError( 'mathwmcsubmit' );
 		}
 
@@ -68,7 +68,6 @@ class SpecialUploadResult extends SpecialPage {
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
 		$htmlForm->show();
-
 	}
 
 	/**
@@ -101,7 +100,7 @@ class SpecialUploadResult extends SpecialPage {
 	}
 
 	/**
-	 * @param $run
+	 * @param string $run
 	 *
 	 * @return bool|int|string
 	 * @throws MWException
@@ -113,7 +112,7 @@ class SpecialUploadResult extends SpecialPage {
 		$this->runId = $this->importer->validateRunId( $run );
 		/** @type array $warnings */
 		$warnings = $this->importer->getWarnings();
-		if ( $warnings ){
+		if ( $warnings ) {
 			echo "bad wqarni";
 			foreach ( $warnings as $warning ) {
 				$this->getOutput()->addWikiText( $warning );
@@ -130,7 +129,7 @@ class SpecialUploadResult extends SpecialPage {
 		$uID = $this->getUser()->getId();
 		$res = $dbr->selectField( 'math_wmc_runs', 'runName',
 			[ 'isDraft' => true, 'userID' => $uID, 'runId' => $this->runId ] );
-		if ( ! $res ) {
+		if ( !$res ) {
 			return wfMessage( 'math-wmc-SelectRunHelp' )->text();
 		} else {
 			return true;
@@ -146,7 +145,7 @@ class SpecialUploadResult extends SpecialPage {
 
 		$uploadResult = ImportStreamSource::newFromUpload( 'wpFile' );
 
-		if ( ! $uploadResult->isOK() ) {
+		if ( !$uploadResult->isOK() ) {
 			return $uploadResult->getWikiText();
 		}
 
@@ -155,7 +154,7 @@ class SpecialUploadResult extends SpecialPage {
 		$out->addWikiMsg( 'math-wmc-importing' );
 		$error_msg = $this->importer->importFromFile( $source->mHandle );
 
-		if ( ! is_null( $error_msg ) ) {
+		if ( !is_null( $error_msg ) ) {
 			return $error_msg;
 		}
 		if ( count( $this->importer->getWarnings() ) ) {
@@ -196,7 +195,7 @@ class SpecialUploadResult extends SpecialPage {
 		if ( $this->getRequest()->getBool( "wpdisplayFormulae" ) ) {
 			$this->getOutput()->addModuleStyles( [ 'ext.math.styles' ] );
 			$renderer = MathLaTeXML::newFromMd5( $md5 );
-			if ( $renderer->render() ){
+			if ( $renderer->render() ) {
 				$renderedMath = $renderer->getHtmlOutput();
 			} else {
 				$renderedMath = $md5;
@@ -205,7 +204,7 @@ class SpecialUploadResult extends SpecialPage {
 			$renderedMath = $md5;
 		}
 		$formulaId = MathSearchHooks::generateMathAnchorString( $row['oldId'], $row['fId'] );
-		$link=Revision::newFromId( $row['oldId'] )->getTitle()->getLinkURL().$formulaId;
+		$link = Revision::newFromId( $row['oldId'] )->getTitle()->getLinkURL().$formulaId;
 		$this->getOutput()->addHTML( "<tr><td>${row['qId']}</td><td><a href=\"$link\" >$formulaId</a></td>
 			<td>${row['rank']}</td><td>$renderedMath</td></tr>" );
 	}
@@ -214,17 +213,17 @@ class SpecialUploadResult extends SpecialPage {
 	 * @throws MWException
 	 */
 	private function displayFeedback() {
-		$runId=$this->runId;
-		$dbr=wfGetDB( DB_SLAVE );
+		$runId = $this->runId;
+		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
-			[ 'l'=>'math_wmc_rank_levels', 'r'=>'math_wmc_ref', 'math_wmc_results' ],
+			[ 'l' => 'math_wmc_rank_levels', 'r' => 'math_wmc_ref', 'math_wmc_results' ],
 			[
 				'count(DISTINCT `r`.`qId`)  AS `c`',
 				'`l`.`level`                AS `level`'
 			],
 			[
 				"(`math_wmc_results`.`rank` <= `l`.`level`)" ,
-				'runId'=>$runId,
+				'runId' => $runId,
 				'`math_wmc_results`.`oldId` = `r`.`oldId`',
 				'`math_wmc_results`.`qId` = `r`.`qId`'
 			],
@@ -234,7 +233,7 @@ class SpecialUploadResult extends SpecialPage {
 				'ORDER BY' => 'count(DISTINCT `r`.`qId`) DESC'
 			]
 		);
-		if ( ! $res || $res->numRows() == 0 ){
+		if ( !$res || $res->numRows() == 0 ) {
 			$this->getOutput()->addWikiText( "Score is 0. Check your submission" );
 			return;
 		} else {
@@ -247,8 +246,8 @@ class SpecialUploadResult extends SpecialPage {
     <th>rank cutoff</th>
   </tr>' );
 		foreach ( $res as $result ) {
-			$c=$result->c;
-			$l=$result->level;
+			$c = $result->c;
+			$l = $result->level;
 			$this->getOutput()->addHTML( "
   <tr>
     <td>$c</td>
@@ -262,17 +261,17 @@ class SpecialUploadResult extends SpecialPage {
 	 * @throws MWException
 	 */
 	private function displayFormulaFeedback() {
-		$runId=$this->runId;
-		$dbr=wfGetDB( DB_SLAVE );
+		$runId = $this->runId;
+		$dbr = wfGetDB( DB_SLAVE );
 		$res = $dbr->select(
-			[ 'l'=>'math_wmc_rank_levels', 'r'=>'math_wmc_ref', 'math_wmc_results' ],
+			[ 'l' => 'math_wmc_rank_levels', 'r' => 'math_wmc_ref', 'math_wmc_results' ],
 			[
 				'count(DISTINCT `r`.`qId`)  AS `c`',
 				'`l`.`level`                AS `level`'
 			],
 			[
 				"(`math_wmc_results`.`rank` <= `l`.`level`)",
-				'runId'=>$runId,
+				'runId' => $runId,
 				'`math_wmc_results`.`oldId` = `r`.`oldId`',
 				'`math_wmc_results`.`qId` = `r`.`qId`',
 				'`math_wmc_results`.`fId` = `r`.`fId`',
@@ -283,7 +282,7 @@ class SpecialUploadResult extends SpecialPage {
 				'ORDER BY' => 'count(DISTINCT `r`.`qId`) DESC'
 			]
 		);
-		if ( ! $res || $res->numRows() == 0 ){
+		if ( !$res || $res->numRows() == 0 ) {
 			$this->getOutput()->addWikiText( "Score is 0. Check your submission" );
 			return;
 		} else {
@@ -296,8 +295,8 @@ class SpecialUploadResult extends SpecialPage {
     <th>rank cutoff</th>
   </tr>' );
 		foreach ( $res as $result ) {
-			$c=$result->c;
-			$l=$result->level;
+			$c = $result->c;
+			$l = $result->level;
 			$this->getOutput()->addHTML( "
   <tr>
     <td>$c</td>

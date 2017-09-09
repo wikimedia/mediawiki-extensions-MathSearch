@@ -12,7 +12,7 @@ class MathSearchHooks {
 	/**
 	 * LoadExtensionSchemaUpdates handler; set up math table on install/upgrade.
 	 *
-	 * @param $updater DatabaseUpdater
+	 * @param DatabaseUpdater $updater
 	 * @throws Exception
 	 * @return bool
 	 */
@@ -58,7 +58,7 @@ class MathSearchHooks {
 
 	/**
 	 * Checks if the db2 php client is installed
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function isDB2Supported() {
 		if ( function_exists( 'db2_connect' ) ) {
@@ -77,7 +77,7 @@ class MathSearchHooks {
 	 * @param string $tex the user input hash
 	 */
 	private static function updateIndex( $revId, $eid, $inputHash, $tex ) {
-		if ( $revId>0 && $eid ) {
+		if ( $revId > 0 && $eid ) {
 			try {
 				$dbr = wfGetDB( DB_SLAVE );
 				$exists = $dbr->selectRow( 'mathindex',
@@ -114,7 +114,7 @@ class MathSearchHooks {
 	 * prefixes it with "math" to increase the probability of
 	 * having a unique id that can be referenced via the anchor
 	 * #math{$id}.
-	 * @param int $id
+	 * @param int &$id
 	 * @param MathRenderer $renderer
 	 * @param int $revId
 	 * @return bool true if an ID has been assigned manually,
@@ -141,7 +141,7 @@ class MathSearchHooks {
 	 * Callback function that is called after a formula was rendered
 	 * @param Parser $parser
 	 * @param MathRenderer $renderer
-	 * @param string|null $Result reference to the rendering result
+	 * @param string|null &$Result reference to the rendering result
 	 * @return bool
 	 */
 	static function updateMathIndex( Parser $parser, MathRenderer $renderer, &$Result = null ) {
@@ -163,11 +163,12 @@ class MathSearchHooks {
 	 * Callback function that is called after a formula was rendered
 	 * @param Parser $parser
 	 * @param MathRenderer $renderer
-	 * @param string|null $Result reference to the rendering result
+	 * @param string|null &$Result reference to the rendering result
 	 * @return bool
 	 */
-	static function addIdentifierDescription( Parser $parser, MathRenderer $renderer,
-		&$Result = null ) {
+	static function addIdentifierDescription(
+		Parser $parser, MathRenderer $renderer, &$Result = null
+	) {
 		$revId = $parser->getRevisionId();
 		self::setMathId( $eid, $renderer, $revId );
 		$mo = MathObject::cloneFromRenderer( $renderer );
@@ -182,11 +183,12 @@ class MathSearchHooks {
 	 * Callback function that is called after a formula was rendered
 	 * @param Parser $parser
 	 * @param MathRenderer $renderer
-	 * @param string|null $Result reference to the rendering result
+	 * @param string|null &$Result reference to the rendering result
 	 * @return bool
 	 */
-	static function addLinkToFormulaInfoPage( Parser $parser, MathRenderer $renderer,
-		&$Result = null ) {
+	static function addLinkToFormulaInfoPage(
+		Parser $parser, MathRenderer $renderer, &$Result = null
+	) {
 		$revId = $parser->getRevisionId();
 		if ( $revId == 0 || self::setMathId( $eid, $renderer, $revId ) === false ) {
 			return true;
@@ -210,13 +212,14 @@ class MathSearchHooks {
 	 *
 	 * @param Parser $parser
 	 * @param MathRenderer $renderer
-	 * @param null $Result
+	 * @param null &$Result
 	 * @return bool
 	 */
-	static function onMathFormulaRenderedNoLink( Parser $parser, MathRenderer $renderer,
-		&$Result = null ) {
+	static function onMathFormulaRenderedNoLink(
+		Parser $parser, MathRenderer $renderer, &$Result = null
+	) {
 		$revId = $parser->getRevisionId();
-		if ( ! self::setMathId( $eid, $renderer, $revId ) ) {
+		if ( !self::setMathId( $eid, $renderer, $revId ) ) {
 			return true;
 		}
 		if ( $revId > 0 ) { // Only store something if a pageid was set.
@@ -232,8 +235,8 @@ class MathSearchHooks {
 	/**
 	 * Links to the unit test files for the test cases.
 	 *
-	 * @param string $files
-	 * @return boolean (true)
+	 * @param string &$files
+	 * @return bool true
 	 */
 	static function onRegisterUnitTests( &$files ) {
 		$testDir = __DIR__ . '/tests/';
@@ -270,8 +273,8 @@ class MathSearchHooks {
 	/**
 	 * Register the <mquery> tag with the Parser.
 	 *
-	 * @param $parser Parser instance of Parser
-	 * @return Boolean: true
+	 * @param Parser $parser instance of Parser
+	 * @return bool true
 	 */
 	static function onParserFirstCallInit( $parser ) {
 		$parser->setHook( 'mquery', [ 'MathSearchHooks', 'mQueryTagHook' ] );
@@ -282,8 +285,8 @@ class MathSearchHooks {
 	/**
 	 * Callback function for the <mquery> parser hook.
 	 *
-	 * @param $content (the LaTeX+MWS query input)
-	 * @param $attributes
+	 * @param string $content the LaTeX+MWS query input
+	 * @param array $attributes
 	 * @param Parser $parser
 	 * @return array
 	 */
@@ -311,7 +314,7 @@ class MathSearchHooks {
 	) {
 		$revId = $article->getTitle()->getLatestRevID();
 		$mathEngineBaseX = new MathEngineBaseX();
-		if ( $mathEngineBaseX->update( "", [ $revId ] ) ){
+		if ( $mathEngineBaseX->update( "", [ $revId ] ) ) {
 			LoggerFactory::getInstance( 'MathSearch' )->warning( "Deletion of $revId was successful." );
 		} else {
 			LoggerFactory::getInstance( 'MathSearch' )->warning( "Deletion of $revId failed." );
@@ -326,18 +329,19 @@ class MathSearchHooks {
 	 * @param User $user
 	 * @param Content $content
 	 * @param string $summary
-	 * @param boolean $isMinor
-	 * @param boolean $isWatch
-	 * @param $section Deprecated
-	 * @param integer $flags
+	 * @param bool $isMinor
+	 * @param bool $isWatch
+	 * @param string $section Deprecated
+	 * @param int $flags
 	 * @param Revision|null $revision
 	 * @param Status $status
-	 * @param integer $baseRevId
+	 * @param int $baseRevId
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function onPageContentSaveComplete( $article, $user, $content, $summary, $isMinor,
-		$isWatch, $section, $flags, $revision, $status, $baseRevId ) {
+		$isWatch, $section, $flags, $revision, $status, $baseRevId
+	) {
 		// TODO: Update to JOB
 		if ( $revision == null ) {
 			LoggerFactory::getInstance(
@@ -346,7 +350,7 @@ class MathSearchHooks {
 			return true;
 		}
 		$revId = $revision->getId();
-		if ( $revision->getContentModel() !== CONTENT_MODEL_WIKITEXT ){
+		if ( $revision->getContentModel() !== CONTENT_MODEL_WIKITEXT ) {
 			// Skip pages that do not contain wikitext
 			return true;
 		}
@@ -394,21 +398,20 @@ class MathSearchHooks {
 	 */
 	public static function registerExtension() {
 		global $wgMathValidModes;
-		if ( ! in_array( 'latexml', $wgMathValidModes ) ) {
+		if ( !in_array( 'latexml', $wgMathValidModes ) ) {
 			$wgMathValidModes[] = 'latexml';
 		}
 	}
 
 	/**
-	 * @param $revId int
+	 * @param int $revId
 	 * @return MathIdGenerator
 	 * @throws MWException
 	 */
 	private static function getRevIdGenerator( $revId ) {
-		if ( !array_key_exists( $revId, MathSearchHooks::$idGenerators ) ) {
-			MathSearchHooks::$idGenerators[$revId] = MathIdGenerator::newFromRevisionId( $revId );
+		if ( !array_key_exists( $revId, self::$idGenerators ) ) {
+			self::$idGenerators[$revId] = MathIdGenerator::newFromRevisionId( $revId );
 		}
-		return MathSearchHooks::$idGenerators[$revId];
-
+		return self::$idGenerators[$revId];
 	}
 }

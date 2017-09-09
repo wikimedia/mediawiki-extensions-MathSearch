@@ -118,7 +118,7 @@ class MathObject extends MathMathML {
 	 *
 	 * @global boolean $wgMathDebug
 	 * @param stdClass $res
-	 * @return boolean|\self
+	 * @return bool|\self
 	 */
 	public static function constructformpagerow( $res ) {
 		global $wgMathDebug;
@@ -140,7 +140,7 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 * @param $wikiText
+	 * @param string $wikiText
 	 * @return mixed
 	 */
 	public static function extractMathTagsFromWikiText( $wikiText ) {
@@ -330,7 +330,7 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 * @param $identifier
+	 * @param string $identifier
 	 * @return bool|ResultWrapper
 	 */
 	public function getNouns( $identifier ) {
@@ -346,7 +346,6 @@ class MathObject extends MathMathML {
 			[ 'ORDER BY' => 'evidence DESC', 'LIMIT' => 5 ]
 		);
 		return $identifiers;
-
 	}
 
 	public function getPageTitle() {
@@ -418,7 +417,6 @@ class MathObject extends MathMathML {
 	}
 
 	public function render( $purge = false ) {
-
 	}
 
 	public function getSvg( /** @noinspection PhpUnusedParameterInspection */
@@ -481,7 +479,7 @@ class MathObject extends MathMathML {
 				if ( !isset( $result[$key] ) ) {
 					$result[$key] = [];
 				}
-				$result[$key][] = (object) [ 'definition' => $row->noun ];
+				$result[$key][] = (object)[ 'definition' => $row->noun ];
 			}
 			return $result;
 		} else {

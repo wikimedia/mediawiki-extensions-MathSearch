@@ -50,7 +50,7 @@ class WmcRefIdentifier extends Maintenance {
 				if ( isset( $rels[$i] ) ) {
 					foreach ( $rels[$i] as $rel ) {
 						if ( preg_match( '/\[\[(.*)\]\]/', $rel->definition, $m ) ) {
-							if ( $wd->search( $m[1] ) ){
+							if ( $wd->search( $m[1] ) ) {
 								$res = $wd->getResults();
 								$relations[$i][] = $res;
 							}

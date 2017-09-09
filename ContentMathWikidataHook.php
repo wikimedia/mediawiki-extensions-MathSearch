@@ -13,6 +13,7 @@ class ContentMathWikidataHook {
 
 	/**
 	 * Add Datatype "ContentMath" to the Wikibase Repository
+	 * @param array &$dataTypeDefinitions
 	 */
 	public static function onWikibaseRepoDataTypes( array &$dataTypeDefinitions ) {
 		global $wgContentMathEnableWikibaseDataType;
@@ -22,7 +23,7 @@ class ContentMathWikidataHook {
 
 		$dataTypeDefinitions['PT:contentmath'] = [
 			'value-type'                 => 'string',
-			'validator-factory-callback' => function() {
+			'validator-factory-callback' => function () {
 				// load validator builders
 				$factory = WikibaseRepo::getDefaultValidatorBuilders();
 
@@ -33,12 +34,12 @@ class ContentMathWikidataHook {
 				$validators[] = new ContentMathValidator();
 				return $validators;
 			},
-			'parser-factory-callback' => function( ParserOptions $options ) {
+			'parser-factory-callback' => function ( ParserOptions $options ) {
 				$repo = WikibaseRepo::getDefaultInstance();
 				$normalizer = new WikibaseStringValueNormalizer( $repo->getStringNormalizer() );
 				return new StringParser( $normalizer );
 			},
-			'formatter-factory-callback' => function( $format, FormatterOptions $options ) {
+			'formatter-factory-callback' => function ( $format, FormatterOptions $options ) {
 				global $wgOut;
 				$styles = [ 'ext.math.desktop.styles', 'ext.math.scripts', 'ext.math.styles' ];
 				$wgOut->addModuleStyles( $styles );
@@ -68,7 +69,7 @@ class ContentMathWikidataHook {
 
 		$dataTypeDefinitions['PT:contentmath'] = [
 			'value-type'                 => 'string',
-			'formatter-factory-callback' => function( $format, FormatterOptions $options ) {
+			'formatter-factory-callback' => function ( $format, FormatterOptions $options ) {
 				global $wgOut;
 				$styles = [ 'ext.math.desktop.styles', 'ext.math.scripts', 'ext.math.styles' ];
 				$wgOut->addModuleStyles( $styles );

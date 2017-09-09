@@ -191,7 +191,7 @@ class MathPerformance extends Maintenance {
 			call_user_func( [ $rbi, $method ] );
 			$this->time( $prefix . $method );
 			return true;
-		} catch ( Exception $e ){
+		} catch ( Exception $e ) {
 			$this->vPrint( "Tex:{$rbi->getTex()}" );
 			$this->vPrint( $e->getMessage() );
 			$this->vPrint( $e->getTraceAsString() );
@@ -214,7 +214,7 @@ class MathPerformance extends Maintenance {
 	 * @param $input
 	 */
 	private static function processImage( $folder, $input ) {
-		$log =  LoggerFactory::getInstance( 'MathSearch-maint' );
+		$log = LoggerFactory::getInstance( 'MathSearch-maint' );
 		$texvc = new MathTexvc( $input );
 		$texvc->render();
 		$texvc->writeCache();
@@ -228,7 +228,7 @@ class MathPerformance extends Maintenance {
 		file_put_contents( "$path/old.png", $texvc->getPng() );
 
 		// Mathoid
-		if ( ! $mathML->render() ) {
+		if ( !$mathML->render() ) {
 			$log->error( 'MathML rendering returned false', [
 				'mathml' => $mathML,
 				'tex' => $input,
@@ -244,7 +244,7 @@ class MathPerformance extends Maintenance {
 
 		// Mathoid eating it's MathML
 		$mathML = new MathMathML( $o->getMathml(), [ 'type' => 'pmml' ] );
-		if ( ! $mathML->render() ) {
+		if ( !$mathML->render() ) {
 			$log->error( 'MathML rendering returned false', [
 				'mathml' => $mathML,
 				'tex' => $input,
@@ -259,7 +259,7 @@ class MathPerformance extends Maintenance {
 
 		// LaTeXML */
 		$mathML = new MathLaTeXML( $input );
-		if ( ! $mathML->readFromDatabase() ) {
+		if ( !$mathML->readFromDatabase() ) {
 			$log->error( 'LaTeXML rendering returned false', [
 				'mathml' => $mathML,
 				'tex' => $input,
@@ -272,7 +272,6 @@ class MathPerformance extends Maintenance {
 		file_put_contents( "$path/new-latexml.png", $o->getPng() );
 		file_put_contents( "$path/new-latexml.svg", $o->getSvg( 'force' ) );
 		file_put_contents( "$path/new-latexml.mml", $mathML->getMathml() );
-
 	}
 
 	/**

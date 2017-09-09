@@ -14,7 +14,7 @@ class MathIdGenerator {
 	private $contentIdMap;
 
 	/**
-	 * @param $revision
+	 * @param Revision $revision
 	 * @return MathIdGenerator
 	 * @throws MWException
 	 */
@@ -38,8 +38,8 @@ class MathIdGenerator {
 
 	/**
 	 * MathIdGenerator constructor.
-	 * @param $wikiText
-	 * @param $revisionId
+	 * @param string $wikiText
+	 * @param int $revisionId
 	 */
 	public function __construct( $wikiText, $revisionId = 0 ) {
 		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
@@ -95,12 +95,12 @@ class MathIdGenerator {
 		if ( !$this->contentIdMap ) {
 			$this->contentIdMap = [];
 			foreach ( $this->mathTags as $key => $tag ) {
-				if ( !array_key_exists( $tag[MathIdGenerator::CONTENT_POS],
+				if ( !array_key_exists( $tag[self::CONTENT_POS],
 						$this->contentIdMap )
 				) {
-					$this->contentIdMap[$tag[MathIdGenerator::CONTENT_POS]] = [];
+					$this->contentIdMap[$tag[self::CONTENT_POS]] = [];
 				}
-				$this->contentIdMap[$tag[MathIdGenerator::CONTENT_POS]][] =
+				$this->contentIdMap[$tag[self::CONTENT_POS]][] =
 					$this->parserKey2fId( $key );
 			}
 		}
@@ -147,7 +147,7 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * @param boolean $useCustomIds
+	 * @param bool $useCustomIds
 	 */
 	public function setUseCustomIds( $useCustomIds ) {
 		$this->useCustomIds = $useCustomIds;
@@ -155,20 +155,20 @@ class MathIdGenerator {
 
 	public function getTagFromId( $eid ) {
 		foreach ( $this->mathTags as $key => $mathTag ) {
-			if ( $eid == $this->formatKey( $key ) ){
+			if ( $eid == $this->formatKey( $key ) ) {
 				return $mathTag;
 			}
-			if ( isset( $mathTag[self::ATTRIB_POS]['id'] ) && $eid == $mathTag[self::ATTRIB_POS]['id'] ){
+			if ( isset( $mathTag[self::ATTRIB_POS]['id'] ) && $eid == $mathTag[self::ATTRIB_POS]['id'] ) {
 				return $mathTag;
 			}
 		}
 	}
 	public function getUniqueFromId( $eid ) {
 		foreach ( $this->mathTags as $key => $mathTag ) {
-			if ( $eid == $this->formatKey( $key ) ){
+			if ( $eid == $this->formatKey( $key ) ) {
 				return $key;
 			}
-			if ( isset( $mathTag[self::ATTRIB_POS]['id'] ) && $eid == $mathTag[self::ATTRIB_POS]['id'] ){
+			if ( isset( $mathTag[self::ATTRIB_POS]['id'] ) && $eid == $mathTag[self::ATTRIB_POS]['id'] ) {
 				return $key;
 			}
 		}

@@ -21,11 +21,11 @@ class GetEquationsByQuery extends SpecialPage {
 	 */
 	function execute( $par ) {
 		global $wgRequest, $wgOut, $wgMathDebug;
-		if ( ! $wgMathDebug ) {
+		if ( !$wgMathDebug ) {
 			$wgOut->addWikiText(
 				"==Debug mode needed==  This function is only supported in math debug mode."
 			);
-			return false;
+			return;
 		}
 
 		$filterID = $wgRequest->getInt( 'filterID', 1000 );
@@ -83,13 +83,12 @@ class GetEquationsByQuery extends SpecialPage {
 				$renderer = MathRenderer::getRenderer( $row->math_tex, [], 'latexml' );
 				$result = $renderer->render( true );
 				$tend = microtime( true );
-				$wgOut->addWikiText( ":rendering in " . ( $tend -$tstart ) . "s.", false );
+				$wgOut->addWikiText( ":rendering in " . ( $tend - $tstart ) . "s.", false );
 				$renderer->writeCache();
 				$wgOut->addHtml( "Output:" . $result . "<br/>" );
 			}
 
 		}
-
 	}
 
 	protected function getGroupName() {

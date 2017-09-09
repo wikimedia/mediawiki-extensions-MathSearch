@@ -87,7 +87,7 @@ class MathosphereDriver {
 		) {
 			$this->success = $jsonResult->success;
 			if ( $this->success ) {
-				foreach ( $jsonResult->relations as $r ){
+				foreach ( $jsonResult->relations as $r ) {
 					$this->addIdentifierDefinitionTuple( $r );
 				}
 			} else {
@@ -101,7 +101,7 @@ class MathosphereDriver {
 	}
 
 	private function addIdentifierDefinitionTuple( $r ) {
-		if ( ! isset( $this->relations[$r->identifier] ) ){
+		if ( !isset( $this->relations[$r->identifier] ) ) {
 			$this->relations[$r->identifier] = [];
 		}
 		$this->relations[$r->identifier][] = $r;

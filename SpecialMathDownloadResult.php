@@ -31,7 +31,7 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 
 	function execute( $query ) {
 		$this->setHeaders();
-		if ( ! ( $this->getUser()->isAllowed( 'mathwmcsubmit' ) ) ) {
+		if ( !$this->getUser()->isAllowed( 'mathwmcsubmit' ) ) {
 			throw new PermissionsError( 'mathwmcsubmit' );
 		}
 
@@ -42,7 +42,6 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
 		$htmlForm->setSubmitTextMsg( 'math-wmc-download-button' );
 		$htmlForm->show();
-
 	}
 
 	function processInput() {

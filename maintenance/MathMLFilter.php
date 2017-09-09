@@ -22,8 +22,9 @@
 # Alert the user that this is not a valid entry point to MediaWiki if they try to access the special pages file directly.
 if ( !defined( 'MEDIAWIKI' ) ) {
 	die( "This is not a valid entry point to MediaWiki.\n" . "To run the script use:\n" .
-		 'php ../../../maintenance/dumpBackup.php --current --plugin=MathMLFilter:./MathDump.php --filter=mathml' .
-		 "\n" );
+		'php ../../../maintenance/dumpBackup.php --current --plugin=MathMLFilter:./MathDump.php --filter=mathml' .
+		"\n"
+	);
 }
 // @codingStandardsIgnoreEnd
 
@@ -34,11 +35,10 @@ if ( !defined( 'MEDIAWIKI' ) ) {
  */
 class MathMLFilter extends DumpFilter {
 	/**
-	 * @param $backupDumper
+	 * @param BackupDumper $backupDumper
 	 */
 	public static function register( $backupDumper ) {
 		$backupDumper->registerFilter( 'mathml', 'MathMLFilter' );
-
 	}
 
 	/**
