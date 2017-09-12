@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Benel"
+			"Benel",
+			"Tokoabibi"
 		]
 	},
+	"math-search-type-label": "nikalahizaan:",
 	"math-tex2nb-input": "sulitan"
 }
