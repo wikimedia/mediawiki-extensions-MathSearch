@@ -59,7 +59,7 @@ class ExportMathCache extends Maintenance {
 	 */
 	private static function getMathTagsFromDatabase( $table , $offset , $length , $sort ) {
 		$out = [];
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$inputColumn = self::$inputColumns[ $table ];
 		$options = [
 			'OFFSET'   => $offset,

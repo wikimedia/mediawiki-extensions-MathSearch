@@ -49,7 +49,7 @@ class BatchExport extends Maintenance {
 			$this->output( "{$dir} is not a directory.\n" );
 			exit( 1 );
 		}
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		// runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 		// runName VARCHAR(45),
 		// userId INT UNSIGNED,

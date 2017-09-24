@@ -84,7 +84,7 @@ class QueryEval extends Maintenance {
 		$qId = $row->qId;
 		$row->title = str_replace( [ 'π','ő' ], [ '$\\pi$', 'ö' ], $row->title );
 		$tName = $row->qId. ': {\\wikiLink{' . $row->title .'}{' . $row->oldId. '}{'.$row->fId.'}}';
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select( 'math_wmc_freq_hits',
 			[ 'cntRun', 'cntUser' , 'links', 'minRank', 'rendering' ],
 			[ 'qId' => $qId ] );
@@ -154,7 +154,7 @@ TEX;
 		MathSearchUtils::createEvaluationTables();
 		$this->addExtensionTable( 'math_wmc_udf_create' );
 		$this->dbu->doUpdates( [ "extensions" ] );
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		// runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 		// runName VARCHAR(45),
 		// userId INT UNSIGNED,

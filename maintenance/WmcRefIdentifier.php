@@ -31,7 +31,7 @@ class WmcRefIdentifier extends Maintenance {
 	 *
 	 */
 	public function execute() {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->query( 'SELECT qID, oldId, fid, math_inputtex FROM math_wmc_ref r' .
 			' JOIN mathlatexml l WHERE  r.math_inputhash = l.math_inputhash;' );
 

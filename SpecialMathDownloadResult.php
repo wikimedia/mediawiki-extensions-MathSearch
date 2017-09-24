@@ -14,7 +14,7 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 
 	public static function run2CSV( $runId ) {
 		$out = ImportCsv::getCsvColumnHeader() . "\n";
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select( 'math_wmc_results',
 			[ 'qId' , 'oldId' , 'fId' ],
 			[ 'runId' => $runId ],

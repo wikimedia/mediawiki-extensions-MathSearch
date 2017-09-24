@@ -79,7 +79,7 @@ class MathSearchHooks {
 	private static function updateIndex( $revId, $eid, $inputHash, $tex ) {
 		if ( $revId > 0 && $eid ) {
 			try {
-				$dbr = wfGetDB( DB_SLAVE );
+				$dbr = wfGetDB( DB_REPLICA );
 				$exists = $dbr->selectRow( 'mathindex',
 					[ 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ],
 					[

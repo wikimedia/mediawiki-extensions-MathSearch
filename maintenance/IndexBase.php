@@ -91,7 +91,7 @@ abstract class IndexBase extends Maintenance {
 		libxml_use_internal_errors( true );
 		$i = 0;
 		$inc = $this->getArg( 1, 100 );
-		$db = wfGetDB( DB_SLAVE );
+		$db = wfGetDB( DB_REPLICA );
 		echo "getting list of all equations from the database\n";
 		$this->res =
 			$db->select( [ 'mathindex', 'mathlatexml' ], [

@@ -224,7 +224,7 @@ class ImportCsv {
 		if ( array_key_exists( $qId, $this->validQIds ) ) {
 			return $this->validQIds[$qId];
 		}
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		if ( $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qId' => $qId ] ) ) {
 			$this->validQIds[$qId] = true;
 			return true;
@@ -240,7 +240,7 @@ class ImportCsv {
 	 * @return bool|mixed
 	 */
 	private function  getInputHash( $pId, $eId ) {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		return $dbr->selectField( 'mathindex', 'mathindex_inputhash',
 			[ 'mathindex_revision_id' => $pId, 'mathindex_anchor' => $eId ] );
 	}

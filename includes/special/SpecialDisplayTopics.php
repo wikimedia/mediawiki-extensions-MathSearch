@@ -66,7 +66,7 @@ SQL
 
 	private function displayTopic( $query ) {
 		$out = $this->getOutput();
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$qId = $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qID' => $query ] );
 		if ( !$qId ) {
 			$out->addWikiText( "Topic $query does not exist." );
@@ -124,7 +124,7 @@ SQL
 	 */
 	private function printMostFrequentRuns( $qId ) {
 		$out = $this->getOutput();
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->query( "select
 			  math_inputtex as            rendering,
 			  count(distinct runs.userId) cntUser,
@@ -157,7 +157,7 @@ SQL
 	private function printIndividualResults( $qId ) {
 		$out = $this->getOutput();
 		$out->addWikiText( "== Individual results ==" );
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		if ( !$dbr->tableExists( 'math_wmc_page_ranks' ) ) {
 			MathSearchUtils::createEvaluationTables();
 		}

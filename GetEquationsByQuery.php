@@ -57,7 +57,7 @@ class GetEquationsByQuery extends SpecialPage {
 		$wgOut->addWikiText(
 			"Displaying first 10 equation for query: <pre>" . var_export( $sqlFilter, true ) . '</pre>'
 		);
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select(
 				[ 'math' ],
 				[

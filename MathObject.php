@@ -21,7 +21,7 @@ class MathObject extends MathMathML {
 
 	public static function hash2md5( $hash ) {
 		// TODO: make MathRenderer::dbHash2md5 public
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$xhash = unpack( 'H32md5', $dbr->decodeBlob( $hash ) . "                " );
 		return $xhash['md5'];
 	}
@@ -29,7 +29,7 @@ class MathObject extends MathMathML {
 	public static function findSimilarPages( $pid ) {
 		global $wgOut;
 		$out = "";
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		try {
 			$res = $dbr->select( 'mathpagesimilarity',
 				[
@@ -75,7 +75,7 @@ class MathObject extends MathMathML {
 	 * @return self instance
 	 */
 	public static function constructformpage( $pid, $eid ) {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->selectRow(
 			[ 'mathindex' ], self::dbIndexFieldsArray(), 'mathindex_revision_id = ' . $pid
 			. ' AND mathindex_anchor= "' . $eid . '"' );
@@ -224,7 +224,7 @@ class MathObject extends MathMathML {
 
 	public function getObservations( $update = true ) {
 		global $wgOut;
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		try {
 			$res = $dbr->select( [ "mathobservation", "mathvarstat", 'mathrevisionstat' ],
 				[
@@ -334,7 +334,7 @@ class MathObject extends MathMathML {
 	 * @return bool|ResultWrapper
 	 */
 	public function getNouns( $identifier ) {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$pageName = $this->getPageTitle();
 		if ( $pageName === false ) {
 			return false;
@@ -366,7 +366,7 @@ class MathObject extends MathMathML {
 	 */
 	public function getAllOccurences( $currentOnly = true ) {
 		$out = [];
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select(
 			'mathindex', self::dbIndexFieldsArray(),
 			[ 'mathindex_inputhash' => $this->getInputHash() ]
@@ -468,7 +468,7 @@ class MathObject extends MathMathML {
 	}
 
 	public function getRelations() {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$selection = $dbr->select( 'mathsemantics', [ 'identifier', 'evidence', 'noun' ],
 			[ 'revision_id' => $this->revisionID ], __METHOD__,
 			[ 'ORDER BY' => 'evidence desc' ] );
