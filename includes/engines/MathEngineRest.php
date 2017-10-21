@@ -100,7 +100,7 @@ abstract class MathEngineRest {
 		return $this;
 	}
 
-		/**
+	/**
 	 * Posts the query to mwsd and evaluates the result data
 	 * @return bool
 	 */

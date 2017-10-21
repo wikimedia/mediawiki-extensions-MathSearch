@@ -206,7 +206,7 @@ class MathSearchHooks {
 	 * used for test corpus generation for NTCIR11 Math-2
 	 * You can enable this alternative hook via setting
 	 * <code>$wgHooks['MathFormulaRendered'] = array(
-	 *	 'MathSearchHooks::onMathFormulaRenderedNoLink'
+	 * 	 'MathSearchHooks::onMathFormulaRenderedNoLink'
 	 * );</code>
 	 * in your local settings
 	 *
