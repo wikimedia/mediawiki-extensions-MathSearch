@@ -90,6 +90,7 @@
 	"math-lp-5-head": "第5步：上下文独立语义",
 	"math-lp-5-intro": "接下来，您将评估公式语义的质量。",
 	"math-lp-5-identifiers-label": "以下数学标识符已经从公式中提取。选择每个标识符，如果它是表达式的标识符的话。",
+	"math-lp-5-missing-label": "如果表达式包含上面列举的类型中缺少的标识符，那么标识符的LaTeX代码会在下面字段显示。每行使用一个标识符。",
 	"math-lp-6-head": "第6步：上下文相关语义",
 	"math-lp-6-separator-message": "用于标识符<math>$1</math> $<syntaxhighlight lang=\"latex\" inline>$1</syntaxhighlight>$的定义",
 	"math-lp-6-srt-help": "“演讲规则机制”生成以下文本，这应该帮助弱视力或无阅读能力的人们理解公式。接下来，我们参考此文本为“{{int:math-lp-6-srt-label}}”。",
