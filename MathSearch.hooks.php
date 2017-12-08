@@ -325,7 +325,7 @@ class MathSearchHooks {
 	 * Occurs after the save page request has been processed.
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageContentSaveComplete
 	 *
-	 * @param WikiPage $article
+	 * @param WikiPage $wikiPage
 	 * @param User $user
 	 * @param Content $content
 	 * @param string $summary
@@ -339,14 +339,15 @@ class MathSearchHooks {
 	 *
 	 * @return bool
 	 */
-	public static function onPageContentSaveComplete( $article, $user, $content, $summary, $isMinor,
+	public static function onPageContentSaveComplete(
+		WikiPage $wikiPage, $user, $content, $summary, $isMinor,
 		$isWatch, $section, $flags, $revision, $status, $baseRevId
 	) {
 		// TODO: Update to JOB
 		if ( $revision == null ) {
 			LoggerFactory::getInstance(
 				'MathSearch'
-			)->warning( "Empty update for {$article->getTitle()->getFullText()}." );
+			)->warning( "Empty update for {$wikiPage->getTitle()->getFullText()}." );
 			return true;
 		}
 		$revId = $revision->getId();
