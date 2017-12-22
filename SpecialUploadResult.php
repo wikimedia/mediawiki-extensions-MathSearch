@@ -7,9 +7,9 @@
  * @author Yaron Koren (This class is baaed on DT_ImportCSV from the DataTransfer extension)
  */
 class SpecialUploadResult extends SpecialPage {
-	/** @type ImportCsv $importer */
+	/** @var ImportCsv $importer */
 	private $importer;
-	/** @type bool $runId */
+	/** @var bool $runId */
 	protected $runId = false;
 
 	/**
@@ -110,7 +110,7 @@ class SpecialUploadResult extends SpecialPage {
 			return date( 'Y-m-d H:i:s (e)' );
 		}
 		$this->runId = $this->importer->validateRunId( $run );
-		/** @type array $warnings */
+		/** @var array $warnings */
 		$warnings = $this->importer->getWarnings();
 		if ( $warnings ) {
 			echo "bad wqarni";

@@ -27,11 +27,11 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 class ExtractFeatures extends Maintenance {
 	const RTI_CHUNK_SIZE = 100;
 	public $purge = false;
-	/** @type DatabaseMysql */
+	/** @var \Wikimedia\Rdbms\IDatabase */
 	public $dbw = null;
 
 	/**
-	 * @var DatabaseBase
+	 * @var \Wikimedia\Rdbms\IDatabase
 	 */
 	private $db;
 

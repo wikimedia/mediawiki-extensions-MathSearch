@@ -91,7 +91,7 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiText( "Occurrences on the following pages:" );
 		$all = $mo->getAllOccurences();
 		foreach ( $all as  $occ ) {
-			/** @type MathObject $occ */
+			/** @var MathObject $occ */
 			$out->addWikiText( '*' . $occ->printLink2Page( false ) );
 		}
 		$out->addWikiText( 'Hash: ' . $mo->getMd5() );

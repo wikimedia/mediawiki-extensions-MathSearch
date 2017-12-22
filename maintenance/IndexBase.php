@@ -28,7 +28,7 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
  *
  */
 abstract class IndexBase extends Maintenance {
-	/** @type  ResultWrapper */
+	/** @var ResultWrapper $res */
 	protected $res;
 
 	/**

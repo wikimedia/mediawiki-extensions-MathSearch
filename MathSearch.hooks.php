@@ -371,7 +371,7 @@ class MathSearchHooks {
 			}
 			$harvest = $dw->getOutput();
 		}
-		/** @type Revision|null $previousRev */
+		/** @var Revision|null $previousRev */
 		$previousRev = $revision->getPrevious();
 		if ( $previousRev != null ) {
 			$prevRevId = $previousRev->getId();

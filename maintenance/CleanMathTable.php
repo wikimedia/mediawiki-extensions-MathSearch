@@ -29,7 +29,7 @@ class CleanMathTable extends Maintenance {
 	public $purge = false;
 
 	/**
-	 * @var DatabaseBase
+	 * @var \Wikimedia\Rdbms\IDatabase
 	 */
 	private $db;
 

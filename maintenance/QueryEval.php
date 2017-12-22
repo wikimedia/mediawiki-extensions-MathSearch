@@ -29,7 +29,7 @@ function createMySqlFunctionDropperClass() {
 // @codingStandardsIgnoreEnd
 	class MySqlFunctionDropper extends MysqlUpdater {
 		/**
-		 * @param IDatabase $db
+		 * @param \Wikimedia\Rdbms\IDatabase $db
 		 *
 		 * @return MySqlFunctionDropper
 		 */
@@ -53,8 +53,9 @@ function createMySqlFunctionDropperClass() {
 }
 
 class QueryEval extends Maintenance {
-	/** @type DatabaseUpdater*/
+	/** @var DatabaseUpdater $dbu */
 	private $dbu = null;
+
 	/**
 	 *
 	 */

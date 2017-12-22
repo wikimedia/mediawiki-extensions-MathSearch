@@ -27,11 +27,11 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
  */
 class UpdateMath extends Maintenance {
 	public $purge = false;
-	/** @var boolean */
+	/** @var bool */
 	private $verbose;
-	/** @var DatabaseBase */
+	/** @var \Wikimedia\Rdbms\IDatabase */
 	public $dbw;
-	/** @var DatabaseBase */
+	/** @var \Wikimedia\Rdbms\IDatabase */
 	private $db;
 	/** @var MathRenderer  */
 	private $current;

@@ -27,11 +27,11 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 class MathPerformance extends Maintenance {
 	const RTI_CHUNK_SIZE = 10000;
 	public $purge = false;
-	/** @var DatabaseBase */
+	/** @var \Wikimedia\Rdbms\IDatabase */
 	public $dbw;
-	/** @var boolean */
+	/** @var bool */
 	private $verbose;
-	/** @var DatabaseBase */
+	/** @var \Wikimedia\Rdbms\IDatabase */
 	private $db;
 	private $currentHash;
 	private $time = 0.0; // microtime( true );

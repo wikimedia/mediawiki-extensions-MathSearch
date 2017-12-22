@@ -26,11 +26,11 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
  */
 class CalculateDistances extends Maintenance {
 	const RTI_CHUNK_SIZE = 100;
-	/** @var DatabaseBase $dbw */
+	/** @var \Wikimedia\Rdbms\IDatabase $dbw */
 	public $dbw = null;
 
 	/**
-	 * @var DatabaseBase
+	 * @var \Wikimedia\Rdbms\IDatabase
 	 */
 	private $db;
 	private $pagelist = [];

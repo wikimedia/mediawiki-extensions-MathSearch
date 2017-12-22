@@ -116,7 +116,7 @@ class MathObject extends MathMathML {
 
 	/**
 	 *
-	 * @global boolean $wgMathDebug
+	 * @global bool $wgMathDebug
 	 * @param stdClass $res
 	 * @return bool|\self
 	 */
@@ -124,7 +124,7 @@ class MathObject extends MathMathML {
 		global $wgMathDebug;
 		if ( $res && $res->mathindex_revision_id > 0 ) {
 			$class = get_called_class();
-			/** @type MathObject $instance */
+			/** @var MathObject $instance */
 			$instance = new $class;
 			$instance->setRevisionID( $res->mathindex_revision_id );
 			$instance->setAnchorID( $res->mathindex_anchor );
