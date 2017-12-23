@@ -93,6 +93,7 @@
 	"math-lp-5-missing-label": "如果表达式包含上面列举的类型中缺少的标识符，那么标识符的LaTeX代码会在下面字段显示。每行使用一个标识符。",
 	"math-lp-5-footer": "此表单的预填充值是用各种开源项目生成的，例如LaTeXML、MathJax、Mathoid、Mathosphere、SpeechRuleEngine、texvc、texvcjs、texvcinfo。在此对贡献者表示感谢：David Cervone、Deyan Ginev、Alexey Grigorev、Martin Líška、Bruce Miller、Robert Pagel、Michal Růžička、Volker Sorge、Frédéric Wang、Garbirel Wicke及其他贡献者们。",
 	"math-lp-6-head": "第6步：上下文相关语义",
+	"math-lp-6-intro": "接下来，您将评估定义提取物的质量。有些情况下我们的软件可以自动从包围表达式的文本中获得标识符名称。其他情况下则尚无法处理。请帮助改进此软件，并在字段“其他”中，为每个标识符填写一个合适的标识符名称。",
 	"math-lp-6-separator-message": "用于标识符<math>$1</math> $<syntaxhighlight lang=\"latex\" inline>$1</syntaxhighlight>$的定义",
 	"math-lp-6-srt-help": "“演讲规则机制”生成以下文本，这应该帮助弱视力或无阅读能力的人们理解公式。接下来，我们参考此文本为“{{int:math-lp-6-srt-label}}”。",
 	"math-lp-6-srt-label": "演讲规则文本：",
