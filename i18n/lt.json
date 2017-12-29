@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Pofka",
-			"Zygimantus"
+			"Zygimantus",
+			"Manvydasz"
 		]
 	},
 	"math-lp-1-page-label": "Straipsnio pavadinimas",
@@ -27,9 +28,9 @@
 	"math-lp-4-absolute-option-1": "geras",
 	"math-lp-4-absolute-option-2": "moderuoti",
 	"math-lp-4-absolute-option-3": "blogai",
-	"math-lp-6-srt-assessment-option-1": "puiku",
-	"math-lp-6-srt-assessment-option-2": "gerai",
-	"math-lp-6-srt-assessment-option-3": "reikia tobulinti",
+	"math-lp-6-srt-assessment-option-1": "labai naudingas",
+	"math-lp-6-srt-assessment-option-2": "gana naudingas",
+	"math-lp-6-srt-assessment-option-3": "šiek tiek naudingas",
 	"math-lp-finish-label": "Baigti",
 	"math-search-relation-0": "ir",
 	"math-search-relation-1": "arba",
