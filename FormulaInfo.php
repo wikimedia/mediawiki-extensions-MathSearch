@@ -97,7 +97,9 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiText( 'Hash: ' . $mo->getMd5() );
 		$this->printSource( $mo->getUserInputTex(), 'TeX (original user input)', 'latex' );
 		$texInfo = $mo->getTexInfo();
-		$this->printSource( $texInfo->getChecked(), 'TeX (checked)', 'latex' );
+		if ( $texInfo ) {
+			$this->printSource( $texInfo->getChecked(), 'TeX (checked)', 'latex' );
+		}
 		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
@@ -109,14 +111,16 @@ class FormulaInfo extends SpecialPage {
 		$mo->findSimilarPages( $pid );
 		$out->addWikiText( '==Identifiers==' );
 		$relations = $mo->getRelations();
-		foreach ( $texInfo->getIdentifiers() as $x ) {
-			$line = '* <math>'.$x.'</math>';
-			if ( isset( $relations[$x] ) ) {
-				foreach ( $relations[$x] as $r ) {
-					$line .= ", {$r->definition} ($r->score)";
+		if ( $texInfo ) {
+			foreach ( $texInfo->getIdentifiers() as $x ) {
+				$line = '* <math>' . $x . '</math>';
+				if ( isset( $relations[$x] ) ) {
+					foreach ( $relations[$x] as $r ) {
+						$line .= ", {$r->definition} ($r->score)";
+					}
 				}
+				$out->addWikiText( $line );
 			}
-			$out->addWikiText( $line );
 		}
 		$out->addWikiText( '=== MathML observations ===' );
 		$mo->getObservations();
