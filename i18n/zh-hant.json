@@ -16,5 +16,6 @@
 	"math-search-type-label": "類型：",
 	"math-search-type-0": "關鍵字",
 	"math-search-expression-label": "表達式：",
-	"math-tex2nb-input": "輸入"
+	"math-tex2nb-input": "輸入",
+	"datatypes-type-contentmath": "數學表現式（內容）"
 }
