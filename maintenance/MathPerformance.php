@@ -280,7 +280,7 @@ class MathPerformance extends Maintenance {
 	 * @return string
 	 */
 	private static function makePath( $folder, $md5 ) {
-		$subPath = join( '/', str_split( substr( $md5, 0, 3 ) ) );
+		$subPath = implode( '/', str_split( substr( $md5, 0, 3 ) ) );
 		$path = $folder . '/' . $subPath . '/' . $md5;
 		mkdir( $path, '0755', true );
 		return $path;
