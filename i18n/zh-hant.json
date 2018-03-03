@@ -13,6 +13,7 @@
 	"math-wmc-FileLabel": "CSV 檔案",
 	"math-wmc-importing": "匯入中...",
 	"math-search-relation-label": "關係：",
+	"math-search-relation-0": "和",
 	"math-search-relation-1": "或",
 	"math-search-type-label": "類型：",
 	"math-search-type-0": "關鍵字",
