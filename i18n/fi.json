@@ -2,12 +2,17 @@
 	"@metadata": {
 		"authors": [
 			"Nike",
-			"McSalama"
+			"McSalama",
+			"Pyscowicz"
 		]
 	},
+	"math-lp-1-page-label": "Artikkelin otsikko",
+	"math-lp-3-pretty-option-3": "En voi kertoa.",
+	"math-lp-3-assessment-option-4": "En voi kertoa.",
 	"math-lp-6-srt-assessment-option-1": "erittäin hyödyllinen",
 	"math-lp-6-srt-assessment-option-2": "melko hyödyllinen",
 	"math-lp-6-srt-assessment-option-3": "jossain määrin hyödyllinen",
 	"math-lp-6-srt-assessment-option-4": "ei ollenkaan hyödyllinen",
-	"math-lp-6-srt-suggestion-label": "Ehdota parempaa vaihtoehtoa (valinnainen)"
+	"math-lp-6-srt-suggestion-label": "Ehdota parempaa vaihtoehtoa (valinnainen)",
+	"math-wmc-SelectRun": "Nimi"
 }
