@@ -106,7 +106,7 @@
 	"math-lp-7-intro": "Obrigado pela sua avaliação de uma expressão matemática.\n\nPode aceder a mais expressões matemáticas do mesmo artigo ou continuar com outro artigo.",
 	"math-lp-feedback-label": "Comentários adicionais (opcional)",
 	"math-lp-feedback-help": "Se quiser partilhar alguma informação importante sobre este passo da avaliação, introduza-a aqui.",
-	"math-lp-formula-ref": "Está a avaliar a expressão matemática $1, composta assim $2, editada por última vez em <code>$3</code>.",
+	"math-lp-formula-ref": "Está a avaliar a expressão matemática $1, composta assim $2, editada pela última vez em <code>$3</code>.",
 	"math-lp-submit-info": "Pressione um dos botões abaixo para continuar ou feche a janela para terminar o inquérito.",
 	"math-lp-submit-label": "Continuar com o $1º passo",
 	"math-lp-finish-label": "Terminar",
