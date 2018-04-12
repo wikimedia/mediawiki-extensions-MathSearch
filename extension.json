@@ -82,6 +82,7 @@
 		"MathDebug": false,
 		"MathSearchBaseXBackendUrl": "http://localhost:10043/",
 		"MathSearchMWSUrl": "http://localhost:9090/",
+		"MathSearchTranslationUrl": "http://vmext-demo.wmflabs.org/math/translation",
 		"MathUpdateObservations": false,
 		"MathUploadEnabled": false,
 		"MathWmcMaxResults": 10000,

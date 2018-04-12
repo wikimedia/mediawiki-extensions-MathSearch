@@ -36,13 +36,15 @@ class FormulaInfo extends SpecialPage {
 			$this->DisplayInfo( $pid, $eid );
 		}
 	}
+
 	public function InfoTex( $tex ) {
 		global $wgMathDebug, $wgOut;
 		if ( !$wgMathDebug ) {
-			$wgOut->addWikiTex( "tex queries only supported in debug mode" );
+			$wgOut->addWikiText( "tex queries only supported in debug mode" );
 			return false;
 		}
 		$wgOut->addWikiText( "Info for <code>" . $tex . '</code>' );
+
 		/**
 		 * @var MathObject Description
 		 */
@@ -53,6 +55,58 @@ class FormulaInfo extends SpecialPage {
 		} else {
 			$wgOut->addWikiText( "No occurrences found clean up the database to remove unused formulae" );
 		}
+
+		$this->DisplayTranslations( $tex );
+	}
+
+	public function DisplayTranslations( $tex ) {
+		global $wgOut, $wgMathSearchTranslationUrl;
+
+		if ( $wgMathSearchTranslationUrl === false ) {
+			return;
+		}
+
+		$resultMaple = $this->GetTranslation( 'Maple', $tex );
+		$resultMathe = $this->GetTranslation( 'Mathematica', $tex );
+
+		$wgOut->addWikiText( '==Translations to Computer Algebra Systems==' );
+
+		if ( $resultMaple === false || $resultMathe === false ) {
+			$wgOut->addWikiText( 'An error occurred during translation.' );
+			return false;
+		}
+
+		if ( $resultMaple !== false ) {
+			$this->PrintTranslationResult( 'Maple', $resultMaple );
+		}
+
+		if ( $resultMathe !== false ) {
+			$this->PrintTranslationResult( 'Mathematica', $resultMathe );
+		}
+	}
+
+	private function GetTranslation( $cas, $tex ) {
+		global $wgMathSearchTranslationUrl;
+		$params = [ 'cas' => $cas, 'latex' => $tex ];
+		return Http::post(
+			$wgMathSearchTranslationUrl, [ "postData" => $params, "timeout" => 60 ]
+		);
+	}
+
+	private function PrintTranslationResult( $cas, $result ) {
+		global $wgOut;
+
+		$jsonResult = json_decode( $result, true );
+		$wgOut->addWikiText( '=== Translation to '. $cas .'===' );
+
+		$wgOut->addHtml(
+			'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
+		);
+		$wgOut->addWikiText( 'In '. $cas . ': <code>' . $jsonResult['result'] . '</code>' );
+
+		$wgOut->addHtml( '<div class="mw-collapsible-content">' );
+		$wgOut->addWikiText( str_replace( "\n", "\n\n", $jsonResult['log'] ) );
+		$wgOut->addHtml( '</div></div>' );
 	}
 
 	/**
@@ -103,6 +157,9 @@ class FormulaInfo extends SpecialPage {
 		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
+
+		$this->DisplayTranslations( $mo->getUserInputTex() );
+
 		$out->addWikiText( '==Similar pages==' );
 		$out->addWikiText(
 			'Calculated based on the variables occurring on the entire ' . $pageName . ' page'
