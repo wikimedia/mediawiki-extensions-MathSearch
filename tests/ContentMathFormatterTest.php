@@ -11,7 +11,7 @@ use Wikibase\Lib\SnakFormatter;
  *
  * @group MathSearch
  *
- * @license GNU GPL v2+
+ * @license GPL-2.0-or-later
  */
 class ContentMathFormatterTest extends MediaWikiTestCase {
 
