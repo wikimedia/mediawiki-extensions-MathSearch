@@ -232,18 +232,6 @@ class MathSearchHooks {
 		return true;
 	}
 
-	/**
-	 * Links to the unit test files for the test cases.
-	 *
-	 * @param string &$files
-	 * @return bool true
-	 */
-	static function onRegisterUnitTests( &$files ) {
-		$testDir = __DIR__ . '/tests/';
-		$files = array_merge( $files, glob( "$testDir/*Test.php" ) );
-		return true;
-	}
-
 	static function generateMathAnchorString( $revId, $anchorID, $prefix = "#" ) {
 		$result = "{$prefix}math.$revId.$anchorID";
 		Hooks::run( "MathSearchGenerateAnchorString",

@@ -58,9 +58,6 @@
 		"MathFormulaPostRender": {
 			"addLink": "MathSearchHooks::addLinkToFormulaInfoPage"
 		},
-		"UnitTestsList": [
-			"MathSearchHooks::onRegisterUnitTests"
-		],
 		"ParserFirstCallInit": [
 			"MathSearchHooks::onParserFirstCallInit"
 		],
