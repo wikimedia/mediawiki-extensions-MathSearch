@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Csega"
+			"Csega",
+			"Máté"
 		]
 	},
 	"math-wmc-download-button": "Letöltés",
-	"math-wmc-importing": "Importálás…"
+	"math-wmc-importing": "Importálás…",
+	"datatypes-type-contentmath": "Matematikai kifejezés (tartalom)"
 }
