@@ -9,7 +9,8 @@
 	"math-wmc-SelectRun": "ЦӀе",
 	"math-wmc-FileLabel": "CSV Файл",
 	"math-wmc-importing": "Импорт яр...",
-	"math-search-relation-0": "а",
+	"math-search-relation-0": ",",
+	"math-search-relation-2": "иза а дац",
 	"math-search-type-label": "Тайп:",
 	"math-tex2nb-input": "Довзийтар"
 }
