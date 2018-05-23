@@ -4,7 +4,8 @@
 			"아라",
 			"Hwangjy9",
 			"고솜",
-			"Priviet"
+			"Priviet",
+			"Ykhwong"
 		]
 	},
 	"mathsearch": "수학 검색",
@@ -32,5 +33,6 @@
 	"math-lp-4-font-option-2": "보통",
 	"math-lp-6-srt-assessment-option-1": "아주 도움이 됨",
 	"math-lp-7-head": "평가 완료됨",
-	"math-search-type-0": "핵심 단어"
+	"math-search-type-0": "핵심 단어",
+	"wikibase-listdatatypes-contentmath-body": "수식, 공식, 등호 등에 대한 리터럴 데이터 필드이며 DRMF/DLMF 형식의 LaTeX로 표현합니다."
 }
