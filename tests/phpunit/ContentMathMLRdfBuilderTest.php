@@ -2,8 +2,6 @@
 /**
  * Test the ContentMathML RDF formatter
  *
- * @group ContentMath
- * @covers ContentMathMLRdfBuilder
  * @author Moritz Schubotz (physikerwelt)
  */
 
@@ -12,6 +10,10 @@ use Wikibase\DataModel\Entity\PropertyId;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikimedia\Purtle\NTriplesRdfWriter;
 
+/**
+ * @group ContentMath
+ * @covers ContentMathMLRdfBuilder
+ */
 class ContentMathMLRdfBuilderTest extends MediaWikiTestCase {
 	const ACME_PREFIX_URL = 'http://acme/';
 	const ACME_REF = 'testing';
