@@ -42,7 +42,7 @@ function createMySqlFunctionDropperClass() {
 		 *
 		 * @param string $path Path to the patch file
 		 * @param bool $isFullPath Whether to treat $path as a relative or not
-		 * @param string $msg Description of the patch
+		 * @param string|null $msg Description of the patch
 		 *
 		 * @return bool False if patch is skipped.
 		 */

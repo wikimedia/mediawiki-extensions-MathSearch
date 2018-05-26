@@ -646,7 +646,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @param mixed $key
+	 * @param mixed|null $key
 	 * @return mixed
 	 */
 	public function getRelations( $key = null ) {

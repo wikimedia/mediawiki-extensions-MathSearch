@@ -45,7 +45,7 @@ class ImportCsv {
 
 	/**
 	 * @param string $csvFile
-	 * @param int $runId
+	 * @param int|null $runId
 	 * @param bool $overwrite
 	 *
 	 * @return string|bool

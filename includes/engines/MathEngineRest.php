@@ -69,7 +69,7 @@ abstract class MathEngineRest {
 	}
 
 	/**
-	 * @param MathQueryObject $query
+	 * @param MathQueryObject|null $query
 	 * @param bool|string $url
 	 */
 	function __construct( $query = null, $url = false ) {
