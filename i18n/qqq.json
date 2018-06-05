@@ -70,7 +70,7 @@
 	"math-lp-4-intro": "Summarizing instruction for step 4",
 	"math-lp-4-best-label": "Label of the select-best-rendering radio control.",
 	"math-lp-4-size-label": "Label of the size assessment option box.",
-	"math-lp-4-size-option-1": "option of math-lp-4-size-label",
+	"math-lp-4-size-option-1": "option of math-lp-4-size-label\n{{Identical|Fine}}",
 	"math-lp-4-size-option-2": "option of math-lp-4-size-label",
 	"math-lp-4-size-option-3": "option of math-lp-4-size-label",
 	"math-lp-4-spacing-label": "Label of the spacing assessment option box.",
