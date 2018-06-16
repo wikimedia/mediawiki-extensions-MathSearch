@@ -25,21 +25,9 @@ class ContentMathFormatter implements ValueFormatter {
 	 * Loads format to distinguish the type of formatting
 	 *
 	 * @param string $format One of the SnakFormatter::FORMAT_... constants.
-	 *
-	 * @throws InvalidArgumentException
 	 */
 	public function __construct( $format ) {
-		switch ( $format ) {
-			case SnakFormatter::FORMAT_PLAIN:
-			case SnakFormatter::FORMAT_WIKI:
-			case SnakFormatter::FORMAT_HTML:
-			case SnakFormatter::FORMAT_HTML_DIFF:
-			case SnakFormatter::FORMAT_HTML_WIDGET:
-				$this->format = $format;
-				break;
-			default:
-				throw new InvalidArgumentException( 'Unsupported output format: ' . $format );
-		}
+		$this->format = $format;
 	}
 
 	/**
@@ -50,7 +38,7 @@ class ContentMathFormatter implements ValueFormatter {
 	 */
 	public function format( $value ) {
 		if ( !( $value instanceof StringValue ) ) {
-			throw new MismatchingDataValueTypeException( 'StringValue', get_class( $value ) );
+			throw new InvalidArgumentException( '$value must be a StringValue' );
 		}
 
 		$tex = $value->getValue();
