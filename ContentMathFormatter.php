@@ -29,16 +29,7 @@ class ContentMathFormatter implements ValueFormatter {
 	 * @throws InvalidArgumentException
 	 */
 	public function __construct( $format ) {
-		switch ( $format ) {
-			case SnakFormatter::FORMAT_PLAIN:
-			case SnakFormatter::FORMAT_WIKI:
-			case SnakFormatter::FORMAT_HTML:
-			case SnakFormatter::FORMAT_HTML_DIFF:
-				$this->format = $format;
-				break;
-			default:
-				throw new InvalidArgumentException( 'Unsupported output format: ' . $format );
-		}
+		$this->format = $format;
 	}
 
 	/**
