@@ -38,7 +38,7 @@ abstract class MathEngineRest {
 			}
 			LoggerFactory::getInstance(
 				'MathSearch'
-			)->error( 'Nothing retreived from $url. Check if server is running. Error:' .
+			)->error( 'Nothing retrieved from $url. Check if server is running. Error:' .
 				var_export( $details, true ) );
 			return false;
 		} else {

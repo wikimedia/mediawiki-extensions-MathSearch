@@ -101,9 +101,9 @@ class SpecialMathDebug extends SpecialPage {
 				if ( $diff->isEmpty() ) {
 					$out->addWikiText( 'Output is identical' );
 				} else {
-					$out->addWikiText( 'Requst A <source lang="bash"> curl -d \'' .
+					$out->addWikiText( 'Request A <source lang="bash"> curl -d \'' .
 						$renderer->getPostValue() . '\' ' . $parserA . '</source>' );
-					$out->addWikiText( 'Requst B <source lang="bash"> curl -d \'' .
+					$out->addWikiText( 'Request B <source lang="bash"> curl -d \'' .
 						$renderer->getPostValue() . '\' ' . $parserB . '</source>' );
 					$out->addWikiText(
 						'Diff: <source lang="diff">' . $diffFormatter->format( $diff ) . '</source>'

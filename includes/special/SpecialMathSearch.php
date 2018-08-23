@@ -421,7 +421,7 @@ class SpecialMathSearch extends SpecialPage {
 	function render() {
 		$renderer = new MathLaTeXML( $this->mathpattern );
 		$renderer->setLaTeXMLSettings( 'profile=mwsquery' );
-		$renderer->setAllowedRootElments( [ 'query' ] );
+		$renderer->setAllowedRootElements( [ 'query' ] );
 		$renderer->render( true );
 		$this->mathmlquery = $renderer->getMathml();
 		if ( strlen( $this->mathmlquery ) == 0 ) {

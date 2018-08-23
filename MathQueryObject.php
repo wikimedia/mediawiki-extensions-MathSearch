@@ -134,7 +134,7 @@ TeX;
 
 	/**
 	 * Returns the tex query string.
-	 * If not set a a query id will be generated.
+	 * If not set a query id will be generated.
 	 * @return string
 	 */
 	public function getTeXQuery() {
@@ -241,7 +241,7 @@ TeX;
 	public function generatePresentationQueryString() {
 		$renderer = new MathLaTeXML( $this->getTexQuery() );
 		// $renderer->setXMLValidaton( false );
-		// $renderer->setAllowedRootElments( array( 'query' ) );
+		// $renderer->setAllowedRootElements( array( 'query' ) );
 		$renderer->setLaTeXMLSettings( $this->pmmlSettings );
 		if ( $renderer->render( true ) ) {
 			$this->pquery = $renderer->getMathml();
