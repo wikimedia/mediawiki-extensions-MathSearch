@@ -84,7 +84,8 @@ class QueryEval extends Maintenance {
 	private function createTopicTex( $row ) {
 		$qId = $row->qId;
 		$row->title = str_replace( [ 'π','ő' ], [ '$\\pi$', 'ö' ], $row->title );
-		$tName = $row->qId. ': {\\wikiLink{' . $row->title .'}{' . $row->oldId. '}{'.$row->fId.'}}';
+		$tName = $row->qId .
+			': {\\wikiLink{' . $row->title . '}{' . $row->oldId . '}{' . $row->fId . '}}';
 		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select( 'math_wmc_freq_hits',
 			[ 'cntRun', 'cntUser' , 'links', 'minRank', 'rendering' ],
@@ -94,8 +95,8 @@ class QueryEval extends Maintenance {
 			$hit->rendering = str_replace( // TODO: preg_match replaces for by f\lor
 				[ '\\or ','%','$\\begin{align}','\\end{align}$' ],
 				[ '\\lor ', '\\%','\\begin{align}','\\end{align}' ], $hit->rendering );
-			$mostFrequent .= "\\item {$hit->rendering} was found by {$hit->cntUser} users in ".
-				" {$hit->cntRun} runs with minimal rank of {$hit->minRank}. \n".
+			$mostFrequent .= "\\item {$hit->rendering} was found by {$hit->cntUser} users in " .
+				" {$hit->cntRun} runs with minimal rank of {$hit->minRank}. \n" .
 				"For example in the context of the following pages: {$hit->links}\n";
 		}
 		$mostFrequent .= "\\end{enumerate}";
@@ -109,7 +110,7 @@ class QueryEval extends Maintenance {
 		$individualResults = '';
 		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId' => $row->qId ] );
 		foreach ( $res as $rank ) {
-			$individualResults .= $rank->runId . ': '.$rank->rank.'; ';
+			$individualResults .= $rank->runId . ': ' . $rank->rank . '; ';
 		}
 		$out = <<<TEX
 \\begin{topic}{{$tName}}

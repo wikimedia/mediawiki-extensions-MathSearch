@@ -81,10 +81,10 @@ class MathEngineBaseX extends MathEngineRest {
 		return json_encode( [ "type" => $this->type, "query" => $this->query->getCQuery() ] );
 	}
 
-	function update( $harvest = "", array $delte=[] ) {
+	function update( $harvest = "", array $delte = [] ) {
 		global $wgMathSearchBaseXBackendUrl;
 		$json_payload = json_encode( [ "harvest" => $harvest, "delete" => $delte ] );
-		$res = self::doPost( $wgMathSearchBaseXBackendUrl. 'api/update', $json_payload );
+		$res = self::doPost( $wgMathSearchBaseXBackendUrl . 'api/update', $json_payload );
 		if ( $res ) {
 			$resJson = json_decode( $res );
 			if ( $resJson->success == true ) {

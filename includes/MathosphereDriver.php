@@ -132,7 +132,7 @@ class MathosphereDriver {
 	 */
 	public function getBackendUrl() {
 		$config = ConfigFactory::getDefaultInstance()->makeConfig( 'main' );
-		return $config->get( "MathSearchBaseXBackendUrl" ).'api';
+		return $config->get( "MathSearchBaseXBackendUrl" ) . 'api';
 	}
 
 	protected function getPostData() {
@@ -144,7 +144,7 @@ class MathosphereDriver {
 	}
 
 	public function checkBackend() {
-		$res = HTTP::get( $this->getBackendUrl().'/_info' );
+		$res = HTTP::get( $this->getBackendUrl() . '/_info' );
 		if ( $res ) {
 			$res = json_decode( $res );
 			if ( $res && json_last_error() === JSON_ERROR_NONE ) {

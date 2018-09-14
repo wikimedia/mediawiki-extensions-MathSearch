@@ -97,12 +97,12 @@ class FormulaInfo extends SpecialPage {
 		global $wgOut;
 
 		$jsonResult = json_decode( $result, true );
-		$wgOut->addWikiText( '=== Translation to '. $cas .'===' );
+		$wgOut->addWikiText( '=== Translation to ' . $cas . '===' );
 
 		$wgOut->addHtml(
 			'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
 		);
-		$wgOut->addWikiText( 'In '. $cas . ': <code>' . $jsonResult['result'] . '</code>' );
+		$wgOut->addWikiText( 'In ' . $cas . ': <code>' . $jsonResult['result'] . '</code>' );
 
 		$wgOut->addHtml( '<div class="mw-collapsible-content">' );
 		$wgOut->addWikiText( str_replace( "\n", "\n\n", $jsonResult['log'] ) );
@@ -138,7 +138,7 @@ class FormulaInfo extends SpecialPage {
 		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $oldID, $eid );
 		if ( !$mo ) {
-			$out->addWikiText( 'Cannot find the equation data in the database.'.
+			$out->addWikiText( 'Cannot find the equation data in the database.' .
 				' Fetching from revision text.' );
 			$mo = MathObject::newFromRevisionText( $oldID, $eid );
 		}

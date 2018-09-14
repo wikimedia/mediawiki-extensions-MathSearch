@@ -19,7 +19,7 @@
  * @ingroup Maintenance
  */
 
-require_once __DIR__. '/IndexBase.php';
+require_once __DIR__ . '/IndexBase.php';
 
 /**
  * @author Moritz Schubotz

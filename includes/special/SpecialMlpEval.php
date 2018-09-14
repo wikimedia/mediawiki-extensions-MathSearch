@@ -138,7 +138,7 @@ class SpecialMlpEval extends SpecialPage {
 					array_merge( $this->identifiers, preg_split( '/[\n\r]/', $missing ) );
 			}
 		}
-		$this->writeLog( "User completes step ".$req->getInt( 'oldStep' ), $req->getInt( 'oldStep' ) );
+		$this->writeLog( "User completes step " . $req->getInt( 'oldStep' ), $req->getInt( 'oldStep' ) );
 		return $this->setStep( $req->getInt( 'oldStep' ) + 1 );
 	}
 
@@ -332,7 +332,7 @@ class SpecialMlpEval extends SpecialPage {
 			$dbr = wfGetDB( DB_REPLICA );
 			// Note that the math anchor is globally unique
 			$results = $dbr->selectFieldValues( 'math_review_list', 'anchor',
-				"anchor not in (SELECT anchor from math_mlp where user_id = $uid ".
+				"anchor not in (SELECT anchor from math_mlp where user_id = $uid " .
 				"and anchor is not NULL) and revision_id = $rid",
 				__METHOD__, [
 					'LIMIT'    => 1,

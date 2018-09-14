@@ -74,7 +74,7 @@ class ImportDefinitions extends Maintenance {
 								'noun'        => $relation->definition,
 								'evidence'    => $relation->score
 							] );
-							$this->output( "{$title->getText()}: $relation->identifier is ".
+							$this->output( "{$title->getText()}: $relation->identifier is " .
 								"$relation->definition certainty $relation->score\n" );
 						}
 					} else {

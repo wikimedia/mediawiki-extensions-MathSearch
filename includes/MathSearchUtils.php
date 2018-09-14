@@ -42,7 +42,7 @@ class MathSearchUtils {
 		foreach ( $resultWrapper as $row ) {
 			$out .= "\n|-";
 			foreach ( $row as $col ) {
-				$out .= "\n| ". $col;
+				$out .= "\n| " . $col;
 			}
 		}
 		return $out . "\n|}\n";

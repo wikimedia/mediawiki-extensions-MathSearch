@@ -193,7 +193,7 @@ class UpdateMath extends Maintenance {
 					}
 				} else {
 					$this->time( "checkTex-Fail" );
-					echo "\nF:\t\t".$renderer->getMd5()." texvccheck error:" . $renderer->getLastError();
+					echo "\nF:\t\t" . $renderer->getMd5() . " texvccheck error:" . $renderer->getLastError();
 					continue;
 				}
 				$renderer->writeCache( $this->dbw );
@@ -208,13 +208,13 @@ class UpdateMath extends Maintenance {
 					$this->time( "index" );
 				}
 				if ( $renderer->getLastError() ) {
-					echo "\n\t\t". $renderer->getLastError();
-					echo "\nF:\t\t".$renderer->getMd5()." equation " . ( $eId ) .
+					echo "\n\t\t" . $renderer->getLastError();
+					echo "\nF:\t\t" . $renderer->getMd5() . " equation " . ( $eId ) .
 						"-failed beginning with\n\t\t'" . substr( $formula, 0, 100 )
-						. "'\n\t\tmathml:" . substr( $renderer->getMathml(), 0, 10 ) ."\n ";
+						. "'\n\t\tmathml:" . substr( $renderer->getMathml(), 0, 10 ) . "\n ";
 				} else {
 					if ( $this->verbose ) {
-						echo "\nS:\t\t".$renderer->getMd5();
+						echo "\nS:\t\t" . $renderer->getMd5();
 					}
 				}
 			}

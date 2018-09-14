@@ -46,11 +46,10 @@ class SpecialMathDebug extends SpecialPage {
 					$this->testParser( $offset, $length, $page, $purge == 'checked' ? true : false );
 			}
 		}
-		return;
 	}
 
 	function displayButtons(
-		$offset = 0, $length = 10, $page = 'Testpage', $action = 'show', $purge=''
+		$offset = 0, $length = 10, $page = 'Testpage', $action = 'show', $purge = ''
 	) {
 		$out = $this->getOutput();
 		// TODO check if addHTML has to be sanitized
@@ -70,7 +69,7 @@ class SpecialMathDebug extends SpecialPage {
 			. '" class="textfield" onfocus="this.select()" type="text">'
 			. ' purge <input type="checkbox" name="purge" value="checked"'
 			. $purge
-			.'></form>'
+			. '></form>'
 		);
 	}
 
@@ -121,10 +120,9 @@ class SpecialMathDebug extends SpecialPage {
 		}
 		$out->addWikiText( $str_out );
 		return true;
-		$out = $this->getOutput();
 	}
 
-	public function testParser( $offset = 0, $length = 10, $page = 'Testpage' , $purge = true ) {
+	public function testParser( $offset = 0, $length = 10, $page = 'Testpage', $purge = true ) {
 		global $wgMathMathValidModes;
 		$out = $this->getOutput();
 		$i = 0;
@@ -153,7 +151,7 @@ class SpecialMathDebug extends SpecialPage {
 	 * @return bool
 	 */
 	public function generateParserTests(
-		$offset = 0, $length = 10, $page = 'Testpage' , $purge = true
+		$offset = 0, $length = 10, $page = 'Testpage', $purge = true
 	) {
 		$res = $this->getRequest()->response();
 		$res->header( 'Content-Type: application/json' );
@@ -208,7 +206,7 @@ class SpecialMathDebug extends SpecialPage {
 		$renderer->render();
 		$fragment = $renderer->getHtmlOutput();
 		$res = $mode . ':' . $fragment;
-		LoggerFactory::getInstance( 'MathSearch' )->warning( 'rendered:' . $res . ' in mode '. $mode );
+		LoggerFactory::getInstance( 'MathSearch' )->warning( 'rendered:' . $res . ' in mode ' . $mode );
 		return $res . '<br/>';
 	}
 

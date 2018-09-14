@@ -204,7 +204,7 @@ class SpecialUploadResult extends SpecialPage {
 			$renderedMath = $md5;
 		}
 		$formulaId = MathSearchHooks::generateMathAnchorString( $row['oldId'], $row['fId'] );
-		$link = Revision::newFromId( $row['oldId'] )->getTitle()->getLinkURL().$formulaId;
+		$link = Revision::newFromId( $row['oldId'] )->getTitle()->getLinkURL() . $formulaId;
 		$this->getOutput()->addHTML( "<tr><td>${row['qId']}</td><td><a href=\"$link\" >$formulaId</a></td>
 			<td>${row['rank']}</td><td>$renderedMath</td></tr>" );
 	}

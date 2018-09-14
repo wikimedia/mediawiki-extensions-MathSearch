@@ -454,7 +454,7 @@ class SpecialMathSearch extends SpecialPage {
 		$this->defaults[$i]['expr'] = $mathpattern;
 	}
 
-	private function getDefault( $i , $what ) {
+	private function getDefault( $i, $what ) {
 		if ( isset( $this->defaults[$i][$what] ) ) {
 			return $this->defaults[$i][$what];
 		} else {
