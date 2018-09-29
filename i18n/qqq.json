@@ -139,6 +139,7 @@
 	"math-wmc-display-formulae-label": "Checkbox label",
 	"math-wmc-display-formulae-help": "Checkbox help",
 	"action-mathwmcsubmit": "{{doc-action|mathwmcsubmit}}",
+	"right-mathwmcsubmit": "{{doc-right|mathwmcsubmit}}",
 	"math-search-term": "Wiki text that reports the user search input, search options and the number of results from the search. Parameters:\n* $1 - term number\n* $2 - expression \n* $3 - relation type {{msg-mw|math-search-relation-0}} or {{msg-mw|math-search-relation-1}} or {{msg-mw|math-search-relation-2}} or empty \n* $4 - type of search {{msg-mw|math-search-type-0}} or {{msg-mw|math-search-type-1}} \n* $5 - number of search results",
 	"math-search-relation-label": "Text for the label of the selection menu that includes relation search type options\n{{Identical|Relation}}",
 	"math-search-relation-0": "First option in relation selection menu and part of {{msg-mw|math-search-term}}\n{{Identical|And}}",
