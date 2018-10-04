@@ -3,7 +3,8 @@
 		"authors": [
 			"Liuxinyu970226",
 			"Cwlin0416",
-			"Kly"
+			"Kly",
+			"LNDDYL"
 		]
 	},
 	"mathsearch": "數學搜尋",
@@ -19,7 +20,7 @@
 	"getequationsbyquery": "透過查詢取得方程式",
 	"xquerygenerator": "XQuery 產生器",
 	"mathdebug": "測試呈現",
-	"math-lp-1-intro": "親愛的參與者：\n\n感謝您參與在維基百科和其它有使用到數學的 wiki 上，有關評估與改進數學方面的支援。在考察上評估了 MediaWiki（即為運作維基百科的軟體）裡數學公式的品質，所涉及的為以下三個方面：\n\n# LaTeX 輸入：公式來源代碼是否輸入正確？（使用 <syntaxhighlight lang=\"latex\" inline>\\sin</syntaxhighlight>，而不是 <syntaxhighlight lang=\"latex\" inline>sin</syntaxhighlight>）\n# 呈現：公式的顯示是否正確？（即使是在目前設備上正確的 LaTeX 輸入內容，也可能導致出難以閱讀的公式。）\n# Semantic：MediaWiki 的數學擴充功能是否能擷取正確的公式語義？（<math>f(a+b)</math> 可能代表著「函式 <math>f</math> 套用 <math>a</math> 加上 <math>b</math> 的總和參數」或是「變數 <math>f</math> 乘上 <math>a</math> 加上 <math>b</math> 的總和」）\n\n接下來，您會指引到 5 個評估程序步驟。在右側資訊框會提供細節詳情。請注意在僅有一個可能答案的問題中，會將第一個可能選項給預選。",
+	"math-lp-1-intro": "親愛的參與者：\n\n感謝您參與在維基百科和其它有使用到數學的 wiki 上，有關評估與改進數學方面的支援。在考察上評估了 MediaWiki（即為運作維基百科的軟體）裡數學公式的品質，所涉及的為以下三個方面：\n\n# LaTeX 輸入：公式來源代碼是否輸入正確？（使用 <syntaxhighlight lang=\"latex\" inline>\\sin</syntaxhighlight>，而不是 <syntaxhighlight lang=\"latex\" inline>sin</syntaxhighlight>）\n# 呈現：公式的顯示是否正確？（即使是在目前裝置上正確的 LaTeX 輸入內容，也可能導致出難以閱讀的公式。）\n# Semantic：MediaWiki 的數學擴充功能是否能擷取正確的公式語義？（<math>f(a+b)</math> 可能代表著「函式 <math>f</math> 套用 <math>a</math> 加上 <math>b</math> 的總和參數」或是「變數 <math>f</math> 乘上 <math>a</math> 加上 <math>b</math> 的總和」）\n\n接下來，您會指引到 5 個評估程序步驟。在右側資訊框會提供細節詳情。請注意在僅有一個可能答案的問題中，會將第一個可能選項給預選。",
 	"math-lp-1-head": "步驟 1：選擇您孰悉的條目",
 	"math-lp-1-page-label": "條目標題",
 	"math-lp-1-page-help": "下方輸入欄位是預先隨機填寫內容包含數學的條目。您可以有三個選擇\n# 點擊「繼續」來進行此條目。\n# 輸入您想要評估的條目標題，然後點擊「繼續」。\n# 點擊「選擇其它隨機條目」來重新載入此頁面，並取得新的隨機所選條目。",
