@@ -39,10 +39,10 @@ class GenerateWorkload extends IndexBase {
 		$this->mDescription = 'Generates a workload of sample queries.';
 		$this->addOption( 'selectivity', 'Specifies the selectivity for each individual equation',
 			false, true, 'S' );
-		// @codingStandardsIgnoreFile
 		$this->addOption(
 			'lastId',
-			'Specifies to start the ID counter after the given id. For example \'-l 1\' would start with id 2.',
+			'Specifies to start the ID counter after the given id. ' .
+				'For example \'-l 1\' would start with id 2.',
 			false, true, 'l'
 		);
 		// @codingStandardsIgnoreEnd
@@ -69,14 +69,13 @@ class GenerateWorkload extends IndexBase {
 		}
 	}
 
-
 	public function execute() {
 		$i = 0;
 		$inc = $this->getArg( 1, 100 );
 		$this->id = $this->getOption( 'lastId', 0 );
-		$sel = $this->getOption( 'selectivity', .1 );
+		$sel = $this->getOption( 'selectivity', 0.1 );
 		$this->selectivity = (int)( $sel * mt_getrandmax() );
-		$db = wfGetDB( DB_SLAVE );
+		$db = wfGetDB( DB_REPLICA );
 		echo "getting list of all equations from the database\n";
 		$this->res =
 			$db->select( [ 'mathindex' ],
