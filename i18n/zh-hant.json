@@ -137,6 +137,7 @@
 	"math-wmc-display-formulae-label": "顯示提交公式的呈現",
 	"math-wmc-display-formulae-help": "不建議用於較大輸入內容的檔案。",
 	"action-mathwmcsubmit": "提交結果至 NTCIR 維基百科數學搜尋任務",
+	"right-mathwmcsubmit": "可提交結果至 NTCIR 維基百科數學搜尋任務",
 	"math-search-term": "* $4 項目-$1：$3-表達式「$2」帶 {{PLURAL:$5|1 個結果|$5 個結果}}。",
 	"math-search-relation-label": "關係：",
 	"math-search-relation-0": "和",
