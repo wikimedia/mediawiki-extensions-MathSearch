@@ -136,6 +136,7 @@
 	"math-wmc-display-formulae-label": "Apresentar a composição das fórmulas enviadas",
 	"math-wmc-display-formulae-help": "Não recomendado para grandes ficheiros de entrada.",
 	"action-mathwmcsubmit": "enviar resultados à Tarefa NTCIR de Pesquisa Matemática da Wikipédia",
+	"right-mathwmcsubmit": "Pode enviar resultados à Tarefa NTCIR de Pesquisa Matemática da Wikipédia",
 	"math-search-term": "* $4 termo-$1: expressão-$3 \"$2\" com {{PLURAL:$5|1 resultado|$5 resultados}}.",
 	"math-search-relation-label": "Relação:",
 	"math-search-relation-0": "e",

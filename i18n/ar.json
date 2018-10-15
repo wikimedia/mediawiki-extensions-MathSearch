@@ -136,6 +136,7 @@
 	"math-wmc-display-formulae-label": "عرض أداء الصيغ المقدمة",
 	"math-wmc-display-formulae-help": "غير مستحسن لملفات الإدخال الكبيرة.",
 	"action-mathwmcsubmit": "تقديم النتائج إلى مهمة بحث NTCIR للرياضيات في ويكيبيديا",
+	"right-mathwmcsubmit": "يمكن تقديم النتائج إلى مهمة NTCIR ويكيبيديا للبحث عن الرياضيات",
 	"math-search-term": "* $4 term-$1: $3-expression \"$2\" {{PLURAL:$5|بنتيجة واحدة|بـ$5 نتيجة}}.",
 	"math-search-relation-label": "العلاقة:",
 	"math-search-relation-0": "و",
