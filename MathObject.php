@@ -11,13 +11,16 @@ class MathObject extends MathMathML {
 	protected $statusCode = 0;
 	/** @var timestamp of the last modification of the database entry */
 	protected $timestamp;
-	/** @var log messages generated during conversion of mathematical content */
+	/** @var string messages generated during conversion of mathematical content */
 	protected $log = '';
+
+	protected $postData  = '';
 	protected $anchorID = 0;
 	protected $revisionID = 0;
 	protected $index_timestamp = null;
 	protected $dbLoadTime = 0;
 	protected $mathTableName = null;
+	protected $renderingTime = 0;
 
 	public static function hash2md5( $hash ) {
 		// TODO: make MathRenderer::dbHash2md5 public
@@ -210,10 +213,11 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 * @param log $log
+	 * @param string $log
 	 * @return MathObject
 	 */
 	public function setLog( $log ) {
+		$this->changed = true;
 		$this->log = $log;
 		return $this;
 	}
@@ -574,4 +578,77 @@ class MathObject extends MathMathML {
 	public function getRbi() {
 		return $this->rbi;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getPostData() {
+		return $this->postData;
+	}
+
+	/**
+	 * @param string $postData
+	 */
+	public function setPostData( $postData ) {
+		$this->postData = $postData;
+	}
+
+	/**
+	 * @return int time in ms
+	 */
+	public function getRenderingTime() {
+		return $this->renderingTime;
+	}
+
+	/**
+	 * @param int|long $renderingTime either in ms or as in seconds as long
+	 * @throws MWException
+	 */
+	public function setRenderingTime( $renderingTime ) {
+		$type = gettype( $renderingTime );
+		switch ( $type ) {
+			case "double":
+			case "float":
+				$this->renderingTime = (int)( $renderingTime * 1000 );
+				break;
+			case "integer":
+				$this->renderingTime = $renderingTime;
+				break;
+			default:
+				throw new MWException( __METHOD__ . ": does not support type $type" );
+		}
+	}
+
+	/**
+	 * Gets an array that matches the variables of the class to the debug database columns
+	 * @return array
+	 */
+	protected function dbDebugOutArray() {
+		$out = [ 'math_inputhash' => $this->getInputHash(),
+					  'math_log' => $this->getLog(),
+					  'math_mode' => $this->getMode(),
+					  'math_post' => $this->getPostData(),
+					  'math_rederingtime' => $this->getRenderingTime()
+		];
+		return $out;
+	}
+
+	protected function writeDebugLog() {
+		global $wgMathDebug;
+		if ( $wgMathDebug ) {
+			$dbw = wfGetDB( DB_MASTER );
+			$outArray = $this->dbDebugOutArray();
+			$method = __METHOD__;
+			$dbw->onTransactionIdle( function () use ( $dbw, $outArray, $method ) {
+				$dbw->insert( 'mathlog', $outArray, $method );
+			} );
+		}
+	}
+
+	public function writeToDatabase( $dbw = null ) {
+		$dbw = $dbw ?: wfGetDB( DB_MASTER );
+		parent::writeToDatabase( $dbw );
+		$this->writeDebugLog();
+	}
+
 }
