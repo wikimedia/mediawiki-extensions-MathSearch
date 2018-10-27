@@ -25,8 +25,6 @@ class ContentMathFormatter implements ValueFormatter {
 	 * Loads format to distinguish the type of formatting
 	 *
 	 * @param string $format One of the SnakFormatter::FORMAT_... constants.
-	 *
-	 * @throws InvalidArgumentException
 	 */
 	public function __construct( $format ) {
 		$this->format = $format;
@@ -40,7 +38,7 @@ class ContentMathFormatter implements ValueFormatter {
 	 */
 	public function format( $value ) {
 		if ( !( $value instanceof StringValue ) ) {
-			throw new MismatchingDataValueTypeException( 'StringValue', get_class( $value ) );
+			throw new InvalidArgumentException( '$value must be a StringValue' );
 		}
 
 		$tex = $value->getValue();
