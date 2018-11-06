@@ -5,6 +5,9 @@ class MathDebugTest extends MediaWikiTestCase {
 
 	private $someTex = "\\sin(x)+1";
 
+	/**
+	 * @covers MathObject::getLog
+	 */
 	public function testSetLog() {
 		$mo = new MathObject( $this->someTex );
 		$mo->setLog( $this->someLog );

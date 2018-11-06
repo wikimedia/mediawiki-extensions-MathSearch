@@ -6,6 +6,9 @@
 
 class MathEngineTest extends MediaWikiTestCase {
 
+	/**
+	 * @covers MathLaTeXML::getMd5
+	 */
 	public function testHash() {
 		$test_tex = 'E=mc^2';
 		$test_hash = '826676a6a5ad24552f0d5af1593434cc';

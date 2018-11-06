@@ -29,6 +29,14 @@ class MathoidDriverTest extends MediaWikiTestCase {
 		}
 	}
 
+	/**
+	 * @covers MathoidDriver::texvcInfo
+	 * @covers MathoidDriver::getSuccess
+	 * @covers MathoidDriver::getChecked
+	 * @covers MathoidDriver::getIdentifiers
+	 * @covers MathoidDriver::getRequiredPackages
+	 * @covers MathoidDriver::getSpeech
+	 */
 	public function testSuccess() {
 		$m = new MathoidDriver( '\\sin(x^2)' );
 		$this->assertTrue( $m->texvcInfo() );
@@ -39,6 +47,11 @@ class MathoidDriverTest extends MediaWikiTestCase {
 		$this->assertEquals( 'sine left-parenthesis x squared right-parenthesis', $m->getSpeech() );
 	}
 
+	/**
+	 * @covers MathoidDriver::texvcInfo
+	 * @covers MathoidDriver::getSuccess
+	 * @covers MathoidDriver::getError
+	 */
 	public function testFail() {
 		$m = new MathoidDriver( '\\sin(\\invalid)' );
 		$this->assertTrue( $m->texvcInfo() );
@@ -46,6 +59,10 @@ class MathoidDriverTest extends MediaWikiTestCase {
 		$this->assertObjectHasAttribute( 'message', $m->getError() );
 	}
 
+	/**
+	 * @covers MathoidDriver::getSvg
+	 * @covers MathoidDriver::getPng
+	 */
 	public function testFormats() {
 		$m = new MathoidDriver( '\\sin(x^2)' );
 		$this->assertContains( '<svg', $m->getSvg() );

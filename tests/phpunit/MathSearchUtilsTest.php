@@ -16,6 +16,10 @@ class MathSearchUtilsTest extends MediaWikiTestCase {
 | 2
 |}
 ';
+
+	/**
+	 * @covers MathSearchUtils::dbRowToWikiTable
+	 */
 	public function test() {
 		$dbw = wfGetDB( DB_MASTER );
 		$this->markTestSkipped( __METHOD__ . " temporary deactivated." );

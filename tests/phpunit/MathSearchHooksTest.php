@@ -83,6 +83,7 @@ EOT;
 	 * Tests if ID's for math elements are replaced correctly
 	 * //TODO: Update test
 	 * @group ignore
+	 * @covers MathSearchHooks::onMathFormulaRenderedNoLink
 	 */
 	public function testNTCIRHook() {
 		$sample = $this->mathMLSample;
@@ -98,6 +99,9 @@ EOT;
 		$this->assertContains( "math.42.0.14.1.cmml", $sample, "expected replaced id not found" );
 	}
 
+	/**
+	 * @covers MathSearchHooks::setMathId
+	 */
 	public function testSetMathIdIdempotence() {
 		$renderer = MathRenderer::getRenderer( '' );
 		$id = null;

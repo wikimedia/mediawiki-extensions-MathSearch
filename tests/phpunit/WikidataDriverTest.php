@@ -11,6 +11,9 @@
  */
 class WikidataDriverTest extends MediaWikiTestCase {
 
+	/**
+	 * @covers WikidataDriver::<public>
+	 */
 	public function testSuccess() {
 		$wd = new WikidataDriver();
 		$this->assertContains( 'wikidata', $wd->getBackendUrl() );

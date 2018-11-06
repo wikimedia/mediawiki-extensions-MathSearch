@@ -40,6 +40,10 @@ EOT;
 			$this->markTestSkipped( "Can not connect to Restbase Math interface." );
 		}
 	}
+
+	/**
+	 * @covers MathObject::extractMathTagsFromWikiText
+	 */
 	public function test() {
 		$comment = MathObject::extractMathTagsFromWikiText( $this->HTMLComment );
 		$this->assertEquals( 0, count( $comment ), 'Math tags in comments should be ignored.' );
@@ -58,6 +62,9 @@ EOT;
 		$this->assertEquals( ' x^3 ', $second[1] );
 	}
 
+	/**
+	 * @covers MathObject::cloneFromRenderer
+	 */
 	public function testAlttext() {
 		$r = new MathMathML( 'E=mc^2' );
 		$r->render();

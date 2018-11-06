@@ -177,6 +177,11 @@ XML;
 		}
 	}
 
+	/**
+	 * @covers MwsDumpWriter::addFromMathIdGenerator
+	 * @covers MwsDumpWriter::getOutput
+	 * @throws MWException
+	 */
 	public function testExtract() {
 		$revId = 28378;
 		$dw = new MwsDumpWriter();

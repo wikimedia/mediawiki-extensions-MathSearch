@@ -13,10 +13,12 @@ class LaTeX2MathematicaTest extends MediaWikiTestCase {
 		$this->translator = new LaTeXTranslator();
 		parent::setUp();
 	}
+
 	/**
 	 * Loops over all test cases provided by the provider function.
 	 * Compares each the rendering result of each input with the expected output.
 	 * @dataProvider provideCoverage
+	 * @coversNothing
 	 */
 	public function testCoverage( $input, $output ) {
 		$this->assertEquals(

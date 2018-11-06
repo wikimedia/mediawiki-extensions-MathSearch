@@ -7,6 +7,8 @@ class MathIdGeneratorTest extends MediaWikiTestCase {
 wikiText;
 
 	/**
+	 * @covers MathIdGenerator::getIdList
+	 * @covers MathIdGenerator::getIdsFromContent
 	 * @outputBuffering disabled
 	 */
 	public function testSimple() {
@@ -22,7 +24,11 @@ wikiText;
 		$this->assertNotEquals( $id1, $id2, "1 and 2 should not be equal" );
 		$this->assertEquals( "math.42.2", $id2 );
 	}
+
 	/**
+	 * @covers MathIdGenerator::setUseCustomIds
+	 * @covers MathIdGenerator::getIdList
+	 * @covers MathIdGenerator::getIdsFromContent
 	 * @outputBuffering disabled
 	 */
 	public function testCustomId() {

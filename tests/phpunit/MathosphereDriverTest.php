@@ -30,6 +30,11 @@ class MathosphereDriverTest extends MediaWikiTestCase {
 		}
 	}
 
+	/**
+	 * @covers MathosphereDriver::newFromWikitext
+	 * @covers MathosphereDriver::analyze
+	 * @covers MathosphereDriver::getRelations
+	 */
 	public function testEmpty() {
 		$m = MathosphereDriver::newFromWikitext( 'This is a test without formulae.' );
 		$this->assertTrue( $m->analyze() );
@@ -37,6 +42,11 @@ class MathosphereDriverTest extends MediaWikiTestCase {
 		$this->assertEquals( 0, count( $rel ) );
 	}
 
+	/**
+	 * @covers MathosphereDriver::newFromWikitext
+	 * @covers MathosphereDriver::analyze
+	 * @covers MathosphereDriver::getRelations
+	 */
 	public function testEmc2() {
 		$m = MathosphereDriver::newFromWikitext(
 			'The mass energy equivalence <math>E=mc^{2}</math> describes how energy \'\'E\'\'' .
