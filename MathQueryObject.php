@@ -176,11 +176,11 @@ TeX;
 		foreach ( str_split( $this->getTex() ) as $currentchar ) {
 			switch ( $currentchar ) {
 				case '{':
-					$level ++;
+					$level++;
 					if ( $level >= self::MIN_DEPTH && $level < $qVarLevel ) {
 						if ( ( mt_rand() / mt_getrandmax() ) < self::SELECTIVITY_QVAR * $level ) {
 							$qVarLevel = $level;
-							$out .= "{?{x" . $qVarNo ++ . "}";
+							$out .= "{?{x" . $qVarNo++ . "}";
 						} else {
 							$out .= '{';
 						}
@@ -191,7 +191,7 @@ TeX;
 					}
 					break;
 				case '}':
-					$level --;
+					$level--;
 					if ( $level < $qVarLevel ) {
 						$qVarLevel = PHP_INT_MAX;
 						$out .= "}";

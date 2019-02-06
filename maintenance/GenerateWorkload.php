@@ -56,7 +56,7 @@ class GenerateWorkload extends IndexBase {
 	 */
 	protected function generateIndexString( $row ) {
 		if ( mt_rand() <= $this->selectivity ) {
-			$q = MathQueryObject::newQueryFromEquationRow( $row, ++ $this->id );
+			$q = MathQueryObject::newQueryFromEquationRow( $row, ++$this->id );
 			$q->saveToDatabase( $this->getOption( 'overwrite', false ) );
 			$out = $q->exportTexDocument();
 			if ( $out == false ) {

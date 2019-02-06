@@ -90,7 +90,7 @@ class CalculateDistances extends Maintenance {
 				$this->output( $n . " of $count \n" );
 			}
 			$this->dbw->begin( __METHOD__ );
-			for ( $j = 0; $j < self::RTI_CHUNK_SIZE; $j ++ ) {
+			for ( $j = 0; $j < self::RTI_CHUNK_SIZE; $j++ ) {
 				// TODO: USE PREPARED STATEMENTS
 				$pid = $this->pagelist[$n];
 				// @codingStandardsIgnoreStart
@@ -109,7 +109,7 @@ class CalculateDistances extends Maintenance {
 				$start = microtime( true );
 				$this->dbw->query( $sql );
 				echo 'done in ' . ( microtime( true ) - $start ) . "\n";
-				$n ++;
+				$n++;
 			}
 			$start = microtime( true );
 			$this->dbw->commit( __METHOD__ );

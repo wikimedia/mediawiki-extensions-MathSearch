@@ -128,7 +128,7 @@ class SpecialMathSearch extends SpecialPage {
 
 	private function getSearchRows( $cnt ) {
 		$out = [];
-		for ( $i = 1; $i <= $cnt; $i ++ ) {
+		for ( $i = 1; $i <= $cnt; $i++ ) {
 			if ( $i == 1 ) {
 				// Hide the meaningless first relation from the user
 				$relType = 'hidden';
@@ -180,7 +180,7 @@ class SpecialMathSearch extends SpecialPage {
 			return true;
 		}
 
-		for ( $i = 1; $i <= $this->noTerms; $i ++ ) {
+		for ( $i = 1; $i <= $this->noTerms; $i++ ) {
 			$this->addTerm( $i, $formData["rel-$i"], $formData["type-$i"],
 				$formData["expr-$i"] );
 		}

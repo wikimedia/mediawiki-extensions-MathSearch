@@ -200,7 +200,7 @@ class ImportCsv {
 			if ( $qValid === true && $fHash !== false ) {
 				// a valid result has been submitted
 				if ( $qId == $lastQueryID ) {
-					$rank ++;
+					$rank++;
 				} else {
 					$lastQueryID = $qId;
 					$rank = 1;

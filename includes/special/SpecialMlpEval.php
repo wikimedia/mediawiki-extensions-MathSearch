@@ -179,7 +179,7 @@ class SpecialMlpEval extends SpecialPage {
 			// empty
 		}
 		$rp = new RandomPage();
-		for ( $i = 0; $i < self::MAX_ATTEMPTS; $i ++ ) {
+		for ( $i = 0; $i < self::MAX_ATTEMPTS; $i++ ) {
 			$title = $rp->getRandomTitle();
 			if ( $this->setPage( $title ) ) {
 				$this->lastError = "";

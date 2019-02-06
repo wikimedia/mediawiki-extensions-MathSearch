@@ -145,7 +145,7 @@ class ExtractFeatures extends Maintenance {
 				$mo = new MathObject( $formula[1] );
 				$mo->updateObservations( $dbw );
 				// Enable indexing of math formula
-				$anchorID ++;
+				$anchorID++;
 			}
 			return $matches;
 		}
