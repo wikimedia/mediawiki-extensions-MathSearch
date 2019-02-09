@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class MathSearchTerm {
 	const TYPE_TEXT = 0;
 	const TYPE_MATH = 1;
@@ -88,7 +90,7 @@ class MathSearchTerm {
 		$backend->resetResults();
 		switch ( $this->getType() ) {
 			case self::TYPE_TEXT:
-				$search = SearchEngine::create( "CirrusSearch" );
+				$search = MediaWikiServices::getInstance()->getSearchEngineFactory()->create( "CirrusSearch" );
 				$search->setLimitOffset( 10000 );
 				$sres = $search->searchText( $this->getExpr() );
 				if ( $sres ) {
@@ -98,9 +100,10 @@ class MathSearchTerm {
 						$this->relevanceMap[] = $revisionID;
 					}
 					return true;
-				} else {
-					return false;
 				}
+
+				return false;
+
 			case self::TYPE_MATH:
 				$query = new MathQueryObject( $this->getExpr() );
 				$cQuery = $query->getCQuery();
@@ -145,9 +148,9 @@ class MathSearchTerm {
 	public function getRevisionResult( $revisionId ) {
 		if ( array_key_exists( (string)$revisionId, $this->resultSet ) ) {
 			return $this->resultSet[(string)$revisionId];
-		} else {
-			return [];
 		}
+
+		return [];
 	}
 
 }
