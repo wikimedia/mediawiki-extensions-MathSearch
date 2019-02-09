@@ -7,6 +7,9 @@
 	"license-name": "GPL-2.0-or-later",
 	"callback": "MathSearchHooks::registerExtension",
 	"type": "specialpage",
+	"requires": {
+		"MediaWiki": ">= 1.32.0"
+	},
 	"AutoloadClasses": {
 		"MathSearchHooks": "MathSearch.hooks.php",
 		"SpecialMathSearch": "includes/special/SpecialMathSearch.php",
