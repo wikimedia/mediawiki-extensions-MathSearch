@@ -5,7 +5,8 @@
 			"Rcdeboer",
 			"Siebrand",
 			"Sjoerddebruin",
-			"Esketti"
+			"Esketti",
+			"Xbaked potatox"
 		]
 	},
 	"mathsearch": "Wiskundig zoeken",
@@ -51,5 +52,5 @@
 	"math-search-type-0": "Trefwoord",
 	"math-search-type-1": "TeX patroon",
 	"math-search-type-2": "xQuery uitdrukking",
-	"math-search-expression-label": "Uitdrukking"
+	"math-search-expression-label": "Uitdrukking:"
 }
