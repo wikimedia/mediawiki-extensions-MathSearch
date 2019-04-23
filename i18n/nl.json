@@ -6,7 +6,8 @@
 			"Siebrand",
 			"Sjoerddebruin",
 			"Esketti",
-			"Xbaked potatox"
+			"Xbaked potatox",
+			"Mainframe98"
 		]
 	},
 	"mathsearch": "Wiskundig zoeken",
@@ -19,6 +20,22 @@
 	"getequationsbyquery": "Vergelijkingen zoeken",
 	"xquerygenerator": "XQuerygenerator",
 	"mathdebug": "Verwerking testen",
+	"math-lp-2-domain-option-2": "natuurkunde",
+	"math-lp-2-domain-option-3": "scheikunde",
+	"math-lp-2-domain-option-4": "biologie",
+	"math-lp-2-domain-option-5": "techniek",
+	"math-lp-2-domain-option-6": "informatica",
+	"math-lp-2-domain-option-8": "economie",
+	"math-lp-2-domain-option-9": "overige",
+	"math-lp-4-size-option-2": "te klein",
+	"math-lp-4-size-option-3": "te groot",
+	"math-lp-4-spacing-option-1": "goed",
+	"math-lp-4-spacing-option-2": "redelijk",
+	"math-lp-4-spacing-option-3": "slecht",
+	"math-lp-4-absolute-option-1": "goed",
+	"math-lp-4-absolute-option-2": "redelijk",
+	"math-lp-4-absolute-option-3": "slecht",
+	"math-lp-finish-label": "Voltooien",
 	"math-wmc-attach-results-help": "Soms een enkele run bevat te veel resultaten voor een bestand uploaden. In dat geval is de upload is te splitsen in meerdere bestanden.",
 	"math-wmc-attach-results-label": "Bevestig meer resultaten aan bestaande uitvoeren",
 	"math-wmc-download-intro": "Download uw eerder ingediende hier draait. Het bestand bevat alleen geldig hits. Alle ongeldige hits zijn verwijderd.",
@@ -52,5 +69,6 @@
 	"math-search-type-0": "Trefwoord",
 	"math-search-type-1": "TeX patroon",
 	"math-search-type-2": "xQuery uitdrukking",
-	"math-search-expression-label": "Uitdrukking:"
+	"math-search-expression-label": "Uitdrukking:",
+	"math-tex2nb-input": "Invoer"
 }
