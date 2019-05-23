@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Bjankuloski06"
+			"Bjankuloski06",
+			"Vlad5250"
 		]
 	},
 	"mathsearch": "Math-пребарување",
@@ -38,9 +39,9 @@
 	"math-lp-3-pretty-option-2": "LaTeX-код проверен со Texvc",
 	"math-lp-3-assessment-option-1": "внесот е во ред",
 	"math-lp-3-assessment-option-3": "внесот има значајни проблеми",
-	"math-lp-3-suggestion-label": "Внесот треба да се смени во...",
-	"math-lp-4-head": "Чекор 4: Испис",
-	"math-lp-4-best-label": "Кој испис ви изгледа најдобро",
+	"math-lp-3-suggestion-label": "Исправка на корисничкиот внес:",
+	"math-lp-4-head": "Чекор $2: $1Испис",
+	"math-lp-4-best-label": "Кој испис ви изгледа најдобро?",
 	"math-lp-4-size-option-1": "добра",
 	"math-lp-4-size-option-2": "премала",
 	"math-lp-4-size-option-3": "преголема",
