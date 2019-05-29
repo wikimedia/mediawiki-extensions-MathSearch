@@ -23,12 +23,14 @@
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
+use Wikimedia\Rdbms\IResultWrapper;
+
 /**
  * @author Moritz Schubotz
  *
  */
 abstract class IndexBase extends Maintenance {
-	/** @var ResultWrapper $res */
+	/** @var IResultWrapper $res */
 	protected $res;
 
 	/**
