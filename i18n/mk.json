@@ -38,6 +38,7 @@
 	"math-lp-3-pretty-option-1": "LaTeX-код од корисничкиот внес",
 	"math-lp-3-pretty-option-2": "LaTeX-код проверен со Texvc",
 	"math-lp-3-assessment-option-1": "внесот е во ред",
+	"math-lp-3-assessment-option-2": "внесот има ситни проблеми",
 	"math-lp-3-assessment-option-3": "внесот има значајни проблеми",
 	"math-lp-3-suggestion-label": "Исправка на корисничкиот внес:",
 	"math-lp-4-head": "Чекор $2: $1Испис",
@@ -45,6 +46,8 @@
 	"math-lp-4-size-option-1": "добра",
 	"math-lp-4-size-option-2": "премала",
 	"math-lp-4-size-option-3": "преголема",
+	"math-lp-4-spacing-option-1": "добро",
+	"math-lp-4-spacing-option-2": "средно",
 	"math-lp-6-srt-assessment-option-1": "многу корисен",
 	"math-lp-6-srt-assessment-option-2": "корисен",
 	"math-lp-6-srt-assessment-option-3": "корисничок",
@@ -52,6 +55,7 @@
 	"math-lp-7-head": "Оценката е завршена",
 	"math-lp-feedback-label": "Дополнителни коментари (незадол.)",
 	"math-lp-submit-label": "Продолжи со чекорот $1",
+	"math-lp-finish-label": "Заврши",
 	"math-lp-new-article": "Продолжи со друга статија",
 	"math-lp-new-formula": "Продолжи со друга формула",
 	"math-wmc-attach-results-help": "Понекогаш едно исполнување содржи премногу исходни ставки за да можат да се подигнат како една податотека. Во тој случај, ставките мора да се поделат на повеќе податотеки.",
@@ -78,6 +82,7 @@
 	"math-wmc-display-formulae-label": "Прикажувај исцртување на поднесените формули",
 	"math-wmc-display-formulae-help": "Не се препорачува за големи вносни податотеки.",
 	"action-mathwmcsubmit": "поднесување на исход на Википедиината пребарувачка задача NTCIR",
+	"right-mathwmcsubmit": "Поднесување на исход на Википедиината пребарувачка задача NTCIR",
 	"math-search-term": "* $4 член-$1: $3-израз „$2“ со {{PLURAL:$5|1 ставка|$5 ставки}}.",
 	"math-search-relation-label": "Однос:",
 	"math-search-relation-0": "и",
@@ -92,5 +97,6 @@
 	"math-tex2nb-intro": "Овој нагледен пример е наменет да го прикаже претворањето од TeX во Mathematica.\n\nПриказниот извршник претвора функции на LaTeX кои непосредно се претвораат во нивните истоветници во Mathematica.\n\nФункциите без изречна поддршка за Mathematica се достапни за превод преку пакетот DRMF (во изработка).",
 	"math-tex2nb-input": "Внос",
 	"math-tex2nb-latex": "Следниов внос во LaTeX ...",
-	"math-tex2nb-mathematica": "... се преведува во извод во Mathematica ..."
+	"math-tex2nb-mathematica": "... се преведува во извод во Mathematica ...",
+	"wikibase-listdatatypes-contentmath-body": "Буквалните податочни полиња за математички изрази, формула, равенки и слично, изразени во DRMF/DLMF варијанта на LaTeX."
 }
