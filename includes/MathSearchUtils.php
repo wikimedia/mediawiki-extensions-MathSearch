@@ -6,6 +6,8 @@
  * Time: 17:39
  */
 
+use Wikimedia\Rdbms\IResultWrapper;
+
 class MathSearchUtils {
 	private static function addExtensionTable( $name, $folder = '' ) {
 		$dbw = wfGetDB( DB_MASTER );
@@ -37,7 +39,7 @@ class MathSearchUtils {
 		return $out;
 	}
 
-	static function dbRowToWikiTable( ResultWrapper $resultWrapper, array $heads ) {
+	static function dbRowToWikiTable( IResultWrapper $resultWrapper, array $heads ) {
 		$out = self::getTableHead( $heads );
 		foreach ( $resultWrapper as $row ) {
 			$out .= "\n|-";

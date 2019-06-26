@@ -110,7 +110,7 @@ TeX;
 
 	/**
 	 *
-	 * @param ResultWrapper $rpage
+	 * @param stdClass $rpage
 	 * @param bool|int $queryID
 	 * @return \self
 	 */

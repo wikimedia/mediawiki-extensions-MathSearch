@@ -50,7 +50,7 @@ class GenerateWorkload extends IndexBase {
 	}
 
 	/**
-	 * @param ResultWrapper $row
+	 * @param stdClass $row
 	 *
 	 * @return string
 	 */
