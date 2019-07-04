@@ -3,7 +3,7 @@
 use DataValues\StringValue;
 use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 use ValueFormatters\ValueFormatter;
-use Wikibase\Lib\SnakFormatter;
+use Wikibase\Lib\Formatters\SnakFormatter;
 
 /*
 * Formats the tex string based on the known formats
