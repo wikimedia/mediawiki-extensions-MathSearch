@@ -46,6 +46,7 @@ class GenerateFeatureTable extends Maintenance {
 		$this->addArg( 'max', "If set processing is stopped at the page with rank(pageID)<=max", false );
 		$this->requireExtension( 'MathSearch' );
 	}
+
 	/**
 	 * Populates the search index with content from all pages
 	 *
@@ -118,6 +119,7 @@ class GenerateFeatureTable extends Maintenance {
 		}
 		return 0;
 	}
+
 	/**
 	 *
 	 */

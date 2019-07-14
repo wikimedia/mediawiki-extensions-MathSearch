@@ -5,6 +5,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	 * @var LaTeXTranslator
 	 */
 	private $translator;
+
 	function __construct() {
 		parent::__construct( 'LaTeXTranslator' );
 		$this->translator = new LaTeXTranslator();

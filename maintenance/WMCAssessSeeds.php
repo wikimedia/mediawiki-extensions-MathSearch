@@ -26,6 +26,7 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
  */
 class WMCAssessSeeds extends Maintenance {
 	private $DEFAULT_ASSESSMENT = 2;
+
 	/**
 	 *
 	 */

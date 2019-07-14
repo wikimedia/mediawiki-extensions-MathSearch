@@ -277,6 +277,7 @@ class SpecialMlpEval extends SpecialPage {
 			return $this->step + 1;
 		}
 	}
+
 	public function getPreviousStep( $step = false, $substep = '' ) {
 		if ( $step === false ) {
 			$step = $this->step;

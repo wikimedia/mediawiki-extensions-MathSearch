@@ -10,6 +10,7 @@
  */
 class FormulaInfo extends SpecialPage {
 	private $purge = false;
+
 	/**
 	 *
 	 */

@@ -78,6 +78,7 @@ abstract class MathEngineRest {
 			$this->setBackendUrl( $url );
 		}
 	}
+
 	public function getSize() {
 		return $this->size;
 	}

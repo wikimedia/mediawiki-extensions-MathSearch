@@ -9,6 +9,7 @@ use MediaWiki\Logger\LoggerFactory;
  */
 class MathSearchHooks {
 	private static $idGenerators = [];
+
 	/**
 	 * LoadExtensionSchemaUpdates handler; set up math table on install/upgrade.
 	 *

@@ -67,6 +67,7 @@ class QueryEval extends Maintenance {
 		$this->addArg( "dir", "The output directory", true );
 		$this->requireExtension( 'MathSearch' );
 	}
+
 	private function addExtensionTable( $name, $folder = '' ) {
 		if ( is_null( $this->dbu ) ) {
 			$dbw = wfGetDB( DB_MASTER );
@@ -80,6 +81,7 @@ class QueryEval extends Maintenance {
 	 *
 	 * @return string
 	 */
+
 	/** @noinspection PhpExpressionResultUnusedInspection */
 	private function createTopicTex( $row ) {
 		$qId = $row->qId;

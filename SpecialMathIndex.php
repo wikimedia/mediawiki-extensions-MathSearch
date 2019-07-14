@@ -6,6 +6,7 @@ class SpecialMathIndex extends SpecialPage {
 	function __construct() {
 		parent::__construct( 'MathIndex', 'edit', true );
 	}
+
 	/**
 	 * Sets headers - this should be called from the execute() method of all derived classes!
 	 */
@@ -15,6 +16,7 @@ class SpecialMathIndex extends SpecialPage {
 		$out->setRobotPolicy( "noindex,nofollow" );
 		$out->setPageTitle( $this->getDescription() );
 	}
+
 	function execute( $par ) {
 		global $wgMathDebug;
 		$output = $this->getOutput();
@@ -31,6 +33,7 @@ class SpecialMathIndex extends SpecialPage {
 				'Enable the math debug mode by setting <code> $wgMathDebug = true</code> .' );
 		}
 	}
+
 	function testIndex() {
 		$out = $this->getOutput();
 		$out->addWikiText( 'This is a test.' );

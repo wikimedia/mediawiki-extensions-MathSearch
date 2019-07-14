@@ -60,6 +60,7 @@ class MathIdGenerator {
 	public static function newFromTitle( Title $title ) {
 		return self::newFromRevisionId( $title->getLatestRevID() );
 	}
+
 	public function getIdList() {
 		return $this->formatIds( $this->mathTags );
 	}
@@ -163,6 +164,7 @@ class MathIdGenerator {
 			}
 		}
 	}
+
 	public function getUniqueFromId( $eid ) {
 		foreach ( $this->mathTags as $key => $mathTag ) {
 			if ( $eid == $this->formatKey( $key ) ) {

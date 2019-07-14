@@ -55,6 +55,7 @@ class MwsDumpWriter {
 		$out .= "\n</" . $this->mwsns . "expr>\n";
 		return $out;
 	}
+
 	public function addMwsExpression( $mathML, $revId, $eId ) {
 		$this->outBuffer .= $this->getMwsExpression( $mathML, $revId, $eId );
 		return true;

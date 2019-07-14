@@ -209,6 +209,7 @@ class MathPerformance extends Maintenance {
 			self::processImage( $folder, $formula->$tex );
 		}
 	}
+
 	/**
 	 * @param $folder
 	 * @param $input

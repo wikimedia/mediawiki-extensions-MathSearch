@@ -690,6 +690,7 @@ class LaTeXTranslator {
 		];
 		// @codingStandardsIgnoreEnd
 	}
+
 	/**
 	 * @var string contains data in Wiki html input form
 	 */

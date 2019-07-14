@@ -82,6 +82,7 @@ SQL
 	 *
 	 * @return string
 	 */
+
 	/** @noinspection PhpExpressionResultUnusedInspection */
 	private function createTopicTex( $qId, $qVarCount ) {
 		/*
