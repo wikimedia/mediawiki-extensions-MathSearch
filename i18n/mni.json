@@ -1,11 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
-			"Laishram Lokendro"
+			"Laishram Lokendro",
+			"Amire80",
+			"Awangba Mangang"
 		]
 	},
-	"math-search-relation-label": "leinaba mari:",
-	"math-search-relation-0": "amasung",
+	"math-search-relation-label": "ꯂꯩꯅꯕ ꯃꯔꯤ:",
+	"math-search-relation-0": "ꯑꯃꯁꯨꯡ",
 	"math-search-type-label": "makhal:",
 	"math-search-type-2": "xQuery khuphongdok",
 	"math-search-expression-label": "khuphongdok:"
