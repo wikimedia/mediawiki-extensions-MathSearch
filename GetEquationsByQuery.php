@@ -22,7 +22,7 @@ class GetEquationsByQuery extends SpecialPage {
 	function execute( $par ) {
 		global $wgRequest, $wgOut, $wgMathDebug;
 		if ( !$wgMathDebug ) {
-			$wgOut->addWikiText(
+			$wgOut->addWikiTextAsInterface(
 				"==Debug mode needed==  This function is only supported in math debug mode."
 			);
 			return;
@@ -54,7 +54,7 @@ class GetEquationsByQuery extends SpecialPage {
 			default:
 				$sqlFilter = [ 'math_status' => '3', 'valid_xml' => '0' ];
 		}
-		$wgOut->addWikiText(
+		$wgOut->addWikiTextAsInterface(
 			"Displaying first 10 equation for query: <pre>" . var_export( $sqlFilter, true ) . '</pre>'
 		);
 		$dbr = wfGetDB( DB_REPLICA );
@@ -72,18 +72,18 @@ class GetEquationsByQuery extends SpecialPage {
 				]
 		);
 		foreach ( $res as $row ) {
-			$wgOut->addWikiText( 'Renderd at <b>' . $row->math_timestamp . '</b> ', false );
+			$wgOut->addWikiTextAsInterface( 'Renderd at <b>' . $row->math_timestamp . '</b> ', false );
 			// @codingStandardsIgnoreStart
 			$wgOut->addHtml( '<a href="/index.php/Special:FormulaInfo?tex=' . urlencode( $row->math_tex ) . '">more info</a>' );
 			// @codingStandardsIgnoreEnd
-			$wgOut->addWikiText( ':TeX-Code:<pre>' . $row->math_tex . '</pre> <br />' );
+			$wgOut->addWikiTextAsInterface( ':TeX-Code:<pre>' . $row->math_tex . '</pre> <br />' );
 			$showmml = $wgRequest->getVal( 'showmml', false );
 			if ( $showmml ) {
 				$tstart = microtime( true );
 				$renderer = MathRenderer::getRenderer( $row->math_tex, [], 'latexml' );
 				$result = $renderer->render( true );
 				$tend = microtime( true );
-				$wgOut->addWikiText( ":rendering in " . ( $tend - $tstart ) . "s.", false );
+				$wgOut->addWikiTextAsInterface( ":rendering in " . ( $tend - $tstart ) . "s.", false );
 				$renderer->writeCache();
 				$wgOut->addHtml( "Output:" . $result . "<br/>" );
 			}

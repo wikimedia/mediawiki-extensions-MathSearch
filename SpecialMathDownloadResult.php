@@ -35,7 +35,7 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 			throw new PermissionsError( 'mathwmcsubmit' );
 		}
 
-		$this->getOutput()->addWikiText( wfMessage( 'math-wmc-download-intro' )->text() );
+		$this->getOutput()->addWikiTextAsInterface( wfMessage( 'math-wmc-download-intro' )->text() );
 		$formDescriptor = $this->printRunSelector( 'select' );
 		$formDescriptor['run']['help-message'] = '';
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );

@@ -192,8 +192,8 @@ class SpecialMathSearch extends SpecialPage {
 
 	public function performSearch() {
 		$out = $this->getOutput();
-		$out->addWikiText( '==Results==' );
-		$out->addWikiText( 'You searched for the following terms:' );
+		$out->addWikiTextAsInterface( '==Results==' );
+		$out->addWikiTextAsInterface( 'You searched for the following terms:' );
 		switch ( $this->mathEngine ) {
 			case 'basex':
 				$this->mathBackend = new MathEngineBaseX( null );
@@ -217,8 +217,6 @@ class SpecialMathSearch extends SpecialPage {
 					case $term::REL_AND:
 						$this->relevanceMap =
 							array_intersect( $this->relevanceMap, $term->getRelevanceMap() );
-							// $this->getOutput()->addWikiText( "Intersected with { $term->getKey() } ");
-							// $this->getOutput()->addWikiText( "In total".count( $term->getRelevanceMap() ) );
 						break;
 					case $term::REL_OR:
 						$this->relevanceMap = $this->relevanceMap + $term->getRelevanceMap();
@@ -230,13 +228,11 @@ class SpecialMathSearch extends SpecialPage {
 				}
 			}
 		}
-		$this->getOutput()->addWikiText( "In total " . count( $this->relevanceMap, true ) .
+		$this->getOutput()->addWikiTextAsInterface( "In total " . count( $this->relevanceMap, true ) .
 			' results.' );
 		foreach ( $this->relevanceMap as $revisionID ) {
 			$this->displayRevisionResults( $revisionID );
 		}
-		// $this->getOutput()->addWikiText("In total".sizeof($this->relevanceMap,true));
-		// $this->getOutput()->addWikiText("Map2".var_export($this->relevanceMap,true));
 	}
 
 	/**
@@ -263,7 +259,7 @@ class SpecialMathSearch extends SpecialPage {
 					->error( "Failure: Could not get MathML $anchorID for page $pagename (id $revisionID)" );
 				continue;
 			}
-			$out->addWikiText( "====[[$pagename#$anchorID|Eq: $anchorID (Result " .
+			$out->addWikiTextAsInterface( "====[[$pagename#$anchorID|Eq: $anchorID (Result " .
 				$this->resultID ++ . ")]]====", false );
 			$out->addHtml( "<br />" );
 			$xpath = $answ[0]['xpath'];
@@ -370,7 +366,7 @@ class SpecialMathSearch extends SpecialPage {
 	 */
 	private function printSource( $src, $lang = "xml" ) {
 		$out = $this->getOutput();
-		$out->addWikiText( '<source lang="' . $lang . '">' . $src . '</source>' );
+		$out->addWikiTextAsInterface( '<source lang="' . $lang . '">' . $src . '</source>' );
 	}
 
 	/**
@@ -405,9 +401,9 @@ class SpecialMathSearch extends SpecialPage {
 				// $textElements[]=$textResult->getSectionSnippet();
 			}
 		}
-		$out->addWikiText( "=== [[Special:Permalink/$revisionID | $pagename]] ===" );
+		$out->addWikiTextAsInterface( "=== [[Special:Permalink/$revisionID | $pagename]] ===" );
 		foreach ( $textElements as $textResult ) {
-			$out->addWikiText( $textResult );
+			$out->addWikiTextAsInterface( $textResult );
 		}
 		LoggerFactory::getInstance( 'MathSearch' )->warning( "Processing results for $pagename" );
 		$this->displayMathElements( $revisionID, $mathElements, $pagename );

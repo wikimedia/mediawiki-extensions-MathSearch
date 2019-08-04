@@ -31,7 +31,7 @@ class SpecialDisplayTopics extends SpecialPage {
 		if ( !( $this->getUser()->isAllowed( 'mathwmcsubmit' ) ) ) {
 			throw new PermissionsError( 'mathwmcsubmit' );
 		}
-		$this->getOutput()->addWikiText( wfMessage( 'math-wmc-Queries' )->text() );
+		$this->getOutput()->addWikiTextAsInterface( wfMessage( 'math-wmc-Queries' )->text() );
 		if ( $query ) {
 			$this->displayTopic( $query );
 		} else {
@@ -61,7 +61,7 @@ FROM math_wmc_ref ref
 SQL
 		);
 		// @codingStandardsIgnoreEnd
-		$this->getOutput()->addWikiText( MathSearchUtils::dbRowToWikiTable( $res, $cols ) );
+		$this->getOutput()->addWikiTextAsInterface( MathSearchUtils::dbRowToWikiTable( $res, $cols ) );
 	}
 
 	private function displayTopic( $query ) {
@@ -69,7 +69,7 @@ SQL
 		$dbr = wfGetDB( DB_REPLICA );
 		$qId = $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qID' => $query ] );
 		if ( !$qId ) {
-			$out->addWikiText( "Topic $query does not exist." );
+			$out->addWikiTextAsInterface( "Topic $query does not exist." );
 			return;
 		}
 		$this->displayOverview( "qID = $qId" );
@@ -143,28 +143,30 @@ SQL
 			order by count(distinct runs.userId) desc, min(rank) asc
 			Limit 15"
 		);
-		$out->addWikiText( "== Most frequent results ==" );
+		$out->addWikiTextAsInterface( "== Most frequent results ==" );
 		foreach ( $res as $hit ) {
-			$out->addWikiText( "*<math>{$hit->rendering}</math>  was found by {$hit->cntUser} users in " .
-				" {$hit->cntRun} runs with minimal rank of {$hit->minRank} \n" );
+			$out->addWikiTextAsInterface(
+				"*<math>{$hit->rendering}</math>  was found by {$hit->cntUser} users in " .
+				" {$hit->cntRun} runs with minimal rank of {$hit->minRank} \n"
+			);
 			$mo = new MathObject( $hit->rendering );
 			$all = $mo->getAllOccurences();
 			foreach ( $all as  $occ ) {
-				$out->addWikiText( '*' . $occ->printLink2Page( false ) );
+				$out->addWikiTextAsInterface( '*' . $occ->printLink2Page( false ) );
 			}
 		}
 	}
 
 	private function printIndividualResults( $qId ) {
 		$out = $this->getOutput();
-		$out->addWikiText( "== Individual results ==" );
+		$out->addWikiTextAsInterface( "== Individual results ==" );
 		$dbr = wfGetDB( DB_REPLICA );
 		if ( !$dbr->tableExists( 'math_wmc_page_ranks' ) ) {
 			MathSearchUtils::createEvaluationTables();
 		}
 		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId' => $qId ] );
 		foreach ( $res as $rank ) {
-			$out->addWikiText( $rank->runId . ': ' . $rank->rank );
+			$out->addWikiTextAsInterface( $rank->runId . ': ' . $rank->rank );
 		}
 	}
 

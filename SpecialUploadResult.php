@@ -44,7 +44,7 @@ class SpecialUploadResult extends SpecialPage {
 			throw new PermissionsError( 'mathwmcsubmit' );
 		}
 
-		$this->getOutput()->addWikiText( wfMessage( 'math-wmc-Introduction' )->text() );
+		$this->getOutput()->addWikiTextAsInterface( wfMessage( 'math-wmc-Introduction' )->text() );
 		$this->importer = new ImportCsv( $this->getUser() );
 		$formDescriptor = $this->printRunSelector();
 		$formDescriptor['File'] = [
@@ -115,7 +115,7 @@ class SpecialUploadResult extends SpecialPage {
 		if ( $warnings ) {
 			echo "bad wqarni";
 			foreach ( $warnings as $warning ) {
-				$this->getOutput()->addWikiText( $warning );
+				$this->getOutput()->addWikiTextAsInterface( $warning );
 			}
 		}
 		return $run;
@@ -158,7 +158,7 @@ class SpecialUploadResult extends SpecialPage {
 			return $error_msg;
 		}
 		if ( count( $this->importer->getWarnings() ) ) {
-			$out->addWikiText( self::formatErrors( $this->importer->getWarnings() ) );
+			$out->addWikiTextAsInterface( self::formatErrors( $this->importer->getWarnings() ) );
 		}
 
 		return true;
@@ -234,10 +234,12 @@ class SpecialUploadResult extends SpecialPage {
 			]
 		);
 		if ( !$res || $res->numRows() == 0 ) {
-			$this->getOutput()->addWikiText( "Score is 0. Check your submission" );
+			$this->getOutput()->addWikiTextAsInterface( "Score is 0. Check your submission" );
 			return;
 		} else {
-			$this->getOutput()->addWikiText( "'''Scored in " . $res->numRows() . " evaluation levels'''" );
+			$this->getOutput()->addWikiTextAsInterface(
+				"'''Scored in " . $res->numRows() . " evaluation levels'''"
+			);
 		}
 
 		$this->getOutput()->addHTML( '<table border="1" style="width:100%">
@@ -283,10 +285,12 @@ class SpecialUploadResult extends SpecialPage {
 			]
 		);
 		if ( !$res || $res->numRows() == 0 ) {
-			$this->getOutput()->addWikiText( "Score is 0. Check your submission" );
+			$this->getOutput()->addWikiTextAsInterface( "Score is 0. Check your submission" );
 			return;
 		} else {
-			$this->getOutput()->addWikiText( "'''Scored in " . $res->numRows() . " evaluation levels'''" );
+			$this->getOutput()->addWikiTextAsInterface(
+				"'''Scored in " . $res->numRows() . " evaluation levels'''"
+			);
 		}
 
 		$this->getOutput()->addHTML( '<table border="1" style="width:100%">

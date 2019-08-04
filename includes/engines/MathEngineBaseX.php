@@ -34,7 +34,7 @@ class MathEngineBaseX extends MathEngineRest {
 					$xRes = new SimpleXMLElement( $jsonResult->response );
 				} catch ( Exception $e ) {
 					global $wgOut;
-					$wgOut->addWikiText( "invalid XML <code>{$jsonResult->response}</code>" );
+					$wgOut->addWikiTextAsInterface( "invalid XML <code>{$jsonResult->response}</code>" );
 					return false;
 				}
 				if ( $xRes->run->result ) {
@@ -42,12 +42,12 @@ class MathEngineBaseX extends MathEngineRest {
 					return true;
 				} else {
 					global $wgOut;
-					$wgOut->addWikiText( "Result was empty." );
+					$wgOut->addWikiTextAsInterface( "Result was empty." );
 					return false;
 				}
 			} else {
 				global $wgOut;
-				$wgOut->addWikiText( "<code>{$jsonResult->response}</code>" );
+				$wgOut->addWikiTextAsInterface( "<code>{$jsonResult->response}</code>" );
 				return false;
 			}
 		} else {

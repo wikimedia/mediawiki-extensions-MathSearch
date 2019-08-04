@@ -41,10 +41,10 @@ class FormulaInfo extends SpecialPage {
 	public function InfoTex( $tex ) {
 		global $wgMathDebug, $wgOut;
 		if ( !$wgMathDebug ) {
-			$wgOut->addWikiText( "tex queries only supported in debug mode" );
+			$wgOut->addWikiTextAsInterface( "tex queries only supported in debug mode" );
 			return false;
 		}
-		$wgOut->addWikiText( "Info for <code>" . $tex . '</code>' );
+		$wgOut->addWikiTextAsInterface( "Info for <code>" . $tex . '</code>' );
 
 		/**
 		 * @var MathObject Description
@@ -54,7 +54,9 @@ class FormulaInfo extends SpecialPage {
 		if ( $allPages ) {
 			$this->DisplayInfo( $allPages[0]->getPageID(), $allPages[0]->getAnchorID() );
 		} else {
-			$wgOut->addWikiText( "No occurrences found clean up the database to remove unused formulae" );
+			$wgOut->addWikiTextAsInterface(
+				"No occurrences found clean up the database to remove unused formulae"
+			);
 		}
 
 		$this->DisplayTranslations( $tex );
@@ -70,10 +72,10 @@ class FormulaInfo extends SpecialPage {
 		$resultMaple = $this->GetTranslation( 'Maple', $tex );
 		$resultMathe = $this->GetTranslation( 'Mathematica', $tex );
 
-		$wgOut->addWikiText( '==Translations to Computer Algebra Systems==' );
+		$wgOut->addWikiTextAsInterface( '==Translations to Computer Algebra Systems==' );
 
 		if ( $resultMaple === false || $resultMathe === false ) {
-			$wgOut->addWikiText( 'An error occurred during translation.' );
+			$wgOut->addWikiTextAsInterface( 'An error occurred during translation.' );
 			return false;
 		}
 
@@ -98,15 +100,15 @@ class FormulaInfo extends SpecialPage {
 		global $wgOut;
 
 		$jsonResult = json_decode( $result, true );
-		$wgOut->addWikiText( '=== Translation to ' . $cas . '===' );
+		$wgOut->addWikiTextAsInterface( '=== Translation to ' . $cas . '===' );
 
 		$wgOut->addHtml(
 			'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
 		);
-		$wgOut->addWikiText( 'In ' . $cas . ': <code>' . $jsonResult['result'] . '</code>' );
+		$wgOut->addWikiTextAsInterface( 'In ' . $cas . ': <code>' . $jsonResult['result'] . '</code>' );
 
 		$wgOut->addHtml( '<div class="mw-collapsible-content">' );
-		$wgOut->addWikiText( str_replace( "\n", "\n\n", $jsonResult['log'] ) );
+		$wgOut->addWikiTextAsInterface( str_replace( "\n", "\n\n", $jsonResult['log'] ) );
 		$wgOut->addHtml( '</div></div>' );
 	}
 
@@ -121,16 +123,18 @@ class FormulaInfo extends SpecialPage {
 		global $wgMathDebug;
 		$out = $this->getOutput();
 		$out->addModuleStyles( [ 'ext.mathsearch.styles' ] );
-		$out->addWikiText( '==General==' );
-		$out->addWikiText( 'Display information for equation id:' . $eid . ' on revision:' . $oldID );
+		$out->addWikiTextAsInterface( '==General==' );
+		$out->addWikiTextAsInterface(
+			'Display information for equation id:' . $eid . ' on revision:' . $oldID
+		);
 		$revision = Revision::newFromId( $oldID );
 		if ( !$revision ) {
-			$out->addWikiText( 'There is no revision with id:' . $oldID . ' in the database.' );
+			$out->addWikiTextAsInterface( 'There is no revision with id:' . $oldID . ' in the database.' );
 			return false;
 		}
 
 		$pageName = (string)$revision->getTitle();
-		$out->addWikiText( "* Page found: [[$pageName#$eid|$pageName]] (eq $eid)  ", false );
+		$out->addWikiTextAsInterface( "* Page found: [[$pageName#$eid|$pageName]] (eq $eid)  ", false );
 		$link = $revision->getTitle()->getLinkURL( [
 				'action' => 'purge',
 				'mathpurge' => 'true'
@@ -139,17 +143,17 @@ class FormulaInfo extends SpecialPage {
 		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $oldID, $eid );
 		if ( !$mo ) {
-			$out->addWikiText( 'Cannot find the equation data in the database.' .
+			$out->addWikiTextAsInterface( 'Cannot find the equation data in the database.' .
 				' Fetching from revision text.' );
 			$mo = MathObject::newFromRevisionText( $oldID, $eid );
 		}
-		$out->addWikiText( "Occurrences on the following pages:" );
+		$out->addWikiTextAsInterface( "Occurrences on the following pages:" );
 		$all = $mo->getAllOccurences();
 		foreach ( $all as  $occ ) {
 			/** @var MathObject $occ */
-			$out->addWikiText( '*' . $occ->printLink2Page( false ) );
+			$out->addWikiTextAsInterface( '*' . $occ->printLink2Page( false ) );
 		}
-		$out->addWikiText( 'Hash: ' . $mo->getMd5() );
+		$out->addWikiTextAsInterface( 'Hash: ' . $mo->getMd5() );
 		$this->printSource( $mo->getUserInputTex(), 'TeX (original user input)', 'latex' );
 		$texInfo = $mo->getTexInfo();
 		if ( $texInfo ) {
@@ -161,13 +165,13 @@ class FormulaInfo extends SpecialPage {
 
 		$this->DisplayTranslations( $mo->getUserInputTex() );
 
-		$out->addWikiText( '==Similar pages==' );
-		$out->addWikiText(
+		$out->addWikiTextAsInterface( '==Similar pages==' );
+		$out->addWikiTextAsInterface(
 			'Calculated based on the variables occurring on the entire ' . $pageName . ' page'
 		);
 		$pid = Revision::newFromId( $oldID )->getTitle()->getArticleID();
 		$mo->findSimilarPages( $pid );
-		$out->addWikiText( '==Identifiers==' );
+		$out->addWikiTextAsInterface( '==Identifiers==' );
 		$relations = $mo->getRelations();
 		if ( $texInfo ) {
 			foreach ( $texInfo->getIdentifiers() as $x ) {
@@ -177,13 +181,13 @@ class FormulaInfo extends SpecialPage {
 						$line .= ", {$r->definition} ($r->score)";
 					}
 				}
-				$out->addWikiText( $line );
+				$out->addWikiTextAsInterface( $line );
 			}
 		}
-		$out->addWikiText( '=== MathML observations ===' );
+		$out->addWikiTextAsInterface( '=== MathML observations ===' );
 		$mo->getObservations();
 		if ( $wgMathDebug ) {
-			$out->addWikiText( '==LOG and Debug==' );
+			$out->addWikiTextAsInterface( '==LOG and Debug==' );
 			$this->printSource( $mo->getTimestamp(), 'Rendered at', 'text', false );
 			$this->printSource( $mo->getIndexTimestamp(), 'and indexed at', 'text', false );
 			$this->printSource( $mo->isValidMathML( $mo->getMathml() ), 'validxml', 'text', false );
@@ -197,7 +201,7 @@ class FormulaInfo extends SpecialPage {
 		if ( $description ) {
 			$description .= ": ";
 		}
-		$this->getOutput()->addWikiText( "$description<syntaxhighlight lang=\"$language\">" .
+		$this->getOutput()->addWikiTextAsInterface( "$description<syntaxhighlight lang=\"$language\">" .
 			$source . '</syntaxhighlight>', $linestart );
 	}
 
@@ -262,20 +266,22 @@ class FormulaInfo extends SpecialPage {
 		$out = $this->getOutput();
 		$names = MathHooks::getMathNames();
 		$name = $names[$mode];
-		$out->addWikiText( "=== $name rendering === " );
+		$out->addWikiTextAsInterface( "=== $name rendering === " );
 		$renderer = MathRenderer::getRenderer( $tex, [], $mode );
 		if ( $this->purge ) {
 			$renderer->render( true );
 		} elseif ( $mode == 'mathml' || !$renderer->isInDatabase() ) {
 			// workaround for restbase mathml mode that does not support database access
-			// $out->addWikiText( "No database entry. Start rendering" );
+			// $out->addWikiTextAsInterface( "No database entry. Start rendering" );
 			$renderer->render();
 		}
 		if ( self::hasMathMLSupport( $mode ) ) {
 			$out->addHtml(
 				'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
 			);
-			$out->addWikiText( 'MathML (' . self::getlengh( $renderer->getMathml() ) . ') :', false );
+			$out->addWikiTextAsInterface(
+				'MathML (' . self::getlengh( $renderer->getMathml() ) . ') :', false
+			);
 			$imgUrl = $wgExtensionAssetsPath . "/MathSearch/images/math_search_logo.png";
 			$mathSearchImg = Html::element(
 				'img', [ 'src' => $imgUrl, 'width' => 15, 'height' => 15 ]
@@ -284,7 +290,7 @@ class FormulaInfo extends SpecialPage {
 				'&searchx=Search">' . $mathSearchImg . '</a>' );
 			$out->addHtml( $renderer->getMathml() );
 			$out->addHtml( '<div class="mw-collapsible-content">' );
-			$out->addWikiText(
+			$out->addWikiTextAsInterface(
 				'<syntaxhighlight lang="xml">' . ( $renderer->getMathml() ) . '</syntaxhighlight>'
 			);
 			$out->addHtml( '</div></div>' );
@@ -293,12 +299,12 @@ class FormulaInfo extends SpecialPage {
 			try {
 				$svg = $renderer->getSvg( 'cached' );
 				if ( $svg === '' ) {
-					$out->addWikiText( 'SVG image empty. Force Re-Rendering' );
+					$out->addWikiTextAsInterface( 'SVG image empty. Force Re-Rendering' );
 					$renderer->render( true );
 				} else {
 					$svg = $renderer->getSvg( 'render' );
 				}
-				$out->addWikiText( 'SVG (' . self::getlengh( $svg ) . ') :', false );
+				$out->addWikiTextAsInterface( 'SVG (' . self::getlengh( $svg ) . ') :', false );
 				$out->addHtml( $svg ); // FALSE, 'mwe-math-demo' ) );
 				$out->addHtml( "<br />\n" );
 			} catch ( Exception $e ) {
@@ -307,7 +313,7 @@ class FormulaInfo extends SpecialPage {
 		}
 		if ( self::hasPngSupport( $mode ) ) {
 			if ( method_exists( $renderer, 'getPng' ) ) {
-				$out->addWikiText( 'PNG (' . self::getlengh( $renderer->getPng() ) . ') :', false );
+				$out->addWikiTextAsInterface( 'PNG (' . self::getlengh( $renderer->getPng() ) . ') :', false );
 				$out->addHtml( $renderer->getHtmlOutput() );
 				$out->addHtml( "<br />\n" );
 			} else {
@@ -316,7 +322,7 @@ class FormulaInfo extends SpecialPage {
 					$rbi = $renderer->getRbi();
 					$pngUrl = preg_replace( '#/svg/#', '/png/', $rbi->getFullSvgUrl() );
 					$png = file_get_contents( $pngUrl );
-					$out->addWikiText( 'PNG (' . self::getlengh( $png ) . ') :', false );
+					$out->addWikiTextAsInterface( 'PNG (' . self::getlengh( $png ) . ') :', false );
 					$out->addHtml( "<img src='$pngUrl' />" );
 					$out->addHtml( "<br />\n" );
 				} catch ( Exception $e ) {

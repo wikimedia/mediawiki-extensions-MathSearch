@@ -53,7 +53,7 @@ class MathObject extends MathMathML {
 					$row->V * 100 . "%\n";
 				// .' ( pageid'.$other.'/'.$row->A.')' );
 			}
-			$wgOut->addWikiText( $out );
+			$wgOut->addWikiTextAsInterface( $out );
 		}
 		catch ( Exception $e ) {
 			return "DatabaseProblem";
@@ -254,36 +254,36 @@ class MathObject extends MathMathML {
 		catch ( Exception $e ) {
 			return "Database problem";
 		}
-		$wgOut->addWikiText( $res->numRows() . 'results' );
+		$wgOut->addWikiTextAsInterface( $res->numRows() . 'results' );
 		if ( $res->numRows() == 0 ) {
 			if ( $update ) {
 				$this->updateObservations();
 				$this->getObservations( false );
 			} else {
-				$wgOut->addWikiText(
+				$wgOut->addWikiTextAsInterface(
 					"no statistics present please run the maintenance script ExtractFeatures.php"
 				);
 			}
 		}
-		$wgOut->addWikiText( $res->numRows() . ' results' );
+		$wgOut->addWikiTextAsInterface( $res->numRows() . ' results' );
 		if ( $res ) {
 			foreach ( $res as $row ) {
 				$featureName = utf8_decode( $row->mathobservation_featurename );
 				if ( bin2hex( $featureName ) == 'e281a2' ) {
 					$featureName = 'invisibe-times';
 				}
-				$wgOut->addWikiText( '*' . $row->mathobservation_featuretype . ' <code>' .
+				$wgOut->addWikiTextAsInterface( '*' . $row->mathobservation_featuretype . ' <code>' .
 					$featureName . '</code> (' . $row->localcnt . '/' .
 					$row->pagestat_featurecount .
 					"/" . $row->varstat_featurecount . ')' );
 				$identifiers = $this->getNouns( $row->mathobservation_featurename );
 				if ( $identifiers ) {
 					foreach ( $identifiers as $identifier ) {
-						$wgOut->addWikiText( '**' . $identifier->noun . '(' .
+						$wgOut->addWikiTextAsInterface( '**' . $identifier->noun . '(' .
 							$identifier->evidence . ')' );
 					}
 				} else {
-					$wgOut->addWikiText( '** not found' );
+					$wgOut->addWikiTextAsInterface( '** not found' );
 				}
 			}
 		}

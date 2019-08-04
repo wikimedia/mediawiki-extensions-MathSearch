@@ -77,7 +77,7 @@ class SpecialMathDebug extends SpecialPage {
 		global $wgMathUseLaTeXML, $wgRequest, $wgMathLaTeXMLUrl;
 		$out = $this->getOutput();
 		if ( !$wgMathUseLaTeXML ) {
-			$out->addWikiText( "MahtML support must be enabled." );
+			$out->addWikiTextAsInterface( "MahtML support must be enabled." );
 			return false;
 		}
 		$parserA = $wgRequest->getVal( 'parserA', 'http://latexml.mathweb.org/convert' );
@@ -90,7 +90,7 @@ class SpecialMathDebug extends SpecialPage {
 		$diffFormatter = new TableDiffFormatter();
 		if ( is_array( $formulae ) ) {
 			foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
-				$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
+				$out->addWikiTextAsInterface( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
 				$renderer->setTex( $formula );
 				$wgMathLaTeXMLUrl = $parserA;
 				$stringA = $renderer->render( true );
@@ -98,27 +98,29 @@ class SpecialMathDebug extends SpecialPage {
 				$stringB = $renderer->render( true );
 				$diff = new Diff( [ $stringA ], [ $stringB ] );
 				if ( $diff->isEmpty() ) {
-					$out->addWikiText( 'Output is identical' );
+					$out->addWikiTextAsInterface( 'Output is identical' );
 				} else {
-					$out->addWikiText( 'Request A <source lang="bash"> curl -d \'' .
+					$out->addWikiTextAsInterface( 'Request A <source lang="bash"> curl -d \'' .
 						$renderer->getPostValue() . '\' ' . $parserA . '</source>' );
-					$out->addWikiText( 'Request B <source lang="bash"> curl -d \'' .
+					$out->addWikiTextAsInterface( 'Request B <source lang="bash"> curl -d \'' .
 						$renderer->getPostValue() . '\' ' . $parserB . '</source>' );
-					$out->addWikiText(
+					$out->addWikiTextAsInterface(
 						'Diff: <source lang="diff">' . $diffFormatter->format( $diff ) . '</source>'
 					);
-					$out->addWikiText( 'XML Element based:' );
+					$out->addWikiTextAsInterface( 'XML Element based:' );
 					$XMLA = explode( '>', $stringA );
 					$XMLB = explode( '>', $stringB );
 					$diff = new Diff( $XMLA, $XMLB );
-					$out->addWikiText( '<source lang="diff">' . $diffFormatter->format( $diff ) . '</source>' );
+					$out->addWikiTextAsInterface(
+						'<source lang="diff">' . $diffFormatter->format( $diff ) . '</source>'
+					);
 				}
 				$i++;
 			}
 		} else {
 			$str_out = "No math elements found";
 		}
-		$out->addWikiText( $str_out );
+		$out->addWikiTextAsInterface( $str_out );
 		return true;
 	}
 
@@ -129,10 +131,10 @@ class SpecialMathDebug extends SpecialPage {
 		foreach (
 			array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t
 		) {
-			$out->addWikiText( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
+			$out->addWikiTextAsInterface( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
 			$out->addHTML( self::render( $t, 'source', $purge ) );
 			$out->addHTML( self::render( $t, 'png', $purge ) );
-			$out->addWikiText(
+			$out->addWikiTextAsInterface(
 				'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>'
 			);
 			if ( in_array( 'latexml', $wgMathMathValidModes ) ) {
@@ -175,7 +177,7 @@ class SpecialMathDebug extends SpecialPage {
 		global $wgMathUseLaTeXML;
 		$out = $this->getOutput();
 		if ( !$wgMathUseLaTeXML ) {
-			$out->addWikiText( "MahtML support must be enabled." );
+			$out->addWikiTextAsInterface( "MahtML support must be enabled." );
 			return false;
 		}
 
@@ -195,7 +197,7 @@ class SpecialMathDebug extends SpecialPage {
 		} else {
 			$tstring = "No math elements found";
 		}
-		$out->addWikiText( '<source>' . $tstring . '<\source>' );
+		$out->addWikiTextAsInterface( '<source>' . $tstring . '<\source>' );
 		return true;
 	}
 

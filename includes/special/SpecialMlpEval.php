@@ -373,8 +373,8 @@ class SpecialMlpEval extends SpecialPage {
 	private function printIntorduction() {
 		$this->enableMathStyles();
 		$out = $this->getOutput();
-		// $out->addWikiText( "Welcome to the MLP evaluation. Your data will be recorded." );
-		// $out->addWikiText( "You are in step {$this->step} of possible evaluation 5 steps" );
+		// $out->addWikiTextAsInterface( "Welcome to the MLP evaluation. Your data will be recorded." );
+		// $out->addWikiTextAsInterface( "You are in step {$this->step} of possible evaluation 5 steps" );
 		$this->printPrefix();
 		switch ( $this->step ) {
 			case self::STEP_PAGE:
@@ -534,7 +534,7 @@ class SpecialMlpEval extends SpecialPage {
 		if ( $description ) {
 			$description .= ": ";
 		}
-		$this->getOutput()->addWikiText( "$description<syntaxhighlight lang=\"$language\">" .
+		$this->getOutput()->addWikiTextAsInterface( "$description<syntaxhighlight lang=\"$language\">" .
 			$source . '</syntaxhighlight>', $linestart );
 	}
 
@@ -582,7 +582,7 @@ class SpecialMlpEval extends SpecialPage {
 	private function printIntro() {
 		$msg =
 			new Message( "math-lp-{$this->step}-intro", [ $this->subStepNames[$this->subStep] ] );
-		$this->getOutput()->addWikiText( $msg->text() );
+		$this->getOutput()->addWikiTextAsInterface( $msg->text() );
 	}
 
 	private function getWikiTextLink() {

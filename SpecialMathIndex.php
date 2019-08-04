@@ -29,14 +29,16 @@ class SpecialMathIndex extends SpecialPage {
 				$this->testIndex();
 			}
 		} else {
-			$output->addWikiText( '\'\'\'This page is avaliblible in math debug mode only.\'\'\'' . "\n\n" .
-				'Enable the math debug mode by setting <code> $wgMathDebug = true</code> .' );
+			$output->addWikiTextAsInterface(
+				'\'\'\'This page is avaliblible in math debug mode only.\'\'\'' . "\n\n" .
+				'Enable the math debug mode by setting <code> $wgMathDebug = true</code> .'
+			);
 		}
 	}
 
 	function testIndex() {
 		$out = $this->getOutput();
-		$out->addWikiText( 'This is a test.' );
+		$out->addWikiTextAsInterface( 'This is a test.' );
 		$formDescriptor = [
 			'script' => [
 				'label' => 'Script', # What's the label of the field

@@ -45,9 +45,9 @@ class SpecialLaTeXTranslator extends SpecialPage {
 
 		$output = $this->getOutput();
 		$output->addWikiMsg( 'math-tex2nb-latex' );
-		$output->addWikiText( "<syntaxhighlight lang='latex'>$data</syntaxhighlight>" );
+		$output->addWikiTextAsInterface( "<syntaxhighlight lang='latex'>$data</syntaxhighlight>" );
 		$output->addWikiMsg( 'math-tex2nb-mathematica' );
-		$output->addWikiText( "<syntaxhighlight lang='text'>$translated</syntaxhighlight>" );
+		$output->addWikiTextAsInterface( "<syntaxhighlight lang='text'>$translated</syntaxhighlight>" );
 	}
 
 	protected function getGroupName() {
