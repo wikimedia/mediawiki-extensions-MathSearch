@@ -4,7 +4,8 @@
 			"Liuxinyu970226",
 			"Cwlin0416",
 			"Kly",
-			"LNDDYL"
+			"LNDDYL",
+			"Winston Sung"
 		]
 	},
 	"mathsearch": "數學搜尋",
@@ -29,7 +30,7 @@
 	"math-lp-2-content-label": "選擇最適當的表達式類型",
 	"math-lp-2-content-option-1": "綜合數學表達式（a²+b²=c²）",
 	"math-lp-2-content-option-2": "單一數字（3.14）",
-	"math-lp-2-content-option-3": "單一識別符號（a、π、c₀）",
+	"math-lp-2-content-option-3": "單一識別符號（a, π, c₀）",
 	"math-lp-2-content-option-4": "單一數學符號（±）",
 	"math-lp-2-content-option-5": "非數學環境使用的符號（♭ 用於音樂裡）",
 	"math-lp-2-content-option-6": "化學結構式（CO₂ + C ⇌ 2 CO）",
