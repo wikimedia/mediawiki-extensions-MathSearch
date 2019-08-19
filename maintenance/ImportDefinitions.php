@@ -33,8 +33,8 @@ class ImportDefinitions extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Batch imports definitions from a folder.' .
-			" \n Processes mathosphere files that follow the naming convention: \n *.json";
+		$this->addDescription( 'Batch imports definitions from a folder.' .
+			" \n Processes mathosphere files that follow the naming convention: \n *.json" );
 		$this->addArg( 'dir', 'The directory to be read', true );
 		$this->addOption(
 			'overwrite', 'Overwrite existing definitions with the same name.', false, false, "o"

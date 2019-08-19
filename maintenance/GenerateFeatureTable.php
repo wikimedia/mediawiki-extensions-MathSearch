@@ -37,7 +37,7 @@ class GenerateFeatureTable extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Outputs page text to stdout';
+		$this->addDescription( 'Outputs page text to stdout' );
 		$this->addOption(
 			'purge', "If set all formulae are rendered again from strech. (Very time consuming!)",
 			false, false, "f"

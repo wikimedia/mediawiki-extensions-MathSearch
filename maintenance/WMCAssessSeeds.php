@@ -32,10 +32,8 @@ class WMCAssessSeeds extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
-		// @codingStandardsIgnoreStart
-		$this->mDescription =
-			'Automatically creates assessment for formulae and revisions that have been used to create the topics.';
-		// @codingStandardsIgnoreEnd
+		$this->addDescription( 'Automatically creates assessment for formulae and revisions ' .
+			'that have been used to create the topics.' );
 		$this->addArg( 'user', 'The user that is marked as assessor.', true );
 		$this->requireExtension( 'MathSearch' );
 	}

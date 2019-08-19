@@ -32,10 +32,8 @@ class BatchExport extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
-		// @codingStandardsIgnoreStart
-		$this->mDescription =
-			"Exports  submissions to a folder. \n Each run is named after the following convention: \n \$userName-\$runName-\$runId.csv";
-		// @codingStandardsIgnoreEnd
+		$this->addDescription( "Exports  submissions to a folder. \n Each run is named after the " .
+			"following convention: \n \$userName-\$runName-\$runId.csv" );
 		$this->addArg( 'dir', 'The output directory', true );
 		$this->requireExtension( 'MathSearch' );
 	}

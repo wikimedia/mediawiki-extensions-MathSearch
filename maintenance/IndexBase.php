@@ -38,7 +38,7 @@ abstract class IndexBase extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Exports data';
+		$this->addDescription( 'Exports data' );
 		$this->addArg( 'dir', 'The directory where the harvest files go to.' );
 		$this->addArg( 'ffmax', 'The maximal number of formula per file.', false );
 		$this->addArg( 'min', 'If set processing is started at the page with rank(pageID)>min',

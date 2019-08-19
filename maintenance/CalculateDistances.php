@@ -40,7 +40,7 @@ class CalculateDistances extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Outputs page text to stdout';
+		$this->addDescription( 'Outputs page text to stdout' );
 		$this->addOption( 'page9', 'Ignore pages with only 9 equations or less.', false, false,
 			'9' );
 		$this->addArg( 'min', 'If set processing is started at the page with curid>min', false );

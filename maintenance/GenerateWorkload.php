@@ -36,7 +36,7 @@ class GenerateWorkload extends IndexBase {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Generates a workload of sample queries.';
+		$this->addDescription( 'Generates a workload of sample queries.' );
 		$this->addOption( 'selectivity', 'Specifies the selectivity for each individual equation',
 			false, true, 'S' );
 		$this->addOption(

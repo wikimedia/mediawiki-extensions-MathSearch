@@ -40,7 +40,7 @@ class MathPerformance extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Run math performance tests.';
+		$this->addDescription( 'Run math performance tests.' );
 		$this->addArg( 'action', 'Selects what should be done.', false );
 		$this->addArg( 'shares', 'How many pieces should be used.', false );
 		$this->addArg( 'share', 'Which piece should be used. Starting from 0.', false );

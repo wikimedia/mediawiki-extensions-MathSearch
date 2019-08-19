@@ -35,7 +35,7 @@ class CreateDB2MathTable extends IndexBase {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Exports a db2 compatible math index table.';
+		$this->addDescription( 'Exports a db2 compatible math index table.' );
 		$this->addArg( 'truncate', 'If true, db2 math table is deleted before import', false );
 	}
 

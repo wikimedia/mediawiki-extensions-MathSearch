@@ -45,7 +45,7 @@ class UpdateMath extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Updates the index of Mathematical formulae.';
+		$this->addDescription( 'Updates the index of Mathematical formulae.' );
 		$this->addOption( 'purge',
 			"If set all formulae are rendered again without using caches. (Very time consuming!)",
 			false, false, "f" );

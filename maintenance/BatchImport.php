@@ -33,10 +33,8 @@ class BatchImport extends Maintenance {
 	 */
 	public function __construct() {
 		parent::__construct();
-		// @codingStandardsIgnoreStart
-		$this->mDescription =
-			"Batch imports submissions from a folder. \n Processes CSV files that follow the naming convention: \n \$userName-\$runName.csv";
-		// @codingStandardsIgnoreEnd
+		$this->addDescription( "Batch imports submissions from a folder. \n Processes CSV files " .
+			"that follow the naming convention: \n \$userName-\$runName.csv" );
 		$this->addArg( 'dir', 'The directory to be read', true );
 		$this->addOption(
 			'overwrite', 'Overwrite existing runs with the same name.', false, false, "o"

@@ -35,9 +35,8 @@ class ExportMathCache extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
-		// @codingStandardsIgnoreStart
-		$this->mDescription = 'Exports a json file that consists of the input hashes and the texvc input from the database cache.';
-		// @codingStandardsIgnoreEnd
+		$this->addDescription( 'Exports a json file that consists of the input hashes and ' .
+			'the texvc input from the database cache.' );
 		$this->addArg( 'table', "The math table to be used (mathoid or latexml).", false );
 		$this->addOption(
 			'offset', "If set the first n equations on the table are skipped", false, true, "o"

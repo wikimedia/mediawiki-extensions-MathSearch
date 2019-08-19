@@ -39,7 +39,7 @@ class CreateBaseXMathTable extends IndexBase {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Generates harvest files for the MathWebSearch Daemon.';
+		$this->addDescription( 'Generates harvest files for the MathWebSearch Daemon.' );
 		$this->addOption( 'mwsns', 'The namespace or mws normally "mws:"', false );
 		$this->addOption( 'truncate', 'If set the database will be recreated.' );
 	}
