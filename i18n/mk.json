@@ -98,5 +98,7 @@
 	"math-tex2nb-input": "Внос",
 	"math-tex2nb-latex": "Следниов внос во LaTeX ...",
 	"math-tex2nb-mathematica": "... се преведува во извод во Mathematica ...",
+	"datatypes-type-contentmath": "Математички израз (содржина)",
+	"wikibase-listdatatypes-contentmath-head": "Математички израз (содржина)",
 	"wikibase-listdatatypes-contentmath-body": "Буквалните податочни полиња за математички изрази, формула, равенки и слично, изразени во DRMF/DLMF варијанта на LaTeX."
 }
