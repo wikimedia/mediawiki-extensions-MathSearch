@@ -3,10 +3,15 @@
 		"authors": [
 			"Nike",
 			"McSalama",
-			"Pyscowicz"
+			"Pyscowicz",
+			"Silvonen"
 		]
 	},
 	"math-lp-1-page-label": "Artikkelin otsikko",
+	"math-lp-2-domain-option-2": "fysiikka",
+	"math-lp-2-domain-option-3": "kemia",
+	"math-lp-2-domain-option-4": "biologia",
+	"math-lp-2-domain-option-7": "lääketiede",
 	"math-lp-3-pretty-option-3": "En voi kertoa.",
 	"math-lp-3-assessment-option-4": "En voi kertoa.",
 	"math-lp-6-srt-assessment-option-1": "erittäin hyödyllinen",
@@ -15,5 +20,8 @@
 	"math-lp-6-srt-assessment-option-4": "ei ollenkaan hyödyllinen",
 	"math-lp-6-srt-suggestion-label": "Ehdota parempaa vaihtoehtoa (valinnainen)",
 	"math-wmc-download-button": "Lataa",
-	"math-wmc-SelectRun": "Nimi"
+	"math-wmc-SelectRun": "Nimi",
+	"math-search-relation-0": "ja",
+	"math-search-relation-1": "tai",
+	"math-search-relation-2": "ja ei"
 }
