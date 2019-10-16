@@ -2,6 +2,7 @@
 
 use DataValues\StringValue;
 use DataValues\NumberValue;
+use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 use Wikibase\Lib\Formatters\SnakFormatter;
 
 /**
@@ -32,26 +33,20 @@ class ContentMathFormatterTest extends MediaWikiTestCase {
 		$this->assertSame( SnakFormatter::FORMAT_PLAIN, $formatter->getFormat(), 'test getFormat' );
 	}
 
-	/**
-	 * @expectedException ValueFormatters\Exceptions\MismatchingDataValueTypeException
-	 */
 	public function testNotStringValue() {
 		$formatter = new ContentMathFormatter( SnakFormatter::FORMAT_PLAIN );
+		$this->expectException( MismatchingDataValueTypeException::class );
 		$formatter->format( new NumberValue( 0 ) );
 	}
 
-	/**
-	 * @expectedException ValueFormatters\Exceptions\MismatchingDataValueTypeException
-	 */
 	public function testNullValue() {
 		$formatter = new ContentMathFormatter( SnakFormatter::FORMAT_PLAIN );
+		$this->expectException( MismatchingDataValueTypeException::class );
 		$formatter->format( null );
 	}
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
 	public function testUnknownFormat() {
+		$this->expectException( InvalidArgumentException::class );
 		new ContentMathFormatter( 'unknown/unknown' );
 	}
 

@@ -2,6 +2,7 @@
 
 use DataValues\StringValue;
 use DataValues\NumberValue;
+use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 
 /**
  * @covers MathValidator
@@ -18,19 +19,15 @@ class ContentMathValidatorTest extends MediaWikiTestCase {
 		$this->setMwGlobals( 'wgMathDisableTexFilter', 'always' );
 	}
 
-	/**
-	 * @expectedException ValueFormatters\Exceptions\MismatchingDataValueTypeException
-	 */
 	public function testNotStringValue() {
 		$validator = new ContentMathValidator();
+		$this->expectException( MismatchingDataValueTypeException::class );
 		$validator->validate( new NumberValue( 0 ) );
 	}
 
-	/**
-	 * @expectedException ValueFormatters\Exceptions\MismatchingDataValueTypeException
-	 */
 	public function testNullValue() {
 		$validator = new ContentMathValidator();
+		$this->expectException( MismatchingDataValueTypeException::class );
 		$validator->validate( null );
 	}
 
