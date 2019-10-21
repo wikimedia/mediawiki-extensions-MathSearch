@@ -14,7 +14,7 @@ use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 class ContentMathValidatorTest extends MediaWikiTestCase {
 	const VADLID_TEX = "a^2+b^2=c^2";
 
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 		$this->setMwGlobals( 'wgMathDisableTexFilter', 'always' );
 	}

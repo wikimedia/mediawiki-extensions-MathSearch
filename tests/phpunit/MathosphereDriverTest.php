@@ -22,7 +22,7 @@ class MathosphereDriverTest extends MediaWikiTestCase {
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 
 		if ( !self::$hasMathosphere ) {

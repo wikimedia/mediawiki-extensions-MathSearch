@@ -18,7 +18,7 @@ class ContentMathMLRdfBuilderTest extends MediaWikiTestCase {
 	const ACME_PREFIX_URL = 'http://acme/';
 	const ACME_REF = 'testing';
 
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 		$this->setMwGlobals( 'wgMathDisableTexFilter', 'always' );
 	}
