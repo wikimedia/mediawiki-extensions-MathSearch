@@ -265,7 +265,7 @@ class SpecialMlpEval extends SpecialPage {
 				case '':
 					return '4';
 				case '4':
-					return '4a';
+					// skip 4a png was removed
 				case '4a':
 					return '4b';
 				case '4b':
@@ -399,10 +399,7 @@ class SpecialMlpEval extends SpecialPage {
 			case self::STEP_RENDERING:
 				switch ( $this->subStep ) {
 					case '4a':
-						$this->getUser()->setOption( 'math', 'png' );
-						$this->printMathObjectInContext( false, false,
-							$this->getPngRenderingAsHtmlFragment() );
-						break;
+						// remove step 4a since PNG mode was finally removed
 					case '4b':
 						$this->getUser()->setOption( 'math', 'mathml' );
 						$this->printMathObjectInContext( false, false,
@@ -552,19 +549,6 @@ class SpecialMlpEval extends SpecialPage {
 		$largeMathML =
 			preg_replace( "/<math/", "<math style=\"font-size: {$factor}% !important;\"", $largeMathML );
 		return $largeMathML;
-	}
-
-	public function getPngRenderingAsHtmlFragment( $factor = 1.75, $tex = false, $options = [] ) {
-		$this->updateTex( $tex, $options );
-		$renderer = new MathTexvc( $tex, $options );
-		$renderer->checkTex();
-		$renderer->render();
-		$dims = getimagesizefromstring( $renderer->getPng() );
-		return Html::element( 'img', [
-			'src'    => $renderer->getMathImageUrl(),
-			'width'  => $dims[0] * $factor,
-			'height' => $dims[1] * $factor
-		] );
 	}
 
 	private function printFormula() {

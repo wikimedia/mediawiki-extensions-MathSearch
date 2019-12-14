@@ -433,18 +433,13 @@ class MathObject extends MathMathML {
 	}
 
 	public function getPng() {
-		if ( $this->mode == 'mathml' || $this->mode == 'latexml' ) {
-			if ( $this->getInputType() !== 'pmml' && $this->getRbi() ) {
-				$pngUrl = preg_replace( '#/svg/#', '/png/', $this->getRbi()->getFullSvgUrl() );
-				return file_get_contents( $pngUrl );
-			} else {
-				$md = new MathoidDriver( $this->getUserInputTex(), $this->getInputType() );
-				return $md->getPng();
-			}
+		if ( $this->getInputType() !== 'pmml' && $this->getRbi() ) {
+			$pngUrl = preg_replace( '#/svg/#', '/png/', $this->getRbi()->getFullSvgUrl() );
+			return file_get_contents( $pngUrl );
+		} else {
+			$md = new MathoidDriver( $this->getUserInputTex(), $this->getInputType() );
+			return $md->getPng();
 		}
-		$texvc = MathTexvc::newFromMd5( $this->getMd5() );
-		$texvc->readFromDatabase();
-		return $texvc->getPng();
 	}
 
 	public function addIdentifierTitle( $arg ) {

@@ -216,9 +216,6 @@ class MathPerformance extends Maintenance {
 	 */
 	private static function processImage( $folder, $input ) {
 		$log = LoggerFactory::getInstance( 'MathSearch-maint' );
-		$texvc = new MathTexvc( $input );
-		$texvc->render();
-		$texvc->writeCache();
 		$mathML = new MathMathML( $input );
 		$md5 = $mathML->getMd5();
 		$path = self::makePath( $folder, $md5 );
@@ -226,7 +223,6 @@ class MathPerformance extends Maintenance {
 			'tex' => $input,
 			'path' => $path
 		] );
-		file_put_contents( "$path/old.png", $texvc->getPng() );
 
 		// Mathoid
 		if ( !$mathML->render() ) {

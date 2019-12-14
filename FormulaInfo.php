@@ -161,7 +161,6 @@ class FormulaInfo extends SpecialPage {
 		}
 		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
-		$this->DisplayRendering( $mo->getUserInputTex(), 'png' );
 
 		$this->DisplayTranslations( $mo->getUserInputTex() );
 
@@ -242,7 +241,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasPngSupport( $mode ) {
-		if ( $mode === 'png' || $mode === 'mathml' ) {
+		if ( $mode === 'mathml' ) {
 			return true;
 		} else {
 			return false;

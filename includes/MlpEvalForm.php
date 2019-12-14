@@ -76,7 +76,6 @@ class MlpEvalForm extends OOUIHTMLForm {
 							'options' => [
 									$this->eval->getMathMLRenderingAsHtmlFragment() => 'mathml',
 									$this->eval->getSvgRenderingAsHtmlFragment()    => 'svg',
-									$this->eval->getPngRenderingAsHtmlFragment()    => 'png'
 							],
 							'default' => 'mathml'
 					];
