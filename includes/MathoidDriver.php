@@ -67,8 +67,8 @@ class MathoidDriver {
 	}
 
 	public function texvcInfo() {
-		return $this->processResults( self::doPost( $this->getBackendUrl() . "/texvcinfo",
-			$this->getPostData() ) );
+		$url = trim( $this->getBackendUrl(), " \n\t/" ) . "/texvcinfo";
+		return $this->processResults( self::doPost( $url, $this->getPostData() ) );
 	}
 
 	protected function processResults( $res ) {

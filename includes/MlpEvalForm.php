@@ -111,12 +111,14 @@ class MlpEvalForm extends OOUIHTMLForm {
 					$options[$rendered] = $id;
 					$default[] = $id;
 				}
-				$formDescriptor['5-identifiers'] = [
-						'type'    => 'multiselect',
+				if ( !empty( $options ) ) {
+					$formDescriptor['5-identifiers'] = [
+						'type' => 'multiselect',
 						'options' => $options,
 						'default' => $default,
 						// 'invert'=> true,
-				];
+					];
+				}
 				$formDescriptor['5-missing'] = [
 						'type' => 'textarea',
 						'rows' => 3, # Display height of field
