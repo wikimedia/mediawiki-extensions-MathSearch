@@ -24,13 +24,14 @@ class ContentMathWikidataHook {
 		$dataTypeDefinitions['PT:contentmath'] = [
 			'value-type'                 => 'string',
 			'validator-factory-callback' => function () {
+				global $wgMathSearchContentTexMaxLength;
 				// load validator builders
 				$factory = WikibaseRepo::getDefaultValidatorBuilders();
 
 				// initialize an array with string validators
 				// returns an array of validators
 				// that add basic string validation such as preventing empty strings
-				$validators = $factory->buildStringValidators();
+				$validators = $factory->buildStringValidators( $wgMathSearchContentTexMaxLength );
 				$validators[] = new ContentMathValidator();
 				return $validators;
 			},
