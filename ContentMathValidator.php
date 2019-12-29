@@ -28,6 +28,7 @@ class ContentMathValidator implements ValueValidator {
 
 		$checker = new MathLaTeXML( $tex );
 		if ( $checker->checkTeX() ) {
+			$checker->writeCache();
 			return Result::newSuccess();
 		}
 

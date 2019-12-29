@@ -53,6 +53,7 @@ class ContentMathFormatter implements ValueFormatter {
 
 				if ( $renderer->checkTex() && $renderer->render() ) {
 					$html = $renderer->getHtmlOutput();
+					$renderer->writeCache();
 				} else {
 					$html = $renderer->getLastError();
 				}
