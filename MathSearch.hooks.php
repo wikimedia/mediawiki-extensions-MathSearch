@@ -128,8 +128,12 @@ class MathSearchHooks {
 				return true;
 			} else {
 				if ( is_null( $id ) ) {
-					$id = self::getRevIdGenerator( $revId )
-							->guessIdFromContent( $renderer->getUserInputTex() );
+					try {
+						$id = self::getRevIdGenerator( $revId )->guessIdFromContent( $renderer->getUserInputTex() );
+					} catch ( MWException $e ) {
+						LoggerFactory::getInstance( "MathSearch" )->warning( "Error generating Math ID", [ $e ] );
+						return false;
+					}
 					$renderer->setID( $id );
 					return true;
 				}
