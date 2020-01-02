@@ -4,7 +4,8 @@
 			"Violetanka",
 			"Kincki",
 			"HakanIST",
-			"Sayginer"
+			"Sayginer",
+			"BaRaN6161 TURK"
 		]
 	},
 	"displaytopics": "Konuları görüntüle",
@@ -38,6 +39,7 @@
 	"math-wmc-SelectRunHelp": "Gönderiniz için benzersiz bir ad belirtin ya da var olan bir taslak üzerine yazın.",
 	"math-wmc-FileLabel": "CSV Dosyası",
 	"math-wmc-importing": "İçe aktarılıyor...",
+	"math-search-type-label": "Tür:",
 	"datatypes-type-contentmath": "Matematiksel ifade (içerik)",
 	"wikibase-listdatatypes-contentmath-head": "Matematiksel ifade (içerik)"
 }
