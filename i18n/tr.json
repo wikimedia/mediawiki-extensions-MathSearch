@@ -39,7 +39,9 @@
 	"math-wmc-SelectRunHelp": "Gönderiniz için benzersiz bir ad belirtin ya da var olan bir taslak üzerine yazın.",
 	"math-wmc-FileLabel": "CSV Dosyası",
 	"math-wmc-importing": "İçe aktarılıyor...",
+	"math-search-relation-label": "İlişki:",
 	"math-search-type-label": "Tür:",
+	"math-search-expression-label": "İfade:",
 	"datatypes-type-contentmath": "Matematiksel ifade (içerik)",
 	"wikibase-listdatatypes-contentmath-head": "Matematiksel ifade (içerik)"
 }
