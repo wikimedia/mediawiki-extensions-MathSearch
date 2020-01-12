@@ -41,13 +41,14 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	public function processInput( $formData ) {
 		$data = $formData['input'];
 
-		$translated = $this->translator->processInput( $data );
-
 		$output = $this->getOutput();
 		$output->addWikiMsg( 'math-tex2nb-latex' );
 		$output->addWikiTextAsInterface( "<syntaxhighlight lang='latex'>$data</syntaxhighlight>" );
 		$output->addWikiMsg( 'math-tex2nb-mathematica' );
-		$output->addWikiTextAsInterface( "<syntaxhighlight lang='text'>$translated</syntaxhighlight>" );
+		if ( !FormulaInfo::DisplayTranslations( $data ) ) {
+			$translated = $this->translator->processInput( $data );
+			$output->addWikiTextAsInterface( "<syntaxhighlight lang='text'>$translated</syntaxhighlight>" );
+		}
 	}
 
 	protected function getGroupName() {

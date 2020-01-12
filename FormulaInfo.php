@@ -62,15 +62,19 @@ class FormulaInfo extends SpecialPage {
 		$this->DisplayTranslations( $tex );
 	}
 
-	public function DisplayTranslations( $tex ) {
+	/**
+	 * @param string $tex
+	 * @return bool
+	 */
+	public static function DisplayTranslations( $tex ) {
 		global $wgOut, $wgMathSearchTranslationUrl;
 
 		if ( $wgMathSearchTranslationUrl === false ) {
-			return;
+			return false;
 		}
 
-		$resultMaple = $this->GetTranslation( 'Maple', $tex );
-		$resultMathe = $this->GetTranslation( 'Mathematica', $tex );
+		$resultMaple = self::GetTranslation( 'Maple', $tex );
+		$resultMathe = self::GetTranslation( 'Mathematica', $tex );
 
 		$wgOut->addWikiTextAsInterface( '==Translations to Computer Algebra Systems==' );
 
@@ -80,15 +84,17 @@ class FormulaInfo extends SpecialPage {
 		}
 
 		if ( $resultMaple !== false ) {
-			$this->PrintTranslationResult( 'Maple', $resultMaple );
+			self::PrintTranslationResult( 'Maple', $resultMaple );
 		}
 
 		if ( $resultMathe !== false ) {
-			$this->PrintTranslationResult( 'Mathematica', $resultMathe );
+			self::PrintTranslationResult( 'Mathematica', $resultMathe );
 		}
+
+		return true;
 	}
 
-	private function GetTranslation( $cas, $tex ) {
+	private static function GetTranslation( $cas, $tex ) {
 		global $wgMathSearchTranslationUrl;
 		$params = [ 'cas' => $cas, 'latex' => $tex ];
 		return Http::post(
@@ -96,7 +102,7 @@ class FormulaInfo extends SpecialPage {
 		);
 	}
 
-	private function PrintTranslationResult( $cas, $result ) {
+	private static function PrintTranslationResult( $cas, $result ) {
 		global $wgOut;
 
 		$jsonResult = json_decode( $result, true );
