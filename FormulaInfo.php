@@ -287,7 +287,7 @@ class FormulaInfo extends SpecialPage {
 			$out->addWikiTextAsInterface(
 				'MathML (' . self::getlengh( $renderer->getMathml() ) . ') :', false
 			);
-			$imgUrl = $wgExtensionAssetsPath . "/MathSearch/images/math_search_logo.png";
+			$imgUrl = $wgExtensionAssetsPath . "/MathSearch/resources/images/math_search_logo.png";
 			$mathSearchImg = Html::element(
 				'img', [ 'src' => $imgUrl, 'width' => 15, 'height' => 15 ]
 			);

@@ -121,8 +121,8 @@
 	},
 
 	"ResourceFileModulePaths": {
-		"localBasePath": "modules",
-		"remoteExtPath": "MathSearch/modules"
+		"localBasePath": "resources",
+		"remoteExtPath": "MathSearch/resources"
 	},
 	"SpecialPages": {
 		"MathSearch": "SpecialMathSearch",
