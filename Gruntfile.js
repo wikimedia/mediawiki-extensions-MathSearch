@@ -1,23 +1,11 @@
-/*jshint node:true */
+/* eslint-env node */
 module.exports = function ( grunt ) {
 	var conf = grunt.file.readJSON( 'extension.json' );
-	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
-	grunt.loadNpmTasks( 'grunt-jsonlint' );
 	grunt.loadNpmTasks( 'grunt-banana-checker' );
-	grunt.loadNpmTasks( 'grunt-jscs' );
+	grunt.loadNpmTasks( 'grunt-eslint' );
 
 	grunt.initConfig( {
-		jshint: {
-			options: {
-				jshintrc: true
-			},
-			all: [
-				'*.js'
-			]
-		},
-		jscs: {
-			src: '<%= jshint.all %>'
-		},
+		// eslint-disable-next-line no-restricted-properties
 		banana: Object.assign(
 			conf.MessagesDirs,
 			{
@@ -26,15 +14,19 @@ module.exports = function ( grunt ) {
 				}
 			}
 		),
-		jsonlint: {
+		eslint: {
+			options: {
+				extensions: [ '.js', '.json' ]
+			},
 			all: [
-				'**/*.json',
+				'**/*.js{,on}',
+				'!modules/DataTables/**',
 				'!node_modules/**',
 				'!vendor/**'
 			]
 		}
 	} );
 
-	grunt.registerTask( 'test', [ 'jshint', 'jscs', 'jsonlint', 'banana' ] );
+	grunt.registerTask( 'test', [ 'eslint', 'banana' ] );
 	grunt.registerTask( 'default', 'test' );
 };
