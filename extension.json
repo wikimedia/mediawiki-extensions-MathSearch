@@ -38,10 +38,10 @@
 		"MathHighlighter": "includes/MathHighlighter.php",
 		"MlpEvalForm": "includes/MlpEvalForm.php",
 		"WikidataDriver": "includes/WikidataDriver.php",
-		"ContentMathValidator": "ContentMathValidator.php",
-		"ContentMathFormatter": "ContentMathFormatter.php",
-		"ContentMathWikidataHook": "ContentMathWikidataHook.php",
-		"ContentMathMLRdfBuilder": "ContentMathMLRdfBuilder.php"
+		"ContentMathValidator": "includes/content/ContentMathValidator.php",
+		"ContentMathFormatter": "includes/content/ContentMathFormatter.php",
+		"ContentMathWikidataHook": "includes/content/ContentMathWikidataHook.php",
+		"ContentMathMLRdfBuilder": "includes/content/ContentMathMLRdfBuilder.php"
 	},
 	"AvailableRights": [
 		"mathwmcsubmit"
