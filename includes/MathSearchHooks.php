@@ -19,7 +19,7 @@ class MathSearchHooks {
 	 */
 	static function onLoadExtensionSchemaUpdates( $updater = null ) {
 		global $wgMathWmcServer;
-		if ( is_null( $updater ) ) {
+		if ( $updater === null ) {
 			throw new MWException( "Mathsearch extension requires Mediawiki 1.18 or above" );
 		}
 		$type = $updater->getDB()->getType();
@@ -127,7 +127,7 @@ class MathSearchHooks {
 				$id = $renderer->getID();
 				return true;
 			} else {
-				if ( is_null( $id ) ) {
+				if ( $id === null ) {
 					try {
 						$id = self::getRevIdGenerator( $revId )->guessIdFromContent( $renderer->getUserInputTex() );
 					} catch ( MWException $e ) {

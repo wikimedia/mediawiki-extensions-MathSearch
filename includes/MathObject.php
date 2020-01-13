@@ -392,7 +392,7 @@ class MathObject extends MathMathML {
 	 */
 	public function isCurrent() {
 		$rev = Revision::newFromId( $this->revisionID );
-		if ( is_null( $rev ) ) {
+		if ( $rev === null ) {
 			return false;
 		} else {
 			return $rev->isCurrent();
@@ -495,7 +495,7 @@ class MathObject extends MathMathML {
 
 	protected function getMathTableName() {
 		global $wgMathAnalysisTableName;
-		if ( is_null( $this->mathTableName ) ) {
+		if ( $this->mathTableName === null ) {
 			return $wgMathAnalysisTableName;
 		} else {
 			return $this->mathTableName;

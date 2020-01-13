@@ -13,7 +13,7 @@ class MathosphereDriverTest extends MediaWikiTestCase {
 
 	private static $hasMathosphere;
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass() : void {
 		$m = new MathosphereDriver();
 		self::$hasMathosphere = $m->checkBackend();
 	}
@@ -39,7 +39,7 @@ class MathosphereDriverTest extends MediaWikiTestCase {
 		$m = MathosphereDriver::newFromWikitext( 'This is a test without formulae.' );
 		$this->assertTrue( $m->analyze() );
 		$rel = $m->getRelations();
-		$this->assertEquals( 0, count( $rel ) );
+		$this->assertSame( 0, count( $rel ) );
 	}
 
 	/**

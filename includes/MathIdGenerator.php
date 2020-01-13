@@ -77,7 +77,7 @@ class MathIdGenerator {
 		}
 		if ( isset( $this->mathTags[$key] ) ) {
 			return $this->formatKey( $key );
-		};
+		}
 	}
 
 	public function getInputHash( $inputTex ) {

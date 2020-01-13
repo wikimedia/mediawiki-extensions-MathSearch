@@ -123,7 +123,7 @@ class ImportCsv {
 	 * @throws Exception
 	 */
 	public function importFromFile( $csv_file ) {
-		if ( is_null( $csv_file ) ) {
+		if ( $csv_file === null ) {
 			return wfMessage( 'emptyfile' )->text();
 		}
 

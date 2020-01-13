@@ -26,7 +26,7 @@ class FormulaInfo extends SpecialPage {
 		$pid = $wgRequest->getVal( 'pid' );// Page ID
 		$eid = $wgRequest->getVal( 'eid' );// Equation ID
 		$this->purge = $wgRequest->getVal( 'purge', false );
-		if ( is_null( $pid ) || is_null( $eid ) ) {
+		if ( $pid === null || $eid === null ) {
 			$tex = $wgRequest->getVal( 'tex', '' );
 			if ( $tex == '' ) {
 				$wgOut->addHTML( '<b>Please specify page and equation id</b>' );

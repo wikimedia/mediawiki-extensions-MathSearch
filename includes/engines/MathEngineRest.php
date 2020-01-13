@@ -12,7 +12,7 @@ use MediaWiki\Logger\LoggerFactory;
  * @ingroup extensions
  */
 abstract class MathEngineRest {
-	/** @var MathQueryObject the query to be answered*/
+	/** @var MathQueryObject the query to be answered */
 	protected $query;
 	protected $type = "mws";
 	protected $size = false;

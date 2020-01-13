@@ -12,7 +12,7 @@
 class MathoidDriverTest extends MediaWikiTestCase {
 	private static $hasMathoid;
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass() : void {
 		$m = new MathoidDriver();
 		self::$hasMathoid = $m->checkBackend();
 	}

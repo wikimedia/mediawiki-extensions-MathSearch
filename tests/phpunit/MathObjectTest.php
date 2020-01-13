@@ -25,7 +25,7 @@ some more text
 EOT;
 	protected static $hasRestbase;
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass() : void {
 		$rbi = new MathRestbaseInterface();
 		self::$hasRestbase = $rbi->checkBackend( true );
 	}
@@ -46,9 +46,9 @@ EOT;
 	 */
 	public function test() {
 		$comment = MathObject::extractMathTagsFromWikiText( $this->HTMLComment );
-		$this->assertEquals( 0, count( $comment ), 'Math tags in comments should be ignored.' );
+		$this->assertSame( 0, count( $comment ), 'Math tags in comments should be ignored.' );
 		$noWiki = MathObject::extractMathTagsFromWikiText( $this->noWiki );
-		$this->assertEquals( 0, count( $noWiki ) );
+		$this->assertSame( 0, count( $noWiki ) );
 		$attributeTest = MathObject::extractMathTagsFromWikiText( $this->attributes );
 		$this->assertEquals( 1, count( $attributeTest ) );
 		$expected = [ 'x' => 'x1', 'y' => 'y1' ];

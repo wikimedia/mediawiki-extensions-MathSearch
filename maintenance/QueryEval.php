@@ -68,7 +68,7 @@ class QueryEval extends Maintenance {
 	}
 
 	private function addExtensionTable( $name, $folder = '' ) {
-		if ( is_null( $this->dbu ) ) {
+		if ( $this->dbu === null ) {
 			$dbw = wfGetDB( DB_MASTER );
 			$this->dbu = DatabaseUpdater::newForDB( $dbw );
 		}

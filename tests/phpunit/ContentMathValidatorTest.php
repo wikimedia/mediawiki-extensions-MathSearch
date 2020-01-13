@@ -1,7 +1,7 @@
 <?php
 
-use DataValues\StringValue;
 use DataValues\NumberValue;
+use DataValues\StringValue;
 use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 
 /**

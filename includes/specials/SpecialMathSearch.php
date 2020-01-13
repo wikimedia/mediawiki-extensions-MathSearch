@@ -277,7 +277,7 @@ class SpecialMathSearch extends SpecialPage {
 			if ( $wgMathDebug ) {
 				LoggerFactory::getInstance( 'MathSearch' )->debug( 'xPATH:' . $xpath );
 			}
-			if ( !is_null( $hits ) && $hits ) {
+			if ( $hits !== null && $hits ) {
 				foreach ( $hits as $node ) {
 					$this->highlightHit( $node, $dom, $mml );
 				}

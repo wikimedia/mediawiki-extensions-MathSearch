@@ -192,7 +192,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	private function setPage( Title $title ) {
-		if ( is_null( $title ) ) {
+		if ( $title === null ) {
 			$this->lastError = "Title was null.";
 			return false;
 		}

@@ -1,10 +1,10 @@
 <?php
 
+use DataValues\StringValue;
 use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
+use ValueValidators\Error;
 use ValueValidators\Result;
 use ValueValidators\ValueValidator;
-use ValueValidators\Error;
-use DataValues\StringValue;
 
 // @author Duc Linh Tran, Julian Hilbig, Moritz Schubotz
 

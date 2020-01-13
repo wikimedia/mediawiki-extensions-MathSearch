@@ -154,7 +154,7 @@ class SpecialUploadResult extends SpecialPage {
 		$out->addWikiMsg( 'math-wmc-importing' );
 		$error_msg = $this->importer->importFromFile( $source->mHandle );
 
-		if ( !is_null( $error_msg ) ) {
+		if ( $error_msg !== null ) {
 			return $error_msg;
 		}
 		if ( count( $this->importer->getWarnings() ) ) {

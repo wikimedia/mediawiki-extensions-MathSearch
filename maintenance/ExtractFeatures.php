@@ -126,8 +126,8 @@ class ExtractFeatures extends Maintenance {
 
 	/**
 	 * @param             $pid
-	 * @param string      $pText
-	 * @param string      $pTitle
+	 * @param string $pText
+	 * @param string $pTitle
 	 * @param bool|string $purge
 	 * @param             $dbw
 	 *

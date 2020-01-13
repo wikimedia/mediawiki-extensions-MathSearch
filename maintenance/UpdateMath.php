@@ -33,7 +33,7 @@ class UpdateMath extends Maintenance {
 	public $dbw;
 	/** @var \Wikimedia\Rdbms\IDatabase */
 	private $db;
-	/** @var MathRenderer  */
+	/** @var MathRenderer */
 	private $current;
 	private $time = 0.0; // microtime( true );
 	private $performance = [];
@@ -144,10 +144,10 @@ class UpdateMath extends Maintenance {
 	}
 
 	/**
-	 * @param int     $pid
-	 * @param string  $pText
-	 * @param string  $pTitle
-	 * @param int     $revId
+	 * @param int $pid
+	 * @param string $pText
+	 * @param string $pTitle
+	 * @param int $revId
 	 *
 	 * @return number
 	 */
