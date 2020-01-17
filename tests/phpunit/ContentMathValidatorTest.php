@@ -34,8 +34,7 @@ class ContentMathValidatorTest extends MediaWikiTestCase {
 	public function testValidInput() {
 		$validator = new ContentMathValidator();
 		$result = $validator->validate( new StringValue( self::VADLID_TEX ) );
-		// not supported by jenkins php version
-		// $this->assertType( \ValueValidators\Result::class, $result );
+		$this->assertInstanceOf( \ValueValidators\Result::class, $result );
 		$this->assertTrue( $result->isValid() );
 	}
 }
