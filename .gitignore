@@ -10,3 +10,4 @@ node_modules/
 vendor/
 npm-debug.log
 composer.lock
+/.eslintcache
