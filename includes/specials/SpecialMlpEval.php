@@ -494,7 +494,7 @@ class SpecialMlpEval extends SpecialPage {
 						'anchor'      => $this->fId,
 						'priority'    => 2
 				];
-				$dbw->upsert( 'math_review_list', $row, [ 'revision_id', 'anchor' ], $row );
+				$dbw->upsert( 'math_review_list', $row, [ [ 'revision_id', 'anchor' ] ], $row );
 			} elseif ( $cnt > 1 ) {
 				$dbw->delete( 'math_review_list', [ 'revision_id', 'anchor' ] );
 			}
