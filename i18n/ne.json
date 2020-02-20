@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"सरोज कुमार ढकाल"
+			"सरोज कुमार ढकाल",
+			"हिमाल सुबेदी"
 		]
 	},
 	"math-lp-4-spacing-option-1": "राम्रो",
@@ -13,5 +14,6 @@
 	"math-lp-4-absolute-option-2": "सामान्य",
 	"math-lp-4-absolute-option-3": "खराब",
 	"math-lp-6-srt-assessment-option-1": "धेरै उपयोगी",
-	"math-lp-finish-label": "सकाउने"
+	"math-lp-finish-label": "सकाउने",
+	"math-wmc-download-button": "डाउनलोड गरिएकाे"
 }
