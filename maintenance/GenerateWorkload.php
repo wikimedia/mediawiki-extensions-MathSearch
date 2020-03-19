@@ -45,7 +45,6 @@ class GenerateWorkload extends IndexBase {
 				'For example \'-l 1\' would start with id 2.',
 			false, true, 'l'
 		);
-		// @codingStandardsIgnoreEnd
 		$this->addOption( 'overwrite', 'Overwrite existing draft queries ', false, false, "o" );
 	}
 
