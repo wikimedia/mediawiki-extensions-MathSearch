@@ -2,12 +2,11 @@
 
 use DataValues\NumberValue;
 use DataValues\StringValue;
-use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 
 /**
- * @covers MathValidator
+ * @covers ContentMathValidator
  *
- * @group ContentContentMath
+ * @group Math
  *
  * @license GPL-2.0-or-later
  */
@@ -21,13 +20,13 @@ class ContentMathValidatorTest extends MediaWikiTestCase {
 
 	public function testNotStringValue() {
 		$validator = new ContentMathValidator();
-		$this->expectException( MismatchingDataValueTypeException::class );
+		$this->expectException( InvalidArgumentException::class );
 		$validator->validate( new NumberValue( 0 ) );
 	}
 
 	public function testNullValue() {
 		$validator = new ContentMathValidator();
-		$this->expectException( MismatchingDataValueTypeException::class );
+		$this->expectException( InvalidArgumentException::class );
 		$validator->validate( null );
 	}
 

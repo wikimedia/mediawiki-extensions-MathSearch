@@ -78,7 +78,6 @@ class GenerateFeatureTable extends Maintenance {
 			$this->dbw->begin( __METHOD__ );
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
-				// $revtext = Revision::getRevisionText( $s );
 				$fcount += $this->doUpdate( $s->page_id );
 			}
 			$this->dbw->commit( __METHOD__ );

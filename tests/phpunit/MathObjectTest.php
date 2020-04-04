@@ -35,6 +35,7 @@ EOT;
 	 * This method is called before a test is executed.
 	 */
 	protected function setUp() : void {
+		$this->markTestSkipped( "MathObject test temporary disabled" ); // T249428
 		parent::setUp();
 		if ( !self::$hasRestbase ) {
 			$this->markTestSkipped( "Can not connect to Restbase Math interface." );
@@ -48,7 +49,7 @@ EOT;
 		$comment = MathObject::extractMathTagsFromWikiText( $this->HTMLComment );
 		$this->assertSame( 0, count( $comment ), 'Math tags in comments should be ignored.' );
 		$noWiki = MathObject::extractMathTagsFromWikiText( $this->noWiki );
-		$this->assertSame( 0, count( $noWiki ) );
+		$this->assertSame( 0, count( $noWiki ), 'Math tags in no-wiki tags should be ignored.' );
 		$attributeTest = MathObject::extractMathTagsFromWikiText( $this->attributes );
 		$this->assertEquals( 1, count( $attributeTest ) );
 		$expected = [ 'x' => 'x1', 'y' => 'y1' ];

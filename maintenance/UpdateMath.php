@@ -20,6 +20,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\MediaWikiServices;
+
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 /**
@@ -126,10 +128,11 @@ class UpdateMath extends Maintenance {
 					__METHOD__
 			);
 			$this->dbw->begin( __METHOD__ );
+			$revisionStore = MediaWikiServices::getInstance()->getRevisionStore();
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
 				$this->output( "\nr{$s->rev_id}" );
-				$revText = Revision::getRevisionText( $s );
+				$revText = $revisionStore->newRevisionFromRow( $s );
 				$fCount += $this->doUpdate( $s->page_id, $revText, $s->page_title, $s->rev_id );
 			}
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";

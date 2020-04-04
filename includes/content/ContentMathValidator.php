@@ -1,12 +1,15 @@
 <?php
 
 use DataValues\StringValue;
-use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 use ValueValidators\Error;
 use ValueValidators\Result;
 use ValueValidators\ValueValidator;
 
-// @author Duc Linh Tran, Julian Hilbig, Moritz Schubotz
+/**
+ * @author Duc Linh Tran
+ * @author Julian Hilbig
+ * @author Moritz Schubotz
+ */
 
 class ContentMathValidator implements ValueValidator {
 
@@ -20,7 +23,7 @@ class ContentMathValidator implements ValueValidator {
 	 */
 	public function validate( $value ) {
 		if ( !( $value instanceof StringValue ) ) {
-			throw new MismatchingDataValueTypeException( 'StringValue', get_class( $value ) );
+			throw new InvalidArgumentException( '$value must be a StringValue' );
 		}
 
 		// get input String from value

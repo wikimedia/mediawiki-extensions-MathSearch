@@ -19,6 +19,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\MediaWikiServices;
+
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 /**
@@ -66,6 +68,7 @@ class ExtractFeatures extends Maintenance {
 		}
 		$this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
 		$fcount = 0;
+		$revisionStore = MediaWikiServices::getInstance()->getRevisionStore();
 
 		while ( $n < $count ) {
 			if ( $n ) {
@@ -84,7 +87,7 @@ class ExtractFeatures extends Maintenance {
 			$this->dbw->begin( __METHOD__ );
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
-				$revtext = Revision::getRevisionText( $s );
+				$revtext = $revisionStore->newRevisionFromRow( $s );
 				$fcount += self::doUpdate( $s->page_id, $revtext, $s->page_title, $this->purge,
 					$this->dbw );
 			}

@@ -5,7 +5,7 @@
  * @group MathSearch
  */
 class MwsDumpWriterTest extends MediaWikiTestCase {
-	// TODO: update tests strategy resources etc.
+	// TODO: update tests strategy resources etc. T249429
 	private $testWikiText = <<<'WikiText'
 <math>
 E = m c
@@ -171,6 +171,7 @@ XML;
 	 * This method is called before a test is executed.
 	 */
 	protected function setUp() : void {
+		$this->markTestSkipped( "MwsDumpWriterTest temporary disabled" ); // T249429
 		parent::setUp();
 		if ( !self::$hasRestbase ) {
 			$this->markTestSkipped( "Can not connect to Restbase Math interface." );
