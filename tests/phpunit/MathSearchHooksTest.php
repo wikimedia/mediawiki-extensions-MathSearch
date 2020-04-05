@@ -96,7 +96,11 @@ EOT;
 				$parser, $renderer, $sample
 			), 'Hook did not return true'
 		);
-		$this->assertContains( "math.42.0.14.1.cmml", $sample, "expected replaced id not found" );
+		$this->assertStringContainsString(
+			"math.42.0.14.1.cmml",
+			$sample,
+			"expected replaced id not found"
+		);
 	}
 
 	/**

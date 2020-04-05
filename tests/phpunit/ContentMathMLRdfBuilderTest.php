@@ -45,18 +45,21 @@ class ContentMathMLRdfBuilderTest extends MediaWikiTestCase {
 
 	public function testValidInput() {
 		$triples = $this->makeCase( 'a^2' );
-		$this->assertContains( self::ACME_PREFIX_URL . self::ACME_REF . '> "<math', $triples );
-		$this->assertContains( '>a</mi>\n', $triples );
-		$this->assertContains( '>2</mn>\n', $triples );
-		$this->assertContains( 'a^{2}', $triples );
-		$this->assertContains( '^^<http://www.w3.org/1998/Math/MathML> .', $triples );
+		$this->assertStringContainsString(
+			self::ACME_PREFIX_URL . self::ACME_REF . '> "<math',
+			$triples
+		);
+		$this->assertStringContainsString( '>a</mi>\n', $triples );
+		$this->assertStringContainsString( '>2</mn>\n', $triples );
+		$this->assertStringContainsString( 'a^{2}', $triples );
+		$this->assertStringContainsString( '^^<http://www.w3.org/1998/Math/MathML> .', $triples );
 	}
 
 	public function testInvalidInput() {
 		$triples = $this->makeCase( '\notExists' );
-		$this->assertContains( '<math', $triples );
-		$this->assertContains( 'undefined undefined', $triples );
-		$this->assertContains( 'notExists', $triples );
-		$this->assertContains( '^^<http://www.w3.org/1998/Math/MathML> .', $triples );
+		$this->assertStringContainsString( '<math', $triples );
+		$this->assertStringContainsString( 'undefined undefined', $triples );
+		$this->assertStringContainsString( 'notExists', $triples );
+		$this->assertStringContainsString( '^^<http://www.w3.org/1998/Math/MathML> .', $triples );
 	}
 }

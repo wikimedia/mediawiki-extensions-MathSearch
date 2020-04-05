@@ -16,11 +16,11 @@ class WikidataDriverTest extends MediaWikiTestCase {
 	 */
 	public function testSuccess() {
 		$wd = new WikidataDriver();
-		$this->assertContains( 'wikidata', $wd->getBackendUrl() );
+		$this->assertStringContainsString( 'wikidata', $wd->getBackendUrl() );
 		$this->assertTrue( $wd->search( 'magnet' ) );
 		$res = $wd->getResults();
 		$this->assertArrayHasKey( 'Q11421', $res );
-		$this->assertContains( 'magnetic field', $res['Q11421'] );
+		$this->assertStringContainsString( 'magnetic field', $res['Q11421'] );
 		$res = $wd->getResults( false, false );
 		$this->assertEquals( 'magnet', $res['Q11421'] );
 	}

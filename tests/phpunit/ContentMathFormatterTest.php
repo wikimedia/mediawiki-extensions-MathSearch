@@ -48,7 +48,7 @@ class ContentMathFormatterTest extends MediaWikiTestCase {
 		$formatter = new ContentMathFormatter( 'unknown/unknown' );
 		$value = new StringValue( self::SOME_TEX );
 		$resultFormat = $formatter->format( $value );
-		$this->assertContains( '</math>', $resultFormat );
+		$this->assertStringContainsString( '</math>', $resultFormat );
 	}
 
 	public function testFormatPlain() {
@@ -62,18 +62,22 @@ class ContentMathFormatterTest extends MediaWikiTestCase {
 		$formatter = new ContentMathFormatter( SnakFormatter::FORMAT_HTML );
 		$value = new StringValue( self::SOME_TEX );
 		$resultFormat = $formatter->format( $value );
-		$this->assertContains( '</math>', $resultFormat, 'Result must contain math-tag' );
+		$this->assertStringContainsString( '</math>', $resultFormat, 'Result must contain math-tag' );
 	}
 
 	public function testFormatDiffHtml() {
 		$formatter = new ContentMathFormatter( SnakFormatter::FORMAT_HTML_DIFF );
 		$value = new StringValue( self::SOME_TEX );
 		$resultFormat = $formatter->format( $value );
-		$this->assertContains( '</math>', $resultFormat, 'Result must contain math-tag' );
-		$this->assertContains( '</h4>', $resultFormat, 'Result must contain a <h4> tag' );
-		$this->assertContains( '</code>', $resultFormat, 'Result must contain a <code> tag' );
-		$this->assertContains( 'wb-details', $resultFormat, 'Result must contain wb-details class' );
-		$this->assertContains(
+		$this->assertStringContainsString( '</math>', $resultFormat, 'Result must contain math-tag' );
+		$this->assertStringContainsString( '</h4>', $resultFormat, 'Result must contain a <h4> tag' );
+		$this->assertStringContainsString( '</code>', $resultFormat, 'Result must contain a <code> tag' );
+		$this->assertStringContainsString(
+			'wb-details',
+			$resultFormat,
+			'Result must contain wb-details class'
+		);
+		$this->assertStringContainsString(
 			htmlspecialchars( self::SOME_TEX ),
 			$resultFormat,
 			'Result must contain the TeX source'
