@@ -306,7 +306,6 @@ class FormulaInfo extends SpecialPage {
 				if ( $svg === '' ) {
 					$out->addWikiTextAsInterface( 'SVG image empty. Force Re-Rendering' );
 					$renderer->render( true );
-				} else {
 					$svg = $renderer->getSvg( 'render' );
 				}
 				$out->addWikiTextAsInterface( 'SVG (' . self::getlengh( $svg ) . ') :', false );
