@@ -161,7 +161,7 @@ class SpecialMlpEval extends SpecialPage {
 		return $this->step;
 	}
 
-	public function getRandomPage() {
+	public function getRandomPageText() {
 		try {
 			$uid = $this->getUser()->getId();
 			$dbr = wfGetDB( DB_REPLICA );
@@ -173,7 +173,7 @@ class SpecialMlpEval extends SpecialPage {
 				] );
 			if ( $results ) {
 				$this->setRevision( $results[0] );
-				return $this->revision->getTitle();
+				return $this->revision->getTitle()->getText();
 			}
 		} catch ( Exception $e ) {
 			// empty
@@ -183,7 +183,7 @@ class SpecialMlpEval extends SpecialPage {
 			$title = $rp->getRandomTitle();
 			if ( $this->setPage( $title ) ) {
 				$this->lastError = "";
-				return $title;
+				return $title->getText();
 			}
 		}
 		$this->log()->warning( "Could not find suitable page with math:" . $this->lastError );

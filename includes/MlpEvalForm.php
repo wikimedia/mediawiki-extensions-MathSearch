@@ -33,7 +33,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 			case SpecialMlpEval::STEP_PAGE:
 				$formDescriptor['1-page'] = [
 					'class'         => 'HTMLTitleTextField',
-					'default'       => $this->eval->getRandomPage()->getText()
+					'default'       => $this->eval->getRandomPageText()
 				];
 				break;
 			case SpecialMlpEval::STEP_FORMULA:

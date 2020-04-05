@@ -88,7 +88,7 @@ class SpecialMathDebug extends SpecialPage {
 		$renderer = new MathLaTeXML();
 		$renderer->setPurge();
 		$diffFormatter = new TableDiffFormatter();
-		if ( is_array( $formulae ) ) {
+		if ( count( $formulae ) ) {
 			foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
 				$out->addWikiTextAsInterface( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
 				$renderer->setTex( $formula );
@@ -186,7 +186,7 @@ class SpecialMathDebug extends SpecialPage {
 		$renderer = new MathLaTeXML();
 		$renderer->setPurge();
 		$tstring = '';
-		if ( is_array( $formulae ) ) {
+		if ( count( $formulae ) ) {
 			foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
 				$tstring .= "\n!! test\n Test #" . ( $offset + $i++ ) . ": $key \n!! input"
 					. "\n<math>$formula</math>\n!! result\n";
@@ -220,7 +220,7 @@ class SpecialMathDebug extends SpecialPage {
 			$keys = $idGenerator->formatIds( $tags );
 			return array_combine( $keys, array_column( $tags, MathIdGenerator::CONTENT_POS ) );
 		} else {
-			return 'Page does not exist';
+			return [];
 		}
 	}
 

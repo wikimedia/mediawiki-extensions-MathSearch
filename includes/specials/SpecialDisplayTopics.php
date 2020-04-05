@@ -16,7 +16,9 @@ class SpecialDisplayTopics extends SpecialPage {
 	public function __construct( $name = 'DisplayTopics' ) {
 		global $wgMathWmcServer;
 		if ( $wgMathWmcServer ) {
-			parent::__construct( $name );
+			parent::__construct( $name, 'mathwmcsubmit', true );
+		} else {
+			parent::__construct( $name, 'mathwmcsubmit', false );
 		}
 	}
 

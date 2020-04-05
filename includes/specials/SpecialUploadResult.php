@@ -4,7 +4,7 @@
  * Lets the user import a CSV file with the results
  *
  * @author Moritz Schubotz
- * @author Yaron Koren (This class is baaed on DT_ImportCSV from the DataTransfer extension)
+ * @author Yaron Koren (This class is based on DT_ImportCSV from the DataTransfer extension)
  */
 class SpecialUploadResult extends SpecialPage {
 	/** @var ImportCsv $importer */
@@ -18,7 +18,9 @@ class SpecialUploadResult extends SpecialPage {
 	public function __construct( $name = 'MathUpload' ) {
 		global $wgMathWmcServer;
 		if ( $wgMathWmcServer ) {
-			parent::__construct( $name );
+			parent::__construct( $name, 'mathwmcsubmit', true );
+		} else {
+			parent::__construct( $name, 'mathwmcsubmit', false );
 		}
 	}
 
