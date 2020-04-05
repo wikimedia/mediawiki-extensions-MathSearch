@@ -24,7 +24,7 @@ class MathSearchHooks {
 		}
 		$type = $updater->getDB()->getType();
 		if ( $type == "mysql" ) {
-			$dir = __DIR__ . '/db/';
+			$dir = __DIR__ . '/../db/';
 			$updater->addExtensionTable( 'mathindex', $dir . 'mathindex.sql' );
 			$updater->addExtensionTable( 'mathobservation', $dir . 'mathobservation.sql' );
 			$updater->addExtensionTable( 'mathvarstat', $dir . 'mathvarstat.sql' );
