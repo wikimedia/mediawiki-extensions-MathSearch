@@ -120,7 +120,7 @@
 	"math-wmc-download-button": "İndir",
 	"math-wmc-Introduction": "Gönderinizi şu andaki NTCIR Vikipedi Matematik Arama Görevine buradan yükleyin:",
 	"math-wmc-SectionRun": "Gönderme bilgileri",
-	"math-wmc-SelectRun": "İsim",
+	"math-wmc-SelectRun": "Ad",
 	"math-wmc-SelectRunHelp": "Gönderiniz için benzersiz bir ad belirtin ya da var olan bir taslak üzerine yazın.",
 	"math-wmc-FileLabel": "CSV Dosyası",
 	"math-wmc-FileHelp": "Sonuçlarınızı (queryId,formulaId)-pairs virgülle ayrılmış listesi olarak yükleyin. <code>queryId,formulaId</code> biçiminde bir sütun başlığı gerekir.",
