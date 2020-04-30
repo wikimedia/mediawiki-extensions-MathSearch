@@ -87,7 +87,10 @@ EOT;
 	 */
 	public function testNTCIRHook() {
 		$sample = $this->mathMLSample;
-		$parser = new Parser();
+
+		$services = MediaWiki\MediaWikiServices::getInstance();
+		$services->resetServiceForTesting( 'ParserFactory' );
+		$parser = $services->getParserFactory()->create();
 		$parser->mRevisionId = 42;
 		$renderer = MathRenderer::getRenderer( '' );
 		$renderer->setID( 'math.42.0' );
