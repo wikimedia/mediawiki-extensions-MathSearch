@@ -35,6 +35,8 @@ class MathSearchHooks {
 			$updater->addExtensionTable( 'mathlog', $dir . 'mathlog.sql' );
 			$updater->addExtensionTable( 'math_mlp', $dir . 'math_mlp.sql' );
 			$updater->addExtensionTable( 'math_review_list', "${dir}math_review_list.sql" );
+			$updater->addExtensionTable( 'math_wbs_entity_map', "${dir}math_wbs_entity_map.sql" );
+			$updater->addExtensionTable( 'math_wbs_text_store', "${dir}math_wbs_text_store.sql" );
 			if ( $wgMathWmcServer ) {
 				$wmcDir = $dir . 'wmc/persistent/';
 				$updater->addExtensionTable( 'math_wmc_ref', $wmcDir . "math_wmc_ref.sql" );
@@ -255,7 +257,7 @@ class MathSearchHooks {
 			"Store index for \$$tex\$ in database with id $eid for revision $oldID." );
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->onTransactionCommitOrIdle( function () use ( $oldID, $eid, $inputHash, $dbw ) {
-			$dbw->replace( 'mathindex', [ 'mathindex_revision_id', 'mathindex_anchor' ], [
+			$dbw->replace( 'mathindex', [ [ 'mathindex_revision_id' , 'mathindex_anchor' ] ], [
 				'mathindex_revision_id' => $oldID,
 				'mathindex_anchor' => $eid,
 				'mathindex_inputhash' => $inputHash

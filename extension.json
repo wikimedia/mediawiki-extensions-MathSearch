@@ -79,7 +79,7 @@
 		"MathWmcMaxResults": 10000,
 		"MathWmcServer": false,
 		"MathSearchWikidataUrl": "https://wikidata.org",
-		"ContentMathEnableWikibaseDataType" : true,
+		"ContentMathEnableWikibaseDataType": true,
 		"MathSearchContentTexMaxLength": 5000
 	},
 	"MessagesDirs": {
@@ -110,7 +110,6 @@
 			]
 		}
 	},
-
 	"ResourceFileModulePaths": {
 		"localBasePath": "resources",
 		"remoteExtPath": "MathSearch/resources"
@@ -126,6 +125,12 @@
 		"LaTeXTranslator": "SpecialLaTeXTranslator",
 		"MathUpload": "SpecialUploadResult",
 		"MathDownload": "SpecialMathDownloadResult"
+	},
+	"AutoloadNamespaces": {
+		"MathSearch\\StackExchange\\": "includes/stackexchange"
+	},
+	"JobClasses": {
+		"SeLineReader" : "\\MathSearch\\StackExchange\\LineReaderJob"
 	},
 	"manifest_version": 1
 }

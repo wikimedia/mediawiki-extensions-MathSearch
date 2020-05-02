@@ -3,17 +3,26 @@
 		"jakub-onderka/php-parallel-lint": "1.0.0",
 		"mediawiki/mediawiki-codesniffer": "30.0.0",
 		"jakub-onderka/php-console-highlighter": "0.4.0",
-		"mediawiki/minus-x": "1.0.0"
+		"mediawiki/minus-x": "1.0.0",
+		"phperf/xh-tool": "^1.1"
 	},
 	"scripts": {
-		"test": [
+		"lint": [
 			"parallel-lint . --exclude vendor --exclude node_modules",
-			"phpcs -p -s",
+			"phpcs -p -s"
+		],
+		"test": [
+			"@lint",
 			"minus-x check ."
 		],
+		"fix-lint": "phpcbf",
 		"fix": [
-			"minus-x fix .",
-			"phpcbf"
+			"@fix-lint",
+			"minus-x fix ."
 		]
+	},
+	"require": {
+		"ext-dom": "*",
+		"ext-simplexml": "*"
 	}
 }
