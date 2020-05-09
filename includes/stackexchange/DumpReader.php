@@ -12,6 +12,7 @@ class DumpReader {
 	 */
 	private $fileName;
 	private $errPath;
+	private $part = 0;
 
 	private static function getLog() {
 		return LoggerFactory::getInstance( 'MathSearch' );
@@ -38,35 +39,33 @@ class DumpReader {
 
 	public function run() {
 		$batchSize = 1000;
-		$jobs = [];
 		$rows = [];
 		while ( !feof( $this->file ) ) {
 			$line = trim( fgets( $this->file ) );
 			if ( strpos( $line, '<row' ) === 0 ) {
 				$rows [] = $line;
 				if ( count( $rows ) >= $batchSize ) {
-					$this->addJob( $jobs, $rows );
+					$this->addJob( $rows );
 					$rows = [];
 				}
 			} else {
 				self::getLog()->info( "Skip line: {line}", [ 'line' => $line ] );
 			}
 		}
-		$this->addJob( $jobs, $rows );
-		\JobQueueGroup::singleton()->push( $jobs );
+		$this->addJob( $rows );
 	}
 
 	/**
-	 * @param array &$jobs
 	 * @param array $rows
 	 */
-	private function addJob( array &$jobs, array $rows ) {
-		$part = count( $jobs ) + 1;
+	private function addJob( array $rows ) {
+		$part = ++$this->part;
 		$title = Title::newFromText( "SE reader '$this->fileName' part $part" );
-		$jobs[] = new LineReaderJob( $title, [
+		$job = new LineReaderJob( $title, [
 			'rows' => $rows,
 			'fileName' => $this->fileName,
 			'errFile' => $this->errPath . "/$this->fileName-$part-err.xml",
 		] );
+		\JobQueueGroup::singleton()->push( $job );
 	}
 }
