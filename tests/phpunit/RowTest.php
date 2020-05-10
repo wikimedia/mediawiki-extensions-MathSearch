@@ -16,7 +16,7 @@ XmlFragment;
 	 * @covers \MathSearch\StackExchange\Row::getFields
 	 */
 	public function testGetFields() {
-		$f = new Row( self::SAMPLE_ROW, 'posts.xml' );
+		$f = new Row( self::SAMPLE_ROW, 'Posts_V1.0_0.xml' );
 		$fields = $f->getFields();
 		$this->assertCount( 11, $fields );
 		$this->assertSame( 1, $fields['OwnerUserId']->getContent() );
@@ -26,7 +26,7 @@ XmlFragment;
 	 * @covers \MathSearch\StackExchange\Row::getIgnoredFieldCount
 	 */
 	public function testGetIgnoredFieldCount() {
-		$f = new Row( self::SAMPLE_ROW, 'posts.xml' );
+		$f = new Row( self::SAMPLE_ROW, 'Posts_V1.0_0.xml' );
 		$this->assertSame( 0, $f->getIgnoredFieldCount() );
 	}
 

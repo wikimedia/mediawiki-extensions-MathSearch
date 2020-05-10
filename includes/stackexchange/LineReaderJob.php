@@ -30,7 +30,7 @@ class LineReaderJob extends \Job {
 						'row' => $row,
 						'e' => $e,
 					] );
-				file_put_contents( $this->params['errFile'], $row, FILE_APPEND );
+				file_put_contents( $this->params['errFile'], "$row\n", FILE_APPEND );
 
 			}
 

@@ -2,6 +2,7 @@
 
 namespace MathSearch\StackExchange;
 
+use Exception;
 use MediaWiki\Logger\LoggerFactory;
 use SimpleXMLElement;
 use User;
@@ -32,7 +33,11 @@ class Row {
 	 */
 	public function __construct( string $line, $fileName ) {
 		$this->normFileName = $fileName;
+		set_error_handler( function ( $errno, $errstr, $errfile, $errline ) {
+			throw new Exception( $errstr, $errno );
+		} );
 		$row = new SimpleXMLElement( $line );
+		restore_error_handler();
 		foreach ( $row->attributes() as $key => $value ) {
 			$field = new Field( $key, (string)$value, $fileName );
 			if ( $field->isKnown() ) {

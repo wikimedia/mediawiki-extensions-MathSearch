@@ -11,3 +11,5 @@ vendor/
 npm-debug.log
 composer.lock
 /.eslintcache
+.idea
+

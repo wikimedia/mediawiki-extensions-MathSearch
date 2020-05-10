@@ -2,6 +2,8 @@
 
 namespace MathSearch\StackExchange;
 
+use Exception;
+
 class WikitextGenerator {
 	private $idGen;
 	private $formulae = [];
@@ -25,6 +27,7 @@ class WikitextGenerator {
 	 */
 	private function processElement( \SimpleXMLElement $elem, $postQId ): string {
 		$tagText = (string)$elem;
+
 		switch ( $elem->getName() ) {
 			case 'a':
 				if ( $elem['href'] ) {
@@ -43,6 +46,7 @@ class WikitextGenerator {
 					$fid = (int)$elem['id'];
 					$qid = $this->getQId( $fid );
 					$this->formulae[] = new Formula( $fid, $qid, $tagText, $postQId );
+
 					return "<math id='$fid' qid='$qid'>$tagText</math>";
 				}
 		}
@@ -51,11 +55,16 @@ class WikitextGenerator {
 	}
 
 	public function toWikitext( $html, $postQId = null ) {
+		// Ugly workaround to remove wrong pre-processing
+		$html = preg_replace( '/([<>])\1/', '$1', $html );
 		$text = strip_tags( $html, '<a><span>' );
-		// TODO: Replace with DOM Parser
-		$text = preg_replace_callback( '/<(?:a|span)(?: [^>]*)?>.*?<\/(?:a|span)>/i', // span or a
+		$text = preg_replace_callback( '/<(?:a|span)(?:[^>]*?)>.*?<\/(?:a|span)>/i', // span or a
 			function ( $m ) use ( $postQId ) {
+				set_error_handler( function ( $errno, $errstr, $errfile, $errline ) {
+					throw new Exception( $errstr, $errno );
+				} );
 				$elem = new \SimpleXMLElement( $m[0] );
+				restore_error_handler();
 
 				return $this->processElement( $elem, $postQId );
 			}, $text );
