@@ -4,8 +4,12 @@ namespace MathSearch\StackExchange;
 
 use MediaWiki\Logger\LoggerFactory;
 use Title;
+use XMLReader;
 
 class DumpReader {
+	/**
+	 * @var XMLReader
+	 */
 	private $file;
 	/**
 	 * @var string
@@ -20,11 +24,13 @@ class DumpReader {
 
 	/**
 	 * DumpReader constructor.
-	 * @param resource $file
+	 * @param \SplFileObject $file
+	 * @param $errPath
 	 */
 	public function __construct( $file, $errPath ) {
+		$this->file = new XMLReader();
+		$this->file->open( $file->getRealPath() );
 		$this->normalizeFilename( $file->getFilename() );
-		$this->file = fopen( $file, 'r' );
 		$this->errPath = $errPath;
 	}
 
@@ -40,16 +46,24 @@ class DumpReader {
 	public function run() {
 		$batchSize = 1000;
 		$rows = [];
-		while ( !feof( $this->file ) ) {
-			$line = trim( fgets( $this->file ) );
-			if ( strpos( $line, '<row' ) === 0 ) {
-				$rows [] = $line;
-				if ( count( $rows ) >= $batchSize ) {
-					$this->addJob( $rows );
-					$rows = [];
+		$xml = $this->file;
+		while ( $xml->read() ) {
+			if ( $xml->name === 'row' && $xml->nodeType == XMLReader::ELEMENT ) {
+				$attribs = [];
+				if ( $xml->hasAttributes ) {
+					while ( $xml->moveToNextAttribute() ) {
+						$attribs[$xml->name] = $xml->value;
+					}
+					$rows[] = $attribs;
+					if ( count( $rows ) >= $batchSize ) {
+						$this->addJob( $rows );
+						$rows = [];
+					}
 				}
 			} else {
-				self::getLog()->info( "Skip line: {line}", [ 'line' => $line ] );
+				if ( $xml->nodeType == XMLReader::ELEMENT ) {
+					self::getLog()->info( "Skip element: {line}", [ 'line' => $xml->name ] );
+				}
 			}
 		}
 		$this->addJob( $rows );

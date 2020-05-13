@@ -65,7 +65,7 @@ class ImportStackExchangeDump extends Maintenance {
 		}
 		$files = new GlobIterator( $this->dir . '*.xml' );
 		foreach ( $files as $file ) {
-			print "Processing {$file->getFilename()}";
+			print "Processing {$file->getFilename()}\n";
 			$dr = new DumpReader( $file, $errPath );
 			$dr->run();
 		}

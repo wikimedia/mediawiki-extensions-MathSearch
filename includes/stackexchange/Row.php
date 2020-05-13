@@ -27,23 +27,20 @@ class Row {
 	private $body;
 	private $normFileName;
 
-	/**
-	 * Post constructor.
-	 * @param String $line
-	 */
-	public function __construct( string $line, $fileName ) {
+	public function __construct( $line, $fileName ) {
 		$this->normFileName = $fileName;
 		set_error_handler( function ( $errno, $errstr, $errfile, $errline ) {
 			throw new Exception( $errstr, $errno );
 		} );
-		$row = new SimpleXMLElement( $line );
-		restore_error_handler();
-		foreach ( $row->attributes() as $key => $value ) {
-			$field = new Field( $key, (string)$value, $fileName );
-			if ( $field->isKnown() ) {
-				$this->fields[$key] = $field;
-			} else {
-				$this->ignoredFieldCount ++;
+		if ( is_array( $line ) ) {
+			foreach ( $line as $key => $value ) {
+				$this->addField( $fileName, $key, $value );
+			}
+		} else {
+			$row = new SimpleXMLElement( $line );
+			restore_error_handler();
+			foreach ( $row->attributes() as $key => $value ) {
+				$this->addField( $fileName, $key, $value );
 			}
 		}
 	}
@@ -139,6 +136,20 @@ class Row {
 			return $this->getField( $fieldName )->getContent();
 		} else {
 			return null;
+		}
+	}
+
+	/**
+	 * @param $fileName
+	 * @param $key
+	 * @param SimpleXMLElement $value
+	 */
+	private function addField( $fileName, $key, SimpleXMLElement $value ): void {
+		$field = new Field( $key, (string)$value, $fileName );
+		if ( $field->isKnown() ) {
+			$this->fields[$key] = $field;
+		} else {
+			$this->ignoredFieldCount ++;
 		}
 	}
 }

@@ -23,6 +23,7 @@
 	},
 	"require": {
 		"ext-dom": "*",
-		"ext-simplexml": "*"
+		"ext-simplexml": "*",
+		"ext-xmlreader": "*"
 	}
 }
