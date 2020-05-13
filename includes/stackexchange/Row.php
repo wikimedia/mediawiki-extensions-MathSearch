@@ -121,10 +121,19 @@ class Row {
 		$body = $this->getField( 'Body' )->getContent();
 		$wtGen = new WikitextGenerator();
 		$qid = $this->getQid();
-		$wt = $wtGen->toWikitext( $body, $qid );
-		foreach ( $wtGen->getFormulae() as $f ) {
-			// $f->createWbItem();
-			$f->updateSearchIndex();
+		try {
+			$wt = $wtGen->toWikitext( $body, $qid );
+			foreach ( $wtGen->getFormulae() as $f ) {
+				// $f->createWbItem();
+				$f->updateSearchIndex();
+			}
+		}
+		catch ( \Throwable $e ) {
+			$wt = $body;
+			$this->getLog()->error( "Problem while concerting {body} to wikitext: {e}", [
+				'body' => $body,
+				'e' => $e->getMessage(),
+			] );
 		}
 		$type = $this->getQIdFromField( 'PostTypeId' );
 		$parent = $this->getQIdFromField( 'ParentId' );

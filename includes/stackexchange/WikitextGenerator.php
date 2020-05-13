@@ -2,7 +2,7 @@
 
 namespace MathSearch\StackExchange;
 
-use Exception;
+use XMLReader;
 
 class WikitextGenerator {
 	private $idGen;
@@ -20,56 +20,40 @@ class WikitextGenerator {
 		$this->idGen = $idGen;
 	}
 
-	/**
-	 * @param \SimpleXMLElement $elem
-	 * @param $matches
-	 * @return string
-	 */
-	private function processElement( \SimpleXMLElement $elem, $postQId ): string {
-		$tagText = (string)$elem;
-
-		switch ( $elem->getName() ) {
-			case 'a':
-				if ( $elem['href'] ) {
-					$href = (string)$elem['href'];
+	public function getNextElement( XMLReader $xml, $postQId ): string {
+		if ( $xml->nodeType == XMLReader::ELEMENT ) {
+			if ( $xml->name === 'a' ) {
+				$href = $xml->getAttribute( 'href' );
+				if ( $href ) {
+					$xml->read();
 					if ( preg_match( '#http://en\.wikipedia\.org/wiki/(.*)#', $href, $matches ) ) {
-						return "[[w:{$matches[1]}|$tagText]]";
+						return "[[w:{$matches[1]}|$xml->value]]";
 					} else {
-						return "[$href $tagText]";
+						return "[$href $xml->value]";
 					}
-				} else {
-					return '';
 				}
-				break;
-			case 'span':
-				if ( $elem['class'] == 'math-container' ) {
-					$fid = (int)$elem['id'];
-					$qid = $this->getQId( $fid );
-					$this->formulae[] = new Formula( $fid, $qid, $tagText, $postQId );
-
-					return "<math id='$fid' qid='$qid'>$tagText</math>";
-				}
+			}
+			if ( $xml->name === 'span' && $xml->getAttribute( 'class' ) === 'math-container' ) {
+				$fid = (int)$xml->getAttribute( 'id' );
+				$qid = $this->getQId( $fid );
+				$xml->read();
+				$tagText = $xml->value;
+				$this->formulae[] = new Formula( $fid, $qid, $tagText, $postQId );
+				return "<math id='$fid' qid='$qid'>$tagText</math>";
+			}
 		}
 
-		return $tagText;
+		return $xml->value;
 	}
 
 	public function toWikitext( $html, $postQId = null ) {
-		// Ugly workaround to remove wrong pre-processing
-		$html = preg_replace( '/([<>])\1/', '$1', $html );
-		$text = strip_tags( $html, '<a><span>' );
-		$text = preg_replace_callback( '/<(?:a|span)(?:[^>]*?)>.*?<\/(?:a|span)>/i', // span or a
-			function ( $m ) use ( $postQId ) {
-				set_error_handler( function ( $errno, $errstr, $errfile, $errline ) {
-					throw new Exception( $errstr, $errno );
-				} );
-				$elem = new \SimpleXMLElement( $m[0] );
-				restore_error_handler();
-
-				return $this->processElement( $elem, $postQId );
-			}, $text );
-
-		return $text;
+		$xml = new \XMLReader();
+		$xml->xml( "<text>$html</text>" );
+		$out = "";
+		while ( $xml->read() ) {
+			$out .= $this->getNextElement( $xml, $postQId );
+		}
+		return $out;
 	}
 
 	private function getQId( int $fid ) {
