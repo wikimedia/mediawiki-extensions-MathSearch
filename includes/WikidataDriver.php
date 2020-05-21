@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class WikidataDriver {
 
 	private $lang = 'en';
@@ -22,7 +24,9 @@ class WikidataDriver {
 				"/w/api.php?format=json&action=wbsearchentities&uselang={$this->lang}" .
 				"&language={$this->lang}&search={$term}"
 		];
-		$serviceClient = new VirtualRESTServiceClient( new MultiHttpClient( [] ) );
+		$serviceClient = new VirtualRESTServiceClient(
+			MediaWikiServices::getInstance()->getHttpRequestFactory()->createMultiClient()
+		);
 		$response = $serviceClient->run( $request );
 		if ( $response['code'] === 200 ) {
 			$json = json_decode( $response['body'] );
