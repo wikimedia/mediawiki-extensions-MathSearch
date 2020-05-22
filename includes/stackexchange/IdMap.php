@@ -9,6 +9,10 @@ class IdMap {
 	private $dbw;
 	private $item;
 	private $store;
+	/**
+	 * @var \HashBagOStuff
+	 */
+	private $cache;
 	private static $instance;
 
 	/**
@@ -19,6 +23,8 @@ class IdMap {
 		$this->item = new Item();
 		$wikibaseRepo = WikibaseRepo::getDefaultInstance();
 		$this->store = $wikibaseRepo->getStore()->getEntityStore();
+		// don't store too many keys
+		$this->cache = new \HashBagOStuff( [ 'maxKeys' => 10000 ] );
 	}
 
 	/**
@@ -40,18 +46,22 @@ class IdMap {
 	}
 
 	public function addQid( int $extId, int $extIdType ) {
+		$cacheKey = "$extIdType.$extId";
+		if ( $this->cache->hasKey( $cacheKey ) ) {
+			return $this->cache->get( $cacheKey );
+		}
 		$fields = [
 			'math_external_id' => $extId,
 			'math_external_id_type' => $extIdType,
 		];
 
 		$qid = $this->dbw->selectField( 'math_wbs_entity_map', 'math_local_qid', $fields );
-		if ( $qid ) {
-			return $qid;
+		if ( !$qid ) {
+			$qid = $this->getNewQid()->getNumericId();
+			$fields['math_local_qid'] = $qid;
+			$this->dbw->insert( 'math_wbs_entity_map', $fields );
 		}
-		$qid = $this->getNewQid()->getNumericId();
-		$fields['math_local_qid'] = $qid;
-		$this->dbw->insert( 'math_wbs_entity_map', $fields );
+		$this->cache->set( $cacheKey, $qid );
 
 		return $qid;
 	}
