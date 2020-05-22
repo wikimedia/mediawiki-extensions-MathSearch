@@ -40,7 +40,7 @@ class Row {
 			$row = new SimpleXMLElement( $line );
 			restore_error_handler();
 			foreach ( $row->attributes() as $key => $value ) {
-				$this->addField( $fileName, $key, $value );
+				$this->addField( $fileName, $key, (string)$value );
 			}
 		}
 	}
@@ -151,10 +151,10 @@ class Row {
 	/**
 	 * @param $fileName
 	 * @param $key
-	 * @param SimpleXMLElement $value
+	 * @param string $value
 	 */
-	private function addField( $fileName, $key, SimpleXMLElement $value ): void {
-		$field = new Field( $key, (string)$value, $fileName );
+	private function addField( $fileName, $key, $value ): void {
+		$field = new Field( $key, $value, $fileName );
 		if ( $field->isKnown() ) {
 			$this->fields[$key] = $field;
 		} else {

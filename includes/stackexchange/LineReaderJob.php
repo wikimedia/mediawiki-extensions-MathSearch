@@ -3,6 +3,7 @@
 namespace MathSearch\StackExchange;
 
 use MediaWiki\Logger\LoggerFactory;
+use SimpleXMLElement;
 
 class LineReaderJob extends \Job {
 	public function __construct( $title, $params ) {
@@ -30,7 +31,10 @@ class LineReaderJob extends \Job {
 						'row' => $row,
 						'e' => $e,
 					] );
-				file_put_contents( $this->params['errFile'], "$row\n", FILE_APPEND );
+				$xml = new SimpleXMLElement( '<row/>' );
+				$rowTransposed = array_flip( $row );
+				array_walk( $rowTransposed, [ $xml,'addAttribute' ] );
+				file_put_contents( $this->params['errFile'], "{$xml->asXML()}\n", FILE_APPEND );
 
 			}
 
