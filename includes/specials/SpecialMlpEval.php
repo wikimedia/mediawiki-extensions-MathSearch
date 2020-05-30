@@ -663,8 +663,8 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @param $tex
-	 * @param $options
+	 * @param &$tex
+	 * @param &$options
 	 */
 	private function updateTex( &$tex, &$options ) {
 		if ( !$tex ) {

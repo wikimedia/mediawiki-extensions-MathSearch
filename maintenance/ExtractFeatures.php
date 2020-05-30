@@ -128,11 +128,11 @@ class ExtractFeatures extends Maintenance {
 	}
 
 	/**
-	 * @param             $pid
+	 * @param $pid
 	 * @param string $pText
 	 * @param string $pTitle
 	 * @param bool|string $purge
-	 * @param             $dbw
+	 * @param $dbw
 	 *
 	 * @return number
 	 * @internal param unknown $pId

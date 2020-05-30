@@ -51,7 +51,7 @@ EOT;
 		$noWiki = MathObject::extractMathTagsFromWikiText( $this->noWiki );
 		$this->assertSame( 0, count( $noWiki ), 'Math tags in no-wiki tags should be ignored.' );
 		$attributeTest = MathObject::extractMathTagsFromWikiText( $this->attributes );
-		$this->assertEquals( 1, count( $attributeTest ) );
+		$this->assertSame( 1, count( $attributeTest ) );
 		$expected = [ 'x' => 'x1', 'y' => 'y1' ];
 		$first = array_shift( $attributeTest );
 		$this->assertEquals( $expected, $first[2] );
