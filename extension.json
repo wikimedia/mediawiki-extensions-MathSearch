@@ -127,10 +127,21 @@
 		"MathDownload": "SpecialMathDownloadResult"
 	},
 	"AutoloadNamespaces": {
-		"MathSearch\\StackExchange\\": "includes/stackexchange"
+		"MathSearch\\StackExchange\\": "includes/stackexchange",
+		"MediaWiki\\Extension\\MathSearch\\Rest\\": "includes/rest"
 	},
 	"JobClasses": {
 		"SeLineReader" : "\\MathSearch\\StackExchange\\LineReaderJob"
 	},
+	"RestRoutes": [
+		{
+			"path": "/math/v0/arq/getPost/{fId}",
+			"method": "GET",
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Rest\\ArqTask\\GetPostId",
+			"services": [
+				"DBLoadBalancer"
+			]
+		}
+	],
 	"manifest_version": 1
 }
