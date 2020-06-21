@@ -1,5 +1,9 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Revision\SlotRecord;
+
 class MathIdGenerator {
 
 	const CONTENT_POS = 1;
@@ -19,11 +23,18 @@ class MathIdGenerator {
 	 * @throws MWException
 	 */
 	public static function newFromRevision( Revision $revision ) {
-		if ( $revision->getContentModel() !== CONTENT_MODEL_WIKITEXT ) {
+		$revisionRecord = $revision->getRevisionRecord();
+
+		$contentModel = $revisionRecord
+			->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
+			->getModel();
+		if ( $contentModel !== CONTENT_MODEL_WIKITEXT ) {
 			throw new MWException( "MathIdGenerator supports only CONTENT_MODEL_WIKITEXT" );
 		}
-		return new MathIdGenerator( ContentHandler::getContentText( $revision->getContent() ),
-			$revision->getId() );
+		return new MathIdGenerator(
+			ContentHandler::getContentText( $revisionRecord->getContent( SlotRecord::MAIN ) ),
+			$revisionRecord->getId()
+		);
 	}
 
 	/**
@@ -53,7 +64,12 @@ class MathIdGenerator {
 	}
 
 	public static function newFromRevisionId( $revId ) {
-		$revision = Revision::newFromId( $revId );
+		$revisionRecord = MediaWikiServices::getInstance()
+			->getRevisionLookup()
+			->getRevisionById( $revId );
+
+		// TODO remove use of Revision objects
+		$revision = new Revision( $revisionRecord );
 		return self::newFromRevision( $revision );
 	}
 

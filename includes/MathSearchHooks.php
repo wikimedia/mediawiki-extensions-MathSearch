@@ -1,5 +1,9 @@
 <?php
+
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RevisionRecord;
+use Mediawiki\Revision\SlotRecord;
 
 /**
  * MediaWiki MathSearch extension
@@ -345,11 +349,17 @@ class MathSearchHooks {
 			)->warning( "Empty update for {$wikiPage->getTitle()->getFullText()}." );
 			return true;
 		}
-		$revId = $revision->getId();
-		if ( $revision->getContentModel() !== CONTENT_MODEL_WIKITEXT ) {
+		$revisionRecord = $revision->getRevisionRecord();
+
+		if ( $revisionRecord
+			->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
+			->getModel() !== CONTENT_MODEL_WIKITEXT
+		) {
 			// Skip pages that do not contain wikitext
 			return true;
 		}
+
+		$revId = $revisionRecord->getId();
 		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
 		$mathTags = $idGenerator->getMathTags();
 		$harvest = "";
@@ -366,10 +376,11 @@ class MathSearchHooks {
 			}
 			$harvest = $dw->getOutput();
 		}
-		/** @var Revision|null $previousRev */
-		$previousRev = $revision->getPrevious();
-		if ( $previousRev != null ) {
-			$prevRevId = $previousRev->getId();
+		$previousRevisionRecord = MediaWikiServices::getInstance()
+			->getRevisionLookup()
+			->getPreviousRevision( $revisionRecord );
+		if ( $previousRevisionRecord != null ) {
+			$prevRevId = $previousRevisionRecord->getId();
 			$baseXUpdater = new MathEngineBaseX();
 			$res = $baseXUpdater->update( $harvest, [ $prevRevId ] );
 		} else {
