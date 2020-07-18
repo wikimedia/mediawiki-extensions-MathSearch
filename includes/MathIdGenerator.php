@@ -18,13 +18,11 @@ class MathIdGenerator {
 	private $contentIdMap;
 
 	/**
-	 * @param Revision $revision
+	 * @param RevisionRecord $revisionRecord
 	 * @return MathIdGenerator
 	 * @throws MWException
 	 */
-	public static function newFromRevision( Revision $revision ) {
-		$revisionRecord = $revision->getRevisionRecord();
-
+	public static function newFromRevisionRecord( RevisionRecord $revisionRecord ) {
 		$contentModel = $revisionRecord
 			->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
 			->getModel();
@@ -68,9 +66,7 @@ class MathIdGenerator {
 			->getRevisionLookup()
 			->getRevisionById( $revId );
 
-		// TODO remove use of Revision objects
-		$revision = new Revision( $revisionRecord );
-		return self::newFromRevision( $revision );
+		return self::newFromRevisionRecord( $revisionRecord );
 	}
 
 	public static function newFromTitle( Title $title ) {
