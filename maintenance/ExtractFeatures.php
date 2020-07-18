@@ -88,7 +88,7 @@ class ExtractFeatures extends Maintenance {
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
 				$revtext = $revisionStore->newRevisionFromRow( $s );
-				$fcount += self::doUpdate( $s->page_id, $revtext, $s->page_title, $this->purge,
+				$fcount += self::doUpdate( $revtext, $s->page_title, $this->purge,
 					$this->dbw );
 			}
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
@@ -128,16 +128,14 @@ class ExtractFeatures extends Maintenance {
 	}
 
 	/**
-	 * @param $pid
 	 * @param string $pText
 	 * @param string $pTitle
 	 * @param bool|string $purge
-	 * @param $dbw
+	 * @param \Wikimedia\Rdbms\IDatabase $dbw
 	 *
 	 * @return number
-	 * @internal param unknown $pId
 	 */
-	private static function doUpdate( $pid, $pText, $pTitle = "", $purge = false, $dbw ) {
+	private static function doUpdate( $pText, $pTitle = "", $purge = false, $dbw ) {
 		// TODO: fix link id problem
 		$anchorID = 0;
 		$math = MathObject::extractMathTagsFromWikiText( $pText );
