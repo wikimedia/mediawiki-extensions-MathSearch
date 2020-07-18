@@ -225,8 +225,11 @@ class SpecialMlpEval extends SpecialPage {
 			$this->lastError = "no revision id given";
 			return false;
 		}
+		// TODO stop using Revision objects
 		$this->revision = Revision::newFromId( $revId );
-		$this->mathIdGen = MathIdGenerator::newFromRevision( $this->revision );
+		$this->mathIdGen = MathIdGenerator::newFromRevisionRecord(
+			$this->revision->getRevisionRecord()
+		);
 		$tagCount = count( $this->mathIdGen->getMathTags() );
 		if ( $tagCount == 0 ) {
 			$this->lastError = "has no math tags";
