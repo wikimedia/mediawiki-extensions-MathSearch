@@ -27,9 +27,6 @@ class WmcRefIdentifier extends Maintenance {
 		$this->requireExtension( 'MathSearch' );
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->query( 'SELECT qID, oldId, fid, math_inputtex FROM math_wmc_ref r' .

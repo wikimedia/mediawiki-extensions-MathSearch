@@ -42,9 +42,6 @@ class UpdateMath extends Maintenance {
 	private $renderingMode = 'latexml';
 	private $chunkSize = 1000;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Updates the index of Mathematical formulae.' );

@@ -27,9 +27,6 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
  * Class BatchExport
  */
 class BatchExport extends Maintenance {
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( "Exports  submissions to a folder. \n Each run is named after the " .
@@ -38,9 +35,6 @@ class BatchExport extends Maintenance {
 		$this->requireExtension( 'MathSearch' );
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		$dir = $this->getArg( 0 );
 		if ( !is_dir( $dir ) ) {

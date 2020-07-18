@@ -39,9 +39,6 @@ class ImportStackExchangeDump extends Maintenance {
 		'Votes',
 	];
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( "Imports StackExchangeDump. \n" .
@@ -52,9 +49,6 @@ class ImportStackExchangeDump extends Maintenance {
 		// $this->requireExtension('Wikibase');
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		$this->dir = $this->getArg( 0 );
 		$this->overwrite = $this->getOption( 'overwrite' );

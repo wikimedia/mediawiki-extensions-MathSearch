@@ -32,9 +32,6 @@ class GenerateFeatureTable extends Maintenance {
 	 */
 	private $db;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Outputs page text to stdout' );
@@ -87,13 +84,9 @@ class GenerateFeatureTable extends Maintenance {
 	}
 
 	/**
-	 * @param $pid
+	 * @param string $pid
 	 *
 	 * @return number
-	 * @internal param unknown $pId
-	 * @internal param unknown $pText
-	 * @internal param string $pTitle
-	 * @internal param string $purge
 	 */
 	private function doUpdate( $pid ) {
 		// TODO: fix link id problem
@@ -119,9 +112,6 @@ class GenerateFeatureTable extends Maintenance {
 		return 0;
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );

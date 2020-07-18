@@ -37,9 +37,6 @@ class ExtractFeatures extends Maintenance {
 	 */
 	private $db;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Outputs page text to stdout' );

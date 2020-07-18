@@ -34,9 +34,6 @@ class CreateBaseXMathTable extends IndexBase {
 	/** @var \BaseXSession */
 	private $session;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Generates harvest files for the MathWebSearch Daemon.' );
@@ -92,9 +89,6 @@ class CreateBaseXMathTable extends IndexBase {
 		return $retval;
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		global $wgMathSearchBaseXDatabaseName;
 		self::$mwsns = $this->getOption( 'mwsns', '' );

@@ -28,9 +28,6 @@ class BatchImport extends Maintenance {
 	private $dir;
 	private $overwrite;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( "Batch imports submissions from a folder. \n Processes CSV files " .
@@ -42,9 +39,6 @@ class BatchImport extends Maintenance {
 		$this->requireExtension( 'MathSearch' );
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		$this->dir = $this->getArg( 0 );
 		$this->overwrite = $this->getOption( 'overwrite' );

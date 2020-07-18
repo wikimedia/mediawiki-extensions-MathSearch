@@ -30,9 +30,6 @@ class CreateDB2MathTable extends IndexBase {
 	private $conn;
 	private $time;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Exports a db2 compatible math index table.' );
