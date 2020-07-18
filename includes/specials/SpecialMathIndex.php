@@ -62,8 +62,10 @@ class SpecialMathIndex extends SpecialPage {
 		$htmlForm->show(); # Displaying the form
 	}
 
-	/* We write a callback function */
-	# OnSubmit Callback, here we do all the logic we want to do...
+	/**
+	 * OnSubmit Callback, here we do all the logic we want to do...
+	 * @param array $formData
+	 */
 	public static function processInput( $formData ) {
 		switch ( $formData['script'] ) {
 			case self::SCRIPT_UPDATE_MATH:

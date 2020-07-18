@@ -211,7 +211,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @param $revId
+	 * @param int $revId
 	 * @return bool
 	 * @throws MWException
 	 */
@@ -353,14 +353,14 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function getFId() {
 		return $this->fId;
 	}
 
 	/**
-	 * @return mixed
+	 * @return int
 	 */
 	public function getOldId() {
 		return $this->oldId;
@@ -645,7 +645,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function getSpeechRuleText() {
 		return $this->speechRuleText;
@@ -666,8 +666,8 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @param &$tex
-	 * @param &$options
+	 * @param string &$tex
+	 * @param array &$options
 	 */
 	private function updateTex( &$tex, &$options ) {
 		if ( !$tex ) {

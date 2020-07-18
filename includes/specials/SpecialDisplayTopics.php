@@ -80,7 +80,7 @@ SQL
 	}
 
 	/**
-	 * @param $qId
+	 * @param string $qId
 	 */
 	private function printMostFrequentRuns( $qId ) {
 		$out = $this->getOutput();

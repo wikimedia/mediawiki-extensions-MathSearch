@@ -25,7 +25,7 @@ class SpecialUploadResult extends SpecialPage {
 	}
 
 	/**
-	 * @param $errors
+	 * @param array $errors
 	 *
 	 * @return string
 	 */
@@ -190,7 +190,7 @@ class SpecialUploadResult extends SpecialPage {
 	}
 
 	/**
-	 * @param $row
+	 * @param array $row
 	 */
 	private function printResultRow( $row ) {
 		$md5 = MathObject::hash2md5( $row['math_inputhash'] );
