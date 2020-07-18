@@ -80,49 +80,6 @@ SQL
 	}
 
 	/**
-	 * @param $row
-	 *
-	 * @return string
-	 */
-
-	/** @noinspection PhpExpressionResultUnusedInspection */
-	private function createTopicTex( $qId, $qVarCount ) {
-		/*
-		$this->printMostFrequentRuns( $qId );
-		if ( $qVarCount > 0 ) {
-			$relevance = "  \\begin{relevance}[{$qVarCount}]
-			$row->rendering
-			\\end{relevance}";
-		} else {
-			$relevance = '';
-		}
-		$individualResults = '';
-		$res = $dbr->select( 'math_wmc_page_ranks', '*', array( 'qId' => $row->qId ) );
-		foreach ( $res as $rank ) {
-			$individualResults .= $rank->runId . ': ' . $rank->rank . '; ';
-		}
-		$out = <<<TEX
-		\\begin{topic}{{$tName}}
-		\\begin{fquery}
-		\${$row->texQuery}\$
-		\\end{fquery}
-
-		\\begin{private}
-		$relevance
-		The reference entry occurs {$row->exactMatches} time(s) in the dataset.
-		In the top 25 results the page {$row->title} occurred {$row->count} times.
-		The rank varied between {$row->min} and {$row->max} with an average of {$row->avg}.
-		In detail the run results are the following: $individualResults
-		$mostFrequent
-		\\end{private}
-		\\end{topic}
-		TEX;
-
-		return $out;
-		*/
-	}
-
-	/**
 	 * @param $qId
 	 */
 	private function printMostFrequentRuns( $qId ) {
