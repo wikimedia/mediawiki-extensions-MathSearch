@@ -167,7 +167,7 @@ class MathosphereDriver {
 	}
 
 	/**
-	 * @return array
+	 * @return array[]
 	 */
 	public function getRelations() {
 		return $this->relations;

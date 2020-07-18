@@ -252,13 +252,10 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	/**
-	 * @param $tex
-	 * @param $mode
+	 * @param string $tex
+	 * @param string $mode
 	 *
 	 * @throws MWException
-	 *
-	 * @internal param $out
-	 * @internal param $mo
 	 */
 	private function DisplayRendering( $tex, $mode ) {
 		global $wgExtensionAssetsPath, $wgMathValidModes;

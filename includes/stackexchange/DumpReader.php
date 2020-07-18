@@ -24,7 +24,7 @@ class DumpReader {
 
 	/**
 	 * @param \SplFileObject $file
-	 * @param $errPath
+	 * @param string $errPath
 	 */
 	public function __construct( $file, $errPath ) {
 		$this->file = new XMLReader();

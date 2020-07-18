@@ -186,7 +186,7 @@ abstract class MathEngineRest {
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function getType() {
 		return $this->type;

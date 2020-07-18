@@ -123,10 +123,9 @@ class Field {
 	}
 
 	/**
-	 * Field constructor.
-	 * @param $seName
-	 * @param $content
-	 * @param $normFileName
+	 * @param string $seName
+	 * @param string $content
+	 * @param string $normFileName
 	 */
 	public function __construct( $seName, $content, $normFileName ) {
 		$this->seName = $seName;
@@ -156,7 +155,7 @@ class Field {
 	}
 
 	/**
-	 * @return mixed
+	 * @return int|string
 	 */
 	public function getContent() {
 		return $this->content;

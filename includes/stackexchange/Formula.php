@@ -17,10 +17,10 @@ class Formula {
 	private $postQId;
 
 	/**
-	 * Formula constructor.
-	 * @param $id
-	 * @param $qid
-	 * @param $text
+	 * @param int $id
+	 * @param int $qid
+	 * @param string $text
+	 * @param int $postQId
 	 */
 	public function __construct( $id, $qid, $text, $postQId ) {
 		$this->id = $id;

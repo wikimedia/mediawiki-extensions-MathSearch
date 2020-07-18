@@ -172,7 +172,7 @@ class MathoidDriver {
 	}
 
 	/**
-	 * @param $format
+	 * @param string $format
 	 * @return bool|string
 	 */
 	private function getFormat( $format ) {

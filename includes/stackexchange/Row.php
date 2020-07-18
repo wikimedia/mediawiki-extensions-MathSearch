@@ -87,7 +87,7 @@ class Row {
 	}
 
 	/**
-	 * @return int|mixed
+	 * @return int|string
 	 */
 	public function getQid() {
 		$id = $this->getField( 'Id' );
@@ -149,8 +149,8 @@ class Row {
 	}
 
 	/**
-	 * @param $fileName
-	 * @param $key
+	 * @param string $fileName
+	 * @param string $key
 	 * @param string $value
 	 */
 	private function addField( $fileName, $key, $value ): void {

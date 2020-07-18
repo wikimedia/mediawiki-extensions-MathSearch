@@ -36,7 +36,7 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
 	public function getKeys() {
 		if ( !isset( $this->keys ) ) {
@@ -138,7 +138,7 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
 	public function getMathTags() {
 		return $this->mathTags;
@@ -188,7 +188,7 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * @param $key
+	 * @param string $key
 	 * @return string
 	 */
 	private function formatKey( $key ) {

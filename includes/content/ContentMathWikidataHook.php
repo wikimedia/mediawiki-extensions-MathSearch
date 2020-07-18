@@ -58,8 +58,9 @@ class ContentMathWikidataHook {
 		];
 	}
 
-	/*
+	/**
 	 * Add Datatype "ContentMath" to the Wikibase Client
+	 * @param array &$dataTypeDefinitions
 	 */
 	public static function onWikibaseClientDataTypes( array &$dataTypeDefinitions ) {
 		global $wgContentMathEnableWikibaseDataType;

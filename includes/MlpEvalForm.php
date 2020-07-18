@@ -236,7 +236,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 	}
 
 	/**
-	 * @param $key
+	 * @param string $key
 	 */
 	private function saveSubstepField( $key ) {
 		$substeps = [ '4','4a','4b','4c' ];

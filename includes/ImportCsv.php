@@ -20,7 +20,7 @@ class ImportCsv {
 	 */
 	private $warnings = [];
 	/**
-	 * @var array
+	 * @var array[]
 	 */
 	private $results = [];
 	/**
@@ -217,7 +217,7 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param $qId
+	 * @param string $qId
 	 * @return bool
 	 */
 	private function isValidQId( $qId ) {
@@ -235,9 +235,9 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param $pId
-	 * @param $eId
-	 * @return bool|mixed
+	 * @param int $pId
+	 * @param int $eId
+	 * @return string|false
 	 */
 	private function  getInputHash( $pId, $eId ) {
 		$dbr = wfGetDB( DB_REPLICA );
@@ -246,11 +246,11 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param $qId
-	 * @param $pId
-	 * @param $eId
-	 * @param $fHash
-	 * @param $rank
+	 * @param string $qId
+	 * @param int|false $pId
+	 * @param int|false $eId
+	 * @param string $fHash
+	 * @param int $rank
 	 */
 	private function addValidatedResult( $qId, $pId, $eId, $fHash, $rank ) {
 		$this->results[] = [
@@ -318,7 +318,7 @@ class ImportCsv {
 	}
 
 	/**
-	 * @return array
+	 * @return array[]
 	 */
 	public function getResults() {
 		return $this->results;

@@ -142,7 +142,7 @@ class MathObject extends MathMathML {
 
 	/**
 	 * @param string $wikiText
-	 * @return mixed
+	 * @return array
 	 */
 	public static function extractMathTagsFromWikiText( $wikiText ) {
 		$idGenerator = new MathIdGenerator( $wikiText );
