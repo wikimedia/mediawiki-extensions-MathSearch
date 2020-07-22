@@ -19,7 +19,7 @@ class MathIdGenerator {
 
 	/**
 	 * @param RevisionRecord $revisionRecord
-	 * @return MathIdGenerator
+	 * @return self
 	 * @throws MWException
 	 */
 	public static function newFromRevisionRecord( RevisionRecord $revisionRecord ) {
@@ -29,14 +29,14 @@ class MathIdGenerator {
 		if ( $contentModel !== CONTENT_MODEL_WIKITEXT ) {
 			throw new MWException( "MathIdGenerator supports only CONTENT_MODEL_WIKITEXT" );
 		}
-		return new MathIdGenerator(
+		return new self(
 			ContentHandler::getContentText( $revisionRecord->getContent( SlotRecord::MAIN ) ),
 			$revisionRecord->getId()
 		);
 	}
 
 	/**
-	 * @return array
+	 * @return int[] Array mapping key names to their position
 	 */
 	public function getKeys() {
 		if ( !isset( $this->keys ) ) {
@@ -60,6 +60,11 @@ class MathIdGenerator {
 		$this->revisionId = $revisionId;
 	}
 
+	/**
+	 * @param int $revId
+	 *
+	 * @return self
+	 */
 	public static function newFromRevisionId( $revId ) {
 		$revisionRecord = MediaWikiServices::getInstance()
 			->getRevisionLookup()
@@ -68,6 +73,11 @@ class MathIdGenerator {
 		return self::newFromRevisionRecord( $revisionRecord );
 	}
 
+	/**
+	 * @param Title $title
+	 *
+	 * @return self
+	 */
 	public static function newFromTitle( Title $title ) {
 		return self::newFromRevisionId( $title->getLatestRevID() );
 	}
@@ -76,10 +86,20 @@ class MathIdGenerator {
 		return $this->formatIds( $this->mathTags );
 	}
 
+	/**
+	 * @param array $mathTags
+	 *
+	 * @return string[]
+	 */
 	public function formatIds( $mathTags ) {
 		return array_map( [ $this, 'parserKey2fId' ], array_keys( $mathTags ) );
 	}
 
+	/**
+	 * @param string $key
+	 *
+	 * @return string|null
+	 */
 	public function parserKey2fId( $key ) {
 		if ( $this->useCustomIds ) {
 			if ( isset( $this->mathTags[$key][self::ATTRIB_POS]['id'] ) ) {
@@ -95,6 +115,11 @@ class MathIdGenerator {
 		return pack( "H32", md5( $inputTex ) );
 	}
 
+	/**
+	 * @param string $content
+	 *
+	 * @return string[]
+	 */
 	public function getIdsFromContent( $content ) {
 		$contentIdMap = $this->getContentIdMap();
 		if ( array_key_exists( $content, $contentIdMap ) ) {
@@ -103,6 +128,9 @@ class MathIdGenerator {
 		return [];
 	}
 
+	/**
+	 * @return array[]
+	 */
 	public function getContentIdMap() {
 		if ( !$this->contentIdMap ) {
 			$this->contentIdMap = [];
@@ -119,6 +147,11 @@ class MathIdGenerator {
 		return $this->contentIdMap;
 	}
 
+	/**
+	 * @param string $content
+	 *
+	 * @return string
+	 */
 	public function guessIdFromContent( $content ) {
 		$allIds = $this->getIdsFromContent( $content );
 		$size = count( $allIds );
@@ -165,6 +198,11 @@ class MathIdGenerator {
 		$this->useCustomIds = $useCustomIds;
 	}
 
+	/**
+	 * @param string $eid
+	 *
+	 * @return array|null
+	 */
 	public function getTagFromId( $eid ) {
 		foreach ( $this->mathTags as $key => $mathTag ) {
 			if ( $eid == $this->formatKey( $key ) ) {
@@ -176,6 +214,11 @@ class MathIdGenerator {
 		}
 	}
 
+	/**
+	 * @param string $eid
+	 *
+	 * @return string|null
+	 */
 	public function getUniqueFromId( $eid ) {
 		foreach ( $this->mathTags as $key => $mathTag ) {
 			if ( $eid == $this->formatKey( $key ) ) {

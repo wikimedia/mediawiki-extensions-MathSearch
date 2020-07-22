@@ -7,7 +7,6 @@
  * GPLv2 license; info in main package.
  *
  * @group MathSearch
- * Class MathSearchHooksTest
  */
 class WikidataDriverTest extends MediaWikiTestCase {
 

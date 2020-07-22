@@ -1,15 +1,12 @@
 <?php
 use MediaWiki\Logger\LoggerFactory;
 
-/**
- * Class MathObject
- */
 class MathObject extends MathMathML {
 	// DEBUG VARIABLES
 	// Available, if Math extension runs in debug mode ($wgMathDebug = true) only.
 	/** @var int LaTeXML return code (will be available in future Mathoid versions as well) */
 	protected $statusCode = 0;
-	/** @var timestamp of the last modification of the database entry */
+	/** @var string|null Timestamp of the last modification of the database entry */
 	protected $timestamp;
 	/** @var string messages generated during conversion of mathematical content */
 	protected $log = '';
@@ -61,7 +58,7 @@ class MathObject extends MathMathML {
 	}
 
 	public static function cloneFromRenderer( MathRenderer $renderer ) {
-		$instance = new MathObject( $renderer->getUserInputTex() );
+		$instance = new self( $renderer->getUserInputTex() );
 		$instance->setMathml( $renderer->getMathml() );
 		$instance->setSvg( $renderer->getSvg() );
 		$instance->setMode( $renderer->getMode() );
@@ -73,7 +70,7 @@ class MathObject extends MathMathML {
 
 	/**
 	 * @param int $pid
-	 * @param int $eid
+	 * @param string $eid
 	 * @return self instance
 	 */
 	public static function constructformpage( $pid, $eid ) {
@@ -85,6 +82,12 @@ class MathObject extends MathMathML {
 		return $o;
 	}
 
+	/**
+	 * @param int $oldId
+	 * @param string $eid
+	 *
+	 * @return self
+	 */
 	public static function newFromRevisionText( $oldId, $eid ) {
 		$gen = MathIdGenerator::newFromRevisionId( $oldId );
 		$tag = $gen->getTagFromId( $eid );
@@ -92,13 +95,13 @@ class MathObject extends MathMathML {
 			throw new MWException( "$eid not found in revision text $oldId" );
 		}
 		$mo =
-			new MathObject( $tag[MathIdGenerator::CONTENT_POS], $tag[MathIdGenerator::ATTRIB_POS] );
+			new self( $tag[MathIdGenerator::CONTENT_POS], $tag[MathIdGenerator::ATTRIB_POS] );
 		$mo->setRevisionID( $oldId );
 		return $mo;
 	}
 
 	/**
-	 * @return array
+	 * @return string[]
 	 */
 	private static function dbIndexFieldsArray() {
 		global $wgMathDebug;
@@ -125,7 +128,7 @@ class MathObject extends MathMathML {
 		global $wgMathDebug;
 		if ( $res && $res->mathindex_revision_id > 0 ) {
 			$class = get_called_class();
-			/** @var MathObject $instance */
+			/** @var self $instance */
 			$instance = new $class;
 			$instance->setRevisionID( $res->mathindex_revision_id );
 			$instance->setAnchorID( $res->mathindex_anchor );
@@ -180,7 +183,7 @@ class MathObject extends MathMathML {
 
 	/**
 	 * @param int $statusCode
-	 * @return MathObject
+	 * @return self
 	 */
 	public function setStatusCode( $statusCode ) {
 		$this->statusCode = $statusCode;
@@ -188,15 +191,15 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 * @return timestamp
+	 * @return string
 	 */
 	public function getTimestamp() {
 		return $this->timestamp;
 	}
 
 	/**
-	 * @param timestamp $timestamp
-	 * @return MathObject
+	 * @param string $timestamp
+	 * @return self
 	 */
 	public function setTimestamp( $timestamp ) {
 		$this->timestamp = $timestamp;
@@ -204,7 +207,7 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 * @return log
+	 * @return string
 	 */
 	public function getLog() {
 		return $this->log;
@@ -212,7 +215,7 @@ class MathObject extends MathMathML {
 
 	/**
 	 * @param string $log
-	 * @return MathObject
+	 * @return self
 	 */
 	public function setLog( $log ) {
 		$this->changed = true;
@@ -364,7 +367,7 @@ class MathObject extends MathMathML {
 	 *
 	 * @param bool $currentOnly
 	 *
-	 * @return array
+	 * @return self[]
 	 */
 	public function getAllOccurences( $currentOnly = true ) {
 		$out = [];

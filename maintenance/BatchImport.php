@@ -21,9 +21,6 @@
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
-/**
- * Class BatchImport
- */
 class BatchImport extends Maintenance {
 	private $dir;
 	private $overwrite;

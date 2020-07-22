@@ -25,7 +25,7 @@ class SpecialUploadResult extends SpecialPage {
 	}
 
 	/**
-	 * @param array $errors
+	 * @param string[] $errors
 	 *
 	 * @return string
 	 */
@@ -151,9 +151,11 @@ class SpecialUploadResult extends SpecialPage {
 			return $uploadResult->getWikiText();
 		}
 
+		/** @var ImportStreamSource $source */
 		$source = $uploadResult->value;
 
 		$out->addWikiMsg( 'math-wmc-importing' );
+		// FIXME: ImportStreamSource::$mHandle is private!
 		$error_msg = $this->importer->importFromFile( $source->mHandle );
 
 		if ( $error_msg !== null ) {

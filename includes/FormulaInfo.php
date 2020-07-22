@@ -43,9 +43,6 @@ class FormulaInfo extends SpecialPage {
 		}
 		$wgOut->addWikiTextAsInterface( "Info for <code>" . $tex . '</code>' );
 
-		/**
-		 * @var MathObject Description
-		 */
 		$mo = new MathObject( $tex );
 		$allPages = $mo->getAllOccurences();
 		if ( $allPages ) {

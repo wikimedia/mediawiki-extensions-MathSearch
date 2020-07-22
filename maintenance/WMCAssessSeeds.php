@@ -21,9 +21,6 @@
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
-/**
- * Class BatchExport
- */
 class WMCAssessSeeds extends Maintenance {
 	private $DEFAULT_ASSESSMENT = 2;
 

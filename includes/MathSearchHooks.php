@@ -79,7 +79,7 @@ class MathSearchHooks {
 	 * Updates the formula index in the database
 	 *
 	 * @param int $revId Page-ID
-	 * @param int $eid Equation-ID (get updated incrementally for every math element on the page)
+	 * @param string $eid Equation-ID (get updated incrementally for every math element on the page)
 	 * @param string $inputHash hash of tex string (used as database entry)
 	 * @param string $tex the user input hash
 	 */
@@ -121,10 +121,10 @@ class MathSearchHooks {
 	 * prefixes it with "math" to increase the probability of
 	 * having a unique id that can be referenced via the anchor
 	 * #math{$id}.
-	 * @param int &$id
+	 * @param string &$id
 	 * @param MathRenderer $renderer
 	 * @param int $revId
-	 * @return bool true if an ID has been assigned manually,
+	 * @return bool|null true if an ID has been assigned manually,
 	 * false if the automatic fallback math{$id} was used.
 	 */
 	public static function setMathId( &$id, MathRenderer $renderer, $revId ) {
@@ -252,7 +252,7 @@ class MathSearchHooks {
 
 	/**
 	 * @param int $oldID
-	 * @param int $eid
+	 * @param string $eid
 	 * @param string $inputHash
 	 * @param string $tex
 	 */

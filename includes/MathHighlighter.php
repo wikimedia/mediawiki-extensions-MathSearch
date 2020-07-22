@@ -28,7 +28,7 @@ class MathHighlighter {
 	}
 
 	/**
-	 * @param int|false $tagPos
+	 * @param int $tagPos
 	 * @param string $wikiText
 	 * @return int
 	 */
@@ -46,9 +46,9 @@ class MathHighlighter {
 	}
 
 	/**
-	 * @param int|false $tagPos
+	 * @param int $tagPos
 	 * @param string $wikiText
-	 * @return bool|int
+	 * @return int
 	 */
 	private function getEndPos( $tagPos, $wikiText ) {
 		$halfWindow = round( self::WINDOW_SIZE / 2 );

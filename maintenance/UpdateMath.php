@@ -24,9 +24,6 @@ use MediaWiki\MediaWikiServices;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
-/**
- * Class UpdateMath
- */
 class UpdateMath extends Maintenance {
 	public $purge = false;
 	/** @var bool */

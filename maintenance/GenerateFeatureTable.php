@@ -84,7 +84,7 @@ class GenerateFeatureTable extends Maintenance {
 	}
 
 	/**
-	 * @param string $pid
+	 * @param int $pid
 	 *
 	 * @return number
 	 */

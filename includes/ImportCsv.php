@@ -24,7 +24,7 @@ class ImportCsv {
 	 */
 	private $results = [];
 	/**
-	 * @var array
+	 * @var bool[] Array mapping numeric qId values to either true (exists) or false (doesn't exist)
 	 */
 	private $validQIds = [];
 	/**
@@ -34,7 +34,7 @@ class ImportCsv {
 	/**
 	 * @var User
 	 */
-	private $user = null;
+	private $user;
 
 	/**
 	 * @param User $user
@@ -44,11 +44,11 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param string $csvFile
+	 * @param resource $csvFile
 	 * @param int|null $runId
 	 * @param bool $overwrite
 	 *
-	 * @return string|bool
+	 * @return string|true|null
 	 */
 	public function execute( $csvFile, $runId = null, $overwrite = false ) {
 		$this->overwrite = $overwrite;
@@ -118,7 +118,7 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param string|null $csv_file
+	 * @param resource|null $csv_file
 	 * @return null
 	 * @throws Exception
 	 */
@@ -217,7 +217,7 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param string $qId
+	 * @param int $qId
 	 * @return bool
 	 */
 	private function isValidQId( $qId ) {
@@ -236,7 +236,7 @@ class ImportCsv {
 
 	/**
 	 * @param int $pId
-	 * @param int $eId
+	 * @param string $eId
 	 * @return string|false
 	 */
 	private function  getInputHash( $pId, $eId ) {
@@ -246,9 +246,9 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param string $qId
-	 * @param int|false $pId
-	 * @param int|false $eId
+	 * @param int $qId
+	 * @param int $pId
+	 * @param string $eId
 	 * @param string $fHash
 	 * @param int $rank
 	 */
@@ -271,7 +271,7 @@ class ImportCsv {
 	}
 
 	/**
-	 * @return bool
+	 * @return true
 	 * @throws DBUnexpectedError
 	 */
 	function processInput() {

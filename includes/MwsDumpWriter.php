@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Class MwsDumpWriter
- */
 class MwsDumpWriter {
 	private $mwsns = 'mws:';
 	private $XMLHead;

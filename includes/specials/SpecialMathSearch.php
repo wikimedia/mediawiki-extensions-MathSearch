@@ -89,6 +89,7 @@ class SpecialMathSearch extends SpecialPage {
 
 	/**
 	 * Generates the search input form
+	 *
 	 * @return HTMLForm
 	 */
 	private function searchForm() {
@@ -235,7 +236,7 @@ class SpecialMathSearch extends SpecialPage {
 
 	/**
 	 * @param int $revisionID
-	 * @param array $mathElements
+	 * @param array[] $mathElements
 	 * @param string $pagename
 	 */
 	public function displayMathElements( $revisionID, $mathElements, $pagename ) {

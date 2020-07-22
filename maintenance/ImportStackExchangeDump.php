@@ -23,9 +23,6 @@ use MathSearch\StackExchange\DumpReader;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
-/**
- * Class BatchImport
- */
 class ImportStackExchangeDump extends Maintenance {
 	private $dir;
 	private $overwrite;

@@ -23,9 +23,6 @@ use UtfNormal\Utils;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
-/**
- * Class BatchExport
- */
 class BatchExport extends Maintenance {
 	public function __construct() {
 		parent::__construct();

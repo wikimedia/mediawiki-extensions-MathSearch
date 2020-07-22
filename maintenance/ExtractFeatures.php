@@ -23,9 +23,6 @@ use MediaWiki\MediaWikiServices;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
-/**
- * Class ExtractFeatures
- */
 class ExtractFeatures extends Maintenance {
 	const RTI_CHUNK_SIZE = 100;
 	public $purge = false;
@@ -132,7 +129,7 @@ class ExtractFeatures extends Maintenance {
 	 *
 	 * @return number
 	 */
-	private static function doUpdate( $pText, $pTitle = "", $purge = false, $dbw ) {
+	private static function doUpdate( $pText, $pTitle, $purge, $dbw ) {
 		// TODO: fix link id problem
 		$anchorID = 0;
 		$math = MathObject::extractMathTagsFromWikiText( $pText );

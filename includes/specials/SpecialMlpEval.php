@@ -318,6 +318,11 @@ class SpecialMlpEval extends SpecialPage {
 		return 'mathsearch';
 	}
 
+	/**
+	 * @param string $fId
+	 *
+	 * @return true
+	 */
 	private function setFId( $fId = '' ) {
 		if ( $fId == '' && $this->fId != '' ) {
 			$fId = $this->fId;
@@ -329,8 +334,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @return array
-	 * @throws MWException
+	 * @return string
 	 */
 	private function getRandomFId() {
 		try{
