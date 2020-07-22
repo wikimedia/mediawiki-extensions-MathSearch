@@ -10,7 +10,6 @@ class WikitextGenerator {
 	private $postQid = 0;
 
 	/**
-	 * WikitextGenerator constructor.
 	 * @param IdMap|null $idGen
 	 */
 	public function __construct( IdMap $idGen = null ) {

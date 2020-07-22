@@ -15,9 +15,6 @@ class IdMap {
 	private $cache;
 	private static $instance;
 
-	/**
-	 * IdMap constructor.
-	 */
 	private function __construct() {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->item = new Item();

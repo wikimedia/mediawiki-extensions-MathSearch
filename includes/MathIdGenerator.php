@@ -48,7 +48,6 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * MathIdGenerator constructor.
 	 * @param string $wikiText
 	 * @param int $revisionId
 	 */

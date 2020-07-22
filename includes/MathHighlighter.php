@@ -7,7 +7,6 @@ class MathHighlighter {
 	private $wikiText;
 
 	/**
-	 * MathHighlighter constructor.
 	 * @param string $fId
 	 * @param int $revId
 	 * @param bool $highlight
