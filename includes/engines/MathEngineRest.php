@@ -61,7 +61,6 @@ abstract class MathEngineRest {
 	}
 
 	/**
-	 *
 	 * @return MathQueryObject
 	 */
 	public function getQuery() {
@@ -92,7 +91,6 @@ abstract class MathEngineRest {
 	}
 
 	/**
-	 *
 	 * @param MathQueryObject $query
 	 * @return $this
 	 */

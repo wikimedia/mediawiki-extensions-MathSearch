@@ -109,7 +109,6 @@ TeX;
 	}
 
 	/**
-	 *
 	 * @param stdClass $rpage
 	 * @param bool|int $queryID
 	 * @return \self

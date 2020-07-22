@@ -11,9 +11,6 @@
 class FormulaInfo extends SpecialPage {
 	private $purge = false;
 
-	/**
-	 *
-	 */
 	function __construct() {
 		parent::__construct( 'FormulaInfo' );
 	}

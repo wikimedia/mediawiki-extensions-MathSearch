@@ -72,7 +72,6 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 *
 	 * @param int $pid
 	 * @param int $eid
 	 * @return self instance
@@ -118,7 +117,6 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 *
 	 * @global bool $wgMathDebug
 	 * @param stdClass $res
 	 * @return bool|\self

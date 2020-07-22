@@ -150,9 +150,6 @@ class ExtractFeatures extends Maintenance {
 		return 0;
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( 'purge', false );

@@ -38,9 +38,6 @@ class SpecialMathSearch extends SpecialPage {
 		throw new ErrorException( $errstr, 0, $errno, $errfile, $errline );
 	}
 
-	/**
-	 *
-	 */
 	function __construct() {
 		parent::__construct( 'MathSearch' );
 	}
@@ -360,7 +357,6 @@ class SpecialMathSearch extends SpecialPage {
 	}
 
 	/**
-	 *
 	 * @param String $src
 	 * @param String $lang the language of the source snippet
 	 */

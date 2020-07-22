@@ -25,7 +25,6 @@ require_once __DIR__ . '/IndexBase.php';
 
 /**
  * @author Moritz Schubotz
- *
  */
 class GenerateWorkload extends IndexBase {
 	private $id = 0;

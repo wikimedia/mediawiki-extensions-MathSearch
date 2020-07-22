@@ -24,7 +24,6 @@ class ContentMathMLRdfBuilderTest extends MediaWikiTestCase {
 	}
 
 	/**
-	 *
 	 * @param string $test
 	 * @return string
 	 */

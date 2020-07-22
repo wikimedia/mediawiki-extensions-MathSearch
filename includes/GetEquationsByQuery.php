@@ -9,9 +9,6 @@
  * @ingroup extensions
  */
 class GetEquationsByQuery extends SpecialPage {
-	/**
-	 *
-	 */
 	function __construct() {
 		parent::__construct( 'GetEquationsByQuery' );
 	}

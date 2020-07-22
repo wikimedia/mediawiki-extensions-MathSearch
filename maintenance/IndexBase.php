@@ -27,7 +27,6 @@ use Wikimedia\Rdbms\IResultWrapper;
 
 /**
  * @author Moritz Schubotz
- *
  */
 abstract class IndexBase extends Maintenance {
 	/** @var IResultWrapper $res */

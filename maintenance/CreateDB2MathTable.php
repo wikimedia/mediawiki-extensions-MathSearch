@@ -23,7 +23,6 @@ require_once __DIR__ . '/IndexBase.php';
 
 /**
  * @author Moritz Schubotz
- *
  */
 class CreateDB2MathTable extends IndexBase {
 	private $statment;
