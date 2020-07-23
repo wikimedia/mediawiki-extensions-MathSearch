@@ -56,9 +56,6 @@ class QueryEval extends Maintenance {
 	/** @var DatabaseUpdater $dbu */
 	private $dbu = null;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( "Exports submissions to a folder. \n Each run is named after the " .
@@ -76,12 +73,11 @@ class QueryEval extends Maintenance {
 	}
 
 	/**
-	 * @param $row
+	 * @param stdClass $row
 	 *
 	 * @return string
+	 * @noinspection PhpExpressionResultUnusedInspection
 	 */
-
-	/** @noinspection PhpExpressionResultUnusedInspection */
 	private function createTopicTex( $row ) {
 		$qId = $row->qId;
 		$row->title = str_replace( [ 'π','ő' ], [ '$\\pi$', 'ö' ], $row->title );
@@ -145,9 +141,6 @@ TEX;
 			'drop math_wmc udfs' );
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		$dir = $this->getArg( 0 );
 		if ( !is_dir( $dir ) ) {

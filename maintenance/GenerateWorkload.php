@@ -31,9 +31,6 @@ class GenerateWorkload extends IndexBase {
 	private $id = 0;
 	private $selectivity = PHP_INT_MAX;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Generates a workload of sample queries.' );

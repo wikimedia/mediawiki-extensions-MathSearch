@@ -27,9 +27,6 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 class WMCAssessSeeds extends Maintenance {
 	private $DEFAULT_ASSESSMENT = 2;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Automatically creates assessment for formulae and revisions ' .
@@ -38,9 +35,6 @@ class WMCAssessSeeds extends Maintenance {
 		$this->requireExtension( 'MathSearch' );
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		$user = User::newFromName( $this->getArg( 0 ) );
 		$uId = $user->getId();

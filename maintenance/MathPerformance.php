@@ -90,9 +90,9 @@ class MathPerformance extends Maintenance {
 	}
 
 	/**
-	 * @param $hash
-	 * @param $tex
-	 * @return bool|ResultWrapper
+	 * @param string $hash
+	 * @param string $tex
+	 * @return bool|\Wikimedia\Rdbms\IResultWrapper
 	 * @throws DBUnexpectedError
 	 */
 	private function getFormulae( $hash, $tex ) {
@@ -211,8 +211,8 @@ class MathPerformance extends Maintenance {
 	}
 
 	/**
-	 * @param $folder
-	 * @param $input
+	 * @param string $folder
+	 * @param string $input
 	 */
 	private static function processImage( $folder, $input ) {
 		$log = LoggerFactory::getInstance( 'MathSearch-maint' );
@@ -272,8 +272,8 @@ class MathPerformance extends Maintenance {
 	}
 
 	/**
-	 * @param $folder
-	 * @param $md5
+	 * @param string $folder
+	 * @param string $md5
 	 * @return string
 	 */
 	private static function makePath( $folder, $md5 ) {

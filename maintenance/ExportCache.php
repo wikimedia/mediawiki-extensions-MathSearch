@@ -51,10 +51,11 @@ class ExportMathCache extends Maintenance {
 	}
 
 	/**
-	 * @param $table
-	 * @param $offset
-	 * @param $length
-	 * @return bool|ResultWrapper
+	 * @param string $table
+	 * @param string|int $offset
+	 * @param string|int $length
+	 * @param bool $sort
+	 * @return bool|array
 	 */
 	private static function getMathTagsFromDatabase( $table, $offset, $length, $sort ) {
 		$out = [];

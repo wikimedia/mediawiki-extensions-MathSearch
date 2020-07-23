@@ -33,9 +33,6 @@ class CleanMathTable extends Maintenance {
 	 */
 	private $db;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Outputs page text to stdout' );
@@ -45,13 +42,13 @@ class CleanMathTable extends Maintenance {
 		$this->requireExtension( 'MathSearch' );
 	}
 
-	// @codingStandardsIgnoreStart
 	/**
+	 * @codingStandardsIgnoreStart
 	 * The idea is basically to select the math elements that do not have a corresponding mathindex entry.
 	 * Basically that means:
 	 * <code>DELETE math FROM (`math` LEFT OUTER JOIN `mathindex` ON ( (`mathindex`.`mathindex_inputhash` = `math`.`math_inputhash`) )) WHERE mathindex_inputhash IS NULL </code>
+	 * @codingStandardsIgnoreEnd
 	 */
-	// @codingStandardsIgnoreEnd
 	public function execute() {
 		// FIXME: this does not work at all
 		$this->purge = $this->getOption( 'purge', false );

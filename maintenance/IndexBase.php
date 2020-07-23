@@ -33,9 +33,6 @@ abstract class IndexBase extends Maintenance {
 	/** @var IResultWrapper $res */
 	protected $res;
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Exports data' );
@@ -86,9 +83,6 @@ abstract class IndexBase extends Maintenance {
 		}
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		libxml_use_internal_errors( true );
 		$i = 0;

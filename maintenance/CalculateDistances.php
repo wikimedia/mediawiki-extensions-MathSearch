@@ -35,9 +35,6 @@ class CalculateDistances extends Maintenance {
 	private $db;
 	private $pagelist = [];
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Outputs page text to stdout' );
@@ -48,9 +45,6 @@ class CalculateDistances extends Maintenance {
 		$this->requireExtension( 'MathSearch' );
 	}
 
-	/**
-	 *
-	 */
 	public function execute() {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->db = wfGetDB( DB_MASTER );
