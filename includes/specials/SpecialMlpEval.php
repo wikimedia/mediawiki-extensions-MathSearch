@@ -1,6 +1,8 @@
 <?php
 
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RevisionRecord;
 
 /**
  * MediaWiki MathSearch extension
@@ -39,8 +41,8 @@ class SpecialMlpEval extends SpecialPage {
 	private $lastError = false;
 	/** @var string */
 	private $fId;
-	/** @var  Revision */
-	private $revision;
+	/** @var  RevisionRecord */
+	private $revisionRecord;
 	private $texInputChanged = false;
 	private $identifiers = [];
 	private $relations;
@@ -173,7 +175,7 @@ class SpecialMlpEval extends SpecialPage {
 				] );
 			if ( $results ) {
 				$this->setRevision( $results[0] );
-				return $this->revision->getTitle()->getText();
+				return $this->revisionRecord->getPageAsLinkTarget()->getText();
 			}
 		} catch ( Exception $e ) {
 			// empty
@@ -225,10 +227,11 @@ class SpecialMlpEval extends SpecialPage {
 			$this->lastError = "no revision id given";
 			return false;
 		}
-		// TODO stop using Revision objects
-		$this->revision = Revision::newFromId( $revId );
+		$this->revisionRecord = MediaWikiServices::getInstance()
+			->getRevisionLookup()
+			->getRevisionById( $revId );
 		$this->mathIdGen = MathIdGenerator::newFromRevisionRecord(
-			$this->revision->getRevisionRecord()
+			$this->revisionRecord
 		);
 		$tagCount = count( $this->mathIdGen->getMathTags() );
 		if ( $tagCount == 0 ) {
@@ -332,7 +335,7 @@ class SpecialMlpEval extends SpecialPage {
 	private function getRandomFId() {
 		try{
 			$uid = $this->getUser()->getId();
-			$rid = $this->revision->getId();
+			$rid = $this->revisionRecord->getId();
 			$dbr = wfGetDB( DB_REPLICA );
 			// Note that the math anchor is globally unique
 			$results = $dbr->selectFieldValues( 'math_review_list', 'anchor',
@@ -370,7 +373,7 @@ class SpecialMlpEval extends SpecialPage {
 	 * @return Title
 	 */
 	public function getRevisionTitle() {
-		return $this->revision->getTitle();
+		return Title::newFromLinkTarget( $this->revisionRecord->getPageAsLinkTarget() );
 	}
 
 	private function printIntorduction() {
@@ -579,7 +582,7 @@ class SpecialMlpEval extends SpecialPage {
 
 	private function printFormulaRef() {
 		$this->getOutput()->addWikiMsg( 'math-lp-formula-ref', $this->getWikiTextLink(),
-			$this->selectedMathTag->getWikiText(), $this->revision->getTimestamp() );
+			$this->selectedMathTag->getWikiText(), $this->revisionRecord->getTimestamp() );
 	}
 
 	private function printPrefix() {
