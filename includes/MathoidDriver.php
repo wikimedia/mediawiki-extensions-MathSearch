@@ -26,7 +26,6 @@ class MathoidDriver {
 	}
 
 	/**
-	 * MathoidDriver constructor.
 	 * @param string $q
 	 * @param string $type
 	 */

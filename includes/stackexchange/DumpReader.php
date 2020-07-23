@@ -23,7 +23,6 @@ class DumpReader {
 	}
 
 	/**
-	 * DumpReader constructor.
 	 * @param \SplFileObject $file
 	 * @param $errPath
 	 */

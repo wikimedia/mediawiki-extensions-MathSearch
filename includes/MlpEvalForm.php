@@ -10,7 +10,6 @@ class MlpEvalForm extends OOUIHTMLForm {
 	private $step;
 
 	/**
-	 * MlpEvalForm constructor.
 	 * @param SpecialMlpEval $specialPage
 	 */
 	public function __construct( SpecialMlpEval $specialPage ) {
