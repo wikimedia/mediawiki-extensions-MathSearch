@@ -1,5 +1,8 @@
 <?php
+
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\SlotRecord;
 
 class MathosphereDriver {
 	private $wikiText;
@@ -13,8 +16,10 @@ class MathosphereDriver {
 
 	function __construct( $revisionId = null ) {
 		if ( $revisionId !== null ) {
-			$revision = Revision::newFromId( $revisionId );
-			$this->wikiText = $revision->getContent()->getNativeData();
+			$revisionRecord = MediaWikiServices::getInstance()
+				->getRevisionLookup()
+				->getRevisionById( $revisionId );
+			$this->wikiText = $revisionRecord->getContent( SlotRecord::MAIN )->getNativeData();
 		}
 	}
 

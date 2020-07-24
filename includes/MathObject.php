@@ -1,5 +1,7 @@
 <?php
+
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 
 /**
  * Class MathObject
@@ -43,13 +45,19 @@ class MathObject extends MathMathML {
 				"pagesimilarity_A=$pid OR pagesimilarity_B=$pid", __METHOD__,
 				[ "ORDER BY" => 'V DESC', "LIMIT" => 10 ]
 			);
+			$revisionLookup = MediaWikiServices::getInstance()
+				->getRevisionLookup();
+
 			foreach ( $res as $row ) {
 				if ( $row->A == $pid ) {
 					$other = $row->B;
 				} else {
 					$other = $row->A;
 				}
-				$out .= '# [[' . Revision::newFromId( $other )->getTitle() . ']] similarity ' .
+				$revLinkTarget = $revisionLookup->getRevisionById( $other )
+					->getPageAsLinkTarget();
+				$revTitle = Title::newFromLinkTarget( $revLinkTarget );
+				$out .= '# [[' . $revTitle . ']] similarity ' .
 					$row->V * 100 . "%\n";
 				// .' ( pageid'.$other.'/'.$row->A.')' );
 			}
@@ -351,9 +359,13 @@ class MathObject extends MathMathML {
 	}
 
 	public function getPageTitle() {
-		$revision = Revision::newFromId( $this->getRevisionID() );
-		if ( $revision ) {
-			return (string)$revision->getTitle();
+		$revisionRecord = MediaWikiServices::getInstance()
+			->getRevisionLookup()
+			->getRevisionById( $this->getRevisionID() );
+		if ( $revisionRecord ) {
+			$linkTarget = $revisionRecord->getPageAsLinkTarget();
+			$title = Title::newFromLinkTarget( $linkTarget );
+			return (string)$title;
 		} else {
 			return false;
 		}
@@ -389,11 +401,13 @@ class MathObject extends MathMathML {
 	 * @return bool
 	 */
 	public function isCurrent() {
-		$rev = Revision::newFromId( $this->revisionID );
-		if ( $rev === null ) {
+		$revisionRecord = MediaWikiServices::getInstance()
+			->getRevisionLookup()
+			->getRevisionById( $this->revisionID );
+		if ( $revisionRecord === null ) {
 			return false;
 		} else {
-			return $rev->isCurrent();
+			return $revisionRecord->isCurrent();
 		}
 	}
 
@@ -461,7 +475,14 @@ class MathObject extends MathMathML {
 	 * @return null|Revision
 	 */
 	public function getRevision() {
-		return Revision::newFromId( $this->revisionID );
+		$revisionRecord = MediaWikiServices::getInstance()
+			->getRevisionLookup()
+			->getRevisionById( $this->revisionId );
+		// TODO replace this public method with one returning RevisionRecord instead
+		if ( $revisionRecord ) {
+			return new Revision( $revisionRecord );
+		}
+		return null;
 	}
 
 	public function getRelations() {

@@ -1,4 +1,7 @@
 <?php
+
+use MediaWiki\MediaWikiServices;
+
 /**
  * MediaWiki MathSearch extension
  *
@@ -130,17 +133,20 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiTextAsInterface(
 			'Display information for equation id:' . $eid . ' on revision:' . $oldID
 		);
-		$revision = Revision::newFromId( $oldID );
-		if ( !$revision ) {
+		$revisionRecord = MediaWikiServices::getInstance()
+			->getRevisionLookup()
+			->getRevisionById( $oldID );
+		if ( !$revisionRecord ) {
 			$out->addWikiTextAsInterface( 'There is no revision with id:' . $oldID . ' in the database.' );
 			return false;
 		}
 
-		$pageName = (string)$revision->getTitle();
+		$title = Title::newFromLinkTarget( $revisionRecord->getPageAsLinkTarget() );
+		$pageName = (string)$title;
 		$out->addWikiTextAsInterface( "* Page found: [[$pageName#$eid|$pageName]] (eq $eid)  ", false );
-		$link = $revision->getTitle()->getLinkURL( [
-				'action' => 'purge',
-				'mathpurge' => 'true'
+		$link = $title->getLinkURL( [
+			'action' => 'purge',
+			'mathpurge' => 'true'
 		] );
 		$out->addHtml( "<a href=\"$link\">(force rerendering)</a>" );
 		/* @var $mo MathObject  */
@@ -171,7 +177,7 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiTextAsInterface(
 			'Calculated based on the variables occurring on the entire ' . $pageName . ' page'
 		);
-		$pid = Revision::newFromId( $oldID )->getTitle()->getArticleID();
+		$pid = $title->getArticleID();
 		$mo->findSimilarPages( $pid );
 		$out->addWikiTextAsInterface( '==Identifiers==' );
 		$relations = $mo->getRelations();

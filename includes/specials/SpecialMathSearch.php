@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 
 /**
  * MediaWiki MathSearch extension
@@ -374,12 +375,15 @@ class SpecialMathSearch extends SpecialPage {
 	 */
 	function displayRevisionResults( $revisionID ) {
 		$out = $this->getOutput();
-		$revision = Revision::newFromId( $revisionID );
-		if ( !$revision ) {
+		$revisionRecord = MediaWikiServices::getInstance()
+			->getRevisionLookup()
+			->getRevisionById( $revisionID );
+		if ( !$revisionRecord ) {
 			LoggerFactory::getInstance( 'MathSearch' )->error( 'invalid revision number' );
 			return false;
 		}
-		$pagename = (string)$revision->getTitle();
+		$title = Title::newFromLinkTarget( $revisionRecord->getPageAsLinkTarget() );
+		$pagename = (string)$title;
 		$mathElements = [];
 		$textElements = [];
 		/** @var MathSearchTerm $term */
