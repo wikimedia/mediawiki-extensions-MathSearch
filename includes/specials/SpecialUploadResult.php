@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * Lets the user import a CSV file with the results
  *
@@ -208,7 +210,11 @@ class SpecialUploadResult extends SpecialPage {
 			$renderedMath = $md5;
 		}
 		$formulaId = MathSearchHooks::generateMathAnchorString( $row['oldId'], $row['fId'] );
-		$link = Revision::newFromId( $row['oldId'] )->getTitle()->getLinkURL() . $formulaId;
+		$revisionRecord = MediaWikiServices::getInstance()
+			->getRevisionLookup()
+			->getRevisionById( $row['oldId'] );
+		$title = Title::newFromLinkTarget( $revisionRecord->getPageAsLinkTarget() );
+		$link = $title->getLinkURL() . $formulaId;
 		$this->getOutput()->addHTML( "<tr><td>${row['qId']}</td><td><a href=\"$link\" >$formulaId</a></td>
 			<td>${row['rank']}</td><td>$renderedMath</td></tr>" );
 	}
