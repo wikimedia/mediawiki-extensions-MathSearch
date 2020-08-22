@@ -62,7 +62,6 @@
 		"MathFormulaPostRender": "MathSearchHooks::addLinkToFormulaInfoPage",
 		"ParserFirstCallInit": "MathSearchHooks::onParserFirstCallInit",
 		"ArticleDeleteComplete": "MathSearchHooks::onArticleDeleteComplete",
-		"PageContentSaveComplete": "MathSearchHooks::onPageContentSaveComplete",
 		"WikibaseClientDataTypes": "ContentMathWikidataHook::onWikibaseClientDataTypes",
 		"WikibaseRepoDataTypes": "ContentMathWikidataHook::onWikibaseRepoDataTypes"
 	},
