@@ -322,35 +322,19 @@ class MathSearchHooks {
 
 	/**
 	 * Occurs after the save page request has been processed.
-	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageContentSaveComplete
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageSaveComplete
 	 *
 	 * @param WikiPage $wikiPage
-	 * @param User $user
-	 * @param Content $content
+	 * @param MediaWiki\User\UserIdentity $user
 	 * @param string $summary
-	 * @param bool $isMinor
-	 * @param bool $isWatch
-	 * @param string $section Deprecated
 	 * @param int $flags
-	 * @param Revision|null $revision
-	 * @param Status $status
-	 * @param int $baseRevId
+	 * @param MediaWiki\Revision\RevisionRecord $revisionRecord
 	 *
 	 * @return bool
 	 */
-	public static function onPageContentSaveComplete(
-		WikiPage $wikiPage, $user, $content, $summary, $isMinor,
-		$isWatch, $section, $flags, $revision, $status, $baseRevId
+	public static function onPageSaveComplete(
+		WikiPage $wikiPage, $user, $summary, $flags, $revisionRecord
 	) {
-		// TODO: Update to JOB
-		if ( $revision == null ) {
-			LoggerFactory::getInstance(
-				'MathSearch'
-			)->warning( "Empty update for {$wikiPage->getTitle()->getFullText()}." );
-			return true;
-		}
-		$revisionRecord = $revision->getRevisionRecord();
-
 		if ( $revisionRecord
 			->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
 			->getModel() !== CONTENT_MODEL_WIKITEXT
@@ -396,6 +380,39 @@ class MathSearchHooks {
 				'MathSearch'
 			)->warning( "Update for $revId (was $prevRevId) failed." );
 		}
+	}
+
+	/**
+	 * Occurs after the save page request has been processed.
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageContentSaveComplete
+	 *
+	 * @param WikiPage $wikiPage
+	 * @param User $user
+	 * @param Content $content
+	 * @param string $summary
+	 * @param bool $isMinor
+	 * @param bool $isWatch
+	 * @param string $section Deprecated
+	 * @param int $flags
+	 * @param Revision|null $revision
+	 * @param Status $status
+	 * @param int $baseRevId
+	 *
+	 * @return bool
+	 */
+	public static function onPageContentSaveComplete(
+		WikiPage $wikiPage, $user, $content, $summary, $isMinor,
+		$isWatch, $section, $flags, $revision, $status, $baseRevId
+	) {
+		// TODO: Update to JOB
+		if ( $revision == null ) {
+			LoggerFactory::getInstance(
+				'MathSearch'
+			)->warning( "Empty update for {$wikiPage->getTitle()->getFullText()}." );
+			return true;
+		}
+		$revisionRecord = $revision->getRevisionRecord();
+		self::onPageSaveComplete( $wikiPage, $user, $summary, $flags, $revisionRecord );
 
 		return true;
 	}
@@ -404,9 +421,15 @@ class MathSearchHooks {
 	 * Enable latexml rendering mode as option by default
 	 */
 	public static function registerExtension() {
-		global $wgMathValidModes;
+		global $wgMathValidModes, $wgHooks;
 		if ( !in_array( 'latexml', $wgMathValidModes ) ) {
 			$wgMathValidModes[] = 'latexml';
+		}
+		if ( class_exists( MediaWiki\HookContainer\HookContainer::class ) ) {
+			// MW 1.35+
+			$wgHooks['PageSaveComplete'][] = 'MathSearchHooks::onPageSaveComplete';
+		} else {
+			$wgHooks['PageContentSaveComplete'][] = '"MathSearchHooks::onPageContentSaveComplete';
 		}
 	}
 
