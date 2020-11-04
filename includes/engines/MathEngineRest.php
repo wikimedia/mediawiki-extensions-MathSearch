@@ -18,7 +18,7 @@ abstract class MathEngineRest {
 	protected $size = false;
 	protected $resultSet = [];
 	protected $relevanceMap = [];
-	/** @var string $backendUrl */
+	/** @var string */
 	protected $backendUrl = "http://localhost:9090";
 
 	protected static function doPost( $url, $postData ) {

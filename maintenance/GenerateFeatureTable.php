@@ -50,7 +50,7 @@ class GenerateFeatureTable extends Maintenance {
 	 * @param int $n
 	 * @param int $cmax
 	 */
-	protected function populateSearchIndex( $n = 0, $cmax = - 1 ) {
+	protected function populateSearchIndex( $n = 0, $cmax = -1 ) {
 		$res = $this->db->select( 'page', 'MAX(page_id) AS count' );
 		$s = $this->db->fetchObject( $res );
 		$count = $s->count;
@@ -116,7 +116,7 @@ class GenerateFeatureTable extends Maintenance {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->purge = $this->getOption( "purge", false );
 		$this->db = wfGetDB( DB_MASTER );
-		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, - 1 ) );
+		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
 	}
 }
 

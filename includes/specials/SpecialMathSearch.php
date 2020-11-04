@@ -303,7 +303,7 @@ class SpecialMathSearch extends SpecialPage {
 	 * works for "xml:id" only,  but not for "id" which is extended to "math:id"
 	 * 	TODO: could be fixed with
 	 * @link http://php.net/manual/de/domdocument.getelementbyid.php#86056
-	 * @param String $id
+	 * @param string $id
 	 * @param DOMDocument $doc
 	 * @return DOMElement
 	 */
@@ -359,8 +359,8 @@ class SpecialMathSearch extends SpecialPage {
 	}
 
 	/**
-	 * @param String $src
-	 * @param String $lang the language of the source snippet
+	 * @param string $src
+	 * @param string $lang the language of the source snippet
 	 */
 	private function printSource( $src, $lang = "xml" ) {
 		$out = $this->getOutput();

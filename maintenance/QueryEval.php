@@ -53,7 +53,7 @@ function createMySqlFunctionDropperClass() {
 }
 
 class QueryEval extends Maintenance {
-	/** @var DatabaseUpdater $dbu */
+	/** @var DatabaseUpdater */
 	private $dbu = null;
 
 	public function __construct() {

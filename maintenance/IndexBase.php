@@ -29,7 +29,7 @@ use Wikimedia\Rdbms\IResultWrapper;
  * @author Moritz Schubotz
  */
 abstract class IndexBase extends Maintenance {
-	/** @var IResultWrapper $res */
+	/** @var IResultWrapper */
 	protected $res;
 
 	public function __construct() {

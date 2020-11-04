@@ -5,9 +5,9 @@
  * @author Moritz Schubotz
  */
 class SpecialDisplayTopics extends SpecialPage {
-	/** @var ImportCsv $importer */
+	/** @var ImportCsv */
 	private $importer;
-	/** @var bool $runId */
+	/** @var bool */
 	protected $runId = false;
 
 	/**

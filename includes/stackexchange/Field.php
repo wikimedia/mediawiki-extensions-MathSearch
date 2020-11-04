@@ -184,7 +184,7 @@ class Field {
 					break;
 				case 'time':
 					$c = [
-						'time' => '+' . substr( $c, 0, - 4 ) . 'Z',
+						'time' => '+' . substr( $c, 0, -4 ) . 'Z',
 						'timezone' => 0,
 						'before' => 0,
 						'after' => 0,
@@ -255,7 +255,7 @@ class Field {
 		}
 		if ( $hasKey( 'separator' ) ) {
 			$this->content =
-				preg_split( $fieldInfo['separator'], $this->content, - 1, PREG_SPLIT_NO_EMPTY );
+				preg_split( $fieldInfo['separator'], $this->content, -1, PREG_SPLIT_NO_EMPTY );
 		}
 		$this->setIfDefined( 'externalIdType', $fieldInfo );
 

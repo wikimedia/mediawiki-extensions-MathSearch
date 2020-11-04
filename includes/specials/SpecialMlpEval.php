@@ -29,7 +29,7 @@ class SpecialMlpEval extends SpecialPage {
 		'4b' => 'SVG-',
 		'4c' => 'MathML-'
 	];
-	/** @var  MathObject */
+	/** @var MathObject */
 	private $selectedMathTag;
 	/** @var int */
 	private $step;
@@ -41,7 +41,7 @@ class SpecialMlpEval extends SpecialPage {
 	private $lastError = false;
 	/** @var string */
 	private $fId;
-	/** @var  RevisionRecord */
+	/** @var RevisionRecord */
 	private $revisionRecord;
 	private $texInputChanged = false;
 	private $identifiers = [];
@@ -80,7 +80,7 @@ class SpecialMlpEval extends SpecialPage {
 			$t = Title::newFromText( $req->getText( 'wp1-page' ) );
 			if ( $this->setPage( $t ) ) {
 				if ( $revId && $revId != $this->getOldId() ) {
-					$this->writeLog( "$revId was not selected", - 1, $revId );
+					$this->writeLog( "$revId was not selected", -1, $revId );
 				}
 			}
 			$revId = $this->getOldId();
@@ -517,7 +517,7 @@ class SpecialMlpEval extends SpecialPage {
 		$rndRev = $req->getInt( 'oldId' );
 		$oldStep = $req->getInt( 'oldStep' );
 		if ( $rndRev && $oldStep == 1 ) {
-			$this->writeLog( "$rndRev was not selected, by button", - 1, $rndRev );
+			$this->writeLog( "$rndRev was not selected, by button", -1, $rndRev );
 		}
 		$req->unsetVal( 'wp1-page' );
 		$req->unsetVal( 'oldId' );

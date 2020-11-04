@@ -9,9 +9,9 @@ use MediaWiki\MediaWikiServices;
  * @author Yaron Koren (This class is based on DT_ImportCSV from the DataTransfer extension)
  */
 class SpecialUploadResult extends SpecialPage {
-	/** @var ImportCsv $importer */
+	/** @var ImportCsv */
 	private $importer;
-	/** @var bool $runId */
+	/** @var bool */
 	protected $runId = false;
 
 	/**
