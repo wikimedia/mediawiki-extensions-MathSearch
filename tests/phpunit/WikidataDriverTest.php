@@ -14,6 +14,7 @@ class WikidataDriverTest extends MediaWikiTestCase {
 	 * @covers WikidataDriver::<public>
 	 */
 	public function testSuccess() {
+		$this->markTestSkipped( 'All HTTP requests are banned in tests. See T265628.' );
 		$wd = new WikidataDriver();
 		$this->assertStringContainsString( 'wikidata', $wd->getBackendUrl() );
 		$this->assertTrue( $wd->search( 'magnet' ) );

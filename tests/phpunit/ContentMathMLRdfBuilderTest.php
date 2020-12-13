@@ -19,6 +19,7 @@ class ContentMathMLRdfBuilderTest extends MediaWikiTestCase {
 	const ACME_REF = 'testing';
 
 	protected function setUp() : void {
+		$this->markTestSkipped( 'All HTTP requests are banned in tests. See T265628.' );
 		parent::setUp();
 		$this->setMwGlobals( 'wgMathDisableTexFilter', 'always' );
 	}

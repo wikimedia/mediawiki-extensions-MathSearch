@@ -18,6 +18,7 @@ class ContentMathFormatterTest extends MediaWikiTestCase {
 	const SOME_TEX = 'a^2+b^2 < c^2';
 
 	protected function setUp() : void {
+		$this->markTestSkipped( 'All HTTP requests are banned in tests. See T265628.' );
 		parent::setUp();
 		$this->setMwGlobals( 'wgMathDisableTexFilter', 'always' );
 	}

@@ -1,5 +1,6 @@
 <?php
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 
 class MathoidDriver {
 	private $success;
@@ -137,7 +138,9 @@ class MathoidDriver {
 	}
 
 	public function checkBackend() {
-		$res = HTTP::get( $this->getBackendUrl() . '/_info' );
+		$res = MediaWikiServices::getInstance()
+				->getHttpRequestFactory()
+				->get( ( $this->getBackendUrl() . '/_info' ) );
 		if ( $res ) {
 			$res = json_decode( $res );
 			if ( $res && json_last_error() === JSON_ERROR_NONE ) {
