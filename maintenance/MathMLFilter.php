@@ -62,7 +62,7 @@ class MathMLFilter extends DumpFilter {
 	}
 
 	/**
-	 * @param object $rev
+	 * @param stdClass $rev
 	 * @param string $string the revision text
 	 */
 	function writeRevision( $rev, $string ) {
