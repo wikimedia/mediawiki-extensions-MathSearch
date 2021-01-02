@@ -21,7 +21,8 @@
 			"@fix-lint",
 			"minus-x fix .",
 			"phpcbf"
-		]
+		],
+		"phan": "phan -d . --long-progress-bar"
 	},
 	"require": {
 		"ext-dom": "*",
