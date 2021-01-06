@@ -177,7 +177,7 @@ TeX;
 				case '{':
 					$level++;
 					if ( $level >= self::MIN_DEPTH && $level < $qVarLevel ) {
-						if ( ( mt_rand() / mt_getrandmax() ) < self::SELECTIVITY_QVAR * $level ) {
+						if ( ( self::SELECTIVITY_QVAR * $level ) > ( mt_rand() / mt_getrandmax() ) ) {
 							$qVarLevel = $level;
 							$out .= "{?{x" . $qVarNo++ . "}";
 						} else {

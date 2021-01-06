@@ -145,7 +145,7 @@ class ImportCsv {
 		// Code copied from:
 		// http://www.dotvoid.com/2010/04/detecting-utf-bom-byte-order-mark/
 		$byteOrderMark = pack( "CCC", 0xef, 0xbb, 0xbf );
-		if ( 0 == strncmp( $table[0][0], $byteOrderMark, 3 ) ) {
+		if ( strncmp( $table[0][0], $byteOrderMark, 3 ) == 0 ) {
 			$table[0][0] = substr( $table[0][0], 3 );
 			// If there were quotation marks around this value,
 			// they didn't get removed, so remove them now.
