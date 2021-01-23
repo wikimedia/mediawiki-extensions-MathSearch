@@ -153,6 +153,7 @@
 	"math-tex2nb-header": "Header of the input-box for user-defined LaTeX input on the specialpage LaTeXTranslator.",
 	"math-tex2nb-intro": "Introductory text for the specialpage LaTeXTranslator.",
 	"math-tex2nb-input": "Form label for the LaTeX input form on the specialpage LaTeXTranslator.\n{{Identical|Input}}",
+	"math-tex2nb-wikitext": "Form label for wikitext context on the specialpage LaTeXTranslator.",
 	"math-tex2nb-latex": "Message above the syntax-highlighted-LaTeX input on the specialpage LaTeXTranslator.",
 	"math-tex2nb-mathematica": "Message between the LaTex input and the output on the specialpage LaTeXTranslator.",
 	"datatypes-type-contentmath": "The name of a data type.\n{{related|Datatypes-type}}\n{{Identical|Mathematical expression}}",

@@ -1,14 +1,9 @@
 <?php
 
 class SpecialLaTeXTranslator extends SpecialPage {
-	/**
-	 * @var LaTeXTranslator
-	 */
-	private $translator;
 
 	function __construct() {
 		parent::__construct( 'LaTeXTranslator' );
-		$this->translator = new LaTeXTranslator();
 	}
 
 	/**
@@ -22,9 +17,18 @@ class SpecialLaTeXTranslator extends SpecialPage {
 		$formDescriptor = [
 			'input' => [
 				'label-message' => 'math-tex2nb-input',
+				'class' => 'HTMLTextField',
+				'default' => '(z)_n = \frac{\Gamma(z+n)}{\Gamma(z)}',
+			],
+			'wikitext' => [
+				'label-message' => 'math-tex2nb-wikitext',
 				'class' => 'HTMLTextAreaField',
-				'default' => '\log x'
-			]
+				'default' => 'The Gamma function 
+<math>\Gamma(z)</math>
+and the pochhammer symbol
+<math>(a)_n</math>
+are often used together.',
+			],
 		];
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Translate' );
