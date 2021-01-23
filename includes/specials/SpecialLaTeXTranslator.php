@@ -1,9 +1,29 @@
 <?php
 
+use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
+
 class SpecialLaTeXTranslator extends SpecialPage {
+
+	const VERSION = '1.0.0';
+	private $cache;
+	private $dgUrl;
+	private $compUrl;
+	private $httpFactory;
+	private $logger;
 
 	function __construct() {
 		parent::__construct( 'LaTeXTranslator' );
+		$mw = MediaWikiServices::getInstance();
+		$this->cache = $mw->getMainWANObjectCache();
+		// provisional Hack to get the URL
+		$provisionalUrl = $mw->getMainConfig()->get( 'MathSearchTranslationUrl' );
+		$this->dgUrl =
+			preg_replace( '/translation/', 'generateAnnotatedDependencyGraph', $provisionalUrl );
+		$this->compUrl =
+			preg_replace( '/translation/', 'generateTranslatedComputedMoi', $provisionalUrl );
+		$this->httpFactory = $mw->getHttpRequestFactory();
+		$this->logger = LoggerFactory::getInstance( 'MathSearch' );
 	}
 
 	/**
@@ -33,7 +53,8 @@ are often used together.',
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Translate' );
 		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
-		$htmlForm->setHeaderText( '<h2>' . wfMessage( 'math-tex2nb-header' )->toString() . '</h2>' );
+		$htmlForm->setHeaderText( '<h2>' . wfMessage( 'math-tex2nb-header' )->toString() .
+			'</h2>' );
 		$htmlForm->show();
 	}
 
@@ -43,16 +64,57 @@ are often used together.',
 	 * @return bool
 	 */
 	public function processInput( $formData ) {
-		$data = $formData['input'];
-
+		$tex = $formData['input'];
+		$context = $formData['wikitext'];
+		$dependencyGraph = $this->getDependencyGraphFromContext( $context );
 		$output = $this->getOutput();
 		$output->addWikiMsg( 'math-tex2nb-latex' );
-		$output->addWikiTextAsInterface( "<syntaxhighlight lang='latex'>$data</syntaxhighlight>" );
+		$output->addWikiTextAsInterface( "<syntaxhighlight lang='latex'>$tex</syntaxhighlight>" );
 		$output->addWikiMsg( 'math-tex2nb-mathematica' );
-		if ( !FormulaInfo::DisplayTranslations( $data ) ) {
-			$translated = $this->translator->processInput( $data );
-			$output->addWikiTextAsInterface( "<syntaxhighlight lang='text'>$translated</syntaxhighlight>" );
+		FormulaInfo::DisplayTranslations( $tex );
+	}
+
+	/**
+	 * @param $context
+	 * @return false|mixed
+	 */
+	private function getDependencyGraphFromContext( $context ): string {
+		$hash =
+			$this->cache->makeGlobalKey( self::class, sha1( self::VERSION . '-DG-' . $context ) );
+
+		return $this->cache->getWithSetCallback( $hash, WANObjectCache::TTL_INDEFINITE,
+			[ $this, 'calculateDependencyGraphFromContext' ] );
+	}
+
+	/**
+	 * @param $context
+	 * @return false|mixed
+	 * @throws MWException
+	 */
+	public function calculateDependencyGraphFromContext( $context ): string {
+		$this->logger->error( "Cache miss. Calculate dependency graph." );
+		$url = $this->dgUrl;
+		$q = rawurlencode( $context );
+		$postData = "content=$q";
+		$options = [
+			'method' => 'POST',
+			'postData' => $postData,
+		];
+		$req = $this->httpFactory->create( $url, $options, __METHOD__ );
+		$req->execute();
+		$statusCode = $req->getStatus();
+		if ( $statusCode === 200 ) {
+			return $req->getContent();
 		}
+		$e = new MWException( 'Dependency graph endpoint failed.' );
+		$this->logger->error( 'Dependency graph "{url}" returned ' .
+			'HTTP status code "{statusCode}" for post data "{postData}": {exception}.', [
+				'url' => $url,
+				'statusCode' => $statusCode,
+				'postData' => $postData,
+				'exception' => $e,
+			] );
+		throw $e;
 	}
 
 	protected function getGroupName() {
