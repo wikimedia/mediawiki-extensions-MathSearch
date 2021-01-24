@@ -10,7 +10,7 @@
 	"mathdownload": "Download math search results",
 	"mathindex": "Math index",
 	"mathupload": "Submit math search results",
-	"latextranslator": "LaTeX to Mathematica Translator",
+	"latextranslator": "LaTeX to CAS translator",
 	"specialpages-group-mathsearch": "Math search",
 	"displaytopics": "Display topics",
 	"mathsearch-desc": "Integrates the [http://search.mathweb.org/about.html MathWeb Search] engine",

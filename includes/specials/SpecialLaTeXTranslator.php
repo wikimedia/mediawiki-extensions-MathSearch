@@ -11,6 +11,12 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	private $compUrl;
 	private $httpFactory;
 	private $logger;
+	private $context;
+	private $tex;
+	/**
+	 * @var false|mixed|string
+	 */
+	private $dependencyGraph;
 
 	function __construct() {
 		parent::__construct( 'LaTeXTranslator' );
@@ -45,7 +51,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 				'class' => 'HTMLTextAreaField',
 				'default' => 'The Gamma function 
 <math>\Gamma(z)</math>
-and the pochhammer symbol
+and the Pochhammer symbol
 <math>(a)_n</math>
 are often used together.',
 			],
@@ -64,37 +70,94 @@ are often used together.',
 	 * @return bool
 	 */
 	public function processInput( $formData ) {
-		$tex = $formData['input'];
-		$context = $formData['wikitext'];
-		$dependencyGraph = $this->getDependencyGraphFromContext( $context );
+		$this->tex = $formData['input'];
+		$this->context = $formData['wikitext'];
+		$this->dependencyGraph = $this->getDependencyGraphFromContext();
 		$output = $this->getOutput();
 		$output->addWikiMsg( 'math-tex2nb-latex' );
-		$output->addWikiTextAsInterface( "<syntaxhighlight lang='latex'>$tex</syntaxhighlight>" );
+		$output->addWikiTextAsInterface( "<syntaxhighlight lang='latex'>$this->tex</syntaxhighlight>" );
 		$output->addWikiMsg( 'math-tex2nb-mathematica' );
-		FormulaInfo::DisplayTranslations( $tex );
+		try {
+			$calulation = $this->getTranslations();
+		} catch ( MWException $exception ) {
+			$expected_error = 'The given context (dependency graph) did not contain sufficient information';
+			if ( strpos( $exception->getText(), $expected_error ) !== false ) {
+				FormulaInfo::DisplayTranslations( $this->tex );
+				return true;
+			}
+		}
+		$insights = json_decode( $calulation );
+		$output->addWikiTextAsContent( "Content MathML:" );
+		$renderer = new MathLaTeXML( $insights->semanticFormula );
+		$renderer->render();
+		$output->addHTML( $renderer->getHtmlOutput() );
+		$output->addWikiTextAsContent( "Confidence: " . $insights->confidence );
+		foreach ( $insights->translations as $key => $value ) {
+			$num = json_encode( $value->numericResults, JSON_PRETTY_PRINT );
+			$symb = json_encode( $value->symbolicResults, JSON_PRETTY_PRINT );
+			$output->addWikiTextAsContent( "{$key}: <code>{$value->translation}</code>\n\n" .
+				"Symbolic evaluation  <syntaxhighlight  lang='json'>{$symb}</syntaxhighlight>\n\n" .
+				"Numeric evaluation <syntaxhighlight lang='json'>{$num}</syntaxhighlight>\n\n" );
+		}
 	}
 
 	/**
-	 * @param $context
 	 * @return false|mixed
 	 */
-	private function getDependencyGraphFromContext( $context ): string {
-		$hash =
-			$this->cache->makeGlobalKey( self::class, sha1( self::VERSION . '-DG-' . $context ) );
+	private function getTranslations(): string {
+		$hash =	$this->cache->makeGlobalKey( self::class,
+				sha1( self::VERSION . '-F-' . $this->dependencyGraph . $this->tex ) );
+
+		return $this->cache->getWithSetCallback( $hash, WANObjectCache::TTL_INDEFINITE,
+			[ $this, 'calculateTranslations' ] );
+	}
+
+	/**
+	 * @return string
+	 * @throws MWException
+	 */
+	public function calculateTranslations(): string {
+		$this->logger->info( "Cache miss. Calculate translation." );
+		$q = rawurlencode( $this->tex );
+		$url = "{$this->compUrl}?latex=$q";
+		$options = [
+			'method' => 'POST',
+			'postData' => $this->dependencyGraph
+		];
+		$req = $this->httpFactory->create( $url, $options, __METHOD__ );
+		$req->setHeader( 'Content-Type', 'application/json' );
+		$req->execute();
+		$statusCode = $req->getStatus();
+		if ( $statusCode === 200 ) {
+			return $req->getContent();
+		}
+		$e = new MWException( 'Calculation endpoint failed. Error:' . $req->getContent() );
+		$this->logger->error( 'Calculation "{url}" returned ' .
+			'HTTP status code "{statusCode}" for post data "{postData}".: {exception}.', [
+			'url' => $url,
+			'statusCode' => $statusCode,
+			'postData' => $this->dependencyGraph,
+			'exception' => $e
+		] );
+		throw $e;
+	}
+
+	private function getDependencyGraphFromContext(): string {
+		$hash =	$this->cache->makeGlobalKey( self::class,
+			sha1( self::VERSION . '-DG-' . $this->context ) );
 
 		return $this->cache->getWithSetCallback( $hash, WANObjectCache::TTL_INDEFINITE,
 			[ $this, 'calculateDependencyGraphFromContext' ] );
 	}
 
 	/**
-	 * @param $context
 	 * @return false|mixed
 	 * @throws MWException
 	 */
-	public function calculateDependencyGraphFromContext( $context ): string {
-		$this->logger->error( "Cache miss. Calculate dependency graph." );
+	public function calculateDependencyGraphFromContext(): string {
+		$this->logger->info( "Cache miss. Calculate dependency graph." );
 		$url = $this->dgUrl;
-		$q = rawurlencode( $context );
+		$q = rawurlencode( $this->context );
 		$postData = "content=$q";
 		$options = [
 			'method' => 'POST',
