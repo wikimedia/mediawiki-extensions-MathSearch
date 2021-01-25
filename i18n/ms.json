@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Anakmalaysia"
+			"Anakmalaysia",
+			"Tofeiku"
 		]
 	},
 	"mathsearch": "Pencarian matematik",
@@ -14,5 +15,6 @@
 	"math-wmc-SelectRun": "Nama",
 	"math-wmc-FileLabel": "Fail CSV",
 	"math-wmc-importing": "Mengimport...",
-	"action-mathwmcsubmit": "menyerahkan hasil-hasil kepada NTCIR Wikipedia Math Search Task"
+	"action-mathwmcsubmit": "menyerahkan hasil-hasil kepada NTCIR Wikipedia Math Search Task",
+	"math-tex2nb-wikitext": "Konteks wikiteks"
 }

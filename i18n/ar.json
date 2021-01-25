@@ -3,6 +3,7 @@
 		"authors": [
 			"Hiba Alshawi",
 			"Mervat Salman",
+			"SALMAN",
 			"ديفيد"
 		]
 	},
@@ -148,8 +149,8 @@
 	"math-search-type-2": "تعبير xQuery",
 	"math-search-expression-label": "التعبير:",
 	"math-tex2nb-header": "حددالمدخلات الخاصة بك",
-	"math-tex2nb-intro": "من المفترض أن يعرض هذا النموذج فكرة تحويل تخ إلى Mathematica. \n\nيحول التطبيق التجريبي وظائف لاتكس التي تُترجَم مباشرة إلى نظراء Mathematica. \n\nتتوفر الوظائف بدون دعم Mathematica الواضح للترجمة عبر حزمة DRMF (قيد التطوير).",
-	"math-tex2nb-input": "إدخال",
+	"math-tex2nb-intro": "من المفترض أن يعرض هذا النموذج فكرة تحويل تخ إلى Mathematica. \n\nيحول التطبيق التجريبي وظائف لاتكس التي تُترجَم مباشرة إلى نظراء Mathematica. \n\nتتوفر الوظائف بدون دعم Mathematica الواضح للترجمة عبر حزمة DRMF (قيد التطوير).set up",
+	"math-tex2nb-input": "Saudi Arabia",
 	"math-tex2nb-latex": "إدخال لاتكس التالي...",
 	"math-tex2nb-mathematica": "...تتم ترجمته إلى إخراج Mathematica...",
 	"datatypes-type-contentmath": "التعبير الرياضي (المحتوى)",

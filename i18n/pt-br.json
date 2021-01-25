@@ -150,9 +150,10 @@
 	"math-search-expression-label": "Expressão:",
 	"math-tex2nb-header": "Especifique a sua própria entrada",
 	"math-tex2nb-intro": "Este protótipo pretende demonstrar a ideia da conversão de TeX para Mathematica.\n\nA aplicação de demonstração converte funções LaTeX que se traduzem diretamente para contrapartes Mathematica.\n\nAs funções sem suporte explícito para Mathematica estão disponíveis para tradução através de um pacote DRMF (em desenvolvimento).",
-	"math-tex2nb-input": "Entrada",
+	"math-tex2nb-input": "Entrada de fórmula",
+	"math-tex2nb-wikitext": "Contexto do Wikitexto",
 	"math-tex2nb-latex": "A seguinte entrada em LaTeX ...",
-	"math-tex2nb-mathematica": "... é traduzida para o resultado Mathematica ...",
+	"math-tex2nb-mathematica": "... é traduzida para o resultado CAS ...",
 	"datatypes-type-contentmath": "Expressão matemática (conteúdo)",
 	"wikibase-listdatatypes-contentmath-head": "Expressão matemática (conteúdo)",
 	"wikibase-listdatatypes-contentmath-body": "Campo de dados literais para expressões matemáticas, fórmulas, equações e outros, expressas na variante DRMF/DLMF do LaTeX."

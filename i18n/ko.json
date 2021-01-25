@@ -35,5 +35,7 @@
 	"math-lp-7-head": "평가 완료됨",
 	"right-mathwmcsubmit": "NTCIR Wikipedia Math Search Task에 결과를 제출할 수 있음",
 	"math-search-type-0": "핵심 단어",
+	"math-tex2nb-input": "공식 입력",
+	"math-tex2nb-wikitext": "위키텍스트 컨텍스트",
 	"wikibase-listdatatypes-contentmath-body": "수식, 공식, 등호 등에 대한 리터럴 데이터 필드이며 DRMF/DLMF 형식의 LaTeX로 표현합니다."
 }
