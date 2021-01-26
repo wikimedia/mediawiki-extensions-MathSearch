@@ -8,7 +8,7 @@
 		]
 	},
 	"formulainfo": "Informazioni formula",
-	"latextranslator": "Traduttore da LaTeX a Mathematica",
+	"latextranslator": "Traduttore da LaTeX a CAS",
 	"displaytopics": "Visualizzare gli argomenti",
 	"mathsearch-desc": "Integra il motore di ricerca [http://search.mathweb.org/about.html MathWeb Search]",
 	"getequationsbyquery": "Ottieni equazioni da interrogazioni",
