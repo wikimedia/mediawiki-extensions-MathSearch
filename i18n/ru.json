@@ -8,7 +8,8 @@
 			"Oashnic",
 			"Okras",
 			"Striking Blue",
-			"Vlad5250"
+			"Vlad5250",
+			"Wileyfoxyx"
 		]
 	},
 	"mathsearch": "Математический поиск",
@@ -17,7 +18,7 @@
 	"mathdownload": "Скачать результаты поиска",
 	"mathindex": "Математический индекс",
 	"mathupload": "Показать похожие результаты поиска",
-	"latextranslator": "Переводчик из LaTeX в Mathematica",
+	"latextranslator": "Переводчик из LaTeX в CAS",
 	"specialpages-group-mathsearch": "Математический поиск",
 	"displaytopics": "Показать темы",
 	"mathsearch-desc": "Интегрирует движок [http://search.mathweb.org/about.html  MathWeb Search]",
@@ -154,7 +155,7 @@
 	"math-search-expression-label": "Выражение:",
 	"math-tex2nb-header": "Введите ваш вариант",
 	"math-tex2nb-intro": "Данная страница показывает как TeX может быть переведен в выражение Mathematica. Наше ПО переводит функцию LaTeX напрямую в Mathematica. \n\nФункции без поддержки Mathematica могут быть переведены с помощью пакета DRMF (находится в разработке)",
-	"math-tex2nb-input": "Ввод",
+	"math-tex2nb-input": "Ввод формулы",
 	"math-tex2nb-latex": "Следующее выражение LaTeX ...",
 	"math-tex2nb-mathematica": "... переведено в выражение Mathematica ...",
 	"datatypes-type-contentmath": "Математическое выражение (содержимое)",
