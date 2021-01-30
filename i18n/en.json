@@ -151,6 +151,7 @@
 	"math-tex2nb-wikitext": "Wikitext context",
 	"math-tex2nb-latex": "The following LaTeX input ...",
 	"math-tex2nb-mathematica": "... is translated to the CAS output ...",
+	"math-tex2nb-purge": "Purge cached results.",
 	"datatypes-type-contentmath": "Mathematical expression (content)",
 	"wikibase-listdatatypes-contentmath-head": "Mathematical expression (content)",
 	"wikibase-listdatatypes-contentmath-body": "Literal data field for mathematical expressions, formula, equations and such, expressed in the DRMF/DLMF variant of LaTeX."
