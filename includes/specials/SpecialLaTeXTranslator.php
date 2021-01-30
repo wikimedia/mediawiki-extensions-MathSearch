@@ -1,7 +1,11 @@
 <?php
 
+use MediaWiki\Logger\LegacyLogger;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Revision\SlotRecord;
+use Psr\Log\LogLevel;
 
 class SpecialLaTeXTranslator extends SpecialPage {
 
@@ -13,10 +17,20 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	private $logger;
 	private $context;
 	private $tex;
+	private $purge;
 	/**
 	 * @var false|mixed|string
 	 */
 	private $dependencyGraph;
+
+	private function log( $level, $message, array $context = [] ) {
+		global $wgShowDebug;
+		$this->logger->log( $level, $message, $context );
+		if ( $wgShowDebug ) {
+			$msg = LegacyLogger::interpolate( $message, $context );
+			$this->getOutput()->addWikiTextAsContent( "Log $level:" . $msg );
+		}
+	}
 
 	function __construct() {
 		parent::__construct( 'LaTeXTranslator' );
@@ -37,23 +51,47 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	 * @param string|null $par
 	 */
 	function execute( $par ) {
+		global $wgRequest;
+		$pid = $wgRequest->getVal( 'pid' );// Page ID
+		$eid = $wgRequest->getVal( 'eid' );// Equation ID
 		$this->setHeaders();
 		$output = $this->getOutput();
 		$output->addWikiMsg( 'math-tex2nb-intro' );
+		if ( $pid && $eid ) {
+			$revisionRecord =
+				MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionById( $pid );
+			$contentModel =
+				$revisionRecord->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )->getModel();
+			if ( $contentModel !== CONTENT_MODEL_WIKITEXT ) {
+				throw new MWException( "Only CONTENT_MODEL_WIKITEXT supported fro translation." );
+			}
+			$this->context =
+				ContentHandler::getContentText( $revisionRecord->getContent( SlotRecord::MAIN ) );
+			$mo = MathObject::newFromRevisionText( $pid, $eid );
+			$this->tex = $mo->getTex();
+			$this->displayResults();
+		} else {
+			$this->tex = '(z)_n = \frac{\Gamma(z+n)}{\Gamma(z)}';
+			$this->context = 'The Gamma function 
+<math>\Gamma(z)</math>
+and the Pochhammer symbol
+<math>(a)_n</math>
+are often used together.';
+		}
 		$formDescriptor = [
 			'input' => [
 				'label-message' => 'math-tex2nb-input',
 				'class' => 'HTMLTextField',
-				'default' => '(z)_n = \frac{\Gamma(z+n)}{\Gamma(z)}',
+				'default' => $this->tex,
 			],
 			'wikitext' => [
 				'label-message' => 'math-tex2nb-wikitext',
 				'class' => 'HTMLTextAreaField',
-				'default' => 'The Gamma function 
-<math>\Gamma(z)</math>
-and the Pochhammer symbol
-<math>(a)_n</math>
-are often used together.',
+				'default' => $this->context,
+			],
+			'purge' => [
+				'label-message' => 'math-tex2nb-purge',
+				'class' => 'HTMLCheckField',
 			],
 		];
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
@@ -68,45 +106,28 @@ are often used together.',
 	 * Processes the submitted Form input
 	 * @param array $formData
 	 * @return bool
+	 * @throws MWException
 	 */
 	public function processInput( $formData ) {
 		$this->tex = $formData['input'];
 		$this->context = $formData['wikitext'];
-		$this->dependencyGraph = $this->getDependencyGraphFromContext();
-		$output = $this->getOutput();
-		$output->addWikiMsg( 'math-tex2nb-latex' );
-		$output->addWikiTextAsInterface( "<syntaxhighlight lang='latex'>$this->tex</syntaxhighlight>" );
-		$output->addWikiMsg( 'math-tex2nb-mathematica' );
-		try {
-			$calulation = $this->getTranslations();
-		} catch ( MWException $exception ) {
-			$expected_error = 'The given context (dependency graph) did not contain sufficient information';
-			if ( strpos( $exception->getText(), $expected_error ) !== false ) {
-				FormulaInfo::DisplayTranslations( $this->tex );
-				return true;
-			}
-		}
-		$insights = json_decode( $calulation );
-		$output->addWikiTextAsContent( "Content MathML:" );
-		$renderer = new MathLaTeXML( $insights->semanticFormula );
-		$renderer->render();
-		$output->addHTML( $renderer->getHtmlOutput() );
-		$output->addWikiTextAsContent( "Confidence: " . $insights->confidence );
-		foreach ( $insights->translations as $key => $value ) {
-			$num = json_encode( $value->numericResults, JSON_PRETTY_PRINT );
-			$symb = json_encode( $value->symbolicResults, JSON_PRETTY_PRINT );
-			$output->addWikiTextAsContent( "{$key}: <code>{$value->translation}</code>\n\n" .
-				"Symbolic evaluation  <syntaxhighlight  lang='json'>{$symb}</syntaxhighlight>\n\n" .
-				"Numeric evaluation <syntaxhighlight lang='json'>{$num}</syntaxhighlight>\n\n" );
-		}
+		$this->purge = $formData['purge'];
+
+		return $this->displayResults();
 	}
 
 	/**
 	 * @return false|mixed
+	 * @throws MWException
 	 */
 	private function getTranslations(): string {
-		$hash =	$this->cache->makeGlobalKey( self::class,
+		$hash =
+			$this->cache->makeGlobalKey( self::class,
 				sha1( self::VERSION . '-F-' . $this->dependencyGraph . $this->tex ) );
+		if ( $this->purge ) {
+			$value = $this->calculateTranslations();
+			$this->cache->set( $hash, $value );
+		}
 
 		return $this->cache->getWithSetCallback( $hash, WANObjectCache::TTL_INDEFINITE,
 			[ $this, 'calculateTranslations' ] );
@@ -117,12 +138,12 @@ are often used together.',
 	 * @throws MWException
 	 */
 	public function calculateTranslations(): string {
-		$this->logger->info( "Cache miss. Calculate translation." );
+		$this->log( LogLevel::INFO, "Cache miss. Calculate translation." );
 		$q = rawurlencode( $this->tex );
 		$url = "{$this->compUrl}?latex=$q";
 		$options = [
 			'method' => 'POST',
-			'postData' => $this->dependencyGraph
+			'postData' => $this->dependencyGraph,
 		];
 		$req = $this->httpFactory->create( $url, $options, __METHOD__ );
 		$req->setHeader( 'Content-Type', 'application/json' );
@@ -137,16 +158,23 @@ are often used together.',
 			'url' => $url,
 			'statusCode' => $statusCode,
 			'postData' => $this->dependencyGraph,
-			'exception' => $e
+			'exception' => $e,
 		] );
 		throw $e;
 	}
 
 	private function getDependencyGraphFromContext(): string {
-		$hash =	$this->cache->makeGlobalKey( self::class,
-			sha1( self::VERSION . '-DG-' . $this->context ) );
+		$hash =
+			$this->cache->makeGlobalKey( self::class,
+				sha1( self::VERSION . '-DG-' . $this->context ) );
+		$this->log( LogLevel::DEBUG, "DG Hash is {hash}", [ 'hash' => $hash ] );
+		if ( $this->purge ) {
+			$this->log( Loglevel::INFO, 'Cache purging requested' );
+			$value = $this->calculateDependencyGraphFromContext();
+			$this->cache->set( $hash, $value );
+		}
 
-		return $this->cache->getWithSetCallback( $hash, WANObjectCache::TTL_INDEFINITE,
+		return $this->cache->getWithSetCallback( $hash, 31556952,
 			[ $this, 'calculateDependencyGraphFromContext' ] );
 	}
 
@@ -155,13 +183,14 @@ are often used together.',
 	 * @throws MWException
 	 */
 	public function calculateDependencyGraphFromContext(): string {
-		$this->logger->info( "Cache miss. Calculate dependency graph." );
+		$this->log( LogLevel::INFO, "Cache miss. Calculate dependency graph." );
 		$url = $this->dgUrl;
 		$q = rawurlencode( $this->context );
 		$postData = "content=$q";
 		$options = [
 			'method' => 'POST',
 			'postData' => $postData,
+			'timeout' => 240,
 		];
 		$req = $this->httpFactory->create( $url, $options, __METHOD__ );
 		$req->execute();
@@ -170,17 +199,158 @@ are often used together.',
 			return $req->getContent();
 		}
 		$e = new MWException( 'Dependency graph endpoint failed.' );
-		$this->logger->error( 'Dependency graph "{url}" returned ' .
+		$this->log( LogLevel::ERROR, 'Dependency graph "{url}" returned ' .
 			'HTTP status code "{statusCode}" for post data "{postData}": {exception}.', [
-				'url' => $url,
-				'statusCode' => $statusCode,
-				'postData' => $postData,
-				'exception' => $e,
-			] );
+			'url' => $url,
+			'statusCode' => $statusCode,
+			'postData' => $postData,
+			'exception' => $e,
+		] );
 		throw $e;
+	}
+
+	private function printSource(
+		$source, $description = "", $language = "text", $linestart = true, $collapsible = true
+	) {
+		$inline = ' inline ';
+		$out = $this->getOutput();
+		if ( $description ) {
+			$description .= ": ";
+		}
+		if ( $collapsible ) {
+			$this->printColHeader( $description );
+			$description = '';
+			$inline = '';
+		}
+		$out->addWikiTextAsInterface( "$description<syntaxhighlight lang=\"$language\" $inline>" .
+			$source .
+			'</syntaxhighlight>', $linestart );
+		if ( $collapsible ) {
+			$this->printColFooter();
+		}
+	}
+
+	/**
+	 * @return bool
+	 * @throws MWException
+	 */
+	public function displayResults(): bool {
+		$output = $this->getOutput();
+		$output->addWikiMsg( 'math-tex2nb-latex' );
+		$this->printSource( $this->tex, '', 'latex', false, false );
+		$output->addWikiTextAsContent( "<math>$this->tex</math>", false );
+		$output->addWikiMsg( 'math-tex2nb-mathematica' );
+		try {
+			$this->dependencyGraph = $this->getDependencyGraphFromContext();
+			$calulation = $this->getTranslations();
+		}
+		catch ( MWException $exception ) {
+			$expected_error =
+				'The given context (dependency graph) did not contain sufficient information';
+			if ( strpos( $exception->getText(), $expected_error ) !== false ) {
+				FormulaInfo::DisplayTranslations( $this->tex );
+
+				return false;
+			} else {
+				$output->addWikiTextAsContent( "Could not consider context: {$exception->getMessage()}" );
+				FormulaInfo::DisplayTranslations( $this->tex );
+
+				return false;
+			}
+		}
+		$insights = json_decode( $calulation );
+		$this->printSource( $insights->semanticFormula, "Semantic latex", 'latex', false, false );
+		$output->addWikiTextAsContent( "Confidence: " . $insights->confidence, false );
+
+		foreach ( $insights->translations as $key => $value ) {
+			$output->addWikiTextAsContent( "=== $key ===" );
+			$this->printSource( $value->translation, "Translation", '$key', false, false );
+			$output->addWikiTextAsContent( "==== Information ====" );
+			$info = $value->translationInformation;
+			$this->printList( $info->subEquations, "Sub Equations" );
+			$this->printList( $info->freeVariables, "Free variables" );
+			$this->printList( $info->constraints, "Constraints" );
+			$this->printList( $info->tokenTranslations, "Symbol info" );
+
+			// $this->printList($value);
+			$output->addWikiTextAsContent( "==== Tests ====" );
+			$output->addWikiTextAsContent( "=====  Symbolic =====" );
+
+			$this->displayTests( $value->symbolicResults->testCalculationsGroup );
+			$output->addWikiTextAsContent( "=====  Numeric =====" );
+
+			$this->displayTests( $value->numericResults->testCalculationsGroups );
+		}
+
+		$output->addWikiTextAsContent( "=== Dependency Graph Information ===" );
+		$mathprint = function ( $x ) {
+			return "* <math>$x</math>";
+		};
+		$this->printList( $insights->includes, "Includes", $mathprint );
+		$this->printList( $insights->isPartOf, "Is part of", $mathprint );
+		$this->printList( $insights->definiens, 'Description',
+			function ( $x ) { return "* {$x->definition}";
+			} );
+		$this->printSource( $calulation, 'Complete translation information', 'json' );
+		return false;
+	}
+
+	private function printList( $list, $description, $callable = false ): void {
+		if ( !$list || empty( $list ) ) {
+			return;
+		}
+		$output = $this->getOutput();
+		$this->printColHeader( $description );
+		foreach ( $list as $key => $value ) {
+			if ( $callable === false ) {
+				$callable = function ( $x, $y ) { return "* $x";
+				};
+			}
+			$value = $callable( $value, $key );
+			$output->addWikiTextAsContent( $value );
+		}
+			$this->printColFooter();
 	}
 
 	protected function getGroupName() {
 		return 'mathsearch';
+	}
+
+	private function printColHeader( string $description ): void {
+		$out = $this->getOutput();
+		$out->addHtml( '<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">' );
+		$out->addWikiTextAsContent( $description );
+		$out->addHtml( '<div class="mw-collapsible-content">' );
+	}
+
+	private function printColFooter(): void {
+		$this->getOutput()->addHTML( '</div></div>' );
+	}
+
+	private function displayTests( $group ) {
+		if ( !is_array( $group ) ) {
+			return;
+		}
+		foreach ( $group as $testGroup ) {
+			if ( !$testGroup->testExpression ) {
+				continue;
+			}
+			$this->printSource( $testGroup->testExpression, "Test expression", "text",
+				true, false );
+			foreach ( $testGroup->testCalculations as $calculation ) {
+				$calcRes = json_encode( $calculation, JSON_PRETTY_PRINT );
+				$description = $calculation->result;
+				if ( isset( $calculation->testExpression ) ) {
+					$description .= ": " . $calculation->testExpression;
+				}
+				if ( isset( $calculation->testValues ) ) {
+					$description .= ":";
+					foreach ( $calculation->testValues as $k => $v ) {
+						$description .= " $k = $v, ";
+					}
+				}
+				$this->printSource( $calcRes, $description, 'json' );
+			}
+		}
 	}
 }
