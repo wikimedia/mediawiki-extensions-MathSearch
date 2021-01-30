@@ -200,11 +200,12 @@ class MathSearchHooks {
 	static function addLinkToFormulaInfoPage(
 		Parser $parser, MathRenderer $renderer, &$Result = null
 	) {
+		global $wgMathSearchInfoPage;
 		$revId = $parser->getRevisionId();
 		if ( $revId == 0 || self::setMathId( $eid, $renderer, $revId ) === false ) {
 			return true;
 		}
-		$url = SpecialPage::getTitleFor( 'FormulaInfo' )->getLocalUrl( [
+		$url = SpecialPage::getTitleFor( $wgMathSearchInfoPage )->getLocalUrl( [
 			'pid' => $revId,
 			'eid' => $eid
 		] );

@@ -77,7 +77,8 @@
 		"MathWmcServer": false,
 		"MathSearchWikidataUrl": "https://wikidata.org",
 		"ContentMathEnableWikibaseDataType": true,
-		"MathSearchContentTexMaxLength": 5000
+		"MathSearchContentTexMaxLength": 5000,
+		"MathSearchInfoPage": "FormulaInfo"
 	},
 	"MessagesDirs": {
 		"MathSearch": [
