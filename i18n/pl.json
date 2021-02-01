@@ -4,6 +4,7 @@
 			"Chrumps",
 			"Darellur",
 			"Matma Rex",
+			"Rail",
 			"Woytecr"
 		]
 	},
@@ -80,5 +81,6 @@
 	"math-search-type-1": "Wzorzec TeX",
 	"math-search-type-2": "Wyrażenie xQuery",
 	"math-search-expression-label": "Wyrażenie:",
+	"math-tex2nb-purge": "Usuń wyniki zapisane w pamięci podręcznej.",
 	"datatypes-type-contentmath": "Wyrażenie matematyczne (treść)"
 }

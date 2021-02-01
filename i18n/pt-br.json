@@ -154,6 +154,7 @@
 	"math-tex2nb-wikitext": "Contexto do Wikitexto",
 	"math-tex2nb-latex": "A seguinte entrada em LaTeX ...",
 	"math-tex2nb-mathematica": "... é traduzida para o resultado CAS ...",
+	"math-tex2nb-purge": "Limpe os resultados em cache.",
 	"datatypes-type-contentmath": "Expressão matemática (conteúdo)",
 	"wikibase-listdatatypes-contentmath-head": "Expressão matemática (conteúdo)",
 	"wikibase-listdatatypes-contentmath-body": "Campo de dados literais para expressões matemáticas, fórmulas, equações e outros, expressas na variante DRMF/DLMF do LaTeX."

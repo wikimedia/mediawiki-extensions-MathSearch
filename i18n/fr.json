@@ -6,6 +6,7 @@
 			"Ash Crow",
 			"Caliburn",
 			"Crochet.david",
+			"Florian COLLIN",
 			"Gomoko",
 			"Metroitendo",
 			"Orlodrim",
@@ -161,6 +162,7 @@
 	"math-tex2nb-wikitext": "Contexte du wikitexte",
 	"math-tex2nb-latex": "L’entrée LaTeX suivante…",
 	"math-tex2nb-mathematica": "… est traduite en sortie CAS …",
+	"math-tex2nb-purge": "Purgez les résultats mis en cache.",
 	"datatypes-type-contentmath": "Expression mathématique (contenu)",
 	"wikibase-listdatatypes-contentmath-head": "Expression mathématique (contenu)",
 	"wikibase-listdatatypes-contentmath-body": "Champ de donnée littéral pour les expressions mathématiques, les formules, les équations et autres, exprimés dans la variante DRMF/DLMF de LaTeX."
