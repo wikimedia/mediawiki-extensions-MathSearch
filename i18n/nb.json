@@ -10,7 +10,7 @@
 	"mathdownload": "Last ned mattesøkresultater",
 	"mathindex": "Matteindeks",
 	"mathupload": "Send inn mattesøkresultater",
-	"latextranslator": "Oversetter fra LaTeX til Mathematica",
+	"latextranslator": "Oversetter fra LaTeX til CAS",
 	"specialpages-group-mathsearch": "Mattesøk",
 	"displaytopics": "Vis emner",
 	"mathsearch-desc": "Integrerer [http://search.mathweb.org/about.html/ MathWeb Search]-motoren",

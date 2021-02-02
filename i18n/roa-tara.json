@@ -6,10 +6,13 @@
 	},
 	"mathsearch": "Math Ricerche",
 	"formulainfo": "'Mbormaziune sus a Formule",
+	"mathindex": "Indice de Math",
+	"latextranslator": "Traduttore da LaTeX a CAS",
 	"specialpages-group-mathsearch": "Math Ricerche",
 	"mathsearch-desc": "Integre 'u motore de [http://search.mathweb.org/about.html Ricerche MathWeb]",
 	"getequationsbyquery": "Pigghie le equaziune cu l'inderrogazione",
 	"xquerygenerator": "Generatore XQuery",
 	"mathdebug": "Test d'u render",
-	"math-tex2nb-input": "Ingresse"
+	"math-lp-1-page-label": "Titole d'a vôsce",
+	"math-tex2nb-input": "Input d'a formule"
 }
