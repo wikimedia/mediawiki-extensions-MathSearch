@@ -30,7 +30,7 @@ class LaTeX2MathematicaTest extends MediaWikiTestCase {
 
 	/**
 	 * Gets the test-data from the json file
-	 * @return array($input, $output) where $input is the input LaTeX string and $output is the
+	 * @return array [ $input $output ] where $input is the input LaTeX string and $output is the
 	 * rendered Mathematica string
 	 */
 	public function provideCoverage() {
