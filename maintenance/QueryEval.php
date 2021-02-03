@@ -47,7 +47,7 @@ function createMySqlFunctionDropperClass() {
 		 * @return bool False if patch is skipped.
 		 */
 		public function dropFunction( $path, $isFullPath = false, $msg = null ) {
-			parent::applyPatch( $path, $isFullPath, $msg );
+			return parent::applyPatch( $path, $isFullPath, $msg );
 		}
 	}
 }
