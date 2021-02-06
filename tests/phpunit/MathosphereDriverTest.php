@@ -38,7 +38,7 @@ class MathosphereDriverTest extends MediaWikiTestCase {
 		$m = MathosphereDriver::newFromWikitext( 'This is a test without formulae.' );
 		$this->assertTrue( $m->analyze() );
 		$rel = $m->getRelations();
-		$this->assertSame( 0, count( $rel ) );
+		$this->assertCount( 0, $rel );
 	}
 
 	/**
@@ -52,7 +52,7 @@ class MathosphereDriverTest extends MediaWikiTestCase {
 			' relates to the mass \'\'m\'\' via the [[speed of light]] \'\'c\'\'' );
 		$this->assertTrue( $m->analyze() );
 		$rel = $m->getRelations();
-		$this->assertEquals( 5, count( $rel ) );
+		$this->assertCount( 5, $rel );
 	}
 
 }

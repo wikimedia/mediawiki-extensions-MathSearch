@@ -22,7 +22,7 @@ XmlFragment;
 		$wtGen = new WikitextGenerator();
 		$wikiText = $wtGen->toWikitext( (string)$row['Body'] );
 		$this->assertStringContainsString( '<math id=\'69\'', $wikiText );
-		$this->assertEquals( 7, count( $wtGen->getFormulae() ) );
+		$this->assertCount( 7, $wtGen->getFormulae() );
 	}
 
 }

@@ -239,7 +239,7 @@ class ImportCsv {
 	 * @param string $eId
 	 * @return string|false
 	 */
-	private function  getInputHash( $pId, $eId ) {
+	private function getInputHash( $pId, $eId ) {
 		$dbr = wfGetDB( DB_REPLICA );
 		return $dbr->selectField( 'mathindex', 'mathindex_inputhash',
 			[ 'mathindex_revision_id' => $pId, 'mathindex_anchor' => $eId ] );

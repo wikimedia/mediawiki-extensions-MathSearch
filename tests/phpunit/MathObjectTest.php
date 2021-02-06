@@ -47,16 +47,16 @@ EOT;
 	 */
 	public function test() {
 		$comment = MathObject::extractMathTagsFromWikiText( $this->HTMLComment );
-		$this->assertSame( 0, count( $comment ), 'Math tags in comments should be ignored.' );
+		$this->assertCount( 0, $comment, 'Math tags in comments should be ignored.' );
 		$noWiki = MathObject::extractMathTagsFromWikiText( $this->noWiki );
-		$this->assertSame( 0, count( $noWiki ), 'Math tags in no-wiki tags should be ignored.' );
+		$this->assertCount( 0, $noWiki, 'Math tags in no-wiki tags should be ignored.' );
 		$attributeTest = MathObject::extractMathTagsFromWikiText( $this->attributes );
-		$this->assertSame( 1, count( $attributeTest ) );
+		$this->assertCount( 1, $attributeTest );
 		$expected = [ 'x' => 'x1', 'y' => 'y1' ];
 		$first = array_shift( $attributeTest );
 		$this->assertEquals( $expected, $first[2] );
 		$longMatch = MathObject::extractMathTagsFromWikiText( $this->longSample );
-		$this->assertEquals( 2, count( $longMatch ) );
+		$this->assertCount( 2, $longMatch );
 		$first = array_shift( $longMatch );
 		$this->assertEquals( ' x^2 ', $first[1] );
 		$second = array_shift( $longMatch );

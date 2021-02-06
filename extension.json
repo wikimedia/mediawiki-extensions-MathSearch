@@ -129,7 +129,7 @@
 		"MediaWiki\\Extension\\MathSearch\\Rest\\": "includes/rest"
 	},
 	"JobClasses": {
-		"SeLineReader" : "\\MathSearch\\StackExchange\\LineReaderJob"
+		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob"
 	},
 	"RestRoutes": [
 		{
