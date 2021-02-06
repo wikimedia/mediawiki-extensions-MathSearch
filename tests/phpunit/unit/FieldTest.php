@@ -2,9 +2,9 @@
 
 namespace MathSearch\StackExchange;
 
-use MediaWikiTestCase;
+use MediaWikiUnitTestCase;
 
-class FieldTest extends MediaWikiTestCase {
+class FieldTest extends MediaWikiUnitTestCase {
 
 // protected function setUp(): void {
 //		parent::setUp();
