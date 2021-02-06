@@ -345,32 +345,23 @@ class MathSearchHooks {
 		}
 
 		$revId = $revisionRecord->getId();
-		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
-		$mathTags = $idGenerator->getMathTags();
-		$harvest = "";
-		if ( $mathTags ) {
-			$dw = new MwsDumpWriter();
-			foreach ( $mathTags as $tag ) {
-				$id = null;
-				$tagContent = $tag[ MathIdGenerator::CONTENT_POS ];
-				$attributes = $tag[ MathIdGenerator::ATTRIB_POS ];
-				$renderer = MathRenderer::getRenderer( $tagContent, $attributes, 'latexml' );
-				$renderer->render();
-				self::setMathId( $id, $renderer, $revId );
-				$dw->addMwsExpression( $renderer->getMathml(), $revId, $id );
-			}
-			$harvest = $dw->getOutput();
-		}
+		$harvest = self::getMwsHarvest( $revId );
 		$previousRevisionRecord = MediaWikiServices::getInstance()
 			->getRevisionLookup()
 			->getPreviousRevision( $revisionRecord );
+		$res = false;
 		if ( $previousRevisionRecord != null ) {
 			$prevRevId = $previousRevisionRecord->getId();
 			$baseXUpdater = new MathEngineBaseX();
-			$res = $baseXUpdater->update( $harvest, [ $prevRevId ] );
+			try {
+				$res = $baseXUpdater->update( $harvest, [ $prevRevId ] );
+			} catch ( Exception $e ) {
+				LoggerFactory::getInstance( 'MathSearch' )
+					->warning( 'Harvest update failed: {exception}',
+						[ 'exception' => $e->getMessage() ] );
+			}
 		} else {
 			$prevRevId = -1;
-			$res = false;
 		}
 		if ( $res ) {
 			LoggerFactory::getInstance(
@@ -444,5 +435,35 @@ class MathSearchHooks {
 			self::$idGenerators[$revId] = MathIdGenerator::newFromRevisionId( $revId );
 		}
 		return self::$idGenerators[$revId];
+	}
+
+	/**
+	 * @param int|null $revId
+	 * @return string
+	 */
+	protected static function getMwsHarvest( ?int $revId ): string {
+		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
+		$mathTags = $idGenerator->getMathTags();
+		$harvest = "";
+		try {
+			if ( $mathTags ) {
+				$dw = new MwsDumpWriter();
+				foreach ( $mathTags as $tag ) {
+					$id = null;
+					$tagContent = $tag[MathIdGenerator::CONTENT_POS];
+					$attributes = $tag[MathIdGenerator::ATTRIB_POS];
+					$renderer = MathRenderer::getRenderer( $tagContent, $attributes, 'latexml' );
+					$renderer->render();
+					self::setMathId( $id, $renderer, $revId );
+					$dw->addMwsExpression( $renderer->getMathml(), $revId, $id );
+				}
+				$harvest = $dw->getOutput();
+			}
+		} catch ( Exception $e ) {
+			LoggerFactory::getInstance( 'MathSearch' )
+				->warning( 'Harvest strinc can not be generated: {exception}',
+					[ 'exception' => $e->getMessage() ] );
+		}
+		return $harvest;
 	}
 }

@@ -151,7 +151,9 @@ class SpecialMlpEval extends SpecialPage {
 	public function execute( $par ) {
 		$this->loadData();
 		$this->setHeaders();
-		$this->printIntorduction();
+		if ( !defined( 'MW_PHPUNIT_TEST' ) ) {
+			$this->printIntorduction();
+		}
 		$form = new MlpEvalForm( $this );
 		$form->show();
 		if ( $this->step == 5 || $this->step == 6 ) {
