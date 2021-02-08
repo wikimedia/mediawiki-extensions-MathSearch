@@ -3,6 +3,7 @@
 		"authors": [
 			"Cainamarques",
 			"Eduardo Addad de Oliveira",
+			"Eduardoaddad",
 			"Felipe L. Ewald",
 			"Luk3"
 		]
@@ -13,7 +14,7 @@
 	"mathdownload": "Baixar resultados da pesquisa matemática",
 	"mathindex": "Índice de matemática",
 	"mathupload": "Enviar os resultados da pesquisa matemática",
-	"latextranslator": "Tradutor de LaTeX para Mathematica",
+	"latextranslator": "Tradutor de LaTeX para CAS",
 	"specialpages-group-mathsearch": "Pesquisa de fórmulas matemáticas",
 	"displaytopics": "Mostrar tópicos",
 	"mathsearch-desc": "Integra o motor de busca [http://search.mathweb.org/about.html MathWeb]",
@@ -149,7 +150,7 @@
 	"math-search-type-2": "Expressão xQuery",
 	"math-search-expression-label": "Expressão:",
 	"math-tex2nb-header": "Especifique a sua própria entrada",
-	"math-tex2nb-intro": "Este protótipo pretende demonstrar a ideia da conversão de TeX para Mathematica.\n\nA aplicação de demonstração converte funções LaTeX que se traduzem diretamente para contrapartes Mathematica.\n\nAs funções sem suporte explícito para Mathematica estão disponíveis para tradução através de um pacote DRMF (em desenvolvimento).",
+	"math-tex2nb-intro": "Este protótipo pretende demonstrar a ideia da conversão de TeX para Sistema de Álgebra Computacional (CAS).\n\nA aplicação de demonstração converte funções LaTeX que se traduzem diretamente para contrapartes CAS =.\n\nAs funções sem suporte explícito para CAS estão disponíveis para tradução através de um pacote DRMF (em desenvolvimento).",
 	"math-tex2nb-input": "Entrada de fórmula",
 	"math-tex2nb-wikitext": "Contexto do Wikitexto",
 	"math-tex2nb-latex": "A seguinte entrada em LaTeX ...",
