@@ -3,6 +3,7 @@
 		"authors": [
 			"BaRaN6161 TURK",
 			"HakanIST",
+			"Joseph",
 			"Kincki",
 			"MuratTheTurkish",
 			"SaldırganSincap",
@@ -154,8 +155,10 @@
 	"math-tex2nb-header": "Kendi girdinizi belirtin",
 	"math-tex2nb-intro": "Bu modelin TeX'ten Bilgisayar Cebir Sistemine (CAS) dönüştürme fikrini göstermesi gerekiyor.\n\nDemo-uygulama, doğrudan CAS muadillerine çevrilen LaTeX işlevlerini dönüştürür.\n\nAçık CAS desteği olmayan işlevler, bir DRMF paketi (geliştirme aşamasında) aracılığıyla çeviri için mevcuttur.",
 	"math-tex2nb-input": "Formül girişi",
+	"math-tex2nb-wikitext": "Vikimetin bağlamı",
 	"math-tex2nb-latex": "Aşağıdaki LaTeX girişi ...",
 	"math-tex2nb-mathematica": "... CAS çıkışına çevrildi ...",
+	"math-tex2nb-purge": "Önbellek sonuçlarını boşaltın.",
 	"datatypes-type-contentmath": "Matematiksel ifade (içerik)",
 	"wikibase-listdatatypes-contentmath-head": "Matematiksel ifade (içerik)",
 	"wikibase-listdatatypes-contentmath-body": "LaTeX'in DRMF/DLMF varyantında ifade edilen matematiksel ifadeler, formül, denklemler ve benzeri için değişmez veri alanı."
