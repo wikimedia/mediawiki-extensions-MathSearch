@@ -22,10 +22,6 @@
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class CleanMathTable extends Maintenance {
-	const RTI_CHUNK_SIZE = 10;
-
-	/** @var bool */
-	public $purge = false;
 
 	/**
 	 * @var \Wikimedia\Rdbms\IDatabase
@@ -35,9 +31,6 @@ class CleanMathTable extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Outputs page text to stdout' );
-		$this->addOption( 'purge',
-			'If set all formulae are rendered again from strech. (Very time consuming!)', false,
-			false, 'f' );
 		$this->requireExtension( 'MathSearch' );
 	}
 
@@ -50,7 +43,6 @@ class CleanMathTable extends Maintenance {
 	 */
 	public function execute() {
 		// FIXME: this does not work at all
-		$this->purge = $this->getOption( 'purge', false );
 		$this->db = wfGetDB( DB_MASTER );
 		$this->db->query( 'DELETE math FROM (`math` LEFT OUTER JOIN `mathindex`'
 			. ' ON ( (`mathindex`.`mathindex_inputhash` = `math`.`math_inputhash`) ))'

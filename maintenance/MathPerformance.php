@@ -26,9 +26,6 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class MathPerformance extends Maintenance {
 	const RTI_CHUNK_SIZE = 10000;
-	public $purge = false;
-	/** @var \Wikimedia\Rdbms\IDatabase */
-	public $dbw;
 	/** @var bool */
 	private $verbose;
 	/** @var \Wikimedia\Rdbms\IDatabase */
@@ -60,7 +57,6 @@ class MathPerformance extends Maintenance {
 
 	public function execute() {
 		global $wgMathValidModes;
-		$this->dbw = wfGetDB( DB_MASTER );
 		$this->db = wfGetDB( DB_MASTER );
 		$wgMathValidModes[] = $this->renderingMode;
 		$this->verbose = $this->getOption( 'verbose', false );
