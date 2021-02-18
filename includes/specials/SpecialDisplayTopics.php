@@ -44,7 +44,6 @@ class SpecialDisplayTopics extends SpecialPage {
 	private function displayOverview( $filter = 1 ) {
 		$dbw = wfGetDB( DB_MASTER );
 		$cols = [ '#', 'fId', '#Var', '#matches', 'query', 'reference' ];
-		// @codingStandardsIgnoreStart
 		$res = $dbw->query( <<<SQL
 SELECT
   concat( '[[{{FULLPAGENAME}}/',qId,'|',qId,']]'),
@@ -62,7 +61,6 @@ FROM math_wmc_ref ref
   GROUP BY qId
 SQL
 		);
-		// @codingStandardsIgnoreEnd
 		$this->getOutput()->addWikiTextAsInterface( MathSearchUtils::dbRowToWikiTable( $res, $cols ) );
 	}
 

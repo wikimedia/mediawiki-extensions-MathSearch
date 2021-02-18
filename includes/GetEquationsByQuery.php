@@ -70,9 +70,8 @@ class GetEquationsByQuery extends SpecialPage {
 		);
 		foreach ( $res as $row ) {
 			$wgOut->addWikiTextAsInterface( 'Renderd at <b>' . $row->math_timestamp . '</b> ', false );
-			// @codingStandardsIgnoreStart
-			$wgOut->addHtml( '<a href="/index.php/Special:FormulaInfo?tex=' . urlencode( $row->math_tex ) . '">more info</a>' );
-			// @codingStandardsIgnoreEnd
+			$wgOut->addHtml( '<a href="/index.php/Special:FormulaInfo?tex=' .
+				urlencode( $row->math_tex ) . '">more info</a>' );
 			$wgOut->addWikiTextAsInterface( ':TeX-Code:<pre>' . $row->math_tex . '</pre> <br />' );
 			$showmml = $wgRequest->getVal( 'showmml', false );
 			if ( $showmml ) {

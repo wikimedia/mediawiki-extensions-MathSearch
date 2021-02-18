@@ -161,9 +161,8 @@ class ImportCsv {
 	public function importFromArray( $table ) {
 		global $wgMathWmcMaxResults;
 
-		// @codingStandardsIgnoreStart
+		// phpcs:ignore Generic.NamingConventions.UpperCaseConstantName
 		define( 'ImportPattern', '/math\.(\d+)\.(\d+)/' );
-		// @codingStandardsIgnoreEnd
 
 		// check header line
 		$uploadedHeaders = $table[0];

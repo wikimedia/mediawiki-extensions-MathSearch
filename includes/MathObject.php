@@ -163,7 +163,7 @@ class MathObject extends MathMathML {
 	public static function updateStatistics() {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->query( 'TRUNCATE TABLE `mathvarstat`' );
-		// @codingStandardsIgnoreStart
+		// phpcs:disable Generic.Files.LineLength
 		$dbw->query( "INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`) "
 			.
 			"SELECT `mathobservation_featurename` , `mathobservation_featuretype` , count( * ) AS CNT "
@@ -179,7 +179,7 @@ class MathObject extends MathMathML {
 			'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype` '
 			.
 			'GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_revision_id ORDER BY CNT DESC' );
-		// @codingStandardsIgnoreEnd
+		// phpcs:enable Generic.Files.LineLength
 	}
 
 	/**

@@ -24,9 +24,8 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 /**
  * TODO: Get rid of the workaround
  */
-// @codingStandardsIgnoreStart
+// phpcs:ignore MediaWiki.NamingConventions.PrefixedGlobalFunctions
 function createMySqlFunctionDropperClass() {
-// @codingStandardsIgnoreEnd
 	class MySqlFunctionDropper extends MysqlUpdater {
 		/**
 		 * @param \Wikimedia\Rdbms\IDatabase $db
