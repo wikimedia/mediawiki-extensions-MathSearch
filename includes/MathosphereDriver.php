@@ -5,11 +5,16 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\SlotRecord;
 
 class MathosphereDriver {
+	/** @var string */
 	private $wikiText;
+	/** @var string */
 	private $language = "en";
+	/** @var string */
 	private $title = "";
+	/** @var string|null */
 	private $version;
 	private $error;
+	/** @var bool|null */
 	private $success;
 	private $relations = [];
 	private $identifiers = [];
@@ -66,7 +71,7 @@ class MathosphereDriver {
 	}
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
 	public function getVersion() {
 		return $this->version;

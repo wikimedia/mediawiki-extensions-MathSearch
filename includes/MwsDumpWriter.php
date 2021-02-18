@@ -1,9 +1,12 @@
 <?php
 
 class MwsDumpWriter {
+
+	/** @var string */
 	private $mwsns = 'mws:';
 	private $XMLHead;
 	private $XMLFooter;
+	/** @var string */
 	private $outBuffer = '';
 
 	public function __construct( $ns = 'mws:' ) {

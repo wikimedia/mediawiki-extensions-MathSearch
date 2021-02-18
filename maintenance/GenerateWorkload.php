@@ -27,7 +27,10 @@ require_once __DIR__ . '/IndexBase.php';
  * @author Moritz Schubotz
  */
 class GenerateWorkload extends IndexBase {
+
+	/** @var int */
 	private $id = 0;
+	/** @var int */
 	private $selectivity = PHP_INT_MAX;
 
 	public function __construct() {

@@ -34,8 +34,11 @@ class MathPerformance extends Maintenance {
 	/** @var \Wikimedia\Rdbms\IDatabase */
 	private $db;
 	private $currentHash;
+	/** @var float */
 	private $time = 0.0; // microtime( true );
+	/** @var float[] */
 	private $performance = [];
+	/** @var string */
 	private $renderingMode = 'mathml';
 
 	public function __construct() {

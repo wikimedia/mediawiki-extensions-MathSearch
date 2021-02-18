@@ -8,11 +8,16 @@ class MathIdGenerator {
 
 	const CONTENT_POS = 1;
 	const ATTRIB_POS = 2;
+
+	/** @var string */
 	private $wikiText;
 	private $mathTags;
+	/** @var int */
 	private $revisionId;
 	private $contentAccessStats = [];
+	/** @var string */
 	private $format = "math.%d.%d";
+	/** @var bool */
 	private $useCustomIds = false;
 	private $keys;
 	private $contentIdMap;

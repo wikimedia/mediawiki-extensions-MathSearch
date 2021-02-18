@@ -13,12 +13,17 @@ class MathObject extends MathMathML {
 	/** @var string messages generated during conversion of mathematical content */
 	protected $log = '';
 
-	protected $postData  = '';
+	/** @var string */
+	protected $postData = '';
+	/** @var int */
 	protected $anchorID = 0;
+	/** @var int */
 	protected $revisionID = 0;
 	protected $index_timestamp = null;
 	protected $dbLoadTime = 0;
+	/** @var string|null */
 	protected $mathTableName = null;
+	/** @var int */
 	protected $renderingTime = 0;
 
 	public static function hash2md5( $hash ) {
@@ -427,12 +432,18 @@ class MathObject extends MathMathML {
 		return "[[{$this->getPageTitle()}{$anchor}|{$pageString}Eq: {$this->getAnchorID()}]]";
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getAnchorID() {
 		return $this->anchorID;
 	}
 
-	public function setAnchorID( $ID ) {
-		$this->anchorID = $ID;
+	/**
+	 * @param int $id
+	 */
+	public function setAnchorID( $id ) {
+		$this->anchorID = $id;
 	}
 
 	public function render( $purge = false ) {
@@ -515,6 +526,9 @@ class MathObject extends MathMathML {
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function getMathTableName() {
 		global $wgMathAnalysisTableName;
 		if ( $this->mathTableName === null ) {

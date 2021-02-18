@@ -25,6 +25,7 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ExtractFeatures extends Maintenance {
 	const RTI_CHUNK_SIZE = 100;
+	/** @var bool */
 	public $purge = false;
 	/** @var \Wikimedia\Rdbms\IDatabase */
 	public $dbw = null;

@@ -22,7 +22,10 @@
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ImportDefinitions extends Maintenance {
+
+	/** @var string */
 	private $dir;
+	/** @var bool */
 	private $overwrite;
 
 	public function __construct() {

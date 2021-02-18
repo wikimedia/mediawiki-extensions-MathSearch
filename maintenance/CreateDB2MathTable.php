@@ -27,6 +27,7 @@ require_once __DIR__ . '/IndexBase.php';
 class CreateDB2MathTable extends IndexBase {
 	private $statment;
 	private $conn;
+	/** @var float */
 	private $time;
 
 	public function __construct() {

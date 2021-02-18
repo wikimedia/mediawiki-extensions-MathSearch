@@ -25,6 +25,8 @@ use MediaWiki\MediaWikiServices;
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class UpdateMath extends Maintenance {
+
+	/** @var bool */
 	public $purge = false;
 	/** @var bool */
 	private $verbose;
@@ -34,9 +36,13 @@ class UpdateMath extends Maintenance {
 	private $db;
 	/** @var MathRenderer */
 	private $current;
+	/** @var float */
 	private $time = 0.0; // microtime( true );
+	/** @var float[] */
 	private $performance = [];
+	/** @var string */
 	private $renderingMode = 'latexml';
+	/** @var int */
 	private $chunkSize = 1000;
 
 	public function __construct() {

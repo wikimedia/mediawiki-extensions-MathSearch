@@ -5,6 +5,8 @@
  * @group MathSearch
  */
 class MathSearchUtilsTest extends MediaWikiTestCase {
+
+	/** @var string */
 	private $expectedOutput = '{| class="wikitable sortable"
 |-
 ! s !! i

@@ -15,7 +15,9 @@ class DumpReader {
 	 * @var string
 	 */
 	private $fileName;
+	/** @var string */
 	private $errPath;
+	/** @var int */
 	private $part = 0;
 
 	private static function getLog() {

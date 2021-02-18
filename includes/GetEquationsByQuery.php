@@ -14,7 +14,7 @@ class GetEquationsByQuery extends SpecialPage {
 	}
 
 	/**
-	 * @param unknown $par
+	 * @param string|null $par
 	 */
 	function execute( $par ) {
 		global $wgRequest, $wgOut, $wgMathDebug;

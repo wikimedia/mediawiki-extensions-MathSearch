@@ -4,6 +4,7 @@ use MediaWiki\MediaWikiServices;
 
 class WikidataDriver {
 
+	/** @var string */
 	private $lang = 'en';
 	/** @var bool|array */
 	private $data = false;

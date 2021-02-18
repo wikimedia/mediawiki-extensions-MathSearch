@@ -22,12 +22,14 @@ class SpecialMathSearch extends SpecialPage {
 	public $mathpattern;
 	public $textpattern;
 	public $mathmlquery;
+	/** @var string */
 	public $mathEngine = 'mws';
 	public $displayQuery;
 	private $mathBackend;
 	private $resultID = 0;
 	private $noTerms = 4;
 	private $terms = [];
+	/** @var int[] */
 	private $relevanceMap;
 	private $defaults;
 

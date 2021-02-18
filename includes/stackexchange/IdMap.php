@@ -6,8 +6,12 @@ use Wikibase\DataModel\Entity\Item;
 use Wikibase\Repo\WikibaseRepo;
 
 class IdMap {
+
+	/** @var \Wikimedia\Rdbms\IDatabase */
 	private $dbw;
+	/** @var Item */
 	private $item;
+	/** @var \Wikibase\Lib\Store\EntityStore */
 	private $store;
 	/**
 	 * @var \HashBagOStuff

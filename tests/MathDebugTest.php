@@ -1,8 +1,11 @@
 <?php
 
 class MathDebugTest extends MediaWikiTestCase {
+
+	/** @var string */
 	private $someLog = "Test log.";
 
+	/** @var string */
 	private $someTex = "\\sin(x)+1";
 
 	/**

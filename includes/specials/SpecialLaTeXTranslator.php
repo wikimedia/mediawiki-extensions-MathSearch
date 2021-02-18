@@ -17,6 +17,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	private $logger;
 	private $context;
 	private $tex;
+	/** @var bool */
 	private $purge;
 	/**
 	 * @var false|mixed|string

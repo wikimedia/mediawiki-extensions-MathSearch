@@ -14,9 +14,11 @@ use MediaWiki\Logger\LoggerFactory;
 abstract class MathEngineRest {
 	/** @var MathQueryObject the query to be answered */
 	protected $query;
+	/** @var string */
 	protected $type = "mws";
 	protected $size = false;
 	protected $resultSet = [];
+	/** @var int[] */
 	protected $relevanceMap = [];
 	/** @var string */
 	protected $backendUrl = "http://localhost:9090";
@@ -86,6 +88,9 @@ abstract class MathEngineRest {
 		return $this->resultSet;
 	}
 
+	/**
+	 * @return int[]
+	 */
 	public function getRelevanceMap() {
 		return $this->relevanceMap;
 	}

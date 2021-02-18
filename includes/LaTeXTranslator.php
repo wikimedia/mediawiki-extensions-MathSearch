@@ -1,6 +1,8 @@
 <?php
 
 class LaTeXTranslator {
+
+	/** @var string[][] */
 	private $replacements;
 
 	/**

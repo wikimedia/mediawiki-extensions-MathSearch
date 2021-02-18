@@ -5,7 +5,10 @@ namespace MathSearch\StackExchange;
 use XMLReader;
 
 class WikitextGenerator {
+
+	/** @var IdMap */
 	private $idGen;
+	/** @var Formula[] */
 	private $formulae = [];
 	private $postQid = 0;
 

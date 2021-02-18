@@ -15,7 +15,9 @@ use Wikibase\Repo\WikibaseRepo;
 class Row {
 
 	protected $ownEntityId = null;
+	/** @var Field[] */
 	private $fields = [];
+	/** @var int */
 	private $ignoredFieldCount = 0;
 	private $id;
 	private $qid;
@@ -25,6 +27,7 @@ class Row {
 	private $creationDate;
 	private $viewCount;
 	private $body;
+	/** @var string */
 	private $normFileName;
 
 	public function __construct( $line, $fileName ) {
@@ -68,7 +71,6 @@ class Row {
 		$store = $wikibaseRepo->getStore()->getEntityStore();
 		$user = User::newFromName( 'Maintenance script' );
 		$item = $this->getItem();
-		/** @var $idField Field */
 		$id = $this->fields['Id']->getContent();
 		$item->setLabel( 'en', "{$this->normFileName} {$id}" );
 		if ( array_key_exists( 'Title', $this->fields ) ) {
@@ -104,7 +106,6 @@ class Row {
 		$guidGenerator = new GuidGenerator();
 		$statements = new StatementList();
 		foreach ( $this->fields as $field ) {
-			/* @var $field Field */
 			if ( !$field->isExcludedFromWb() ) {
 				$snaks = $field->getSnaks();
 				foreach ( $snaks as $snak ) {

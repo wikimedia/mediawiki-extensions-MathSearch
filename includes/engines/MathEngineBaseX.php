@@ -12,6 +12,8 @@ use MediaWiki\Logger\LoggerFactory;
  * @ingroup extensions
  */
 class MathEngineBaseX extends MathEngineRest {
+
+	/** @var string */
 	protected $type = "mws";
 
 	function __construct( $query = null ) {

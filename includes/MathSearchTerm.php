@@ -14,6 +14,7 @@ class MathSearchTerm {
 	private $rel = 0;
 	private $type = 0;
 	private $expr = '';
+	/** @var int[] */
 	private $relevanceMap = [];
 	private $resultSet = [];
 
@@ -139,7 +140,7 @@ class MathSearchTerm {
 	}
 
 	/**
-	 * @return array
+	 * @return int[]
 	 */
 	public function getRelevanceMap() {
 		return $this->relevanceMap;

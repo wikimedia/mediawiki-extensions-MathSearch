@@ -47,7 +47,9 @@ class SpecialMlpEval extends SpecialPage {
 	private $identifiers = [];
 	private $relations;
 	private $speechRuleText;
+	/** @var string */
 	private $subStep = '';
+	/** @var string[] */
 	private $renderingFields = [ 'absolute', 'best', 'size', 'spacing', 'integration', 'font' ];
 
 	/**
@@ -312,6 +314,9 @@ class SpecialMlpEval extends SpecialPage {
 		}
 	}
 
+	/**
+	 * @return string[]
+	 */
 	public function getRenderingFields() {
 		return $this->renderingFields;
 	}

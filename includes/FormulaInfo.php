@@ -12,6 +12,8 @@ use MediaWiki\MediaWikiServices;
  * @ingroup extensions
  */
 class FormulaInfo extends SpecialPage {
+
+	/** @var bool */
 	private $purge = false;
 
 	function __construct() {
@@ -19,7 +21,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	/**
-	 * @param unknown $par
+	 * @param string|null $par
 	 */
 	function execute( $par ) {
 		global $wgRequest, $wgOut;
@@ -49,7 +51,7 @@ class FormulaInfo extends SpecialPage {
 		$mo = new MathObject( $tex );
 		$allPages = $mo->getAllOccurences();
 		if ( $allPages ) {
-			$this->DisplayInfo( $allPages[0]->getPageID(), $allPages[0]->getAnchorID() );
+			$this->DisplayInfo( $allPages[0]->getRevisionID(), $allPages[0]->getAnchorID() );
 		} else {
 			$wgOut->addWikiTextAsInterface(
 				"No occurrences found clean up the database to remove unused formulae"
@@ -146,7 +148,6 @@ class FormulaInfo extends SpecialPage {
 			'mathpurge' => 'true'
 		] );
 		$out->addHtml( "<a href=\"$link\">(force rerendering)</a>" );
-		/* @var $mo MathObject  */
 		$mo = MathObject::constructformpage( $oldID, $eid );
 		if ( !$mo ) {
 			$out->addWikiTextAsInterface( 'Cannot find the equation data in the database.' .

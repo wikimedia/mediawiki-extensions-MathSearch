@@ -23,6 +23,8 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class CleanMathTable extends Maintenance {
 	const RTI_CHUNK_SIZE = 10;
+
+	/** @var bool */
 	public $purge = false;
 
 	/**
