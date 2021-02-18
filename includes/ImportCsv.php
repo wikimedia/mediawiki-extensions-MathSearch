@@ -12,9 +12,9 @@ class ImportCsv {
 	 */
 	private static $columnHeaders = [ 'queryId', 'formulaId' ];
 	/**
-	 * @var int
+	 * @var bool|int|string
 	 */
-	protected $runId = false;
+	private $runId = false;
 	/**
 	 * @var array
 	 */

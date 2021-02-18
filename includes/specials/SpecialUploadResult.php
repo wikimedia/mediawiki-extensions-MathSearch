@@ -11,7 +11,7 @@ use MediaWiki\MediaWikiServices;
 class SpecialUploadResult extends SpecialPage {
 	/** @var ImportCsv */
 	private $importer;
-	/** @var bool */
+	/** @var bool|int|string */
 	protected $runId = false;
 
 	/**
