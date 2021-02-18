@@ -135,9 +135,7 @@ class MathObject extends MathMathML {
 	public static function constructformpagerow( $res ) {
 		global $wgMathDebug;
 		if ( $res && $res->mathindex_revision_id > 0 ) {
-			$class = get_called_class();
-			/** @var self $instance */
-			$instance = new $class;
+			$instance = new static();
 			$instance->setRevisionID( $res->mathindex_revision_id );
 			$instance->setAnchorID( $res->mathindex_anchor );
 			if ( $wgMathDebug && isset( $res->mathindex_timestamp ) ) {
