@@ -6,23 +6,25 @@
  */
 class MathObjectTest extends MediaWikiTestCase {
 
-	private $HTMLComment = <<<'EOT'
+	private const HTML_COMMENT = <<<'EOT'
 <!-- HTML Comment <math>a</math> -->
 EOT;
 
-	private $noWiki = <<<'EOT'
+	private const NOWIKI = <<<'EOT'
 <nowiki><math>b</math></nowiki>
 EOT;
 
-	private $attributes = <<<'EOT'
+	private const ATTRIBUTES = <<<'EOT'
 <math x=x1 y=y1>c</math>
 EOT;
-	private $longSample = <<<'EOT'
+
+	private const LONG_SAMPLE = <<<'EOT'
 == heading ==
 <math> x^2 </math>
 some more text
 <math> x^3 </math>
 EOT;
+
 	protected static $hasRestbase;
 
 	public static function setUpBeforeClass() : void {
@@ -46,16 +48,16 @@ EOT;
 	 * @covers MathObject::extractMathTagsFromWikiText
 	 */
 	public function test() {
-		$comment = MathObject::extractMathTagsFromWikiText( $this->HTMLComment );
+		$comment = MathObject::extractMathTagsFromWikiText( self::HTML_COMMENT );
 		$this->assertCount( 0, $comment, 'Math tags in comments should be ignored.' );
-		$noWiki = MathObject::extractMathTagsFromWikiText( $this->noWiki );
+		$noWiki = MathObject::extractMathTagsFromWikiText( self::NOWIKI );
 		$this->assertCount( 0, $noWiki, 'Math tags in no-wiki tags should be ignored.' );
-		$attributeTest = MathObject::extractMathTagsFromWikiText( $this->attributes );
+		$attributeTest = MathObject::extractMathTagsFromWikiText( self::ATTRIBUTES );
 		$this->assertCount( 1, $attributeTest );
 		$expected = [ 'x' => 'x1', 'y' => 'y1' ];
 		$first = array_shift( $attributeTest );
 		$this->assertEquals( $expected, $first[2] );
-		$longMatch = MathObject::extractMathTagsFromWikiText( $this->longSample );
+		$longMatch = MathObject::extractMathTagsFromWikiText( self::LONG_SAMPLE );
 		$this->assertCount( 2, $longMatch );
 		$first = array_shift( $longMatch );
 		$this->assertEquals( ' x^2 ', $first[1] );

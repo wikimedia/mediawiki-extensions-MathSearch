@@ -10,8 +10,8 @@
  */
 class MathSearchHooksTest extends MediaWikiTestCase {
 
-	// @codingStandardsIgnoreStart
-	private $mathMLSample = <<<'EOT'
+	// phpcs:disable Generic.Files.LineLength
+	private const MATHML_SAMPLE = <<<'EOT'
 <math xref="p1.1.m1.1.cmml" xml:id="p1.1.m1.1" display="inline" alttext="{\displaystyle\min\left(1;\exp\left(-\beta\cdot\Delta E\right)\right)}" class="ltx_Math" id="p1.1.m1.1" xmlns="http://www.w3.org/1998/Math/MathML">
   <semantics xref="p1.1.m1.1.cmml" xml:id="p1.1.m1.1a">
     <mrow xref="p1.1.m1.1.14.cmml" xml:id="p1.1.m1.1.14">
@@ -76,7 +76,6 @@ class MathSearchHooksTest extends MediaWikiTestCase {
   </semantics>
 </math>
 EOT;
-	// @codingStandardsIgnoreEnd
 
 	/**
 	 * Tests if ID's for math elements are replaced correctly
@@ -85,7 +84,7 @@ EOT;
 	 * @covers MathSearchHooks::onMathFormulaRenderedNoLink
 	 */
 	public function testNTCIRHook() {
-		$sample = $this->mathMLSample;
+		$sample = self::MATHML_SAMPLE;
 
 		$services = MediaWiki\MediaWikiServices::getInstance();
 		$services->resetServiceForTesting( 'ParserFactory' );

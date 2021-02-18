@@ -1,7 +1,8 @@
 <?php
 
 class MathIdGeneratorTest extends MediaWikiTestCase {
-	private $wikiText1 = <<<wikiText
+
+	private const WIKITEXT1 = <<<wikiText
 	This is a test <math>E=mc^2</math>, and <math>a+b</math>
 	and further down another <math id=CustomId>E=mc^2</math>
 wikiText;
@@ -12,7 +13,7 @@ wikiText;
 	 * @outputBuffering disabled
 	 */
 	public function testSimple() {
-		$idGen = new MathIdGenerator( $this->wikiText1, 42 );
+		$idGen = new MathIdGenerator( self::WIKITEXT1, 42 );
 		$output = $idGen->getIdList();
 		$this->assertCount( 3, $output );
 		$ids = $idGen->getIdsFromContent( 'E=mc^2' );
@@ -32,7 +33,7 @@ wikiText;
 	 * @outputBuffering disabled
 	 */
 	public function testCustomId() {
-		$idGen = new MathIdGenerator( $this->wikiText1, 42 );
+		$idGen = new MathIdGenerator( self::WIKITEXT1, 42 );
 		$idGen->setUseCustomIds( true );
 		$output = $idGen->getIdList();
 		$this->assertCount( 3, $output );

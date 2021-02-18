@@ -6,8 +6,7 @@
  */
 class MathSearchUtilsTest extends MediaWikiTestCase {
 
-	/** @var string */
-	private $expectedOutput = '{| class="wikitable sortable"
+	private const EXPECTED_OUTPUT = '{| class="wikitable sortable"
 |-
 ! s !! i
 |-
@@ -31,6 +30,6 @@ class MathSearchUtilsTest extends MediaWikiTestCase {
 		);
 		$cols = [ 's', 'i' ];
 		$res = $dbw->select( 'tmp_math_util_test', $cols );
-		$this->assertEquals( $this->expectedOutput, MathSearchUtils::dbRowToWikiTable( $res, $cols ) );
+		$this->assertEquals( self::EXPECTED_OUTPUT, MathSearchUtils::dbRowToWikiTable( $res, $cols ) );
 	}
 }

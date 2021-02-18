@@ -15,8 +15,9 @@ use Wikimedia\Purtle\NTriplesRdfWriter;
  * @covers ContentMathMLRdfBuilder
  */
 class ContentMathMLRdfBuilderTest extends MediaWikiTestCase {
-	const ACME_PREFIX_URL = 'http://acme/';
-	const ACME_REF = 'testing';
+
+	private const ACME_PREFIX_URL = 'http://acme/';
+	private const ACME_REF = 'testing';
 
 	protected function setUp() : void {
 		$this->markTestSkipped( 'All HTTP requests are banned in tests. See T265628.' );

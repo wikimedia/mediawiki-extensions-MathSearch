@@ -6,7 +6,7 @@
  */
 class MwsDumpWriterTest extends MediaWikiTestCase {
 	// TODO: update tests strategy resources etc. T249429
-	private $testWikiText = <<<'WikiText'
+	private const TEST_WIKITEXT = <<<'WikiText'
 <math>
 E = m c
 </math>
@@ -24,8 +24,8 @@ E = m c ^ 4
 </math>
 WikiText;
 
-	// @codingStandardsIgnoreStart
-	private $expectedOutput = <<<'XML'
+	// phpcs:disable Generic.Files.LineLength
+	private const EXPECTED_OUTPUT = <<<'XML'
 <?xml version="1.0"?>
 <mws:harvest xmlns:mws="http://search.mathweb.org/ns" xmlns:m="http://www.w3.org/1998/Math/MathML">
 <mws:expr url="28378#math.28378.1">
@@ -158,7 +158,7 @@ WikiText;
 </mws:expr>
 </mws:harvest>
 XML;
-// @codingStandardsIgnoreEnd
+
 	protected static $hasRestbase;
 
 	public static function setUpBeforeClass() : void {
@@ -213,9 +213,9 @@ XML;
 				]
 			]
 		);
-		$gen = new MathIdGenerator( $this->testWikiText, $revId );
+		$gen = new MathIdGenerator( self::TEST_WIKITEXT, $revId );
 		$gen->setUseCustomIds( true );
 		$dw->addFromMathIdGenerator( $gen );
-		$this->assertEquals( $this->expectedOutput, $dw->getOutput() );
+		$this->assertEquals( self::EXPECTED_OUTPUT, $dw->getOutput() );
 	}
 }
