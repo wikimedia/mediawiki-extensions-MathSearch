@@ -91,11 +91,9 @@ class CreateBaseXMathTable extends IndexBase {
 	public function execute() {
 		global $wgMathSearchBaseXDatabaseName;
 		self::$mwsns = $this->getOption( 'mwsns', '' );
-		// @codingStandardsIgnoreStart
 		self::$XMLHead =
 			"<?xml version=\"1.0\"?>\n<" . self::$mwsns .
 			"harvest xmlns:mws=\"http://search.mathweb.org/ns\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\">";
-		// @codingStandardsIgnoreEnd
 		self::$XMLFooter = "</" . self::$mwsns . "harvest>";
 		$this->session = new BaseXSession();
 		if ( $this->getOption( 'truncate', false ) ) {

@@ -42,19 +42,19 @@ class CleanMathTable extends Maintenance {
 	}
 
 	/**
-	 * @codingStandardsIgnoreStart
 	 * The idea is basically to select the math elements that do not have a corresponding mathindex entry.
 	 * Basically that means:
-	 * <code>DELETE math FROM (`math` LEFT OUTER JOIN `mathindex` ON ( (`mathindex`.`mathindex_inputhash` = `math`.`math_inputhash`) )) WHERE mathindex_inputhash IS NULL </code>
-	 * @codingStandardsIgnoreEnd
+	 * <code>DELETE math FROM (`math` LEFT OUTER JOIN `mathindex`
+	 * ON ( (`mathindex`.`mathindex_inputhash` = `math`.`math_inputhash`) ))
+	 * WHERE mathindex_inputhash IS NULL </code>
 	 */
 	public function execute() {
 		// FIXME: this does not work at all
 		$this->purge = $this->getOption( 'purge', false );
 		$this->db = wfGetDB( DB_MASTER );
-		// @codingStandardsIgnoreStart
-		$this->db->query( 'DELETE math FROM (`math` LEFT OUTER JOIN `mathindex` ON ( (`mathindex`.`mathindex_inputhash` = `math`.`math_inputhash`) )) WHERE mathindex_inputhash IS NULL ' );
-		// @codingStandardsIgnoreEnd
+		$this->db->query( 'DELETE math FROM (`math` LEFT OUTER JOIN `mathindex`'
+			. ' ON ( (`mathindex`.`mathindex_inputhash` = `math`.`math_inputhash`) ))'
+			. ' WHERE mathindex_inputhash IS NULL ' );
 		$this->output( "Done.\n" );
 	}
 }

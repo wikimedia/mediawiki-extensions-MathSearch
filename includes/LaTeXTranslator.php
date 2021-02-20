@@ -16,7 +16,6 @@ class LaTeXTranslator {
 
 	function __construct() {
 		# reference: http://stackoverflow.com/a/28611214/4521584
-		// @codingStandardsIgnoreStart
 		$this->replacements = [
 			[
 				# Trignometric & Trig Integrals: \acosh@{x}
@@ -87,10 +86,13 @@ class LaTeXTranslator {
 							$this->par . ")(" . $this->arg . "|" . $this->par . ")~i",
 				# Appell: AppellF1[\alpha,\beta,\beta',\gamma,x,y]
 				'replace' => function ( array $m ) {
-					return
-						'AppellF1[' . LaTeXTranslator::brackR( $m[1] ) . ',' . LaTeXTranslator::brackR( $m[4] ) . ',' .
-						LaTeXTranslator::brackR( $m[7] ) . ',' . LaTeXTranslator::brackR( $m[10] ) . ',' .
-						LaTeXTranslator::brackR( $m[13] ) . ',' . LaTeXTranslator::brackR( $m['16'] ) . ']';
+					return 'AppellF1[' .
+						LaTeXTranslator::brackR( $m[1] ) . ',' .
+						LaTeXTranslator::brackR( $m[4] ) . ',' .
+						LaTeXTranslator::brackR( $m[7] ) . ',' .
+						LaTeXTranslator::brackR( $m[10] ) . ',' .
+						LaTeXTranslator::brackR( $m[13] ) . ',' .
+						LaTeXTranslator::brackR( $m['16'] ) . ']';
 				}
 			],
 			[
@@ -283,7 +285,9 @@ class LaTeXTranslator {
 			],
 			[
 				# Greek Letter: \Alpha
-				'search' => "~\\\\(alpha|beta|gamma|delta|epsilon|varepsilon|zeta|eta|theta|vartheta|gamma|kappa|lambda|mu|nu|xi|o[^mega]|pi|varpi|rho|varrho|sigma|varsigma|tau|upsilon|phi|varphi|chi|psi|omega)~i",
+				'search' => "~\\\\(alpha|beta|gamma|delta|epsilon|varepsilon|zeta|eta|theta|"
+					. "vartheta|gamma|kappa|lambda|mu|nu|xi|o[^mega]|pi|varpi|rho|varrho|sigma|"
+					. "varsigma|tau|upsilon|phi|varphi|chi|psi|omega)~i",
 				# Greek Letter: \[CapitalAlpha]
 				'replace' => function ( array $m ) {
 					return '\\[' . ( strtolower( $m[1] ) != $m[1] ? 'Capital' : '' ) .
@@ -361,9 +365,10 @@ class LaTeXTranslator {
 							$this->par . ")(" . $this->arg . "|" . $this->par . ")~i",
 				# Incomplete Beta & Gamma: Beta[z,a,b], Gamma[a,z]
 				'replace' => function ( array $m ) {
-					return
-						$m[1] . '[' . ( strlen( $m[2] ) > 0 ? LaTeXTranslator::brackR( $m[2] ) . ',' : '' ) .
-						LaTeXTranslator::brackR( $m[3] ) . ',' . LaTeXTranslator::brackR( $m[6] ) . ']';
+					return $m[1] . '[' .
+						( strlen( $m[2] ) > 0 ? LaTeXTranslator::brackR( $m[2] ) . ',' : '' ) .
+						LaTeXTranslator::brackR( $m[3] ) . ',' .
+						LaTeXTranslator::brackR( $m[6] ) . ']';
 				}
 			],
 			[
@@ -401,9 +406,11 @@ class LaTeXTranslator {
 					"|" . $this->par . ")~i",
 				# Jacobi Polynomial: JacobiP[n,a,b,x]
 				'replace' => function ( array $m ) {
-					return
-						'JacobiP[' . LaTeXTranslator::brackR( $m[2] ) . ',' . LaTeXTranslator::brackR( $m[1] ) . ',' .
-						LaTeXTranslator::brackR( $m[3] ) . ',' . LaTeXTranslator::brackR( $m[4] ) . ']';
+					return 'JacobiP[' .
+						LaTeXTranslator::brackR( $m[2] ) . ',' .
+						LaTeXTranslator::brackR( $m[1] ) . ',' .
+						LaTeXTranslator::brackR( $m[3] ) . ',' .
+						LaTeXTranslator::brackR( $m[4] ) . ']';
 				}
 			],
 			[
@@ -430,9 +437,9 @@ class LaTeXTranslator {
 				'search' => "~\\\\Kronecker" . $this->par . $this->par . "~i",
 				# Kronecker: Kronecker[j,k]
 				'replace' => function ( array $m ) {
-					return
-						'KroneckerDelta[' . LaTeXTranslator::brackR( $m[1] ) . ',' . LaTeXTranslator::brackR( $m[2] ) .
-						']';
+					return 'KroneckerDelta[' .
+						LaTeXTranslator::brackR( $m[1] ) . ',' .
+						LaTeXTranslator::brackR( $m[2] ) . ']';
 				}
 			],
 			[
@@ -466,8 +473,9 @@ class LaTeXTranslator {
 					"|" . $this->par . ")(" . $this->arg . "|" . $this->par . ")~i",
 				# LerchPhi: LerchPhi[z,s,a]
 				'replace' => function ( array $m ) {
-					return
-						'LerchPhi[' . LaTeXTranslator::brackR( $m[1] ) . ',' . LaTeXTranslator::brackR( $m[4] ) . ',' .
+					return 'LerchPhi[' .
+						LaTeXTranslator::brackR( $m[1] ) . ',' .
+						LaTeXTranslator::brackR( $m[4] ) . ',' .
 						LaTeXTranslator::brackR( $m[7] ) . ']';
 				}
 			],
@@ -486,9 +494,10 @@ class LaTeXTranslator {
 					$this->par . ")~i",
 				# Mittag-Leffler: MittagLefflerE[\alpha,\beta,z]
 				'replace' => function ( array $m ) {
-					return
-						'MittagLefflerE[' . LaTeXTranslator::brackR( $m[1] ) . ',' . LaTeXTranslator::brackR( $m[2] ) .
-						',' . LaTeXTranslator::brackR( $m[3] ) . ']';
+					return 'MittagLefflerE[' .
+						LaTeXTranslator::brackR( $m[1] ) . ',' .
+						LaTeXTranslator::brackR( $m[2] ) . ',' .
+						LaTeXTranslator::brackR( $m[3] ) . ']';
 				}
 			],
 			[
@@ -690,7 +699,6 @@ class LaTeXTranslator {
 				}
 			]
 		];
-		// @codingStandardsIgnoreEnd
 	}
 
 	/**

@@ -84,12 +84,10 @@ class CalculateDistances extends Maintenance {
 			for ( $j = 0; $j < self::RTI_CHUNK_SIZE; $j++ ) {
 				// TODO: USE PREPARED STATEMENTS
 				$pid = $this->pagelist[$n];
-				// @codingStandardsIgnoreStart
 				$sql =
 					"INSERT IGNORE INTO mathpagesimilarity(pagesimilarity_A,pagesimilarity_B,pagesimilarity_Value) " .
 					"SELECT DISTINCT $pid,`revstat_revid`, " .
 					"CosProd( $pid,`revstat_revid`) FROM `mathrevisionstat` m ";
-				// @codingStandardsIgnoreEnd
 				if ( $this->getOption( 'page9', false ) ) {
 					$sql .= " JOIN (SELECT page_id from mathpage9) as r WHERE m.revstat_revid=r.page_id AND ";
 				} else {
