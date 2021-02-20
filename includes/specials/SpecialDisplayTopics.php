@@ -7,8 +7,6 @@
 class SpecialDisplayTopics extends SpecialPage {
 	/** @var ImportCsv */
 	private $importer;
-	/** @var bool */
-	protected $runId = false;
 
 	/**
 	 * @param string $name

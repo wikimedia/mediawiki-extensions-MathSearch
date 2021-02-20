@@ -7,11 +7,11 @@ class MathObject extends MathMathML {
 	// DEBUG VARIABLES
 	// Available, if Math extension runs in debug mode ($wgMathDebug = true) only.
 	/** @var int LaTeXML return code (will be available in future Mathoid versions as well) */
-	protected $statusCode = 0;
+	private $statusCode = 0;
 	/** @var string|null Timestamp of the last modification of the database entry */
-	protected $timestamp;
+	private $timestamp;
 	/** @var string messages generated during conversion of mathematical content */
-	protected $log = '';
+	private $log = '';
 
 	/** @var string */
 	protected $postData = '';
