@@ -84,16 +84,21 @@ class MathEngineBaseX extends MathEngineRest {
 	function update( $harvest = "", array $delte = [] ) {
 		global $wgMathSearchBaseXBackendUrl;
 		$json_payload = json_encode( [ "harvest" => $harvest, "delete" => $delte ] );
-		$res = self::doPost( $wgMathSearchBaseXBackendUrl . 'api/update', $json_payload );
-		if ( $res ) {
-			$resJson = json_decode( $res );
-			if ( $resJson->success == true ) {
-				return true;
-			} else {
-				LoggerFactory::getInstance(
-					'MathSearch'
-				)->warning( 'harvest update failed' . var_export( $resJson, true ) );
+		try {
+			$res = self::doPost( $wgMathSearchBaseXBackendUrl . 'api/update', $json_payload );
+			if ( $res ) {
+				$resJson = json_decode( $res );
+				if ( $resJson->success == true ) {
+					return true;
+				} else {
+					LoggerFactory::getInstance( 'MathSearch' )->warning( 'harvest update failed' .
+						var_export( $resJson, true ) );
+				}
 			}
+		} catch ( Exception $e ) {
+			LoggerFactory::getInstance( 'MathSearch' )
+				->warning( 'Harvest update failed: {exception}',
+					[ 'exception' => $e->getMessage() ] );
 		}
 		return false;
 	}

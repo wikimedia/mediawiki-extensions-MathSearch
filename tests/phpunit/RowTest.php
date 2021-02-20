@@ -4,6 +4,12 @@ namespace MathSearch\StackExchange;
 
 use MediaWikiTestCase;
 
+/**
+ * Class RowTest
+ * @package MathSearch\StackExchange
+ * @group Database
+ * @group MathSearch
+ */
 class RowTest extends MediaWikiTestCase {
 // @codingStandardsIgnoreStart
 	const SAMPLE_ROW = <<<'XmlFragment'
@@ -19,7 +25,7 @@ XmlFragment;
 		$f = new Row( self::SAMPLE_ROW, 'Posts_V1.0_0.xml' );
 		$fields = $f->getFields();
 		$this->assertCount( 11, $fields );
-		$this->assertSame( 1, $fields['OwnerUserId']->getContent() );
+		$this->assertSame( '3', $fields['CommentCount']->getContent() );
 	}
 
 	/**
@@ -28,6 +34,11 @@ XmlFragment;
 	public function testGetIgnoredFieldCount() {
 		$f = new Row( self::SAMPLE_ROW, 'Posts_V1.0_0.xml' );
 		$this->assertSame( 0, $f->getIgnoredFieldCount() );
+	}
+
+	protected function setUp() : void {
+		parent::setUp();
+		$this->tablesUsed[] = 'math_wbs_entity_map';
 	}
 
 }
