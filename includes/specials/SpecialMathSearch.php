@@ -13,18 +13,15 @@ use MediaWiki\MediaWikiServices;
  * @ingroup extensions
  */
 class SpecialMathSearch extends SpecialPage {
+
 	const  GUI_PATH = '/modules/min/index.xhtml';
-	public $qs;
-	public $math_result;
-	public $mathSearchExpr;
-	public $numTextResults;
-	public $mathResults;
-	public $mathpattern;
-	public $textpattern;
-	public $mathmlquery;
+
+	private $mathpattern;
+	private $textpattern;
+	private $mathmlquery;
 	/** @var string */
-	public $mathEngine = 'mws';
-	public $displayQuery;
+	private $mathEngine = 'mws';
+	private $displayQuery;
 	private $mathBackend;
 	private $resultID = 0;
 	private $noTerms = 4;
@@ -250,8 +247,7 @@ class SpecialMathSearch extends SpecialPage {
 			if ( !$res ) {
 				LoggerFactory::getInstance(
 					'MathSearch'
-				)->error( "Failure: Could not get entry $anchorID for page $pagename (id $revisionID) :" .
-					var_export( $this->mathResults, true ) );
+				)->error( "Failure: Could not get entry $anchorID for page $pagename (id $revisionID)" );
 				return;
 			}
 			$mml = $res->getMathml();

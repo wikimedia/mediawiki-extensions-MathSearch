@@ -22,11 +22,12 @@
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class GenerateFeatureTable extends Maintenance {
+
 	const RTI_CHUNK_SIZE = 100000;
 	/** @var bool */
-	public $purge = false;
+	private $purge = false;
 	/** @var \Wikimedia\Rdbms\IDatabase */
-	public $dbw = null;
+	private $dbw = null;
 
 	/**
 	 * @var \Wikimedia\Rdbms\IDatabase

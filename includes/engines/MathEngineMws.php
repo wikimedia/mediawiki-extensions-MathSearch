@@ -41,7 +41,6 @@ class MathEngineMws extends MathEngineRest {
 			}
 			$this->relevanceMap[] = $revisionID;
 			$substarr = [];
-			// $this->mathResults[(string) $pageID][(string) $AnchorID][]=$page->asXML();
 			foreach ( $page->children( "mws", true ) as $substpair ) {
 				$substattrs = $substpair->attributes();
 				$substarr[] =
