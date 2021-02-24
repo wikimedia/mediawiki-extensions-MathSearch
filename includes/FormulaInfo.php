@@ -156,8 +156,7 @@ class FormulaInfo extends SpecialPage {
 		}
 		$out->addWikiTextAsInterface( "Occurrences on the following pages:" );
 		$all = $mo->getAllOccurences();
-		foreach ( $all as  $occ ) {
-			/** @var MathObject $occ */
+		foreach ( $all as $occ ) {
 			$out->addWikiTextAsInterface( '*' . $occ->printLink2Page( false ) );
 		}
 		$out->addWikiTextAsInterface( 'Hash: ' . $mo->getMd5() );

@@ -32,6 +32,7 @@ class CalculateDistances extends Maintenance {
 	 * @var \Wikimedia\Rdbms\IDatabase
 	 */
 	private $db;
+	/** @var int[] List of revision ids */
 	private $pagelist = [];
 
 	public function __construct() {

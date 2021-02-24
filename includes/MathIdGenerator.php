@@ -11,15 +11,19 @@ class MathIdGenerator {
 
 	/** @var string */
 	private $wikiText;
+	/** @var array[] */
 	private $mathTags;
 	/** @var int */
 	private $revisionId;
+	/** @var int[] */
 	private $contentAccessStats = [];
 	/** @var string */
 	private $format = "math.%d.%d";
 	/** @var bool */
 	private $useCustomIds = false;
+	/** @var int[]|null */
 	private $keys;
+	/** @var string[][]|null */
 	private $contentIdMap;
 
 	/**
@@ -134,7 +138,7 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * @return array[]
+	 * @return string[][]
 	 */
 	public function getContentIdMap() {
 		if ( !$this->contentIdMap ) {

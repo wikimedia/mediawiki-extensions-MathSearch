@@ -19,6 +19,7 @@ class MathObject extends MathMathML {
 	protected $anchorID = 0;
 	/** @var int */
 	protected $revisionID = 0;
+	/** @var string|null */
 	protected $index_timestamp = null;
 	protected $dbLoadTime = 0;
 	/** @var string|null */
@@ -234,6 +235,9 @@ class MathObject extends MathMathML {
 		return $this;
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function getIndexTimestamp() {
 		return $this->index_timestamp;
 	}
@@ -544,7 +548,7 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 * @return MathoidDriver
+	 * @return MathoidDriver|false
 	 */
 	public function getTexInfo() {
 		$m = new MathoidDriver( $this->userInputTex );
@@ -590,6 +594,12 @@ class MathObject extends MathMathML {
 		return 0;
 	}
 
+	/**
+	 * @param MathRenderer $renderer
+	 * @param float $factor
+	 *
+	 * @return string
+	 */
 	public static function getReSizedSvgLink( MathRenderer $renderer, $factor = 2 ) {
 		$width = self::getSvgWidth( $renderer->getSvg() );
 		$width = $width[1] * $factor . $width[2];

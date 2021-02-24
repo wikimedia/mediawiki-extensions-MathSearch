@@ -17,6 +17,7 @@ class SpecialMathIndex extends SpecialPage {
 		$out->setPageTitle( $this->getDescription() );
 	}
 
+	/** @inheritDoc */
 	function execute( $par ) {
 		global $wgMathDebug;
 		$output = $this->getOutput();

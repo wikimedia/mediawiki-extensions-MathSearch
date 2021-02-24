@@ -552,11 +552,23 @@ class SpecialMlpEval extends SpecialPage {
 			$source . '</syntaxhighlight>', $linestart );
 	}
 
+	/**
+	 * @param float $factor
+	 * @param string|false $tex
+	 * @param array $options
+	 * @return string
+	 */
 	public function getSvgRenderingAsHtmlFragment( $factor = 2, $tex = false, $options = [] ) {
 		$renderer = $this->getMathMlRenderer( $tex, $options );
 		return MathObject::getReSizedSvgLink( $renderer, $factor );
 	}
 
+	/**
+	 * @param float $factor
+	 * @param string|false $tex
+	 * @param array $options
+	 * @return string
+	 */
 	public function getMathMLRenderingAsHtmlFragment(
 			$factor = 2.5, $tex = false, $options = []
 	) {
@@ -612,9 +624,8 @@ class SpecialMlpEval extends SpecialPage {
 	/**
 	 * @param bool $highlight
 	 * @param bool $collapsed
-	 * @param bool $formula
-	 * @param bool $filter
-	 * @throws MWException
+	 * @param string|false $formula
+	 * @param callback|false $filter
 	 */
 	public function printMathObjectInContext(
 		$highlight = true, $collapsed = true, $formula = false, $filter = false
@@ -666,7 +677,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @param string $tex
+	 * @param string|false $tex
 	 * @param array $options
 	 * @return MathMathML
 	 */
@@ -680,7 +691,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @param string &$tex
+	 * @param string|false &$tex
 	 * @param array &$options
 	 */
 	private function updateTex( &$tex, &$options ) {

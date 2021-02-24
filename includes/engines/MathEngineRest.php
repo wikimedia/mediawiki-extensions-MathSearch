@@ -16,7 +16,9 @@ abstract class MathEngineRest {
 	protected $query;
 	/** @var string */
 	protected $type = "mws";
+	/** @var int|false */
 	protected $size = false;
+	/** @var array[][][] */
 	protected $resultSet = [];
 	/** @var int[] */
 	protected $relevanceMap = [];
@@ -80,10 +82,16 @@ abstract class MathEngineRest {
 		}
 	}
 
+	/**
+	 * @return int|false
+	 */
 	public function getSize() {
 		return $this->size;
 	}
 
+	/**
+	 * @return array[][][]
+	 */
 	public function getResultSet() {
 		return $this->resultSet;
 	}

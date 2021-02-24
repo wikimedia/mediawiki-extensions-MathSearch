@@ -18,6 +18,7 @@ class SpecialMathDebug extends SpecialPage {
 		$out->setPageTitle( $this->getDescription() );
 	}
 
+	/** @inheritDoc */
 	function execute( $par ) {
 		global $wgRequest;
 		$offset = $wgRequest->getVal( 'offset', 0 );
