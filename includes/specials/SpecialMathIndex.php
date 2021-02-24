@@ -19,6 +19,7 @@ class SpecialMathIndex extends SpecialPage {
 		$out->setPageTitle( $this->getDescription() );
 	}
 
+	/** @inheritDoc */
 	function execute( $par ) {
 		$output = $this->getOutput();
 		$this->setHeaders();

@@ -24,7 +24,8 @@ some more text
 <math> x^3 </math>
 EOT;
 
-	protected static $hasRestbase;
+	/** @var bool */
+	private static $hasRestbase;
 
 	public static function setUpBeforeClass() : void {
 		$rbi = new MathRestbaseInterface();

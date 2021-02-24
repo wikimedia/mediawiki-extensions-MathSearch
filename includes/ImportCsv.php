@@ -11,7 +11,7 @@ class ImportCsv {
 	 */
 	private $runId = false;
 	/**
-	 * @var array
+	 * @var string[]
 	 */
 	private $warnings = [];
 	/**
@@ -288,7 +288,7 @@ class ImportCsv {
 	}
 
 	/**
-	 * @return array
+	 * @return string[]
 	 */
 	public function getWarnings() {
 		return $this->warnings;

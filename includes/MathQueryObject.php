@@ -11,8 +11,11 @@ class MathQueryObject extends MathObject {
 	private $queryID = false;
 	private $texquery = false;
 	private $cquery = false;
+	/** @var string|false */
 	private $pquery = false;
+	/** @var string */
 	private $xQuery = '';
+	/** @var int */
 	private $qVarCount = 0;
 
 	/* ToDo: Update to new format
@@ -149,7 +152,7 @@ TeX;
 	/**
 	 * Returns the ContentMathML expression.
 	 * If not set a random query id will be generated based on the TeXQuery.
-	 * @return string
+	 * @return string|null
 	 */
 	public function getCQuery() {
 		if ( $this->cquery === false ) {
@@ -226,6 +229,9 @@ TeX;
 		return $cSettings;
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function generateContentQueryString() {
 		$renderer = new MathLaTeXML( $this->getTeXQuery() );
 		$renderer->setLaTeXMLSettings( $this->getLaTeXMLCMMLSettings() );
@@ -240,6 +246,9 @@ TeX;
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	public function generatePresentationQueryString() {
 		$renderer = new MathLaTeXML( $this->getTeXQuery() );
 		// $renderer->setXMLValidaton( false );

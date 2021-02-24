@@ -23,6 +23,8 @@ use MathSearch\StackExchange\DumpReader;
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ImportStackExchangeDump extends Maintenance {
+
+	/** @var string */
 	private $dir;
 	private $overwrite;
 	const EXPRECTED_FILES = [

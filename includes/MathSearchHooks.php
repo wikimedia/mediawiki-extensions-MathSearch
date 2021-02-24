@@ -19,7 +19,7 @@ class MathSearchHooks {
 	 * LoadExtensionSchemaUpdates handler; set up math table on install/upgrade.
 	 *
 	 * @param DatabaseUpdater|null $updater
-	 * @throws Exception
+	 * @throws MWException
 	 * @return bool
 	 */
 	static function onLoadExtensionSchemaUpdates( $updater = null ) {
@@ -225,7 +225,7 @@ class MathSearchHooks {
 	 *
 	 * @param Parser $parser
 	 * @param MathRenderer $renderer
-	 * @param null &$Result
+	 * @param string|null &$Result
 	 * @return bool
 	 */
 	static function onMathFormulaRenderedNoLink(
@@ -289,7 +289,7 @@ class MathSearchHooks {
 	 * @param string $content the LaTeX+MWS query input
 	 * @param array $attributes
 	 * @param Parser $parser
-	 * @return array
+	 * @return string|string[]
 	 */
 	static function mQueryTagHook( $content, $attributes, $parser ) {
 		global $wgMathDefaultLaTeXMLSetting;

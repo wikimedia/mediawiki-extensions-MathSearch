@@ -18,6 +18,7 @@ class SpecialMathDebug extends SpecialPage {
 		$out->setPageTitle( $this->getDescription() );
 	}
 
+	/** @inheritDoc */
 	function execute( $par ) {
 		$offset = $this->getRequest()->getVal( 'offset', 0 );
 		$length = $this->getRequest()->getVal( 'length', 10 );

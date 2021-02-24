@@ -29,6 +29,7 @@ class MathPerformance extends Maintenance {
 	private $verbose;
 	/** @var \Wikimedia\Rdbms\IDatabase */
 	private $db;
+	/** @var string|null */
 	private $currentHash;
 	/** @var float */
 	private $time = 0.0; // microtime( true );

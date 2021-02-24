@@ -301,7 +301,7 @@ class SpecialMathSearch extends SpecialPage {
 	 * @link http://php.net/manual/de/domdocument.getelementbyid.php#86056
 	 * @param string $id
 	 * @param DOMDocument $doc
-	 * @return DOMElement
+	 * @return DOMElement|null
 	 */
 	private function getElementById( $id, $doc ) {
 		$xpath = new DOMXPath( $doc );
