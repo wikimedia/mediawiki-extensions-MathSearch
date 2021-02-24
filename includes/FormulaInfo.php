@@ -120,7 +120,6 @@ class FormulaInfo extends SpecialPage {
 	 * @param string $eid
 	 *
 	 * @return bool
-	 * @throws MWException
 	 */
 	public function DisplayInfo( $oldID, $eid ) {
 		$out = $this->getOutput();
@@ -255,8 +254,6 @@ class FormulaInfo extends SpecialPage {
 	/**
 	 * @param string $tex
 	 * @param string $mode
-	 *
-	 * @throws MWException
 	 */
 	private function DisplayRendering( $tex, $mode ) {
 		if ( !in_array( $mode, $this->getConfig()->get( 'MathValidModes' ) ) ) {

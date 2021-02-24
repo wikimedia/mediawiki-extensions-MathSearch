@@ -101,8 +101,6 @@ class UpdateMath extends Maintenance {
 	 *
 	 * @param int $n
 	 * @param int $cMax
-	 *
-	 * @throws DBUnexpectedError
 	 */
 	protected function populateSearchIndex( $n = 0, $cMax = -1 ) {
 		$res = $this->db->select( 'revision', 'MAX(rev_id) AS count' );

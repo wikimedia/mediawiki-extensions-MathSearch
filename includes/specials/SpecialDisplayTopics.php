@@ -19,7 +19,6 @@ class SpecialDisplayTopics extends SpecialPage {
 	/**
 	 * @param null|string $query
 	 *
-	 * @throws MWException
 	 * @throws PermissionsError
 	 */
 	function execute( $query ) {

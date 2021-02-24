@@ -428,7 +428,6 @@ class MathSearchHooks {
 	/**
 	 * @param int $revId
 	 * @return MathIdGenerator
-	 * @throws MWException
 	 */
 	private static function getRevIdGenerator( $revId ) {
 		if ( !array_key_exists( $revId, self::$idGenerators ) ) {

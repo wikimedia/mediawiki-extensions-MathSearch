@@ -264,7 +264,6 @@ class ImportCsv {
 
 	/**
 	 * @return true
-	 * @throws DBUnexpectedError
 	 */
 	function processInput() {
 		$this->deleteRun( $this->runId );
@@ -279,7 +278,6 @@ class ImportCsv {
 
 	/**
 	 * @param string $runID
-	 * @throws DBUnexpectedError
 	 */
 	public function deleteRun( $runID ) {
 		if ( $this->overwrite ) {
