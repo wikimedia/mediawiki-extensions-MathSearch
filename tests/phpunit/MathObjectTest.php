@@ -1,7 +1,5 @@
 <?php
 /**
- * Test the mathObject script.
- *
  * @group MathSearch
  */
 class MathObjectTest extends MediaWikiTestCase {

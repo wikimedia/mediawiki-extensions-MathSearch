@@ -1,9 +1,4 @@
 <?php
-/**
- * Test the ContentMathML RDF formatter
- *
- * @author Moritz Schubotz (physikerwelt)
- */
 
 use DataValues\StringValue;
 use Wikibase\DataModel\Entity\PropertyId;
@@ -11,6 +6,7 @@ use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikimedia\Purtle\NTriplesRdfWriter;
 
 /**
+ * @author Moritz Schubotz (physikerwelt)
  * @group ContentMath
  * @covers ContentMathMLRdfBuilder
  */

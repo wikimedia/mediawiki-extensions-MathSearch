@@ -133,7 +133,6 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 * @global bool $wgMathDebug
 	 * @param stdClass $res
 	 * @return bool|\self
 	 */

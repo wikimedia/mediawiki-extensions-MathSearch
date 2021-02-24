@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Moritz
- * Date: 03.01.2015
- * Time: 17:39
- */
 
 use Wikimedia\Rdbms\IResultWrapper;
 

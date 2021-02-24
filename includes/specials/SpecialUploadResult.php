@@ -111,7 +111,6 @@ class SpecialUploadResult extends SpecialPage {
 			return date( 'Y-m-d H:i:s (e)' );
 		}
 		$this->runId = $this->importer->validateRunId( $run );
-		/** @var array $warnings */
 		$warnings = $this->importer->getWarnings();
 		if ( $warnings ) {
 			echo "bad wqarni";

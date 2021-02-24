@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Moritz Schubotz
- * Date: 23.12.2014
- * Time: 22:06
- */
 class ImportCsv {
 	/**
 	 * @var array

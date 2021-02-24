@@ -10,7 +10,6 @@ wikiText;
 	/**
 	 * @covers MathIdGenerator::getIdList
 	 * @covers MathIdGenerator::getIdsFromContent
-	 * @outputBuffering disabled
 	 */
 	public function testSimple() {
 		$idGen = new MathIdGenerator( self::WIKITEXT1, 42 );
@@ -30,7 +29,6 @@ wikiText;
 	 * @covers MathIdGenerator::setUseCustomIds
 	 * @covers MathIdGenerator::getIdList
 	 * @covers MathIdGenerator::getIdsFromContent
-	 * @outputBuffering disabled
 	 */
 	public function testCustomId() {
 		$idGen = new MathIdGenerator( self::WIKITEXT1, 42 );
