@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Lets the user download a CSV file with the results
  *
  * @author Moritz Schubotz
  */
 class SpecialMathDownloadResult extends SpecialUploadResult {
+
 	public function __construct( $name = 'MathDownload' ) {
 		parent::__construct( $name );
 	}

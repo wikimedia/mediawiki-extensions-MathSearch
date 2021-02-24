@@ -6,6 +6,7 @@ use MediaWiki\Logger\LoggerFactory;
 use SimpleXMLElement;
 
 class LineReaderJob extends \Job {
+
 	public function __construct( $title, $params ) {
 		parent::__construct( 'SeLineReader', $title, $params );
 	}

@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Test the MathSearchUtils script.
  *
  * @group MathSearch
  */
 class MwsDumpWriterTest extends MediaWikiTestCase {
+
 	// TODO: update tests strategy resources etc. T249429
 	private const TEST_WIKITEXT = <<<'WikiText'
 <math>

@@ -1,4 +1,5 @@
 <?php
+
 class MathHighlighter {
 	const WINDOW_SIZE = 1200;
 

@@ -9,6 +9,7 @@
  * @group MathSearch
  */
 class MathoidDriverTest extends MediaWikiTestCase {
+
 	private static $hasMathoid;
 
 	public static function setUpBeforeClass() : void {

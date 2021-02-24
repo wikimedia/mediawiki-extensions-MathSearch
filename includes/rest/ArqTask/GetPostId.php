@@ -8,6 +8,7 @@ use Wikimedia\Rdbms\DBConnRef;
 use Wikimedia\Rdbms\ILoadBalancer;
 
 class GetPostId extends SimpleHandler {
+
 	/** @var DBConnRef */
 	private $dbr;
 

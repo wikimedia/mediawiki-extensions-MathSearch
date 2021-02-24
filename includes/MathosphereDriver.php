@@ -5,6 +5,7 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\SlotRecord;
 
 class MathosphereDriver {
+
 	/** @var string */
 	private $wikiText;
 	/** @var string */

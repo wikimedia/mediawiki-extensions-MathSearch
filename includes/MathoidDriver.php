@@ -1,8 +1,10 @@
 <?php
+
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 
 class MathoidDriver {
+
 	private $success;
 	private $checked;
 	private $identifiers;

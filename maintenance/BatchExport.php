@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -24,6 +23,7 @@ use UtfNormal\Utils;
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class BatchExport extends Maintenance {
+
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( "Exports  submissions to a folder. \n Each run is named after the " .

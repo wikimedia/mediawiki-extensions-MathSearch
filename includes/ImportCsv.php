@@ -7,6 +7,7 @@
  * Time: 22:06
  */
 class ImportCsv {
+
 	/**
 	 * @var array
 	 */

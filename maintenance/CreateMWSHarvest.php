@@ -27,6 +27,7 @@ require_once __DIR__ . '/IndexBase.php';
  * @author Moritz Schubotz
  */
 class CreateMWSHarvest extends IndexBase {
+
 	/** @var MwsDumpWriter */
 	private $dw;
 
