@@ -50,7 +50,7 @@ class WikitextGenerator {
 
 	public function toWikitext( $html, $postQId = null ) {
 		$xml = new \XMLReader();
-		$xml->xml( "<text>$html</text>" );
+		$xml->XML( "<text>$html</text>" );
 		$out = "";
 		while ( $xml->read() ) {
 			$out .= $this->getNextElement( $xml, $postQId );

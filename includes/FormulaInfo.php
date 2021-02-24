@@ -105,14 +105,14 @@ class FormulaInfo extends SpecialPage {
 		$jsonResult = json_decode( $result, true );
 		$wgOut->addWikiTextAsInterface( '=== Translation to ' . $cas . '===' );
 
-		$wgOut->addHtml(
+		$wgOut->addHTML(
 			'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
 		);
 		$wgOut->addWikiTextAsInterface( 'In ' . $cas . ': <code>' . $jsonResult['result'] . '</code>' );
 
-		$wgOut->addHtml( '<div class="mw-collapsible-content">' );
+		$wgOut->addHTML( '<div class="mw-collapsible-content">' );
 		$wgOut->addWikiTextAsInterface( str_replace( "\n", "\n\n", $jsonResult['log'] ) );
-		$wgOut->addHtml( '</div></div>' );
+		$wgOut->addHTML( '</div></div>' );
 	}
 
 	/**
@@ -143,7 +143,7 @@ class FormulaInfo extends SpecialPage {
 			'action' => 'purge',
 			'mathpurge' => 'true'
 		] );
-		$out->addHtml( "<a href=\"$link\">(force rerendering)</a>" );
+		$out->addHTML( "<a href=\"$link\">(force rerendering)</a>" );
 		$mo = MathObject::constructformpage( $oldID, $eid );
 		if ( !$mo ) {
 			$out->addWikiTextAsInterface( 'Cannot find the equation data in the database.' .
@@ -193,9 +193,9 @@ class FormulaInfo extends SpecialPage {
 			$this->printSource( $mo->getTimestamp(), 'Rendered at', 'text', false );
 			$this->printSource( $mo->getIndexTimestamp(), 'and indexed at', 'text', false );
 			$this->printSource( $mo->isValidMathML( $mo->getMathml() ), 'validxml', 'text', false );
-			$out->addHtml( $mo->isValidMathML( $mo->getMathml() ) ? "valid" : "invalid" );
+			$out->addHTML( $mo->isValidMathML( $mo->getMathml() ) ? "valid" : "invalid" );
 			$this->printSource( $mo->getStatusCode(), 'status' );
-			$out->addHtml( htmlspecialchars( $mo->getLog(), 'status' ) );
+			$out->addHTML( htmlspecialchars( $mo->getLog(), 'status' ) );
 		}
 	}
 
@@ -272,7 +272,7 @@ class FormulaInfo extends SpecialPage {
 			$renderer->render();
 		}
 		if ( self::hasMathMLSupport( $mode ) ) {
-			$out->addHtml(
+			$out->addHTML(
 				'<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">'
 			);
 			$out->addWikiTextAsInterface(
@@ -283,14 +283,14 @@ class FormulaInfo extends SpecialPage {
 			$mathSearchImg = Html::element(
 				'img', [ 'src' => $imgUrl, 'width' => 15, 'height' => 15 ]
 			);
-			$out->addHtml( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $tex ) .
+			$out->addHTML( '<a href="/wiki/Special:MathSearch?mathpattern=' . urlencode( $tex ) .
 				'&searchx=Search">' . $mathSearchImg . '</a>' );
-			$out->addHtml( $renderer->getMathml() );
-			$out->addHtml( '<div class="mw-collapsible-content">' );
+			$out->addHTML( $renderer->getMathml() );
+			$out->addHTML( '<div class="mw-collapsible-content">' );
 			$out->addWikiTextAsInterface(
 				'<syntaxhighlight lang="xml">' . ( $renderer->getMathml() ) . '</syntaxhighlight>'
 			);
-			$out->addHtml( '</div></div>' );
+			$out->addHTML( '</div></div>' );
 		}
 		if ( self::hasSvgSupport( $mode ) ) {
 			try {
@@ -301,8 +301,8 @@ class FormulaInfo extends SpecialPage {
 					$svg = $renderer->getSvg( 'render' );
 				}
 				$out->addWikiTextAsInterface( 'SVG (' . self::getlengh( $svg ) . ') :', false );
-				$out->addHtml( $svg ); // FALSE, 'mwe-math-demo' ) );
-				$out->addHtml( "<br />\n" );
+				$out->addHTML( $svg ); // FALSE, 'mwe-math-demo' ) );
+				$out->addHTML( "<br />\n" );
 			} catch ( Exception $e ) {
 				$out->addHTML( 'Failed to get svg.' );
 			}
@@ -310,8 +310,8 @@ class FormulaInfo extends SpecialPage {
 		if ( self::hasPngSupport( $mode ) ) {
 			if ( method_exists( $renderer, 'getPng' ) ) {
 				$out->addWikiTextAsInterface( 'PNG (' . self::getlengh( $renderer->getPng() ) . ') :', false );
-				$out->addHtml( $renderer->getHtmlOutput() );
-				$out->addHtml( "<br />\n" );
+				$out->addHTML( $renderer->getHtmlOutput() );
+				$out->addHTML( "<br />\n" );
 			} else {
 				try {
 					$renderer = MathObject::cloneFromRenderer( $renderer );
@@ -319,8 +319,8 @@ class FormulaInfo extends SpecialPage {
 					$pngUrl = preg_replace( '#/svg/#', '/png/', $rbi->getFullSvgUrl() );
 					$png = file_get_contents( $pngUrl );
 					$out->addWikiTextAsInterface( 'PNG (' . self::getlengh( $png ) . ') :', false );
-					$out->addHtml( "<img src='$pngUrl' />" );
-					$out->addHtml( "<br />\n" );
+					$out->addHTML( "<img src='$pngUrl' />" );
+					$out->addHTML( "<br />\n" );
 				} catch ( Exception $e ) {
 					$out->addHTML( 'Failed to get png.' );
 				}

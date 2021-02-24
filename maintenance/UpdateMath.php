@@ -170,7 +170,7 @@ class UpdateMath extends Maintenance {
 				if ( $this->getOption( "texvccheck", false ) ) {
 					$checked = true;
 				} else {
-					$checked = $renderer->checkTex();
+					$checked = $renderer->checkTeX();
 					$this->time( "checkTex" );
 				}
 				if ( $checked ) {

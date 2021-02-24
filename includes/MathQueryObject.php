@@ -89,7 +89,7 @@ class MathQueryObject extends MathObject {
 	public function exportTexDocument() {
 		$texInput = htmlspecialchars( $this->getUserInputTex() );
 		$texInputComment = preg_replace( "/[\n\r]/", "\n%", $texInput );
-		$title = Title::newFromId( $this->getRevisionID() );
+		$title = Title::newFromID( $this->getRevisionID() );
 		$absUrl =
 			$title->getFullURL( [ "oldid" => $title->getLatestRevID() ] ) .
 			MathSearchHooks::generateMathAnchorString( $title->getLatestRevID(), $this->getAnchorID(), '' );
@@ -225,7 +225,7 @@ TeX;
 	}
 
 	public function generateContentQueryString() {
-		$renderer = new MathLaTeXML( $this->getTexQuery() );
+		$renderer = new MathLaTeXML( $this->getTeXQuery() );
 		$renderer->setLaTeXMLSettings( $this->getLaTeXMLCMMLSettings() );
 		$renderer->setAllowedRootElements( [ 'query' ] );
 		if ( $renderer->render( true ) ) {

@@ -256,7 +256,7 @@ class SpecialMathSearch extends SpecialPage {
 			}
 			$out->addWikiTextAsInterface( "====[[$pagename#$anchorID|Eq: $anchorID (Result " .
 				$this->resultID ++ . ")]]====", false );
-			$out->addHtml( "<br />" );
+			$out->addHTML( "<br />" );
 			$xpath = $answ[0]['xpath'];
 			// TODO: Remove hack and report to Prode that he fixes that
 			// $xmml->registerXPathNamespace('m', 'http://www.w3.org/1998/Math/MathML');
@@ -281,11 +281,11 @@ class SpecialMathSearch extends SpecialPage {
 				$renderer = new MathMathML( $mml, [ 'type' => 'pmml' ] );
 				$renderer->setMathml( $mml );
 				$renderer->render();
-				$out->addHtml( $renderer->getHtmlOutput() );
+				$out->addHTML( $renderer->getHtmlOutput() );
 				$renderer->writeCache();
 			} else {
 				$res->render();
-				$out->addHtml( $res->getHtmlOutput() );
+				$out->addHTML( $res->getHtmlOutput() );
 			}
 
 		}
