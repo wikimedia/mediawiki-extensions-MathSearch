@@ -1,7 +1,5 @@
 <?php
 /**
- * Test the MathSearchUtils script.
- *
  * @group MathSearch
  */
 class MathSearchUtilsTest extends MediaWikiTestCase {

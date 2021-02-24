@@ -5,7 +5,6 @@ namespace MathSearch\StackExchange;
 use MediaWikiTestCase;
 
 /**
- * Class RowTest
  * @package MathSearch\StackExchange
  * @group Database
  * @group MathSearch

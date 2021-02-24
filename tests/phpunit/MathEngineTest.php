@@ -1,7 +1,4 @@
 <?php
-/**
- * MediaWiki MathSearch extension
- */
 
 class MathEngineTest extends MediaWikiTestCase {
 

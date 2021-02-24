@@ -75,7 +75,6 @@ class QueryEval extends Maintenance {
 	 * @param stdClass $row
 	 *
 	 * @return string
-	 * @noinspection PhpExpressionResultUnusedInspection
 	 */
 	private function createTopicTex( $row ) {
 		$qId = $row->qId;

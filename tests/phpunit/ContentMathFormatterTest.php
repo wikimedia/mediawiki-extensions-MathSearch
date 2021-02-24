@@ -5,8 +5,6 @@ use DataValues\StringValue;
 use Wikibase\Lib\Formatters\SnakFormatter;
 
 /**
- * Test the results of MathFormatter
- *
  * @covers MathFormatter
  *
  * @group MathSearch

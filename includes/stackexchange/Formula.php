@@ -44,7 +44,6 @@ class Formula {
 		$user = User::newFromName( 'Maintenance script' );
 		$item = new Item();
 		$item->setId( ItemId::newFromNumber( $this->qid ) );
-		/** @var $idField Field */
 		$item->setLabel( 'en', "Formula {$this->id}" );
 		$guidGenerator = new GuidGenerator();
 		$statements = new StatementList();
