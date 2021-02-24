@@ -624,7 +624,7 @@ class SpecialMlpEval extends SpecialPage {
 		}
 		$out = $this->getOutput();
 		$hl = new MathHighlighter( $this->fId, $this->oldId, $highlight );
-		$out->addHtml(
+		$out->addHTML(
 			"<div class=\"toccolours mw-collapsible $collapsed\"  style=\"text-align: left\">"
 		);
 		if ( !$formula ) {
@@ -632,7 +632,7 @@ class SpecialMlpEval extends SpecialPage {
 		} else {
 			$out->addHTML( $formula );
 		}
-		$out->addHtml( '<div class="mw-collapsible-content">' );
+		$out->addHTML( '<div class="mw-collapsible-content">' );
 		global $wgParser;
 
 		$popts = $out->parserOptions();
@@ -644,7 +644,7 @@ class SpecialMlpEval extends SpecialPage {
 			call_user_func_array( $filter, [ &$parserOutput ] );
 		}
 		$out->addHTML( $parserOutput );
-		$out->addHtml( '</div></div>' );
+		$out->addHTML( '</div></div>' );
 	}
 
 	/**
@@ -673,7 +673,7 @@ class SpecialMlpEval extends SpecialPage {
 	private function getMathMlRenderer( $tex, $options ) {
 		$this->updateTex( $tex, $options );
 		$renderer = new MathMathML( $tex, $options );
-		$renderer->checkTex();
+		$renderer->checkTeX();
 		$renderer->render();
 		$renderer->writeCache();
 		return $renderer;

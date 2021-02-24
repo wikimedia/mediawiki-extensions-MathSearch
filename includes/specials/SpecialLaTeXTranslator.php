@@ -170,7 +170,7 @@ are often used together.';
 				sha1( self::VERSION . '-DG-' . $this->context ) );
 		$this->log( LogLevel::DEBUG, "DG Hash is {hash}", [ 'hash' => $hash ] );
 		if ( $this->purge ) {
-			$this->log( Loglevel::INFO, 'Cache purging requested' );
+			$this->log( LogLevel::INFO, 'Cache purging requested' );
 			$value = $this->calculateDependencyGraphFromContext();
 			$this->cache->set( $hash, $value );
 		}
@@ -319,9 +319,9 @@ are often used together.';
 
 	private function printColHeader( string $description ): void {
 		$out = $this->getOutput();
-		$out->addHtml( '<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">' );
+		$out->addHTML( '<div class="toccolours mw-collapsible mw-collapsed"  style="text-align: left">' );
 		$out->addWikiTextAsContent( $description );
-		$out->addHtml( '<div class="mw-collapsible-content">' );
+		$out->addHTML( '<div class="mw-collapsible-content">' );
 	}
 
 	private function printColFooter(): void {

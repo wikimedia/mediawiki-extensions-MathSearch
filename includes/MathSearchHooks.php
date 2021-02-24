@@ -205,7 +205,7 @@ class MathSearchHooks {
 		if ( $revId == 0 || self::setMathId( $eid, $renderer, $revId ) === false ) {
 			return true;
 		}
-		$url = SpecialPage::getTitleFor( $wgMathSearchInfoPage )->getLocalUrl( [
+		$url = SpecialPage::getTitleFor( $wgMathSearchInfoPage )->getLocalURL( [
 			'pid' => $revId,
 			'eid' => $eid
 		] );

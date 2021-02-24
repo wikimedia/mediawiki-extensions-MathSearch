@@ -51,7 +51,7 @@ class ContentMathFormatter implements ValueFormatter {
 			default:
 				$renderer = new MathLaTeXML( $tex );
 
-				if ( $renderer->checkTex() && $renderer->render() ) {
+				if ( $renderer->checkTeX() && $renderer->render() ) {
 					$html = $renderer->getHtmlOutput();
 					$renderer->writeCache();
 				} else {

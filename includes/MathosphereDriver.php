@@ -154,7 +154,7 @@ class MathosphereDriver {
 	}
 
 	public function checkBackend() {
-		$res = HTTP::get( $this->getBackendUrl() . '/_info' );
+		$res = Http::get( $this->getBackendUrl() . '/_info' );
 		if ( $res ) {
 			$res = json_decode( $res );
 			if ( $res && json_last_error() === JSON_ERROR_NONE ) {
