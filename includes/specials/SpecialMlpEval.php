@@ -219,7 +219,6 @@ class SpecialMlpEval extends SpecialPage {
 	/**
 	 * @param int $revId
 	 * @return bool
-	 * @throws MWException
 	 */
 	private function setRevision( $revId = 0 ) {
 		if ( $revId == 0 && $this->oldId > 0 ) {

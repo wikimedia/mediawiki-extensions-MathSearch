@@ -38,7 +38,6 @@ class SpecialUploadResult extends SpecialPage {
 	/**
 	 * @param null|string $query
 	 *
-	 * @throws MWException
 	 * @throws PermissionsError
 	 */
 	function execute( $query ) {
@@ -107,7 +106,6 @@ class SpecialUploadResult extends SpecialPage {
 	 * @param string $run
 	 *
 	 * @return bool|int|string
-	 * @throws MWException
 	 */
 	function runSelectorFilter( $run ) {
 		if ( $run == '' ) {
@@ -142,7 +140,6 @@ class SpecialUploadResult extends SpecialPage {
 
 	/**
 	 * @return bool|null|string
-	 * @throws MWException
 	 */
 	function runFileCheck() {
 		$out = $this->getOutput();
@@ -219,9 +216,6 @@ class SpecialUploadResult extends SpecialPage {
 			<td>${row['rank']}</td><td>$renderedMath</td></tr>" );
 	}
 
-	/**
-	 * @throws MWException
-	 */
 	private function displayFeedback() {
 		$runId = $this->runId;
 		$dbr = wfGetDB( DB_REPLICA );
@@ -269,9 +263,6 @@ class SpecialUploadResult extends SpecialPage {
 		$this->getOutput()->addHTML( '</table>' );
 	}
 
-	/**
-	 * @throws MWException
-	 */
 	private function displayFormulaFeedback() {
 		$runId = $this->runId;
 		$dbr = wfGetDB( DB_REPLICA );

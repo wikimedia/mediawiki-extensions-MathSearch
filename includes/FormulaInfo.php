@@ -122,7 +122,6 @@ class FormulaInfo extends SpecialPage {
 	 * @param string $eid
 	 *
 	 * @return bool
-	 * @throws MWException
 	 */
 	public function DisplayInfo( $oldID, $eid ) {
 		global $wgMathDebug;
@@ -258,8 +257,6 @@ class FormulaInfo extends SpecialPage {
 	/**
 	 * @param string $tex
 	 * @param string $mode
-	 *
-	 * @throws MWException
 	 */
 	private function DisplayRendering( $tex, $mode ) {
 		global $wgExtensionAssetsPath, $wgMathValidModes;

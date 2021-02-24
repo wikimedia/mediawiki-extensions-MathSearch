@@ -107,7 +107,6 @@ are often used together.';
 	 * Processes the submitted Form input
 	 * @param array $formData
 	 * @return bool
-	 * @throws MWException
 	 */
 	public function processInput( $formData ) {
 		$this->tex = $formData['input'];
@@ -119,7 +118,6 @@ are often used together.';
 
 	/**
 	 * @return false|mixed
-	 * @throws MWException
 	 */
 	private function getTranslations(): string {
 		$hash =
@@ -233,7 +231,6 @@ are often used together.';
 
 	/**
 	 * @return bool
-	 * @throws MWException
 	 */
 	public function displayResults(): bool {
 		$output = $this->getOutput();

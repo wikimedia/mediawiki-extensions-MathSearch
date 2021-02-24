@@ -92,7 +92,6 @@ class MathPerformance extends Maintenance {
 	 * @param string $hash
 	 * @param string $tex
 	 * @return bool|\Wikimedia\Rdbms\IResultWrapper
-	 * @throws DBUnexpectedError
 	 */
 	private function getFormulae( $hash, $tex ) {
 		$min = $this->getOption( 'min', 0 );
