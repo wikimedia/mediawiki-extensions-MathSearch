@@ -131,8 +131,7 @@ abstract class MathEngineRest {
 	protected function getPostData( $numProcess ) {
 		global $wgMathDebug;
 		if ( $this->query->getXQuery() ) {
-			$postData = $this->query->getXQuery();
-			return $postData;
+			return $this->query->getXQuery();
 		} else {
 			$tmp =
 				str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"",

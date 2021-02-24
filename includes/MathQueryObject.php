@@ -6,7 +6,9 @@ class MathQueryObject extends MathObject {
 	const SELECTIVITY_QVAR = 0.1;
 	/** @var int */
 	private $queryID = false;
-	private $texquery = false;
+	/** @var string */
+	private $texquery;
+	/** @var string|null|false */
 	private $cquery = false;
 	private $pquery = false;
 	private $xQuery = '';

@@ -20,7 +20,6 @@ class MathObject extends MathMathML {
 	/** @var int */
 	protected $revisionID = 0;
 	protected $index_timestamp = null;
-	protected $dbLoadTime = 0;
 	/** @var string|null */
 	protected $mathTableName = null;
 	/** @var int */
@@ -91,8 +90,7 @@ class MathObject extends MathMathML {
 		$res = $dbr->selectRow(
 			[ 'mathindex' ], self::dbIndexFieldsArray(), 'mathindex_revision_id = ' . $pid
 			. ' AND mathindex_anchor= "' . $eid . '"' );
-		$o = self::constructformpagerow( $res );
-		return $o;
+		return self::constructformpagerow( $res );
 	}
 
 	/**
@@ -653,13 +651,13 @@ class MathObject extends MathMathML {
 	 * @return array
 	 */
 	protected function dbDebugOutArray() {
-		$out = [ 'math_inputhash' => $this->getInputHash(),
-					  'math_log' => $this->getLog(),
-					  'math_mode' => $this->getMode(),
-					  'math_post' => $this->getPostData(),
-					  'math_rederingtime' => $this->getRenderingTime()
+		return [
+			'math_inputhash' => $this->getInputHash(),
+			'math_log' => $this->getLog(),
+			'math_mode' => $this->getMode(),
+			'math_post' => $this->getPostData(),
+			'math_rederingtime' => $this->getRenderingTime(),
 		];
-		return $out;
 	}
 
 	protected function writeDebugLog() {

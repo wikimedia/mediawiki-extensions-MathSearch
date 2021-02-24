@@ -2,10 +2,7 @@
 
 class MlpEvalForm extends OOUIHTMLForm {
 
-	const OPT_CONTINUE = 0;
-	const OPT_BACK = 1;
-	const OPT_RETRY = 2;
-
+	/** @var SpecialMlpEval */
 	private $eval;
 	private $step;
 

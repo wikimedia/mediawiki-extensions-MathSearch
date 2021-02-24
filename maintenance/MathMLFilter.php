@@ -44,8 +44,7 @@ class MathMLFilter extends DumpFilter {
 		$renderer = MathRenderer::getRenderer( $formula, [], 'latexml' );
 		$renderer->render();
 		// TODO: check if there is a Mediawiki function for that
-		$res = htmlspecialchars( $renderer->getMathml() );
-		return $res;
+		return htmlspecialchars( $renderer->getMathml() );
 	}
 
 	/**
