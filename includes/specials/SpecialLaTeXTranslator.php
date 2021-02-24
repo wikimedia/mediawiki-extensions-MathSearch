@@ -25,9 +25,8 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	private $dependencyGraph;
 
 	private function log( $level, $message, array $context = [] ) {
-		global $wgShowDebug;
 		$this->logger->log( $level, $message, $context );
-		if ( $wgShowDebug ) {
+		if ( $this->getConfig()->get( 'ShowDebug' ) ) {
 			$msg = LegacyLogger::interpolate( $message, $context );
 			$this->getOutput()->addWikiTextAsContent( "Log $level:" . $msg );
 		}
@@ -52,9 +51,8 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	 * @param string|null $par
 	 */
 	function execute( $par ) {
-		global $wgRequest;
-		$pid = $wgRequest->getVal( 'pid' );// Page ID
-		$eid = $wgRequest->getVal( 'eid' );// Equation ID
+		$pid = $this->getRequest()->getVal( 'pid' ); // Page ID
+		$eid = $this->getRequest()->getVal( 'eid' ); // Equation ID
 		$this->setHeaders();
 		$output = $this->getOutput();
 		$output->addWikiMsg( 'math-tex2nb-intro' );
@@ -73,7 +71,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 			$this->displayResults();
 		} else {
 			$this->tex = '(z)_n = \frac{\Gamma(z+n)}{\Gamma(z)}';
-			$this->context = 'The Gamma function 
+			$this->context = 'The Gamma function
 <math>\Gamma(z)</math>
 and the Pochhammer symbol
 <math>(a)_n</math>
@@ -98,7 +96,7 @@ are often used together.';
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Translate' );
 		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
-		$htmlForm->setHeaderText( '<h2>' . wfMessage( 'math-tex2nb-header' )->toString() .
+		$htmlForm->setHeaderText( '<h2>' . $this->msg( 'math-tex2nb-header' )->toString() .
 			'</h2>' );
 		$htmlForm->show();
 	}

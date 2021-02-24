@@ -18,12 +18,8 @@ class SpecialUploadResult extends SpecialPage {
 	 * @param string $name
 	 */
 	public function __construct( $name = 'MathUpload' ) {
-		global $wgMathWmcServer;
-		if ( $wgMathWmcServer ) {
-			parent::__construct( $name, 'mathwmcsubmit', true );
-		} else {
-			parent::__construct( $name, 'mathwmcsubmit', false );
-		}
+		$listed = (bool)$this->getConfig()->get( 'MathWmcServer' );
+		parent::__construct( $name, 'mathwmcsubmit', $listed );
 	}
 
 	/**
@@ -42,13 +38,14 @@ class SpecialUploadResult extends SpecialPage {
 	 * @throws PermissionsError
 	 */
 	function execute( $query ) {
-		global $wgMathUploadEnabled;
 		$this->setHeaders();
-		if ( !( $this->getUser()->isAllowed( 'mathwmcsubmit' ) && $wgMathUploadEnabled === true ) ) {
+		if ( !$this->getUser()->isAllowed( 'mathwmcsubmit' ) ||
+			!$this->getConfig()->get( 'MathUploadEnabled' )
+		) {
 			throw new PermissionsError( 'mathwmcsubmit' );
 		}
 
-		$this->getOutput()->addWikiTextAsInterface( wfMessage( 'math-wmc-Introduction' )->text() );
+		$this->getOutput()->addWikiTextAsInterface( $this->msg( 'math-wmc-Introduction' )->text() );
 		$this->importer = new ImportCsv( $this->getUser() );
 		$formDescriptor = $this->printRunSelector();
 		$formDescriptor['File'] = [
@@ -134,7 +131,7 @@ class SpecialUploadResult extends SpecialPage {
 		$res = $dbr->selectField( 'math_wmc_runs', 'runName',
 			[ 'isDraft' => true, 'userID' => $uID, 'runId' => $this->runId ] );
 		if ( !$res ) {
-			return wfMessage( 'math-wmc-SelectRunHelp' )->text();
+			return $this->msg( 'math-wmc-SelectRunHelp' )->text();
 		} else {
 			return true;
 		}

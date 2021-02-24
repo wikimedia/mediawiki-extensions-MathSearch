@@ -167,8 +167,7 @@ class ImportCsv {
 		// check header line
 		$uploadedHeaders = $table[0];
 		if ( $uploadedHeaders != self::$columnHeaders ) {
-			$error_msg = wfMessage( 'math-wmc-bad-header' )->text();
-			return $error_msg;
+			return wfMessage( 'math-wmc-bad-header' )->text();
 		}
 		$rank = 0;
 		$lastQueryID = 0;

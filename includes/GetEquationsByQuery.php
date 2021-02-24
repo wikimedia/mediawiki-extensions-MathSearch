@@ -17,15 +17,14 @@ class GetEquationsByQuery extends SpecialPage {
 	 * @param string|null $par
 	 */
 	function execute( $par ) {
-		global $wgRequest, $wgOut, $wgMathDebug;
-		if ( !$wgMathDebug ) {
-			$wgOut->addWikiTextAsInterface(
+		if ( !$this->getConfig()->get( 'MathDebug' ) ) {
+			$this->getOutput()->addWikiTextAsInterface(
 				"==Debug mode needed==  This function is only supported in math debug mode."
 			);
 			return;
 		}
 
-		$filterID = $wgRequest->getInt( 'filterID', 1000 );
+		$filterID = $this->getRequest()->getInt( 'filterID', 1000 );
 		switch ( $filterID ) {
 			case 0:
 				$sqlFilter = [ 'valid_xml' => '0' ];
@@ -34,14 +33,14 @@ class GetEquationsByQuery extends SpecialPage {
 				$sqlFilter = [ 'math_status' => '3' ];
 				break;
 			case 2:
-				$math5 = $wgRequest->getVal( 'first5', null );
+				$math5 = $this->getRequest()->getVal( 'first5', null );
 				$sqlFilter = [
 					'valid_xml' => '0',
 					'left(math_mathml,5)' => $math5
 				];
 				break;
 			case 3:
-				$math5 = $wgRequest->getVal( 'first5', null );
+				$math5 = $this->getRequest()->getVal( 'first5', null );
 				$sqlFilter = [
 					'valid_xml' => '0',
 						'left(math_tex,5)' => $math5
@@ -51,7 +50,7 @@ class GetEquationsByQuery extends SpecialPage {
 			default:
 				$sqlFilter = [ 'math_status' => '3', 'valid_xml' => '0' ];
 		}
-		$wgOut->addWikiTextAsInterface(
+		$this->getOutput()->addWikiTextAsInterface(
 			"Displaying first 10 equation for query: <pre>" . var_export( $sqlFilter, true ) . '</pre>'
 		);
 		$dbr = wfGetDB( DB_REPLICA );
@@ -64,24 +63,24 @@ class GetEquationsByQuery extends SpecialPage {
 				$sqlFilter,
 				__METHOD__,
 				[
-					'LIMIT' => $wgRequest->getInt( 'limit', 10 ),
-						'OFFSET' => $wgRequest->getInt( 'offset', 0 )
+					'LIMIT' => $this->getRequest()->getInt( 'limit', 10 ),
+					'OFFSET' => $this->getRequest()->getInt( 'offset', 0 ),
 				]
 		);
 		foreach ( $res as $row ) {
-			$wgOut->addWikiTextAsInterface( 'Renderd at <b>' . $row->math_timestamp . '</b> ', false );
-			$wgOut->addHtml( '<a href="/index.php/Special:FormulaInfo?tex=' .
+			$this->getOutput()->addWikiTextAsInterface( 'Renderd at <b>' . $row->math_timestamp . '</b> ', false );
+			$this->getOutput()->addHTML( '<a href="/index.php/Special:FormulaInfo?tex=' .
 				urlencode( $row->math_tex ) . '">more info</a>' );
-			$wgOut->addWikiTextAsInterface( ':TeX-Code:<pre>' . $row->math_tex . '</pre> <br />' );
-			$showmml = $wgRequest->getVal( 'showmml', false );
+			$this->getOutput()->addWikiTextAsInterface( ':TeX-Code:<pre>' . $row->math_tex . '</pre> <br />' );
+			$showmml = $this->getRequest()->getVal( 'showmml', false );
 			if ( $showmml ) {
 				$tstart = microtime( true );
 				$renderer = MathRenderer::getRenderer( $row->math_tex, [], 'latexml' );
 				$result = $renderer->render( true );
 				$tend = microtime( true );
-				$wgOut->addWikiTextAsInterface( ":rendering in " . ( $tend - $tstart ) . "s.", false );
+				$this->getOutput()->addWikiTextAsInterface( ":rendering in " . ( $tend - $tstart ) . "s.", false );
 				$renderer->writeCache();
-				$wgOut->addHtml( "Output:" . $result . "<br/>" );
+				$this->getOutput()->addHTML( "Output:" . $result . "<br/>" );
 			}
 
 		}

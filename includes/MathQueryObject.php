@@ -20,8 +20,7 @@ class MathQueryObject extends MathObject {
 	--destination=$@ --log=$(basename $<).ltxlog $<
 	</code> see http://kwarc.info/kohlhase/event/NTCIR11/
 	*/
-
-	private $pmmlSettings = [
+	private const PMML_SETTINGS = [
 		'format' => 'xml',
 		'whatsin' => 'math',
 		'whatsout' => 'math',
@@ -238,10 +237,10 @@ TeX;
 	}
 
 	public function generatePresentationQueryString() {
-		$renderer = new MathLaTeXML( $this->getTexQuery() );
+		$renderer = new MathLaTeXML( $this->getTeXQuery() );
 		// $renderer->setXMLValidaton( false );
 		// $renderer->setAllowedRootElements( array( 'query' ) );
-		$renderer->setLaTeXMLSettings( $this->pmmlSettings );
+		$renderer->setLaTeXMLSettings( self::PMML_SETTINGS );
 		if ( $renderer->render( true ) ) {
 			$this->pquery = $renderer->getMathml();
 			return $this->pquery;

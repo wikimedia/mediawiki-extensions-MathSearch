@@ -19,12 +19,11 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgRequest;
-		$offset = $wgRequest->getVal( 'offset', 0 );
-		$length = $wgRequest->getVal( 'length', 10 );
-		$page = $wgRequest->getVal( 'page', 'Testpage' );
-		$action = $wgRequest->getVal( 'action', 'show' );
-		$purge = $wgRequest->getVal( 'purge', '' );
+		$offset = $this->getRequest()->getVal( 'offset', 0 );
+		$length = $this->getRequest()->getVal( 'length', 10 );
+		$page = $this->getRequest()->getVal( 'page', 'Testpage' );
+		$action = $this->getRequest()->getVal( 'action', 'show' );
+		$purge = $this->getRequest()->getVal( 'purge', '' );
 		if ( !$this->userCanExecute( $this->getUser() ) ) {
 			$this->displayRestrictionError();
 		} else {
@@ -43,7 +42,7 @@ class SpecialMathDebug extends SpecialPage {
 					$this->generateParserTests( $offset, $length, $page );
 					break;
 				default:
-					$this->testParser( $offset, $length, $page, $purge == 'checked' ? true : false );
+					$this->testParser( $offset, $length, $page, $purge === 'checked' );
 			}
 		}
 	}
@@ -74,14 +73,15 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	public function compareParser( $offset = 0, $length = 10, $page = 'Testpage' ) {
-		global $wgMathUseLaTeXML, $wgRequest, $wgMathLaTeXMLUrl;
+		// phpcs:ignore MediaWiki.Usage.ExtendClassUsage.FunctionConfigUsage
+		global $wgMathLaTeXMLUrl;
 		$out = $this->getOutput();
-		if ( !$wgMathUseLaTeXML ) {
+		if ( !$this->getConfig()->get( 'MathUseLaTeXML' ) ) {
 			$out->addWikiTextAsInterface( "MahtML support must be enabled." );
 			return false;
 		}
-		$parserA = $wgRequest->getVal( 'parserA', 'http://latexml.mathweb.org/convert' );
-		$parserB = $wgRequest->getVal( 'parserB', 'http://latexml-test.instance-proxy.wmflabs.org/' );
+		$parserA = $this->getRequest()->getVal( 'parserA', 'http://latexml.mathweb.org/convert' );
+		$parserB = $this->getRequest()->getVal( 'parserB', 'http://latexml-test.instance-proxy.wmflabs.org/' );
 		$formulae = self::getMathTagsFromPage( $page );
 		$i = 0;
 		$str_out = '';
@@ -125,7 +125,6 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	public function testParser( $offset = 0, $length = 10, $page = 'Testpage', $purge = true ) {
-		global $wgMathMathValidModes;
 		$out = $this->getOutput();
 		$i = 0;
 		foreach (
@@ -137,7 +136,7 @@ class SpecialMathDebug extends SpecialPage {
 			$out->addWikiTextAsInterface(
 				'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>'
 			);
-			if ( in_array( 'latexml', $wgMathMathValidModes ) ) {
+			if ( in_array( 'latexml', $this->getConfig()->get( 'MathMathValidModes' ) ) ) {
 				$out->addHTML( self::render( $t, 'latexml', $purge ) );
 			}
 		}
@@ -174,9 +173,8 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	function generateLaTeXMLOutput( $offset = 0, $length = 10, $page = 'Testpage' ) {
-		global $wgMathUseLaTeXML;
 		$out = $this->getOutput();
-		if ( !$wgMathUseLaTeXML ) {
+		if ( !$this->getConfig()->get( 'MathUseLaTeXML' ) ) {
 			$out->addWikiTextAsInterface( "MahtML support must be enabled." );
 			return false;
 		}

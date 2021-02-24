@@ -208,8 +208,7 @@ class SpecialMlpEval extends SpecialPage {
 		}
 		$revision = $title->getLatestRevID();
 		if ( $revision ) {
-			$retVal = $this->setRevision( $revision );
-			return $retVal;
+			return $this->setRevision( $revision );
 		} else {
 			$this->lastError = "invalid revision";
 			return false;
@@ -403,12 +402,12 @@ class SpecialMlpEval extends SpecialPage {
 			case self::STEP_TEX:
 				$mo = $this->selectedMathTag;
 				$this->printSource( $mo->getUserInputTex(),
-					wfMessage( 'math-lp-3-pretty-option-1' )->text(), 'latex' );
+					$this->msg( 'math-lp-3-pretty-option-1' )->text(), 'latex' );
 				$texInfo = $mo->getTexInfo();
 				if ( $texInfo ) {
 					if ( $texInfo->getChecked() !== $mo->getUserInputTex() ) {
 						$this->printSource( $texInfo->getChecked(),
-							wfMessage( 'math-lp-3-pretty-option-2' )->text(), 'latex' );
+							$this->msg( 'math-lp-3-pretty-option-2' )->text(), 'latex' );
 						$this->texInputChanged = true;
 					}
 				}
@@ -426,7 +425,7 @@ class SpecialMlpEval extends SpecialPage {
 						$this->getUser()->setOption( 'math', 'mathml' );
 						$this->printMathObjectInContext( false, false,
 							$this->getMathMLRenderingAsHtmlFragment(),
-							"SpecialMlpEval::removeSVGs" );
+							[ __CLASS__, 'removeSVGs' ] );
 				}
 				break;
 			case self::STEP_IDENTIFIERS:
@@ -575,7 +574,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	private function printTitle() {
-		$sectionTitle = wfMessage( "math-lp-{$this->step}-head" )
+		$sectionTitle = $this->msg( "math-lp-{$this->step}-head" )
 			->params( $this->subStepNames[$this->subStep], $this->subStep );
 		$this->getOutput()->addHTML( "<h2>$sectionTitle</h2>" );
 	}

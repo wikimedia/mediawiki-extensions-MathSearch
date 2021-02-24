@@ -48,7 +48,6 @@ class SpecialMathSearch extends SpecialPage {
 	 */
 	public function execute( $par ) {
 		set_error_handler( "SpecialMathSearch::exception_error_handler" );
-		global $wgExtensionAssetsPath;
 		$request = $this->getRequest();
 		$this->setHeaders();
 		$this->mathpattern = $request->getText( 'mathpattern', '' );
@@ -79,7 +78,7 @@ class SpecialMathSearch extends SpecialPage {
 		} else {
 			$this->searchForm()->show();
 			if ( file_exists( __DIR__ . self::GUI_PATH ) ) {
-				$minurl = $wgExtensionAssetsPath . '/MathSearch' . self::GUI_PATH;
+				$minurl = $this->getConfig()->get( 'ExtensionAssetsPath' ) . '/MathSearch' . self::GUI_PATH;
 				$this->getOutput()
 					->addHTML( "<p><a href=\"${minurl}\">Test experimental math input interface</a></p>" );
 			}
@@ -137,9 +136,9 @@ class SpecialMathSearch extends SpecialPage {
 			$out["rel-$i"] = [
 				'label-message' => 'math-search-relation-label',
 				'options' => [
-					wfMessage( 'math-search-relation-0' )->text() => 0,
-					wfMessage( 'math-search-relation-1' )->text() => 1,
-					wfMessage( 'math-search-relation-2' )->text() => 2 // ,
+					$this->msg( 'math-search-relation-0' )->text() => 0,
+					$this->msg( 'math-search-relation-1' )->text() => 1,
+					$this->msg( 'math-search-relation-2' )->text() => 2 // ,
 					// 'nor' => 3
 				],
 				'type' => $relType,
@@ -149,9 +148,9 @@ class SpecialMathSearch extends SpecialPage {
 			$out["type-$i"] = [
 				'label-message' => 'math-search-type-label',
 				'options' => [
-					wfMessage( 'math-search-type-0' )->text() => 0,
-					wfMessage( 'math-search-type-1' )->text() => 1,
-					wfMessage( 'math-search-type-2' )->text() => 2
+					$this->msg( 'math-search-type-0' )->text() => 0,
+					$this->msg( 'math-search-type-1' )->text() => 1,
+					$this->msg( 'math-search-type-2' )->text() => 2
 				],
 				'type' => 'select',
 				'section' => "term $i",
@@ -241,7 +240,6 @@ class SpecialMathSearch extends SpecialPage {
 	 */
 	public function displayMathElements( $revisionID, $mathElements, $pagename ) {
 		$out = $this->getOutput();
-		global $wgMathDebug;
 		foreach ( $mathElements as $anchorID => $answ ) {
 			$res = MathObject::constructformpage( $revisionID, $anchorID );
 			if ( !$res ) {
@@ -271,7 +269,7 @@ class SpecialMathSearch extends SpecialPage {
 			$dom->loadXML( $mml );
 			$DOMx = new DOMXpath( $dom );
 			$hits = $DOMx->query( $xpath );
-			if ( $wgMathDebug ) {
+			if ( $this->getConfig()->get( 'MathDebug' ) ) {
 				LoggerFactory::getInstance( 'MathSearch' )->debug( 'xPATH:' . $xpath );
 			}
 			if ( $hits !== null && $hits ) {
@@ -322,8 +320,8 @@ class SpecialMathSearch extends SpecialPage {
 		$this->getOutput()->addWikiMsg( 'math-search-term',
 			$term->getKey(),
 			$expr,
-			wfMessage( "math-search-type-{$term->getType()}" )->text(),
-			$term->getRel() == '' ? '' : wfMessage( "math-search-relation-{$term->getRel()}" )->text(),
+			$this->msg( "math-search-type-{$term->getType()}" )->text(),
+			$term->getRel() == '' ? '' : $this->msg( "math-search-relation-{$term->getRel()}" )->text(),
 			count( $term->getRelevanceMap() ) );
 	}
 

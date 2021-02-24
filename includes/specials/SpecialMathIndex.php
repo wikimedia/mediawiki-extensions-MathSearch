@@ -18,10 +18,9 @@ class SpecialMathIndex extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgMathDebug;
 		$output = $this->getOutput();
 		$this->setHeaders();
-		if ( $wgMathDebug ) {
+		if ( $this->getConfig()->get( 'MathDebug' ) ) {
 			if ( !$this->userCanExecute( $this->getUser() ) ) {
 				$this->displayRestrictionError();
 				return;

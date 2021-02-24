@@ -12,12 +12,8 @@ class SpecialDisplayTopics extends SpecialPage {
 	 * @param string $name
 	 */
 	public function __construct( $name = 'DisplayTopics' ) {
-		global $wgMathWmcServer;
-		if ( $wgMathWmcServer ) {
-			parent::__construct( $name, 'mathwmcsubmit', true );
-		} else {
-			parent::__construct( $name, 'mathwmcsubmit', false );
-		}
+		$listed = (bool)$this->getConfig()->get( 'MathWmcServer' );
+		parent::__construct( $name, 'mathwmcsubmit', $listed );
 	}
 
 	/**
@@ -31,7 +27,7 @@ class SpecialDisplayTopics extends SpecialPage {
 		if ( !( $this->getUser()->isAllowed( 'mathwmcsubmit' ) ) ) {
 			throw new PermissionsError( 'mathwmcsubmit' );
 		}
-		$this->getOutput()->addWikiTextAsInterface( wfMessage( 'math-wmc-Queries' )->text() );
+		$this->getOutput()->addWikiTextAsInterface( $this->msg( 'math-wmc-Queries' )->text() );
 		if ( $query ) {
 			$this->displayTopic( $query );
 		} else {
