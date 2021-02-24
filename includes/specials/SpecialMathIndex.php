@@ -1,7 +1,8 @@
 <?php
 class SpecialMathIndex extends SpecialPage {
-	const SCRIPT_UPDATE_MATH = 0;
-	const SCRIPT_WRITE_INDEX = 1;
+
+	private const SCRIPT_UPDATE_MATH = 0;
+	private const SCRIPT_WRITE_INDEX = 1;
 
 	function __construct() {
 		parent::__construct( 'MathIndex', 'edit', true );

@@ -3,13 +3,15 @@
 use MediaWiki\MediaWikiServices;
 
 class MathSearchTerm {
-	const TYPE_TEXT = 0;
-	const TYPE_MATH = 1;
-	const TYPE_XMATH = 2;
-	const REL_AND = 0;
-	const REL_OR = 1;
-	const REL_NAND = 2;
-	const REL_NOR = 3;
+
+	public const TYPE_TEXT = 0;
+	public const TYPE_MATH = 1;
+	public const TYPE_XMATH = 2;
+	public const REL_AND = 0;
+	public const REL_OR = 1;
+	public const REL_NAND = 2;
+	public const REL_NOR = 3;
+
 	private $key = 0;
 	private $rel = 0;
 	private $type = 0;

@@ -24,7 +24,9 @@ use MediaWiki\MediaWikiServices;
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ExtractFeatures extends Maintenance {
-	const RTI_CHUNK_SIZE = 100;
+
+	private const RTI_CHUNK_SIZE = 100;
+
 	/** @var bool */
 	private $purge = false;
 	/** @var \Wikimedia\Rdbms\IDatabase */

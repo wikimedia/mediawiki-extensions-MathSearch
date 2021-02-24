@@ -6,8 +6,8 @@ use MediaWiki\Revision\SlotRecord;
 
 class MathIdGenerator {
 
-	const CONTENT_POS = 1;
-	const ATTRIB_POS = 2;
+	public const CONTENT_POS = 1;
+	public const ATTRIB_POS = 2;
 
 	/** @var string */
 	private $wikiText;
