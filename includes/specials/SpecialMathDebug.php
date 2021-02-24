@@ -102,9 +102,9 @@ class SpecialMathDebug extends SpecialPage {
 					$out->addWikiTextAsInterface( 'Output is identical' );
 				} else {
 					$out->addWikiTextAsInterface( 'Request A <source lang="bash"> curl -d \'' .
-						$renderer->getPostValue() . '\' ' . $parserA . '</source>' );
+						$renderer->getPostData() . '\' ' . $parserA . '</source>' );
 					$out->addWikiTextAsInterface( 'Request B <source lang="bash"> curl -d \'' .
-						$renderer->getPostValue() . '\' ' . $parserB . '</source>' );
+						$renderer->getPostData() . '\' ' . $parserB . '</source>' );
 					$out->addWikiTextAsInterface(
 						'Diff: <source lang="diff">' . $diffFormatter->format( $diff ) . '</source>'
 					);

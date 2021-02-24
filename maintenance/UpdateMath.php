@@ -196,7 +196,7 @@ class UpdateMath extends Maintenance {
 					echo "\nF:\t\t" . $renderer->getMd5() . " texvccheck error:" . $renderer->getLastError();
 					continue;
 				}
-				$renderer->writeCache( $this->dbw );
+				$renderer->writeCache();
 				$this->time( "write Cache" );
 				if ( !$this->getOption( "hooks", false ) ) {
 					Hooks::run( 'MathFormulaPostRender', [ $parser, &$renderer, &$notused ] );
