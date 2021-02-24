@@ -27,6 +27,7 @@ require_once __DIR__ . '/IndexBase.php';
  * @author Moritz Schubotz
  */
 class CreateBaseXMathTable extends IndexBase {
+
 	private static $mwsns = 'mws:';
 	private static $XMLHead;
 	private static $XMLFooter;

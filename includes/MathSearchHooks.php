@@ -12,6 +12,7 @@ use Mediawiki\Revision\SlotRecord;
  * GPLv2 license; info in main package.
  */
 class MathSearchHooks {
+
 	private static $idGenerators = [];
 
 	/**

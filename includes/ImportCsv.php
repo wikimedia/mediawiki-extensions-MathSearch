@@ -1,6 +1,7 @@
 <?php
 
 class ImportCsv {
+
 	/**
 	 * @var array
 	 */

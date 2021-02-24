@@ -9,6 +9,7 @@ use MediaWiki\MediaWikiServices;
  * @author Yaron Koren (This class is based on DT_ImportCSV from the DataTransfer extension)
  */
 class SpecialUploadResult extends SpecialPage {
+
 	/** @var ImportCsv */
 	private $importer;
 	/** @var bool|int|string */

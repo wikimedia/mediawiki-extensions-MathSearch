@@ -9,6 +9,7 @@ use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\Repo\WikibaseRepo;
 
 class Field {
+
 	private $seName;
 	private $propertyId = null;
 	private $references = false;

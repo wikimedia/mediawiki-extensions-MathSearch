@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -25,6 +24,7 @@ require_once __DIR__ . '/IndexBase.php';
  * @author Moritz Schubotz
  */
 class CreateDB2MathTable extends IndexBase {
+
 	private $statment;
 	private $conn;
 	/** @var float */

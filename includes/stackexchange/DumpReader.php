@@ -7,6 +7,7 @@ use Title;
 use XMLReader;
 
 class DumpReader {
+
 	/**
 	 * @var XMLReader
 	 */

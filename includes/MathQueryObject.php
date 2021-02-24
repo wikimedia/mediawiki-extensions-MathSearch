@@ -1,4 +1,5 @@
 <?php
+
 use MediaWiki\Logger\LoggerFactory;
 
 class MathQueryObject extends MathObject {
@@ -13,6 +14,7 @@ class MathQueryObject extends MathObject {
 	private $pquery = false;
 	private $xQuery = '';
 	private $qVarCount = 0;
+
 	/* ToDo: Update to new format
 	<code>
 		 latexmlc --whatsin=fragment --path=$(LLIB) \

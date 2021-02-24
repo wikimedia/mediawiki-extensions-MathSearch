@@ -3,6 +3,7 @@
 use Wikimedia\Rdbms\IResultWrapper;
 
 class MathSearchUtils {
+
 	private static function addExtensionTable( $name, $folder = '' ) {
 		$dbw = wfGetDB( DB_MASTER );
 		$sql = file_get_contents( __DIR__ . "/../db/wmc/${folder}/${name}.sql" );

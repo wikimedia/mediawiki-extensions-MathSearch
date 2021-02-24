@@ -4,6 +4,7 @@ use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 
 class MathObject extends MathMathML {
+
 	// DEBUG VARIABLES
 	// Available, if Math extension runs in debug mode ($wgMathDebug = true) only.
 	/** @var int LaTeXML return code (will be available in future Mathoid versions as well) */

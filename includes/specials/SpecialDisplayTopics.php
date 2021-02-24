@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Lets the user import a CSV file with the results
  *

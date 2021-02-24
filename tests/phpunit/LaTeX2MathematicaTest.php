@@ -1,5 +1,7 @@
 <?php
+
 class LaTeX2MathematicaTest extends MediaWikiTestCase {
+
 	/**
 	 * @var LaTeXTranslator
 	 */

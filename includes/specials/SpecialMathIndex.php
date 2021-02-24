@@ -1,4 +1,5 @@
 <?php
+
 class SpecialMathIndex extends SpecialPage {
 
 	private const SCRIPT_UPDATE_MATH = 0;

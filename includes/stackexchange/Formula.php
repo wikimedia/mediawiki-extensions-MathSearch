@@ -11,6 +11,7 @@ use Wikibase\DataModel\Statement\StatementList;
 use Wikibase\Repo\WikibaseRepo;
 
 class Formula {
+
 	private $id;
 	private $qid;
 	private $text;
