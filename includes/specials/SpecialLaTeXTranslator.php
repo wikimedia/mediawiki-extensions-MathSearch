@@ -63,7 +63,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 			$contentModel =
 				$revisionRecord->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )->getModel();
 			if ( $contentModel !== CONTENT_MODEL_WIKITEXT ) {
-				throw new MWException( "Only CONTENT_MODEL_WIKITEXT supported fro translation." );
+				throw new MWException( "Only CONTENT_MODEL_WIKITEXT supported for translation." );
 			}
 			$this->context =
 				ContentHandler::getContentText( $revisionRecord->getContent( SlotRecord::MAIN ) );
