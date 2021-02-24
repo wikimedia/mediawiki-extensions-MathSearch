@@ -41,7 +41,7 @@ class ImportStackExchangeDump extends Maintenance {
 		$this->addDescription( "Imports StackExchangeDump. \n" .
 			"Processes XML files in the StackExchangeDump dump format." );
 		$this->addArg( 'dir', 'The directory to be read', true );
-		$this->addArg( 'dir', 'The directory to write error files', false );
+		$this->addArg( 'errPath', 'The directory to write error files', false );
 		$this->requireExtension( 'MathSearch' );
 		// $this->requireExtension('Wikibase');
 	}

@@ -444,11 +444,12 @@ class MathObject extends MathMathML {
 		$this->anchorID = $id;
 	}
 
-	public function render( $purge = false ) {
+	/** @inheritDoc */
+	public function render( $forceReRendering = false ) {
 	}
 
-	public function getSvg( /** @noinspection PhpUnusedParameterInspection */
-		$render = 'render' ) {
+	/** @inheritDoc */
+	public function getSvg( $render = 'render' ) {
 		if ( $render === 'force' ) {
 			$md = new MathoidDriver( $this->getUserInputTex(), $this->getInputType() );
 			return $md->getSvg();

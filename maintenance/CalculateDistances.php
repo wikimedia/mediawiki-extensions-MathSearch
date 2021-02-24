@@ -55,17 +55,20 @@ class CalculateDistances extends Maintenance {
 			$conds .= " AND revstat_revid <= $max";
 		}
 		if ( $this->getOption( 'page9', false ) ) {
+			// TODO: Can use selectField()
 			$res =
 				$this->db->select( [ 'mathpage9', 'mathrevisionstat' ],
-					[ 'page_id', 'revstat_revid' ],
+					'revstat_revid',
+					// FIXME: Should be an array, not a string
 					$conds . ' AND revstat_revid = page_id', __METHOD__, [ 'DISTINCT' ] );
 		} else {
+			// TODO: Can use selectField()
 			$res =
 				$this->db->select( 'mathrevisionstat', 'revstat_revid', $conds, __METHOD__,
 					[ 'DISTINCT' ] );
 		}
 		foreach ( $res as $row ) {
-			array_push( $this->pagelist, $row->pagestat_pageid );
+			$this->pagelist[] = $row->revstat_revid;
 		}
 		$this->populateSearchIndex();
 		$this->output( "Done.\n" );

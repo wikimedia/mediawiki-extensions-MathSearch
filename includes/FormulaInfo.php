@@ -82,14 +82,8 @@ class FormulaInfo extends SpecialPage {
 			return false;
 		}
 
-		if ( $resultMaple !== false ) {
-			self::PrintTranslationResult( 'Maple', $resultMaple );
-		}
-
-		if ( $resultMathe !== false ) {
-			self::PrintTranslationResult( 'Mathematica', $resultMathe );
-		}
-
+		self::PrintTranslationResult( 'Maple', $resultMaple );
+		self::PrintTranslationResult( 'Mathematica', $resultMathe );
 		return true;
 	}
 
