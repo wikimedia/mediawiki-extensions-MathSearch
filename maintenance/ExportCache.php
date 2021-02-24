@@ -23,10 +23,12 @@
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ExportMathCache extends Maintenance {
-	const DEFAULT_TABLE = 'mathoid';
-	const ERROR_CODE_TABLE_NAME = 1;
-	const ERROR_CODE_DB_ERROR = 2;
-	const ERROR_CODE_JSON = 3;
+
+	private const DEFAULT_TABLE = 'mathoid';
+	private const ERROR_CODE_TABLE_NAME = 1;
+	private const ERROR_CODE_DB_ERROR = 2;
+	private const ERROR_CODE_JSON = 3;
+
 	private static $allowedTables = [ 'mathoid' , 'mathlatexml' ];
 	private static $inputColumns = [
 		'mathoid' => 'math_input' ,

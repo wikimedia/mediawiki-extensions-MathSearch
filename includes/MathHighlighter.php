@@ -1,6 +1,7 @@
 <?php
 class MathHighlighter {
-	const WINDOW_SIZE = 1200;
+
+	private const WINDOW_SIZE = 1200;
 
 	/** @var string */
 	private $wikiText;

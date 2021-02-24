@@ -9,7 +9,8 @@ use Psr\Log\LogLevel;
 
 class SpecialLaTeXTranslator extends SpecialPage {
 
-	const VERSION = '1.0.0';
+	private const VERSION = '1.0.0';
+
 	private $cache;
 	private $dgUrl;
 	private $compUrl;

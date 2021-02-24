@@ -14,7 +14,7 @@ use MediaWiki\MediaWikiServices;
  */
 class SpecialMathSearch extends SpecialPage {
 
-	const  GUI_PATH = '/modules/min/index.xhtml';
+	private const GUI_PATH = '/modules/min/index.xhtml';
 
 	private $mathpattern;
 	private $textpattern;

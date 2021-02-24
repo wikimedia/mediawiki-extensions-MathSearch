@@ -14,14 +14,16 @@ use MediaWiki\Revision\RevisionRecord;
  * @ingroup extensions
  */
 class SpecialMlpEval extends SpecialPage {
-	const STEP_PAGE = 1;
-	const STEP_FORMULA = 2;
-	const STEP_TEX = 3;
-	const STEP_RENDERING = 4;
-	const STEP_IDENTIFIERS = 5;
-	const STEP_DEFINITIONS = 6;
-	const STEP_FINISHED = 7;
-	const MAX_ATTEMPTS = 10;
+
+	public const STEP_PAGE = 1;
+	public const STEP_FORMULA = 2;
+	public const STEP_TEX = 3;
+	public const STEP_RENDERING = 4;
+	public const STEP_IDENTIFIERS = 5;
+	public const STEP_DEFINITIONS = 6;
+	public const STEP_FINISHED = 7;
+	private const MAX_ATTEMPTS = 10;
+
 	private $subStepNames = [
 		''   => '',
 		'4'  => '',

@@ -2,8 +2,10 @@
 use MediaWiki\Logger\LoggerFactory;
 
 class MathQueryObject extends MathObject {
-	const MIN_DEPTH = 0;
-	const SELECTIVITY_QVAR = 0.1;
+
+	private const MIN_DEPTH = 0;
+	private const SELECTIVITY_QVAR = 0.1;
+
 	/** @var int */
 	private $queryID = false;
 	private $texquery = false;
