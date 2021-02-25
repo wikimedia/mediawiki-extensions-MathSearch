@@ -26,16 +26,6 @@ class ImportStackExchangeDump extends Maintenance {
 
 	/** @var string */
 	private $dir;
-	private $overwrite;
-	const EXPRECTED_FILES = [
-		'Badges',
-		'Comments',
-		'Posts',
-		'PostLinks',
-		'Tags',
-		'Users',
-		'Votes',
-	];
 
 	public function __construct() {
 		parent::__construct();
@@ -49,7 +39,6 @@ class ImportStackExchangeDump extends Maintenance {
 
 	public function execute() {
 		$this->dir = $this->getArg( 0 );
-		$this->overwrite = $this->getOption( 'overwrite' );
 		$errPath = $this->getArg( 1, realpath( $this->dir ) );
 		if ( !is_dir( $this->dir ) ) {
 			$this->output( "{$this->dir} is not a directory.\n" );

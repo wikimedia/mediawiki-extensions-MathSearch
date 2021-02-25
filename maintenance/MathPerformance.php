@@ -24,7 +24,7 @@ use MediaWiki\Logger\LoggerFactory;
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class MathPerformance extends Maintenance {
-	const RTI_CHUNK_SIZE = 10000;
+
 	/** @var bool */
 	private $verbose;
 	/** @var \Wikimedia\Rdbms\IDatabase */

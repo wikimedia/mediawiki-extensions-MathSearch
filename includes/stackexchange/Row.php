@@ -14,19 +14,10 @@ use Wikibase\Repo\WikibaseRepo;
 
 class Row {
 
-	protected $ownEntityId = null;
 	/** @var Field[] */
 	private $fields = [];
 	/** @var int */
 	private $ignoredFieldCount = 0;
-	private $id;
-	private $qid;
-	private $postTypeId;
-	private $acceptedAnswerId;
-	private $score;
-	private $creationDate;
-	private $viewCount;
-	private $body;
 	/** @var string */
 	private $normFileName;
 
