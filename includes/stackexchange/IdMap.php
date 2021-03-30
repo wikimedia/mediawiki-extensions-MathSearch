@@ -22,8 +22,7 @@ class IdMap {
 	private function __construct() {
 		$this->dbw = wfGetDB( DB_MASTER );
 		$this->item = new Item();
-		$wikibaseRepo = WikibaseRepo::getDefaultInstance();
-		$this->store = $wikibaseRepo->getStore()->getEntityStore();
+		$this->store = WikibaseRepo::getStore()->getEntityStore();
 		// don't store too many keys
 		$this->cache = new \HashBagOStuff( [ 'maxKeys' => 10000 ] );
 	}
