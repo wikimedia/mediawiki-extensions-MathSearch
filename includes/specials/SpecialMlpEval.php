@@ -414,16 +414,27 @@ class SpecialMlpEval extends SpecialPage {
 				}
 				break;
 			case self::STEP_RENDERING:
+				$services = MediaWikiServices::getInstance();
 				switch ( $this->subStep ) {
 					case '4a':
 						// remove step 4a since PNG mode was finally removed
 					case '4b':
-						$this->getUser()->setOption( 'math', 'mathml' );
+						if ( method_exists( $services, 'getUserOptionsManager' ) ) {
+							// MW 1.35+
+							$services->getUserOptionsManager()->setOption( $user, 'math', 'mathml' );
+						} else {
+							$this->getUser()->setOption( 'math', 'mathml' );
+						}
 						$this->printMathObjectInContext( false, false,
 							$this->getSvgRenderingAsHtmlFragment() );
 						break;
 					case '4c':
-						$this->getUser()->setOption( 'math', 'mathml' );
+						if ( method_exists( $services, 'getUserOptionsManager' ) ) {
+							// MW 1.35+
+							$services->getUserOptionsManager()->setOption( $user, 'math', 'mathml' );
+						} else {
+							$this->getUser()->setOption( 'math', 'mathml' );
+						}
 						$this->printMathObjectInContext( false, false,
 							$this->getMathMLRenderingAsHtmlFragment(),
 							[ __CLASS__, 'removeSVGs' ] );
