@@ -58,7 +58,7 @@ class Row {
 	}
 
 	public function createWbItem() {
-		$store = WikibaseRepo::getStore()->getEntityStore();
+		$store = WikibaseRepo::getEntityStore();
 		$user = User::newFromName( 'Maintenance script' );
 		$item = $this->getItem();
 		$id = $this->fields['Id']->getContent();
