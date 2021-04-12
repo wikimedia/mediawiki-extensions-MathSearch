@@ -169,7 +169,7 @@ class Field {
 		$wikibaseRepo = WikibaseRepo::getDefaultInstance();
 		$sf = $wikibaseRepo->getSnakFactory();
 		$propertyId = new PropertyId( $this->propertyId );
-		$type = $wikibaseRepo->getPropertyDataTypeLookup()->getDataTypeIdForProperty( $propertyId );
+		$type = WikibaseRepo::getPropertyDataTypeLookup()->getDataTypeIdForProperty( $propertyId );
 		$content = $this->content;
 		if ( !is_array( $content ) ) {
 			$content = [ $content ];
