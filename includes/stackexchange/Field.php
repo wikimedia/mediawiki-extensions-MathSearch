@@ -166,8 +166,7 @@ class Field {
 	 * @return PropertyValueSnak
 	 */
 	public function getSnaks() {
-		$wikibaseRepo = WikibaseRepo::getDefaultInstance();
-		$sf = $wikibaseRepo->getSnakFactory();
+		$sf = WikibaseRepo::getSnakFactory();
 		$propertyId = new PropertyId( $this->propertyId );
 		$type = WikibaseRepo::getPropertyDataTypeLookup()->getDataTypeIdForProperty( $propertyId );
 		$content = $this->content;

@@ -39,8 +39,7 @@ class Formula {
 	}
 
 	public function createWbItem() {
-		$wikibaseRepo = WikibaseRepo::getDefaultInstance();
-		$sf = $wikibaseRepo->getSnakFactory();
+		$sf = WikibaseRepo::getSnakFactory();
 		$store = WikibaseRepo::getEntityStore();
 		$user = User::newFromName( 'Maintenance script' );
 		$item = new Item();
