@@ -223,7 +223,7 @@ class Field {
 	}
 
 	private function propagateFieldInfo( $fieldInfo ) {
-		$hasKey = function ( $key ) use ( $fieldInfo ) {
+		$hasKey = static function ( $key ) use ( $fieldInfo ) {
 			return array_key_exists( $key, $fieldInfo );
 		};
 		$this->known = true;

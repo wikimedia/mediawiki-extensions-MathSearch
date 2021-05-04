@@ -23,7 +23,7 @@ class Row {
 
 	public function __construct( $line, $fileName ) {
 		$this->normFileName = $fileName;
-		set_error_handler( function ( $errno, $errstr, $errfile, $errline ) {
+		set_error_handler( static function ( $errno, $errstr, $errfile, $errline ) {
 			throw new Exception( $errstr, $errno );
 		} );
 		if ( is_array( $line ) ) {

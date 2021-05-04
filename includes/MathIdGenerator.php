@@ -63,7 +63,7 @@ class MathIdGenerator {
 		$this->wikiText =
 			Parser::extractTagsAndParams( [ 'nowki', 'syntaxhighlight', 'math' ], $wikiText,
 				$tags );
-		$this->mathTags = array_filter( $tags, function ( $v ) {
+		$this->mathTags = array_filter( $tags, static function ( $v ) {
 			return $v[0] === 'math';
 		} );
 		$this->revisionId = $revisionId;

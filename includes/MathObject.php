@@ -677,7 +677,7 @@ class MathObject extends MathMathML {
 			$dbw = wfGetDB( DB_MASTER );
 			$outArray = $this->dbDebugOutArray();
 			$method = __METHOD__;
-			$dbw->onTransactionCommitOrIdle( function () use ( $dbw, $outArray, $method ) {
+			$dbw->onTransactionCommitOrIdle( static function () use ( $dbw, $outArray, $method ) {
 				$dbw->insert( 'mathlog', $outArray, $method );
 			} );
 		}

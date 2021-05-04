@@ -23,7 +23,7 @@ class ContentMathWikidataHook {
 
 		$dataTypeDefinitions['PT:contentmath'] = [
 			'value-type'                 => 'string',
-			'validator-factory-callback' => function () {
+			'validator-factory-callback' => static function () {
 				global $wgMathSearchContentTexMaxLength;
 				// load validator builders
 				$factory = WikibaseRepo::getDefaultValidatorBuilders();
@@ -35,17 +35,17 @@ class ContentMathWikidataHook {
 				$validators[] = new ContentMathValidator();
 				return $validators;
 			},
-			'parser-factory-callback' => function ( ParserOptions $options ) {
+			'parser-factory-callback' => static function ( ParserOptions $options ) {
 				$normalizer = new WikibaseStringValueNormalizer( WikibaseRepo::getStringNormalizer() );
 				return new StringParser( $normalizer );
 			},
-			'formatter-factory-callback' => function ( $format, FormatterOptions $options ) {
+			'formatter-factory-callback' => static function ( $format, FormatterOptions $options ) {
 				global $wgOut;
 				$styles = [ 'ext.math.desktop.styles', 'ext.math.scripts', 'ext.math.styles' ];
 				$wgOut->addModuleStyles( $styles );
 				return new ContentMathFormatter( $format );
 			},
-			'rdf-builder-factory-callback' => function (
+			'rdf-builder-factory-callback' => static function (
 				$mode,
 				RdfVocabulary $vocab,
 				RdfWriter $writer,
@@ -71,7 +71,7 @@ class ContentMathWikidataHook {
 
 		$dataTypeDefinitions['PT:contentmath'] = [
 			'value-type'                 => 'string',
-			'formatter-factory-callback' => function ( $format, FormatterOptions $options ) {
+			'formatter-factory-callback' => static function ( $format, FormatterOptions $options ) {
 				global $wgOut;
 				$styles = [ 'ext.math.desktop.styles', 'ext.math.scripts', 'ext.math.styles' ];
 				$wgOut->addModuleStyles( $styles );

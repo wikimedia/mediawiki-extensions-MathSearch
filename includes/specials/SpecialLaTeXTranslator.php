@@ -280,13 +280,13 @@ are often used together.';
 		}
 
 		$output->addWikiTextAsContent( "=== Dependency Graph Information ===" );
-		$mathprint = function ( $x ) {
+		$mathprint = static function ( $x ) {
 			return "* <math>$x</math>";
 		};
 		$this->printList( $insights->includes, "Includes", $mathprint );
 		$this->printList( $insights->isPartOf, "Is part of", $mathprint );
 		$this->printList( $insights->definiens, 'Description',
-			function ( $x ) { return "* {$x->definition}";
+			static function ( $x ) { return "* {$x->definition}";
 			} );
 		$this->printSource( $calulation, 'Complete translation information', 'json' );
 		return false;
@@ -300,7 +300,7 @@ are often used together.';
 		$this->printColHeader( $description );
 		foreach ( $list as $key => $value ) {
 			if ( $callable === false ) {
-				$callable = function ( $x, $y ) { return "* $x";
+				$callable = static function ( $x, $y ) { return "* $x";
 				};
 			}
 			$value = $callable( $value, $key );

@@ -20,7 +20,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 		// $this->mWasSubmitted = false;
 		$this->addStateFields();
 		$this->addButtons();
-		$this->setSubmitCallback( function (){
+		$this->setSubmitCallback( static function (){
 			return false;
 		} );
 	}

@@ -262,7 +262,7 @@ class MathSearchHooks {
 		LoggerFactory::getInstance( "MathSearch" )->warning(
 			"Store index for \$$tex\$ in database with id $eid for revision $oldID." );
 		$dbw = wfGetDB( DB_MASTER );
-		$dbw->onTransactionCommitOrIdle( function () use ( $oldID, $eid, $inputHash, $dbw ) {
+		$dbw->onTransactionCommitOrIdle( static function () use ( $oldID, $eid, $inputHash, $dbw ) {
 			$dbw->replace( 'mathindex', [ [ 'mathindex_revision_id' , 'mathindex_anchor' ] ], [
 				'mathindex_revision_id' => $oldID,
 				'mathindex_anchor' => $eid,
