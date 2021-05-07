@@ -52,6 +52,6 @@ class WMCAssessSeeds extends Maintenance {
 	}
 }
 
-$maintClass = 'WMCAssessSeeds';
+$maintClass = WMCAssessSeeds::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

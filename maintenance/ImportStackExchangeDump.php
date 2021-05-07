@@ -53,6 +53,6 @@ class ImportStackExchangeDump extends Maintenance {
 	}
 }
 
-$maintClass = 'ImportStackExchangeDump';
+$maintClass = ImportStackExchangeDump::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

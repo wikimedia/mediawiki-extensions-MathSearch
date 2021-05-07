@@ -122,6 +122,6 @@ class GenerateFeatureTable extends Maintenance {
 	}
 }
 
-$maintClass = "GenerateFeatureTable";
+$maintClass = GenerateFeatureTable::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

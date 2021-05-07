@@ -110,6 +110,6 @@ class CreateBaseXMathTable extends IndexBase {
 	}
 }
 
-$maintClass = 'CreateBaseXMathTable';
+$maintClass = CreateBaseXMathTable::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

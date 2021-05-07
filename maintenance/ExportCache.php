@@ -109,5 +109,5 @@ class ExportMathCache extends Maintenance {
 	}
 }
 
-$maintClass = "ExportMathCache";
+$maintClass = ExportMathCache::class;
 require_once RUN_MAINTENANCE_IF_MAIN;

@@ -89,6 +89,6 @@ class GenerateResultTableFromJson extends Maintenance {
 
 }
 
-$maintClass = 'GenerateResultTableFromJson';
+$maintClass = GenerateResultTableFromJson::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;
