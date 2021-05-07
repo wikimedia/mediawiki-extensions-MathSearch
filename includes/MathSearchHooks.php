@@ -65,18 +65,6 @@ class MathSearchHooks {
 	}
 
 	/**
-	 * Checks if the db2 php client is installed
-	 * @return bool
-	 */
-	public static function isDB2Supported() {
-		if ( function_exists( 'db2_connect' ) ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
 	 * Updates the formula index in the database
 	 *
 	 * @param int $revId Page-ID
