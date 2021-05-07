@@ -112,6 +112,6 @@ class CalculateDistances extends Maintenance {
 	}
 }
 
-$maintClass = 'CalculateDistances';
+$maintClass = CalculateDistances::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

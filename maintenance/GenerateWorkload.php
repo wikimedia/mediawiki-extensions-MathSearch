@@ -92,6 +92,6 @@ class GenerateWorkload extends IndexBase {
 	}
 }
 
-$maintClass = 'GenerateWorkload';
+$maintClass = GenerateWorkload::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

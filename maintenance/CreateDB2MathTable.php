@@ -104,6 +104,6 @@ class CreateDB2MathTable extends IndexBase {
 	}
 }
 
-$maintClass = 'CreateDB2MathTable';
+$maintClass = CreateDB2MathTable::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

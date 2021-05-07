@@ -58,6 +58,6 @@ class BatchExport extends Maintenance {
 	}
 }
 
-$maintClass = 'BatchExport';
+$maintClass = BatchExport::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

@@ -80,6 +80,6 @@ class ImportDefinitions extends Maintenance {
 	}
 }
 
-$maintClass = 'ImportDefinitions';
+$maintClass = ImportDefinitions::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

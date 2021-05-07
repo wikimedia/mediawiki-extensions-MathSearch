@@ -169,6 +169,6 @@ TEX;
 	}
 }
 
-$maintClass = 'QueryEval';
+$maintClass = QueryEval::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

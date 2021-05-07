@@ -157,6 +157,6 @@ class ExtractFeatures extends Maintenance {
 	}
 }
 
-$maintClass = 'ExtractFeatures';
+$maintClass = ExtractFeatures::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

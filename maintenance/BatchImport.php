@@ -75,6 +75,6 @@ class BatchImport extends Maintenance {
 	}
 }
 
-$maintClass = 'BatchImport';
+$maintClass = BatchImport::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;

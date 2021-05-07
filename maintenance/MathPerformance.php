@@ -283,6 +283,6 @@ class MathPerformance extends Maintenance {
 
 }
 
-$maintClass = "MathPerformance";
+$maintClass = MathPerformance::class;
 /** @noinspection PhpIncludeInspection */
 require_once RUN_MAINTENANCE_IF_MAIN;
