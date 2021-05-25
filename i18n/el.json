@@ -3,6 +3,7 @@
 		"authors": [
 			"Evropi",
 			"Geraki",
+			"Giannaras99",
 			"Giorgos456",
 			"NikosLikomitros",
 			"Nikosgranturismogt"
@@ -85,5 +86,5 @@
 	"math-search-type-0": "Λέξη κλειδί",
 	"math-search-type-2": "Έκφραση xQuery",
 	"math-search-expression-label": "Έκφραση:",
-	"math-tex2nb-input": "Εισαγωγή"
+	"math-tex2nb-input": "Είσοδος τύπου"
 }
