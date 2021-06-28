@@ -3,6 +3,7 @@
 		"authors": [
 			"A Chinese Wikipedian",
 			"Colathewikian",
+			"GuoPC",
 			"Hzy980512",
 			"Liuxinyu970226",
 			"Yfdyh000",
@@ -152,7 +153,7 @@
 	"math-search-type-2": "xQuery表达式",
 	"math-search-expression-label": "表达式：",
 	"math-tex2nb-header": "请在下方指定您自己的输入",
-	"math-tex2nb-intro": "此实体模型应该展示TeX至Mathematica转换的主意。\n\nDemo应用程序会转换LaTeX函数，它们会直接翻译至Mathematica副本。\n\n没有明确Mathematica支持的功能可用于通过DRMF包翻译（正在开发中）。",
+	"math-tex2nb-intro": "此实体模型应该展示TeX至计算机代数系统（CAS）转换的主意。\n\nDemo应用程序会转换LaTeX函数，它们会直接翻译至CAS副本。\n\n没有明确CAS支持的功能可用于通过DRMF包翻译（正在开发中）。",
 	"math-tex2nb-input": "输入方程式",
 	"math-tex2nb-latex": "以下LaTeX输入...",
 	"math-tex2nb-mathematica": "...被翻译至CAS输出...",
