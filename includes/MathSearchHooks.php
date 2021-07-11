@@ -59,7 +59,7 @@ class MathSearchHooks {
 				// "$dir/patches/mathindexHashConstraint.sql" );
 			}
 		} else {
-			throw new Exception( "Math extension does not currently support $type database." );
+			throw new Exception( "MathSearch extension does not currently support $type database." );
 		}
 		return true;
 	}
