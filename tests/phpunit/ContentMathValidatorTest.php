@@ -14,7 +14,7 @@ class ContentMathValidatorTest extends MediaWikiTestCase {
 
 	private const VADLID_TEX = "a^2+b^2=c^2";
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->setMwGlobals( 'wgMathDisableTexFilter', 'always' );
 	}

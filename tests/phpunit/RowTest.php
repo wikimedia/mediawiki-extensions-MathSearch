@@ -34,7 +34,7 @@ XmlFragment;
 		$this->assertSame( 0, $f->getIgnoredFieldCount() );
 	}
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->tablesUsed[] = 'math_wbs_entity_map';
 	}

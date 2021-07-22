@@ -28,7 +28,7 @@ XmlFragment;
 		$this->assertCount( 7, $wtGen->getFormulae() );
 	}
 
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->tablesUsed[] = 'math_wbs_entity_map';
 	}

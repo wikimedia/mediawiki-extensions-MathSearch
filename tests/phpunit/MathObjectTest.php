@@ -27,7 +27,7 @@ EOT;
 	/** @var bool */
 	private static $hasRestbase;
 
-	public static function setUpBeforeClass() : void {
+	public static function setUpBeforeClass(): void {
 		$rbi = new MathRestbaseInterface();
 		self::$hasRestbase = $rbi->checkBackend( true );
 	}
@@ -36,7 +36,7 @@ EOT;
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		$this->markTestSkipped( "MathObject test temporary disabled" ); // T249428
 		parent::setUp();
 		if ( !self::$hasRestbase ) {

@@ -12,7 +12,7 @@ class MathosphereDriverTest extends MediaWikiTestCase {
 
 	private static $hasMathosphere;
 
-	public static function setUpBeforeClass() : void {
+	public static function setUpBeforeClass(): void {
 		$m = new MathosphereDriver();
 		self::$hasMathosphere = $m->checkBackend();
 	}
@@ -21,7 +21,7 @@ class MathosphereDriverTest extends MediaWikiTestCase {
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() : void {
+	protected function setUp(): void {
 		parent::setUp();
 
 		if ( !self::$hasMathosphere ) {
