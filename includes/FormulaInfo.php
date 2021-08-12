@@ -49,7 +49,7 @@ class FormulaInfo extends SpecialPage {
 		$this->getOutput()->addWikiTextAsInterface( "Info for <code>" . $tex . '</code>' );
 
 		$mo = new MathObject( $tex );
-		$allPages = $mo->getAllOccurences();
+		$allPages = $mo->getAllOccurrences();
 		if ( $allPages ) {
 			$this->DisplayInfo( $allPages[0]->getRevisionID(), $allPages[0]->getAnchorID() );
 		} else {
@@ -147,7 +147,7 @@ class FormulaInfo extends SpecialPage {
 			$mo = MathObject::newFromRevisionText( $oldID, $eid );
 		}
 		$out->addWikiTextAsInterface( "Occurrences on the following pages:" );
-		$all = $mo->getAllOccurences();
+		$all = $mo->getAllOccurrences();
 		foreach ( $all as $occ ) {
 			$out->addWikiTextAsInterface( '*' . $occ->printLink2Page( false ) );
 		}

@@ -4,6 +4,7 @@ use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RevisionRecord;
 
 class MathObject extends MathMathML {
 
@@ -36,7 +37,7 @@ class MathObject extends MathMathML {
 		return $xhash['md5'];
 	}
 
-	public static function findSimilarPages( $pid ) {
+	public static function findSimilarPages( $pid ): string {
 		global $wgOut;
 		$out = "";
 		$dbr = wfGetDB( DB_REPLICA );
@@ -73,7 +74,7 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	public static function cloneFromRenderer( MathRenderer $renderer ) {
+	public static function cloneFromRenderer( MathRenderer $renderer ): MathObject {
 		$instance = new self( $renderer->getUserInputTex() );
 		$instance->setMathml( $renderer->getMathml() );
 		$instance->setSvg( $renderer->getSvg() );
@@ -103,7 +104,7 @@ class MathObject extends MathMathML {
 	 *
 	 * @return self
 	 */
-	public static function newFromRevisionText( $oldId, $eid ) {
+	public static function newFromRevisionText( $oldId, $eid ): MathObject {
 		$gen = MathIdGenerator::newFromRevisionId( $oldId );
 		$tag = $gen->getTagFromId( $eid );
 		if ( !$tag ) {
@@ -118,7 +119,7 @@ class MathObject extends MathMathML {
 	/**
 	 * @return string[]
 	 */
-	private static function dbIndexFieldsArray() {
+	private static function dbIndexFieldsArray(): array {
 		global $wgMathDebug;
 		$in = [
 			'mathindex_revision_id',
@@ -159,7 +160,7 @@ class MathObject extends MathMathML {
 	 * @param string $wikiText
 	 * @return array
 	 */
-	public static function extractMathTagsFromWikiText( $wikiText ) {
+	public static function extractMathTagsFromWikiText( $wikiText ): array {
 		$idGenerator = new MathIdGenerator( $wikiText );
 		return $idGenerator->getMathTags();
 	}
@@ -189,7 +190,7 @@ class MathObject extends MathMathML {
 	/**
 	 * @return int
 	 */
-	public function getStatusCode() {
+	public function getStatusCode(): int {
 		return $this->statusCode;
 	}
 
@@ -197,7 +198,7 @@ class MathObject extends MathMathML {
 	 * @param int $statusCode
 	 * @return self
 	 */
-	public function setStatusCode( $statusCode ) {
+	public function setStatusCode( $statusCode ): MathObject {
 		$this->statusCode = $statusCode;
 		return $this;
 	}
@@ -205,7 +206,7 @@ class MathObject extends MathMathML {
 	/**
 	 * @return string
 	 */
-	public function getTimestamp() {
+	public function getTimestamp(): ?string {
 		return $this->timestamp;
 	}
 
@@ -213,7 +214,7 @@ class MathObject extends MathMathML {
 	 * @param string $timestamp
 	 * @return self
 	 */
-	public function setTimestamp( $timestamp ) {
+	public function setTimestamp( $timestamp ): MathObject {
 		$this->timestamp = $timestamp;
 		return $this;
 	}
@@ -221,7 +222,7 @@ class MathObject extends MathMathML {
 	/**
 	 * @return string
 	 */
-	public function getLog() {
+	public function getLog(): string {
 		return $this->log;
 	}
 
@@ -229,7 +230,7 @@ class MathObject extends MathMathML {
 	 * @param string $log
 	 * @return self
 	 */
-	public function setLog( $log ) {
+	public function setLog( $log ): MathObject {
 		$this->changed = true;
 		$this->log = $log;
 		return $this;
@@ -238,11 +239,11 @@ class MathObject extends MathMathML {
 	/**
 	 * @return string|null
 	 */
-	public function getIndexTimestamp() {
+	public function getIndexTimestamp(): ?string {
 		return $this->index_timestamp;
 	}
 
-	public function getObservations( $update = true ) {
+	public function getObservations( $update = true ): string {
 		global $wgOut;
 		$dbr = wfGetDB( DB_REPLICA );
 		try {
@@ -305,7 +306,7 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	public function getInputHash() {
+	public function getInputHash(): string {
 		if ( $this->inputHash ) {
 			return $this->inputHash;
 		} else {
@@ -313,7 +314,7 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	public function getRevisionID() {
+	public function getRevisionID(): int {
 		return $this->revisionID;
 	}
 
@@ -353,7 +354,7 @@ class MathObject extends MathMathML {
 	 * @param string $identifier
 	 * @return bool|ResultWrapper
 	 */
-	public function getNouns( $identifier ) {
+	public function getNouns( string $identifier ) {
 		$dbr = wfGetDB( DB_REPLICA );
 		$pageName = $this->getPageTitle();
 		if ( $pageName === false ) {
@@ -387,7 +388,7 @@ class MathObject extends MathMathML {
 	 *
 	 * @return self[]
 	 */
-	public function getAllOccurences( $currentOnly = true ) {
+	public function getAllOccurrences( bool $currentOnly = true ): array {
 		$out = [];
 		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select(
@@ -409,7 +410,7 @@ class MathObject extends MathMathML {
 	/**
 	 * @return bool
 	 */
-	public function isCurrent() {
+	public function isCurrent(): bool {
 		$revisionRecord = MediaWikiServices::getInstance()
 			->getRevisionLookup()
 			->getRevisionById( $this->revisionID );
@@ -425,7 +426,7 @@ class MathObject extends MathMathML {
 	 *
 	 * @return string
 	 */
-	public function printLink2Page( $hidePage = true ) {
+	public function printLink2Page( bool $hidePage = true ): string {
 		$pageString = $hidePage ? "" : $this->getPageTitle() . " ";
 		$anchor = MathSearchHooks::generateMathAnchorString(
 			$this->getRevisionID(), $this->getAnchorID()
@@ -436,14 +437,14 @@ class MathObject extends MathMathML {
 	/**
 	 * @return int
 	 */
-	public function getAnchorID() {
+	public function getAnchorID(): int {
 		return $this->anchorID;
 	}
 
 	/**
 	 * @param int $id
 	 */
-	public function setAnchorID( $id ) {
+	public function setAnchorID( int $id ) {
 		$this->anchorID = $id;
 	}
 
@@ -470,7 +471,7 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	public function addIdentifierTitle( $arg ) {
+	public function addIdentifierTitle( $arg ): string {
 		// return '<mi>X</mi>';
 		$attribs = preg_replace( '/title\s*=\s*"(.*)"/', '', $arg[2] );
 		$content = $arg[4];
@@ -490,7 +491,7 @@ class MathObject extends MathMathML {
 	/**
 	 * @return null|Revision
 	 */
-	public function getRevision() {
+	public function getRevision(): ?RevisionRecord {
 		$revisionRecord = MediaWikiServices::getInstance()
 			->getRevisionLookup()
 			->getRevisionById( $this->revisionId );
@@ -501,7 +502,7 @@ class MathObject extends MathMathML {
 		return null;
 	}
 
-	public function getRelations() {
+	public function getRelations(): array {
 		$dbr = wfGetDB( DB_REPLICA );
 		$selection = $dbr->select( 'mathsemantics', [ 'identifier', 'evidence', 'noun' ],
 			[ 'revision_id' => $this->revisionID ], __METHOD__,
@@ -531,7 +532,7 @@ class MathObject extends MathMathML {
 	/**
 	 * @return string
 	 */
-	protected function getMathTableName() {
+	protected function getMathTableName(): ?string {
 		global $wgMathAnalysisTableName;
 		if ( $this->mathTableName === null ) {
 			return $wgMathAnalysisTableName;
@@ -559,7 +560,7 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	public function getWikiText() {
+	public function getWikiText(): string {
 		$attributes = '';
 		foreach ( $this->params as $key => $value ) {
 			if ( $key ) {
@@ -600,7 +601,7 @@ class MathObject extends MathMathML {
 	 *
 	 * @return string
 	 */
-	public static function getReSizedSvgLink( MathRenderer $renderer, $factor = 2 ) {
+	public static function getReSizedSvgLink( MathRenderer $renderer, $factor = 2 ): string {
 		$width = self::getSvgWidth( $renderer->getSvg() );
 		$width = $width[1] * $factor . $width[2];
 		$height = self::getSvgHeight( $renderer->getSvg() );
@@ -613,14 +614,14 @@ class MathObject extends MathMathML {
 		return preg_replace( "/height: (.*?)(ex|px|em)/", "height: $height", $fbi );
 	}
 
-	public function getRbi() {
+	public function getRbi(): \MediaWiki\Extension\Math\MathRestbaseInterface {
 		return $this->rbi;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getPostData() {
+	public function getPostData(): string {
 		return $this->postData;
 	}
 
@@ -634,7 +635,7 @@ class MathObject extends MathMathML {
 	/**
 	 * @return int time in ms
 	 */
-	public function getRenderingTime() {
+	public function getRenderingTime(): int {
 		return $this->renderingTime;
 	}
 
@@ -661,7 +662,7 @@ class MathObject extends MathMathML {
 	 * Gets an array that matches the variables of the class to the debug database columns
 	 * @return array
 	 */
-	protected function dbDebugOutArray() {
+	protected function dbDebugOutArray(): array {
 		return [
 			'math_inputhash' => $this->getInputHash(),
 			'math_log' => $this->getLog(),
