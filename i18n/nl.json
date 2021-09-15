@@ -6,6 +6,7 @@
 			"Mainframe98",
 			"McDutchie",
 			"Rcdeboer",
+			"Romaine",
 			"Siebrand",
 			"Sjoerddebruin",
 			"Xbaked potatox"
@@ -21,6 +22,8 @@
 	"getequationsbyquery": "Vergelijkingen zoeken",
 	"xquerygenerator": "XQuerygenerator",
 	"mathdebug": "Verwerking testen",
+	"math-lp-1-page-label": "Artikeltitel",
+	"math-lp-2-domain-option-1": "(pure) wiskunde",
 	"math-lp-2-domain-option-2": "natuurkunde",
 	"math-lp-2-domain-option-3": "scheikunde",
 	"math-lp-2-domain-option-4": "biologie",
