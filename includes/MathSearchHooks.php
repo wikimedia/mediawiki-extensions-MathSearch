@@ -410,7 +410,7 @@ class MathSearchHooks {
 			// MW 1.35+
 			$wgHooks['PageSaveComplete'][] = 'MathSearchHooks::onPageSaveComplete';
 		} else {
-			$wgHooks['PageContentSaveComplete'][] = '"MathSearchHooks::onPageContentSaveComplete';
+			$wgHooks['PageContentSaveComplete'][] = 'MathSearchHooks::onPageContentSaveComplete';
 		}
 	}
 
