@@ -101,14 +101,11 @@ class MathosphereDriver {
 				foreach ( $jsonResult->relations as $r ) {
 					$this->addIdentifierDefinitionTuple( $r );
 				}
-			} else {
-				// TODO: Implement error handling
-				return false;
+				return true;
 			}
-			return true;
-		} else {
-			return false;
 		}
+		// TODO: Implement error handling
+		return false;
 	}
 
 	private function addIdentifierDefinitionTuple( $r ) {
@@ -162,11 +159,7 @@ class MathosphereDriver {
 				if ( isset( $res->name ) && $res->name === 'mathosphere' ) {
 					$this->version = $res->version;
 					// Mathosphere version 3.0.0-SNAPSHOT is only version currently supported
-					if ( $this->version === "3.0.0-SNAPSHOT" ) {
-						return true;
-					} else {
-						return false;
-					}
+					return ( $this->version === "3.0.0-SNAPSHOT" );
 				}
 			}
 		}

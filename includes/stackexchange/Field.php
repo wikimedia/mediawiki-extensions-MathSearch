@@ -196,14 +196,14 @@ class Field {
 				case 'external-id':
 					break;
 				default:
-					$this->getLog()->warning( "Unexpected type" . $type );
+					self::getLog()->warning( "Unexpected type" . $type );
 			}
 			try {
 				$result[] = $sf->newSnak( $propertyId, 'value', $c );
 			}
 			catch ( InvalidArgumentException $e ) {
 				$c_ser = var_export( $c, false );
-				$this->getLog()
+				self::getLog()
 					->error( "Cannot create value '$c_ser' for property {$this->propertyId}",
 						[ $e ] );
 			}

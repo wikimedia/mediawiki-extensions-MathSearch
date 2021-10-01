@@ -26,7 +26,6 @@ class SpecialMathIndex extends SpecialPage {
 		if ( $this->getConfig()->get( 'MathDebug' ) ) {
 			if ( !$this->userCanExecute( $this->getUser() ) ) {
 				$this->displayRestrictionError();
-				return;
 			} else {
 				$this->testIndex();
 			}

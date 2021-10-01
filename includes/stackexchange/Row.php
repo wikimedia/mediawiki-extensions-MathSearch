@@ -83,9 +83,7 @@ class Row {
 	 */
 	public function getQid() {
 		$id = $this->getField( 'Id' );
-		$qid = IdMap::getInstance()->addQid( $id->getContent(), $id->getExternalIdType() );
-
-		return $qid;
+		return IdMap::getInstance()->addQid( $id->getContent(), $id->getExternalIdType() );
 	}
 
 	public function getField( $name ): Field {
@@ -121,7 +119,7 @@ class Row {
 		}
 		catch ( \Throwable $e ) {
 			$wt = $body;
-			$this->getLog()->error( "Problem while concerting {body} to wikitext: {e}", [
+			self::getLog()->error( "Problem while concerting {body} to wikitext: {e}", [
 				'body' => $body,
 				'e' => $e->getMessage(),
 			] );

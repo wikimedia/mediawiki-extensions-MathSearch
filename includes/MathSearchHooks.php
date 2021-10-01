@@ -24,7 +24,7 @@ class MathSearchHooks {
 	 * @throws MWException
 	 * @return bool
 	 */
-	static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater = null ) {
+	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater = null ) {
 		global $wgMathWmcServer;
 		if ( $updater === null ) {
 			throw new MWException( "Mathsearch extension requires Mediawiki 1.18 or above" );

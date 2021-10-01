@@ -58,7 +58,7 @@ class FormulaInfo extends SpecialPage {
 			);
 		}
 
-		$this->DisplayTranslations( $tex );
+		self::DisplayTranslations( $tex );
 	}
 
 	/**
@@ -160,14 +160,14 @@ class FormulaInfo extends SpecialPage {
 		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
 
-		$this->DisplayTranslations( $mo->getUserInputTex() );
+		self::DisplayTranslations( $mo->getUserInputTex() );
 
 		$out->addWikiTextAsInterface( '==Similar pages==' );
 		$out->addWikiTextAsInterface(
 			'Calculated based on the variables occurring on the entire ' . $pageName . ' page'
 		);
 		$pid = $title->getArticleID();
-		$mo->findSimilarPages( $pid );
+		MathObject::findSimilarPages( $pid );
 		$out->addWikiTextAsInterface( '==Identifiers==' );
 		$relations = $mo->getRelations();
 		if ( $texInfo ) {
@@ -223,27 +223,15 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasMathMLSupport( $mode ) {
-		if ( $mode === 'latexml' || $mode === 'mathml' ) {
-			return true;
-		} else {
-			return false;
-		}
+		return ( $mode === 'latexml' || $mode === 'mathml' );
 	}
 
 	public static function hasSvgSupport( $mode ) {
-		if ( $mode === 'latexml' || $mode === 'mathml' ) {
-			return true;
-		} else {
-			return false;
-		}
+		return ( $mode === 'latexml' || $mode === 'mathml' );
 	}
 
 	public static function hasPngSupport( $mode ) {
-		if ( $mode === 'mathml' ) {
-			return true;
-		} else {
-			return false;
-		}
+		return ( $mode === 'mathml' );
 	}
 
 	/**

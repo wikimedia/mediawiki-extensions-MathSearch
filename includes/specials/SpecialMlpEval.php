@@ -300,14 +300,13 @@ class SpecialMlpEval extends SpecialPage {
 		}
 		if ( $step == 4 ) {
 			switch ( $substep ) {
-				case '4':
-					return '3';
 				case '4a':
 					return '4';
 				case '4b':
 					return '4a';
 				case '4c':
 					return '4b';
+				// case '4':
 				default:
 					return '3';
 			}
@@ -423,7 +422,7 @@ class SpecialMlpEval extends SpecialPage {
 					case '4b':
 						if ( method_exists( $services, 'getUserOptionsManager' ) ) {
 							// MW 1.35+
-							$services->getUserOptionsManager()->setOption( $user, 'math', 'mathml' );
+							$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'mathml' );
 						} else {
 							$this->getUser()->setOption( 'math', 'mathml' );
 						}
@@ -433,7 +432,7 @@ class SpecialMlpEval extends SpecialPage {
 					case '4c':
 						if ( method_exists( $services, 'getUserOptionsManager' ) ) {
 							// MW 1.35+
-							$services->getUserOptionsManager()->setOption( $user, 'math', 'mathml' );
+							$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'mathml' );
 						} else {
 							$this->getUser()->setOption( 'math', 'mathml' );
 						}
@@ -588,9 +587,11 @@ class SpecialMlpEval extends SpecialPage {
 		$renderer = $this->getMathMlRenderer( $tex, $options );
 		$largeMathML = $renderer->getMathml();
 		$factor = round( $factor * 100 );
-		$largeMathML =
-			preg_replace( "/<math/", "<math style=\"font-size: {$factor}% !important;\"", $largeMathML );
-		return $largeMathML;
+		return preg_replace(
+			"/<math/",
+			"<math style=\"font-size: {$factor}% !important;\"",
+			$largeMathML
+		);
 	}
 
 	private function printFormula() {

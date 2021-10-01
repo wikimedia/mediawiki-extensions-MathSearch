@@ -192,10 +192,8 @@ TeX;
 						} else {
 							$out .= '{';
 						}
-					} else {
-						if ( $level < $qVarLevel ) {
-							$out .= '{';
-						}
+					} elseif ( $level < $qVarLevel ) {
+						$out .= '{';
 					}
 					break;
 				case '}':

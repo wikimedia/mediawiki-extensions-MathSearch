@@ -31,7 +31,7 @@ class DumpReader {
 	 */
 	public function __construct( $file, $errPath ) {
 		$this->file = new XMLReader();
-		$this->file->open( $file->getRealPath() );
+		XMLReader::open( $file->getRealPath() );
 		$this->normalizeFilename( $file->getFilename() );
 		$this->errPath = $errPath;
 	}
@@ -62,10 +62,8 @@ class DumpReader {
 						$rows = [];
 					}
 				}
-			} else {
-				if ( $xml->nodeType == XMLReader::ELEMENT ) {
-					self::getLog()->info( "Skip element: {line}", [ 'line' => $xml->name ] );
-				}
+			} elseif ( $xml->nodeType == XMLReader::ELEMENT ) {
+				self::getLog()->info( "Skip element: {line}", [ 'line' => $xml->name ] );
 			}
 		}
 		$this->addJob( $rows );

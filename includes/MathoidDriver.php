@@ -181,6 +181,6 @@ class MathoidDriver {
 	 * @return bool|string
 	 */
 	private function getFormat( $format ) {
-		return $this->doPost( $this->getBackendUrl() . '/' . $format, $this->getPostData() );
+		return self::doPost( $this->getBackendUrl() . '/' . $format, $this->getPostData() );
 	}
 }

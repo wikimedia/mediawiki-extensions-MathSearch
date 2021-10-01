@@ -75,11 +75,8 @@ abstract class IndexBase extends Maintenance {
 		fwrite( $fh, $out );
 		fclose( $fh );
 		echo "written file $fn with entries($min ... $max)\n";
-		if ( $max < $this->res->numRows() - 1 ) {
-			return true;
-		} else {
-			return false;
-		}
+
+		return $max < $this->res->numRows() - 1;
 	}
 
 	public function execute() {

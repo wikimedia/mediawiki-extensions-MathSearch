@@ -49,8 +49,8 @@ class WikitextGenerator {
 	}
 
 	public function toWikitext( $html, $postQId = null ) {
-		$xml = new \XMLReader();
-		$xml->XML( "<text>$html</text>" );
+		$xml = new XMLReader();
+		XMLReader::XML( "<text>$html</text>" );
 		$out = "";
 		while ( $xml->read() ) {
 			$out .= $this->getNextElement( $xml, $postQId );

@@ -359,13 +359,12 @@ class MathObject extends MathMathML {
 		if ( $pageName === false ) {
 			return false;
 		}
-		$identifiers = $dbr->select( 'mathidentifier',
+		return $dbr->select( 'mathidentifier',
 			[ 'noun', 'evidence' ],
 			[ 'pageTitle' => $pageName, 'identifier' => utf8_encode( $identifier ) ],
 			__METHOD__,
 			[ 'ORDER BY' => 'evidence DESC', 'LIMIT' => 5 ]
 		);
-		return $identifiers;
 	}
 
 	public function getPageTitle() {
@@ -611,8 +610,7 @@ class MathObject extends MathMathML {
 		$method->setAccessible( true );
 		$fbi = $method->invoke( $renderer );
 		$fbi = preg_replace( "/width: (.*?)(ex|px|em)/", "width: $width", $fbi );
-		$fbi = preg_replace( "/height: (.*?)(ex|px|em)/", "height: $height", $fbi );
-		return $fbi;
+		return preg_replace( "/height: (.*?)(ex|px|em)/", "height: $height", $fbi );
 	}
 
 	public function getRbi() {

@@ -419,11 +419,8 @@ class SpecialMathSearch extends SpecialPage {
 		$renderer->setAllowedRootElements( [ 'query' ] );
 		$renderer->render( true );
 		$this->mathmlquery = $renderer->getMathml();
-		if ( strlen( $this->mathmlquery ) == 0 ) {
-			return false;
-		} else {
-			return true;
-		}
+
+		return $this->mathmlquery !== '';
 	}
 
 	/**
