@@ -1,7 +1,6 @@
 <?php
 
 use MediaWiki\Extension\Math\MathMathML;
-use MediaWiki\Extension\Math\MathRestbaseInterface;
 
 /**
  * @group MathSearch
@@ -27,14 +26,6 @@ some more text
 <math> x^3 </math>
 EOT;
 
-	/** @var bool */
-	private static $hasRestbase;
-
-	public static function setUpBeforeClass(): void {
-		$rbi = new MathRestbaseInterface();
-		self::$hasRestbase = $rbi->checkBackend( true );
-	}
-
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
@@ -42,9 +33,6 @@ EOT;
 	protected function setUp(): void {
 		$this->markTestSkipped( "MathObject test temporary disabled" ); // T249428
 		parent::setUp();
-		if ( !self::$hasRestbase ) {
-			$this->markTestSkipped( "Can not connect to Restbase Math interface." );
-		}
 	}
 
 	/**

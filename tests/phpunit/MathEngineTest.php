@@ -5,7 +5,7 @@ use MediaWiki\Extension\Math\MathLaTeXML;
 class MathEngineTest extends MediaWikiTestCase {
 
 	/**
-	 * @covers MathLaTeXML::getMd5
+	 * @covers MediaWiki\Extension\Math\MathMathML::getMd5
 	 */
 	public function testHash() {
 		$test_tex = 'E=mc^2';

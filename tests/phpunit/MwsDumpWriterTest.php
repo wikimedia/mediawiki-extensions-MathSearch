@@ -1,7 +1,4 @@
 <?php
-
-use MediaWiki\Extension\Math\MathRestbaseInterface;
-
 /**
  * @group MathSearch
  */
@@ -161,14 +158,6 @@ WikiText;
 </mws:harvest>
 XML;
 
-	/** @var bool */
-	private static $hasRestbase;
-
-	public static function setUpBeforeClass(): void {
-		$rbi = new MathRestbaseInterface();
-		self::$hasRestbase = $rbi->checkBackend( true );
-	}
-
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
@@ -176,9 +165,6 @@ XML;
 	protected function setUp(): void {
 		$this->markTestSkipped( "MwsDumpWriterTest temporary disabled" ); // T249429
 		parent::setUp();
-		if ( !self::$hasRestbase ) {
-			$this->markTestSkipped( "Can not connect to Restbase Math interface." );
-		}
 	}
 
 	/**
