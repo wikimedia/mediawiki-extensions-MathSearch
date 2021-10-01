@@ -18,6 +18,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Extension\Math\MathRenderer;
+
 /**
  * Simple dump output filter to exclude all talk pages.
  *

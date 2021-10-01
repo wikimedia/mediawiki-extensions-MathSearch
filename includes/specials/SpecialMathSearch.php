@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Extension\Math\MathLaTeXML;
+use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 

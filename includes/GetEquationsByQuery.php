@@ -9,6 +9,8 @@
  * @ingroup extensions
  */
 
+use MediaWiki\Extension\Math\MathRenderer;
+
 class GetEquationsByQuery extends SpecialPage {
 
 	function __construct() {

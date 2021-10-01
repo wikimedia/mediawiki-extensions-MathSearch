@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Extension\Math\MathRenderer;
+
 /**
  * MediaWiki MathSearch extension
  *

@@ -1,5 +1,8 @@
 <?php
 
+use MediaWiki\Extension\Math\MathMathML;
+use MediaWiki\Extension\Math\MathRestbaseInterface;
+
 /**
  * @group MathSearch
  */

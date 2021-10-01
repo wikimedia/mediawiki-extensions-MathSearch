@@ -19,6 +19,10 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Extension\Math\Hooks as MathHooks;
+use MediaWiki\Extension\Math\MathLaTeXML;
+use MediaWiki\Extension\Math\MathMathML;
+use MediaWiki\Extension\Math\MathRestbaseInterface;
 use MediaWiki\Logger\LoggerFactory;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';

@@ -1,5 +1,8 @@
 <?php
 
+use MediaWiki\Extension\Math\MathLaTeXML;
+use MediaWiki\Extension\Math\MathMathML;
+use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Logger\LoggerFactory;
 
 class SpecialMathDebug extends SpecialPage {

@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\MediaWikiServices;
 
 /**

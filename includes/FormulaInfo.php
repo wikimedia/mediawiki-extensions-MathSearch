@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Extension\Math\Hooks as MathHooks;
+use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\MediaWikiServices;
 
 /**

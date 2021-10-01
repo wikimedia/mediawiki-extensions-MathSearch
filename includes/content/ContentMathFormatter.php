@@ -1,6 +1,7 @@
 <?php
 
 use DataValues\StringValue;
+use MediaWiki\Extension\Math\MathLaTeXML;
 use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 use ValueFormatters\ValueFormatter;
 use Wikibase\Lib\Formatters\SnakFormatter;

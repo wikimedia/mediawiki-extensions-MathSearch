@@ -19,6 +19,7 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\MediaWikiServices;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';

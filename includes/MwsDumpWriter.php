@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Extension\Math\MathLaTeXML;
+
 class MwsDumpWriter {
 
 	/** @var string */

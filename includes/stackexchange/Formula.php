@@ -2,6 +2,7 @@
 
 namespace MathSearch\StackExchange;
 
+use MediaWiki\Extension\Math\MathMathML;
 use User;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
@@ -31,7 +32,7 @@ class Formula {
 	}
 
 	public function updateSearchIndex() {
-		$renderer = new \MathMathML( $this->text, [ 'display' => 'block' ] );
+		$renderer = new MathMathML( $this->text, [ 'display' => 'block' ] );
 		$hash = $renderer->getInputHash();
 		$renderer->writeToDatabase();
 		// TODO: Fix fake revision ID

@@ -1,6 +1,7 @@
 <?php
 
 use DataValues\StringValue;
+use MediaWiki\Extension\Math\MathLaTeXML;
 use ValueValidators\Error;
 use ValueValidators\Result;
 use ValueValidators\ValueValidator;

@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Extension\Math\MathRenderer;
+
 class MlpEvalForm extends OOUIHTMLForm {
 
 	/** @var SpecialMlpEval */
