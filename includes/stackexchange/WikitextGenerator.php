@@ -2,6 +2,7 @@
 
 namespace MathSearch\StackExchange;
 
+use ArrayIterator;
 use XMLReader;
 
 class WikitextGenerator {
@@ -10,7 +11,6 @@ class WikitextGenerator {
 	private $idGen;
 	/** @var Formula[] */
 	private $formulae = [];
-	private $postQid = 0;
 
 	/**
 	 * @param IdMap|null $idGen
@@ -63,10 +63,10 @@ class WikitextGenerator {
 	}
 
 	/**
-	 * @return \ArrayIterator|Formula[]
+	 * @return ArrayIterator|Formula[]
 	 */
 	public function getFormulae() {
-		return new \ArrayIterator( $this->formulae );
+		return new ArrayIterator( $this->formulae );
 	}
 
 }
