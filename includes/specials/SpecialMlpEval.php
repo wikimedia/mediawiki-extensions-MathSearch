@@ -596,8 +596,16 @@ class SpecialMlpEval extends SpecialPage {
 
 	private function printFormula() {
 		$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
-		$this->getOutput()->addHTML( MathRenderer::renderMath( $mo->getUserInputTex(), [],
-			'mathml' ) );
+		/** @var MathRenderer $renderer */
+		$renderer = MediaWikiServices::getInstance()
+			->get( 'Math.RendererFactory' )
+			->getRenderer( $mo->getUserInputTex(), [] );
+		if ( $renderer->render() ) {
+			$output = $renderer->getHtmlOutput();
+		} else {
+			$output = $renderer->getLastError();
+		}
+		$this->getOutput()->addHTML( $output );
 	}
 
 	private function printTitle() {

@@ -99,7 +99,7 @@ SQL
 				" {$hit->cntRun} runs with minimal rank of {$hit->minRank} \n"
 			);
 			$mo = new MathObject( $hit->rendering );
-			$all = $mo->getAllOccurences();
+			$all = $mo->getAllOccurrences();
 			foreach ( $all as  $occ ) {
 				$out->addWikiTextAsInterface( '*' . $occ->printLink2Page( false ) );
 			}

@@ -1,6 +1,6 @@
 <?php
 
-use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\MediaWikiServices;
 
 class MlpEvalForm extends OOUIHTMLForm {
 
@@ -106,7 +106,15 @@ class MlpEvalForm extends OOUIHTMLForm {
 				// TODO: defaults currently do not work because request->wasPosted() is set to true.
 				$default = [];
 				foreach ( $this->eval->getIdentifiers() as $id ) {
-					$rendered = MathRenderer::renderMath( $id, [], 'mathml' );
+					/** @var MathRenderer $renderer */
+					$renderer = MediaWikiServices::getInstance()
+						->get( 'Math.RendererFactory' )
+						->getRenderer( $id, [] );
+					if ( $renderer->render() ) {
+						$rendered = $renderer->getHtmlOutput();
+					} else {
+						$rendered = $renderer->getLastError();
+					}
 					$options[$rendered] = $id;
 					$default[] = $id;
 				}
