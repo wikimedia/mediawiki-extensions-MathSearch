@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Alexey",
+			"DDPAT",
 			"Facenapalm",
 			"Kaganer",
 			"Kopcap94",
@@ -154,10 +155,10 @@
 	"math-search-type-2": "Выражение xQuery",
 	"math-search-expression-label": "Выражение:",
 	"math-tex2nb-header": "Введите ваш вариант",
-	"math-tex2nb-intro": "Данная страница показывает как TeX может быть переведен в выражение Mathematica. Наше ПО переводит функцию LaTeX напрямую в Mathematica. \n\nФункции без поддержки Mathematica могут быть переведены с помощью пакета DRMF (находится в разработке)",
+	"math-tex2nb-intro": "Этот макет демонстрирует концепцию преобразования TeX в систему компьютерной алгебры (СКА).\n\nДемонстрационное приложение преобразует функции LaTeX, которые напрямую преобразуются в аналоги СКА.\n\nФункции без явной поддержки СКА доступны для перевода через пакет DRMF (в стадии разработки).",
 	"math-tex2nb-input": "Ввод формулы",
 	"math-tex2nb-latex": "Следующее выражение LaTeX ...",
-	"math-tex2nb-mathematica": "... переведено в выражение Mathematica ...",
+	"math-tex2nb-mathematica": "…переведено в выражение СКА…",
 	"datatypes-type-contentmath": "Математическое выражение (содержимое)",
 	"wikibase-listdatatypes-contentmath-head": "Математическое выражение (содержимое)",
 	"wikibase-listdatatypes-contentmath-body": "Литеральное поле данных для математических выражений, уравнений и так далее, выраженных в DRMF/DLMF варианте LaTeX."
