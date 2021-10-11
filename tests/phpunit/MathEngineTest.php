@@ -2,7 +2,7 @@
 
 use MediaWiki\Extension\Math\MathLaTeXML;
 
-class MathEngineTest extends MediaWikiTestCase {
+class MathEngineTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @covers MediaWiki\Extension\Math\MathMathML::getMd5

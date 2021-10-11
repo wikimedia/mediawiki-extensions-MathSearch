@@ -10,7 +10,7 @@ use DataValues\StringValue;
  *
  * @license GPL-2.0-or-later
  */
-class ContentMathValidatorTest extends MediaWikiTestCase {
+class ContentMathValidatorTest extends MediaWikiIntegrationTestCase {
 
 	private const VADLID_TEX = "a^2+b^2=c^2";
 

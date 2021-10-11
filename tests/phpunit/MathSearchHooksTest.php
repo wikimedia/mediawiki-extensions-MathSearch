@@ -10,7 +10,7 @@ use MediaWiki\Extension\Math\MathRenderer;
  *
  * @group MathSearch
  */
-class MathSearchHooksTest extends MediaWikiTestCase {
+class MathSearchHooksTest extends MediaWikiIntegrationTestCase {
 
 	// phpcs:disable Generic.Files.LineLength
 	private const MATHML_SAMPLE = <<<'EOT'

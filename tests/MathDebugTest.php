@@ -1,6 +1,6 @@
 <?php
 
-class MathDebugTest extends MediaWikiTestCase {
+class MathDebugTest extends MediaWikiIntegrationTestCase {
 
 	private const SOME_LOG = "Test log.";
 	private const SOME_TEX = "\\sin(x)+1";

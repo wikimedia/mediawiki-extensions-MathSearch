@@ -5,7 +5,7 @@ use MediaWiki\Extension\Math\MathMathML;
 /**
  * @group MathSearch
  */
-class MathObjectTest extends MediaWikiTestCase {
+class MathObjectTest extends MediaWikiIntegrationTestCase {
 
 	private const HTML_COMMENT = <<<'EOT'
 <!-- HTML Comment <math>a</math> -->

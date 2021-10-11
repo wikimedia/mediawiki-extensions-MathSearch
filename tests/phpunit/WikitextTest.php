@@ -2,7 +2,7 @@
 
 namespace MathSearch\StackExchange;
 
-use MediaWikiTestCase;
+use MediaWikiIntegrationTestCase;
 use SimpleXMLElement;
 
 /**
@@ -10,7 +10,7 @@ use SimpleXMLElement;
  * @group Database
  * @group MathSearch
  */
-class WikitextTest extends MediaWikiTestCase {
+class WikitextTest extends MediaWikiIntegrationTestCase {
 
 	// phpcs:disable Generic.Files.LineLength
 	private const SAMPLE_ROW = <<<'XmlFragment'
