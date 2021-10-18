@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
+			"Antonla",
 			"Saederup92"
 		]
 	},
 	"math-lp-new-article": "Fortsæt med en anden artikel",
-	"math-wmc-SelectRun": "Navn"
+	"math-wmc-SelectRun": "Navn",
+	"math-tex2nb-intro": "Dette udkast demonstrerer konceptet af TeX til Computer Algebra System (CAS) konvertering.\n\nDemo-applikationen konverterer LaTeX-funktioner, som kan oversættes direkte, til CAS-modstykker.\n\nFunktioner uden udtrykkelig CAS-understøttelse kan oversættes vha. en DRMF-pakke (under udvikling)."
 }
