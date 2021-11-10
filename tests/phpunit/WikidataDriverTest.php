@@ -8,7 +8,7 @@
  *
  * @group MathSearch
  */
-class WikidataDriverTest extends MediaWikiTestCase {
+class WikidataDriverTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @covers WikidataDriver::<public>

@@ -8,7 +8,7 @@
  *
  * @group MathSearch
  */
-class MathosphereDriverTest extends MediaWikiTestCase {
+class MathosphereDriverTest extends MediaWikiIntegrationTestCase {
 
 	private static $hasMathosphere;
 

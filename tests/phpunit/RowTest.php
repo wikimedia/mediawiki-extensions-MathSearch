@@ -2,14 +2,14 @@
 
 namespace MathSearch\StackExchange;
 
-use MediaWikiTestCase;
+use MediaWikiIntegrationTestCase;
 
 /**
  * @package MathSearch\StackExchange
  * @group Database
  * @group MathSearch
  */
-class RowTest extends MediaWikiTestCase {
+class RowTest extends MediaWikiIntegrationTestCase {
 
 	// phpcs:disable Generic.Files.LineLength
 	private const SAMPLE_ROW = <<<'XmlFragment'

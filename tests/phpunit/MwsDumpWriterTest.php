@@ -2,7 +2,7 @@
 /**
  * @group MathSearch
  */
-class MwsDumpWriterTest extends MediaWikiTestCase {
+class MwsDumpWriterTest extends MediaWikiIntegrationTestCase {
 
 	// TODO: update tests strategy resources etc. T249429
 	private const TEST_WIKITEXT = <<<'WikiText'

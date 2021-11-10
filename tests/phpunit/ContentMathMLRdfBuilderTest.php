@@ -10,7 +10,7 @@ use Wikimedia\Purtle\NTriplesRdfWriter;
  * @group ContentMath
  * @covers ContentMathMLRdfBuilder
  */
-class ContentMathMLRdfBuilderTest extends MediaWikiTestCase {
+class ContentMathMLRdfBuilderTest extends MediaWikiIntegrationTestCase {
 
 	private const ACME_PREFIX_URL = 'http://acme/';
 	private const ACME_REF = 'testing';

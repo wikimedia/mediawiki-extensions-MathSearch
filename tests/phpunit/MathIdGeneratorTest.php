@@ -1,6 +1,6 @@
 <?php
 
-class MathIdGeneratorTest extends MediaWikiTestCase {
+class MathIdGeneratorTest extends MediaWikiIntegrationTestCase {
 
 	private const WIKITEXT1 = <<<wikiText
 	This is a test <math>E=mc^2</math>, and <math>a+b</math>

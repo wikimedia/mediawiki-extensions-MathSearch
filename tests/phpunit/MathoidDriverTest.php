@@ -8,7 +8,7 @@
  *
  * @group MathSearch
  */
-class MathoidDriverTest extends MediaWikiTestCase {
+class MathoidDriverTest extends MediaWikiIntegrationTestCase {
 
 	private static $hasMathoid;
 

@@ -3,7 +3,7 @@
 /**
  * @group MathSearch
  */
-class MathSearchUtilsTest extends MediaWikiTestCase {
+class MathSearchUtilsTest extends MediaWikiIntegrationTestCase {
 
 	private const EXPECTED_OUTPUT = '{| class="wikitable sortable"
 |-
