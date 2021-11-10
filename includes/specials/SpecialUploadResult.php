@@ -78,6 +78,11 @@ class SpecialUploadResult extends SpecialPage {
 	 * @return array
 	 */
 	protected function printRunSelector( $type = 'selectorother' ) {
+		// If $wgMathWmcServer is unset there's no math_wmc_runs table to query
+		if ( !$this->getConfig()->get( 'MathWmcServer' ) ) {
+			return [];
+		}
+
 		$dbr = wfGetDB( DB_REPLICA );
 		$formFields = [];
 		$options = [];

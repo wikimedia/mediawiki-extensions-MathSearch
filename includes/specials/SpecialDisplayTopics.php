@@ -34,6 +34,11 @@ class SpecialDisplayTopics extends SpecialPage {
 	}
 
 	private function displayOverview( $filter = 1 ) {
+		// If $wgMathWmcServer is unset there's no math_wmc_ref table to query
+		if ( !$this->getConfig()->get( 'MathWmcServer' ) ) {
+			return;
+		}
+
 		$dbw = wfGetDB( DB_MASTER );
 		$cols = [ '#', 'fId', '#Var', '#matches', 'query', 'reference' ];
 		$res = $dbw->query( <<<SQL
@@ -57,6 +62,11 @@ SQL
 	}
 
 	private function displayTopic( $query ) {
+		// If $wgMathWmcServer is unset there's no math_wmc_ref table to query
+		if ( !$this->getConfig()->get( 'MathWmcServer' ) ) {
+			return;
+		}
+
 		$out = $this->getOutput();
 		$dbr = wfGetDB( DB_REPLICA );
 		$qId = $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qID' => $query ] );

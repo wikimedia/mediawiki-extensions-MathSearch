@@ -74,6 +74,12 @@ class MathQueryObject extends MathObject {
 	 * @return bool
 	 */
 	public function saveToDatabase( $overwrite = false ) {
+		global $wgMathWmcServer;
+		// If $wgMathWmcServer is unset there's no math_wmc_ref table to update
+		if ( !$wgMathWmcServer ) {
+			return false;
+		}
+
 		$fields = [
 			'qId' => $this->queryID,
 			'oldId' => $this->getRevisionID(),
