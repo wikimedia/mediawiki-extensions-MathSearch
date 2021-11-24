@@ -1,10 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
-			"Joao Xavier"
+			"Joao Xavier",
+			"JSantos"
 		]
 	},
 	"math-lp-2-domain-option-9": "altra",
 	"math-wmc-download-button": "Deskargar",
+	"math-wmc-SelectRun": "Nomo",
+	"math-search-relation-label": "Relatoː",
 	"math-search-relation-0": "e"
 }

@@ -165,5 +165,5 @@
 	"math-tex2nb-purge": "Purgez les résultats mis en cache.",
 	"datatypes-type-contentmath": "Expression mathématique (contenu)",
 	"wikibase-listdatatypes-contentmath-head": "Expression mathématique (contenu)",
-	"wikibase-listdatatypes-contentmath-body": "Champ de donnée littéral pour les expressions mathématiques, les formules, les équations et autres, exprimés dans la variante DRMF/DLMF de LaTeX."
+	"wikibase-listdatatypes-contentmath-body": "Champ de donnée littéral pour les expressions mathématiques, les formules, les équations et autres, exprimés dans la variante DRMF/DLMF (Digital Repository/Library of Mathematical Formulae/Functions) de LaTeX."
 }
