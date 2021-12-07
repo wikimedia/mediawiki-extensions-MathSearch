@@ -4,7 +4,8 @@
 			"Alirezaaa",
 			"Armin1392",
 			"Huji",
-			"Reza1615"
+			"Reza1615",
+			"Jeeputer"
 		]
 	},
 	"mathsearch": "جستجوی داده‌ها",
@@ -16,6 +17,15 @@
 	"getequationsbyquery": "پرس‌وجو شدن با سوال",
 	"xquerygenerator": "ژنراتور ایکس‌کوِری",
 	"mathdebug": "آزمون ترجمه",
+	"math-lp-1-page-label": "عنوان مقاله",
+	"math-lp-2-domain-option-2": "فیزیک",
+	"math-lp-2-domain-option-3": "شیمی",
+	"math-lp-2-domain-option-4": "زیست‌شناسی",
+	"math-lp-2-domain-option-5": "مهندسی",
+	"math-lp-2-domain-option-6": "علوم رایانه",
+	"math-lp-2-domain-option-7": "پزشکی",
+	"math-lp-2-domain-option-8": "اقتصاد",
+	"math-lp-2-domain-option-9": "سایر",
 	"math-wmc-download-button": "دریافت",
 	"math-wmc-SectionRun": "اطلاعات ارسال",
 	"math-wmc-SelectRun": "نام",
@@ -32,5 +42,5 @@
 	"math-search-relation-1": "یا",
 	"math-search-type-label": "نوع:",
 	"math-search-expression-label": "اصطلاح:",
-	"math-tex2nb-input": "ورودی"
+	"math-tex2nb-input": "ورودی فرمول"
 }

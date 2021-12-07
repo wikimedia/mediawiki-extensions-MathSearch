@@ -5,7 +5,8 @@
 			"Geraki",
 			"Giorgos456",
 			"NikosLikomitros",
-			"Nikosgranturismogt"
+			"Nikosgranturismogt",
+			"Giannaras99"
 		]
 	},
 	"mathsearch": "Μαθηματική αναζήτηση",
@@ -85,5 +86,5 @@
 	"math-search-type-0": "Λέξη κλειδί",
 	"math-search-type-2": "Έκφραση xQuery",
 	"math-search-expression-label": "Έκφραση:",
-	"math-tex2nb-input": "Εισαγωγή"
+	"math-tex2nb-input": "Είσοδος τύπου"
 }
