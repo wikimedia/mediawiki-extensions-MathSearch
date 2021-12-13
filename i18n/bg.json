@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"StanProg"
+			"StanProg",
+			"Kareyac"
 		]
 	},
 	"math-lp-2-content-option-6": "химична структура (CO₂ + C ⇌ 2 CO)",
-	"math-wmc-download-button": "Изтегляне"
+	"math-wmc-download-button": "Изтегляне",
+	"math-search-relation-0": "и"
 }

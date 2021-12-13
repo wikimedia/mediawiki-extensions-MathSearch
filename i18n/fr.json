@@ -11,7 +11,8 @@
 			"Orlodrim",
 			"Thibaut120094",
 			"Urhixidur",
-			"Wladek92"
+			"Wladek92",
+			"Florian COLLIN"
 		]
 	},
 	"mathsearch": "Recherche mathématique",
@@ -162,5 +163,5 @@
 	"math-tex2nb-mathematica": "… est traduite dans la sortir Mathematica …",
 	"datatypes-type-contentmath": "Expression mathématique (contenu)",
 	"wikibase-listdatatypes-contentmath-head": "Expression mathématique (contenu)",
-	"wikibase-listdatatypes-contentmath-body": "Champ de donnée littéral pour les expressions mathématiques, les formules, les équations et autres, exprimés dans la variante DRMF/DLMF de LaTeX."
+	"wikibase-listdatatypes-contentmath-body": "Champ de donnée littéral pour les expressions mathématiques, les formules, les équations et autres, exprimés dans la variante DRMF/DLMF (Digital Repository/Library of Mathematical Formulae/Functions) de LaTeX."
 }

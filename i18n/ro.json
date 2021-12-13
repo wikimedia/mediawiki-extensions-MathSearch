@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"XXN"
+			"XXN",
+			"NGC 54"
 		]
 	},
 	"math-wmc-SelectRun": "Nume",
-	"math-wmc-FileLabel": "Fișier CSV"
+	"math-wmc-FileLabel": "Fișier CSV",
+	"datatypes-type-contentmath": "Expresie matematică (conținut)"
 }
