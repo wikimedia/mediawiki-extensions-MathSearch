@@ -5,6 +5,7 @@
 			"Kly",
 			"LNDDYL",
 			"Liuxinyu970226",
+			"Tranve",
 			"Winston Sung"
 		]
 	},
@@ -152,7 +153,7 @@
 	"math-tex2nb-header": "指定您自己的輸入",
 	"math-tex2nb-intro": "此模擬旨在證明 TeX 至計算機代數系統（CAS）轉換的想法。\n\n展示應用程式所轉換的 LaTeX 函式，會直接轉譯至 CAS 的相對應內容。\n\n沒有 CAS 所明確支援的函式可透過 DRMF 套件（開發中）來轉譯。",
 	"math-tex2nb-input": "公式輸入",
-	"math-tex2nb-wikitext": "Wiki 語法上下文",
+	"math-tex2nb-wikitext": "Wikitext 上下文",
 	"math-tex2nb-latex": "以下 LaTeX 輸入...",
 	"math-tex2nb-mathematica": "...被轉譯成 CAS 輸出...",
 	"math-tex2nb-purge": "清除快取結果。",
