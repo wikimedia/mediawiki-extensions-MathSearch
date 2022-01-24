@@ -3,6 +3,7 @@
 namespace MathSearch\StackExchange;
 
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 use Title;
 use XMLReader;
 
@@ -80,6 +81,11 @@ class DumpReader {
 			'fileName' => $this->fileName,
 			'errFile' => $this->errPath . "/$this->fileName-$part-err.xml",
 		] );
-		\JobQueueGroup::singleton()->push( $job );
+		if ( method_exists( MediaWikiServices::class, 'getJobQueueGroup' ) ) {
+			// MW 1.37+
+			MediaWikiServices::getInstance()->getJobQueueGroup()->push( $job );
+		} else {
+			\JobQueueGroup::singleton()->push( $job );
+		}
 	}
 }
