@@ -103,8 +103,7 @@ class UpdateMath extends Maintenance {
 	 * @param int $cMax
 	 */
 	protected function populateSearchIndex( $n = 0, $cMax = -1 ) {
-		$res = $this->db->select( 'revision', 'MAX(rev_id) AS count' );
-		$s = $this->db->fetchObject( $res );
+		$s = $this->db->selectRow( 'revision', 'MAX(rev_id) AS count' );
 		$count = $s->count;
 		if ( $cMax > 0 && $count > $cMax ) {
 			$count = $cMax;
