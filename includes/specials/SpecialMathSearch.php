@@ -374,14 +374,12 @@ class SpecialMathSearch extends SpecialPage {
 	 */
 	function displayRevisionResults( $revisionID ) {
 		$out = $this->getOutput();
-		$revisionRecord = MediaWikiServices::getInstance()
-			->getRevisionLookup()
-			->getRevisionById( $revisionID );
-		if ( !$revisionRecord ) {
+		$revisionStoreRecord = MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionById( $revisionID );
+		if ( !$revisionStoreRecord ) {
 			LoggerFactory::getInstance( 'MathSearch' )->error( 'invalid revision number' );
 			return false;
 		}
-		$title = Title::newFromLinkTarget( $revisionRecord->getPageAsLinkTarget() );
+		$title = $revisionStoreRecord->getPageAsLinkTarget(); # MCR migration note: this replaced Revision::getTitle
 		$pagename = (string)$title;
 		$mathElements = [];
 		$textElements = [];
