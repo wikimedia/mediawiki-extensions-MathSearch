@@ -129,8 +129,7 @@ class UpdateMath extends Maintenance {
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
 				$this->output( "\nr{$s->rev_id}" );
-				$revText = $revisionStore->newRevisionFromRow( $s );
-				$fCount += $this->doUpdate( $s->page_id, $revText, $s->page_title, $s->rev_id );
+				$fCount += $this->doUpdate( $s->page_id, $s->old_text, $s->page_title, $s->rev_id );
 			}
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$start = microtime( true );
