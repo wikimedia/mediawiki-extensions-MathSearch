@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"FiberAhmed",
 			"Hiba Alshawi",
 			"Mervat Salman",
 			"SALMAN",
@@ -74,7 +75,7 @@
 	"math-lp-4-spacing-label": "كيف حال التباعد بين التعبير الرياضي؟",
 	"math-lp-4-spacing-option-1": "جيد",
 	"math-lp-4-spacing-option-2": "معتدل",
-	"math-lp-4-spacing-option-3": "سيء",
+	"math-lp-4-spacing-option-3": "سيئ",
 	"math-lp-4-font-label": "كيف هو خط التعبير الرياضي؟",
 	"math-lp-4-font-option-1": "واضح",
 	"math-lp-4-font-option-2": "معتدل",
@@ -86,7 +87,7 @@
 	"math-lp-4-absolute-label": "كيف حال العرض العام للتعبير؟",
 	"math-lp-4-absolute-option-1": "جيد",
 	"math-lp-4-absolute-option-2": "معتدل",
-	"math-lp-4-absolute-option-3": "سيء",
+	"math-lp-4-absolute-option-3": "سيئ",
 	"math-lp-5-head": "الخطوة 5: علم السياق المستقل",
 	"math-lp-5-intro": "في ما يلي، ستقيم جودة دلالات المعادلة.",
 	"math-lp-5-identifiers-label": "تم استخراج المعرفات الرياضية التالية من الصيغة، اختر لكل معرف إذا كان معرفا للتعبير.",
