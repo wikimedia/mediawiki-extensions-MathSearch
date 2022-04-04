@@ -26,7 +26,7 @@ class SpecialMathSearch extends SpecialPage {
 	private $displayQuery;
 	private $mathBackend;
 	private $resultID = 0;
-	private $noTerms = 4;
+	private $noTerms = 1;
 	private $terms = [];
 	/** @var int[] */
 	private $relevanceMap;
@@ -228,11 +228,14 @@ class SpecialMathSearch extends SpecialPage {
 				}
 			}
 		}
-		$this->getOutput()->addWikiTextAsInterface( "In total " . count( $this->relevanceMap, true ) .
-			' results.' );
-		foreach ( $this->relevanceMap as $revisionID ) {
-			$this->displayRevisionResults( $revisionID );
+		$formulaCount = 0;
+		if ( $this->relevanceMap != null ) {
+			$formulaCount = count( $this->relevanceMap, true );
+			foreach ( $this->relevanceMap as $revisionID ) {
+				$this->displayRevisionResults( $revisionID );
+			}
 		}
+		$this->getOutput()->addWikiTextAsInterface( "In total " . $formulaCount . ' results.' );
 	}
 
 	/**

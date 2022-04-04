@@ -18,7 +18,7 @@ class MathEngineBaseX extends MathEngineRest {
 
 	function __construct( $query = null ) {
 		global $wgMathSearchBaseXBackendUrl;
-		parent::__construct( $query, $wgMathSearchBaseXBackendUrl . 'api/mwsquery' );
+		parent::__construct( $query, $wgMathSearchBaseXBackendUrl . 'mwsquery' );
 	}
 
 	/**
@@ -87,7 +87,7 @@ class MathEngineBaseX extends MathEngineRest {
 		global $wgMathSearchBaseXBackendUrl;
 		$json_payload = json_encode( [ "harvest" => $harvest, "delete" => $delte ] );
 		try {
-			$res = self::doPost( $wgMathSearchBaseXBackendUrl . 'api/update', $json_payload );
+			$res = self::doPost( $wgMathSearchBaseXBackendUrl . 'update', $json_payload );
 			if ( $res ) {
 				$resJson = json_decode( $res );
 				if ( $resJson->success == true ) {
