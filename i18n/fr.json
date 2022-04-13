@@ -12,7 +12,8 @@
 			"Orlodrim",
 			"Thibaut120094",
 			"Urhixidur",
-			"Wladek92"
+			"Wladek92",
+			"Verdy p"
 		]
 	},
 	"mathsearch": "Recherche mathématique",
@@ -159,7 +160,7 @@
 	"math-tex2nb-header": "Spécifier votre propre entrée",
 	"math-tex2nb-intro": "Cette maquette est supposée démontrer l’idée de la conversion TeX vers le Système de calcul formel (SCF).\n\nL’application de démonstration convertit des fonctions LaTeX qui se traduisent directement vers leur contrepartie SCF.\n\nLes fonctions sans prise en charge explicite dans le SCF sont disponibles pour la traduction via un paquet DRMF (Digital Repository of Mathematical Formulae, en développement).",
 	"math-tex2nb-input": "Entrée de la formule",
-	"math-tex2nb-wikitext": "Contexte du wikitexte",
+	"math-tex2nb-wikitext": "Contexte du wikicode",
 	"math-tex2nb-latex": "L’entrée LaTeX suivante…",
 	"math-tex2nb-mathematica": "… est traduite en sortie CAS …",
 	"math-tex2nb-purge": "Purgez les résultats mis en cache.",
