@@ -136,7 +136,7 @@
 	"math-wmc-display-formulae-label": "Rendering für übermittelte Formeln anzeigen",
 	"math-wmc-display-formulae-help": "Nicht empfohlen für große Eingabedateien.",
 	"action-mathwmcsubmit": "Ergebnisse des NTCIR-Wikipedia-Math-Suchauftrags zu übermitteln",
-	"right-mathwmcsubmit": "Kann Ergebnisse an die NTCIR-Wikipedia-Math-Suchaufgabe übermitteln",
+	"right-mathwmcsubmit": "Ergebnisse an die NTCIR-Wikipedia-Math-Suchaufgabe übermitteln",
 	"math-search-term": "* $4 Term-$1: $3-Ausdruck „$2“ mit {{PLURAL:$5|einem Ergebnis|$5 Ergebnissen}}.",
 	"math-search-relation-label": "Relation:",
 	"math-search-relation-0": "und",

@@ -146,7 +146,7 @@
 	"math-wmc-display-formulae-label": "Afficher un rendu des formulaires envoyés",
 	"math-wmc-display-formulae-help": "Non recommandé pour les gros fichiers d’entrée.",
 	"action-mathwmcsubmit": "envoyer les résultats à la Tâche de recherche mathématique de Wikipédia NTCIR",
-	"right-mathwmcsubmit": "Envoi possible des résultats à la tâche de recherche mathématique Wikipedia NTCIR",
+	"right-mathwmcsubmit": "Soumettre des résultats à la tâche Wikipédia de recherche mathématique NTCIR",
 	"math-search-term": "* $4 term-$1: $3-expression « $2 » avec {{PLURAL:$5|1 résultat|$5 résultats}}.",
 	"math-search-relation-label": "Relation :",
 	"math-search-relation-0": "et",
