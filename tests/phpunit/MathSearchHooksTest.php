@@ -1,6 +1,10 @@
 <?php
 
-use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Config\ServiceOptions;
+use MediaWiki\Extension\Math\MathConfig;
+use MediaWiki\Extension\Math\Render\RendererFactory;
+use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 
 /**
  * MediaWiki MathSearch extension
@@ -87,13 +91,40 @@ EOT;
 	 */
 	public function testNTCIRHook() {
 		$sample = self::MATHML_SAMPLE;
-
+		$logger = LoggerFactory::getInstance( 'mathSearchHooksTest' );
+		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
 		$services = MediaWiki\MediaWikiServices::getInstance();
 		$services->resetServiceForTesting( 'ParserFactory' );
 		$parser = $services->getParserFactory()->create();
-		$parser->mRevisionId = 42;
-		$renderer = MathRenderer::getRenderer( '' );
+
+		# Creating a test page.
+		$mytext = "This is a test text";
+		$page = Title::newFromRow( (object)[
+			'page_id' => 187,
+			'page_len' => strlen( $mytext ),
+			'page_latest' => 1337,
+			'page_namespace' => "test_namespace",
+			'page_title' => "test_title",
+			'page_is_redirect' => 0
+		] );
+		# Creating a math config.
+		$mathConfig = new MathConfig(
+			new ServiceOptions( MathConfig::CONSTRUCTOR_OPTIONS,  [
+					'MathDisableTexFilter' => MathConfig::ALWAYS,
+					'MathValidModes' => [ MathConfig::MODE_SOURCE ],
+				] )
+		);
+		# Setting the revisionId to the parser with preprocess.
+		$parser->preprocess( $mytext, $page, ParserOptions::newFromAnon(), 42 );
+		$serviceOptions = new ServiceOptions(
+			RendererFactory::CONSTRUCTOR_OPTIONS,
+			$services->getMainConfig()
+		);
+		# Setting up the renderer.
+		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger );
+		$renderer = $rendererFactory->getRenderer( '' );
 		$renderer->setID( 'math.42.0' );
+		# Doing Assertions.
 		$this->assertTrue(
 			MathSearchHooks::onMathFormulaRenderedNoLink(
 				$parser, $renderer, $sample
@@ -110,7 +141,23 @@ EOT;
 	 * @covers MathSearchHooks::setMathId
 	 */
 	public function testSetMathIdIdempotence() {
-		$renderer = MathRenderer::getRenderer( '' );
+		$logger = LoggerFactory::getInstance( 'mathSearchHooksTest' );
+		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+		$services = MediaWiki\MediaWikiServices::getInstance();
+		$serviceOptions = new ServiceOptions(
+			RendererFactory::CONSTRUCTOR_OPTIONS,
+			$services->getMainConfig()
+		);
+		# Creating a math config.
+		$mathConfig = new MathConfig(
+			new ServiceOptions( MathConfig::CONSTRUCTOR_OPTIONS,  [
+				'MathDisableTexFilter' => MathConfig::ALWAYS,
+				'MathValidModes' => [ MathConfig::MODE_SOURCE ],
+			] )
+		);
+		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger );
+		$renderer = $rendererFactory->getRenderer( '' );
+
 		$id = null;
 		MathSearchHooks::setMathId( $id, $renderer, 0 );
 		$this->assertEquals( $id, $renderer->getID() );
