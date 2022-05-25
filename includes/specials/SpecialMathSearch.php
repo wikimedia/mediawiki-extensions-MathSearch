@@ -54,6 +54,7 @@ class SpecialMathSearch extends SpecialPage {
 		$this->setHeaders();
 		$this->mathpattern = $request->getText( 'mathpattern', '' );
 		$this->textpattern = $request->getText( 'textpattern', '' );
+		$this->noTerms = $request->getText( 'wpnoTerms', $this->noTerms );
 		$isEncoded = $request->getBool( 'isEncoded', false );
 		if ( $isEncoded ) {
 			$this->mathpattern = htmlspecialchars_decode( $this->mathpattern );

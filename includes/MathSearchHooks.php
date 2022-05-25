@@ -368,6 +368,8 @@ class MathSearchHooks {
 	/**
 	 * Occurs after the save page request has been processed.
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageContentSaveComplete
+	 * @deprecated
+	 * PageContentSaveComplete: legacy hook, deprecated in favor of PageSaveComplete
 	 *
 	 * @param WikiPage $wikiPage
 	 * @param User $user
