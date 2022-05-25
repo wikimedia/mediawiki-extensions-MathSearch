@@ -63,7 +63,8 @@
 		"ParserFirstCallInit": "MathSearchHooks::onParserFirstCallInit",
 		"ArticleDeleteComplete": "MathSearchHooks::onArticleDeleteComplete",
 		"WikibaseClientDataTypes": "ContentMathWikidataHook::onWikibaseClientDataTypes",
-		"WikibaseRepoDataTypes": "ContentMathWikidataHook::onWikibaseRepoDataTypes"
+		"WikibaseRepoDataTypes": "ContentMathWikidataHook::onWikibaseRepoDataTypes",
+		"PageSaveComplete": "MathSearchHooks::onPageSaveComplete"
 	},
 	"config": {
 		"MathAnalysisTableName": "mathlatexml",
