@@ -3,6 +3,7 @@
 		"authors": [
 			"Hwangjy9",
 			"Priviet",
+			"Theshinster123",
 			"Ykhwong",
 			"고솜",
 			"아라"
@@ -56,7 +57,7 @@
 	"math-wmc-SubmissionSuccess": "제출에 성공했습니다.",
 	"math-wmc-importing": "가져오는 중...",
 	"math-wmc-display-formulae-help": "대량 입력 파일에는 권장하지 않습니다.",
-	"right-mathwmcsubmit": "NTCIR Wikipedia Math Search Task에 결과를 제출할 수 있음",
+	"right-mathwmcsubmit": "NTCIR Wikipedia Math Search Task에 결과를 제출하기",
 	"math-search-type-0": "핵심 단어",
 	"math-search-type-1": "TeX 패턴",
 	"math-search-type-2": "xQuery 식",
