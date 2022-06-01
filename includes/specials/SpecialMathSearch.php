@@ -274,15 +274,15 @@ class SpecialMathSearch extends SpecialPage {
 			$dom->validateOnParse = true;
 			$dom->loadXML( $mml );
 			$DOMx = new DOMXpath( $dom );
-			$hits = $DOMx->query( $xpath );
+			# $hits = $DOMx->query( $xpath );
 			if ( $this->getConfig()->get( 'MathDebug' ) ) {
 				LoggerFactory::getInstance( 'MathSearch' )->debug( 'xPATH:' . $xpath );
 			}
-			if ( $hits !== null && $hits ) {
-				foreach ( $hits as $node ) {
-					$this->highlightHit( $node, $dom, $mml );
-				}
-			}
+			#if ( $hits !== null && $hits ) {
+			#	foreach ( $hits as $node ) {
+			#		$this->highlightHit( $node, $dom, $mml );
+			#	}
+			#}
 			if ( $mml != $res->getMathml() ) {
 				$renderer = new MathMathML( $mml, [ 'type' => 'pmml' ] );
 				$renderer->setMathml( $mml );
