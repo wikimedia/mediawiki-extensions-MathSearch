@@ -9,5 +9,7 @@
 	"math-wmc-download-button": "Deskargar",
 	"math-wmc-SelectRun": "Nomo",
 	"math-search-relation-label": "Relatoː",
-	"math-search-relation-0": "e"
+	"math-search-relation-0": "e",
+	"datatypes-type-contentmath": "Matematikala frazo (kontenajo)",
+	"wikibase-listdatatypes-contentmath-head": "Matematikala frazo (kontenajo)"
 }
