@@ -44,6 +44,7 @@ class MathSearchHooks {
 			$updater->addExtensionTable( 'math_review_list', "${dir}math_review_list.sql" );
 			$updater->addExtensionTable( 'math_wbs_entity_map', "${dir}math_wbs_entity_map.sql" );
 			$updater->addExtensionTable( 'math_wbs_text_store', "${dir}math_wbs_text_store.sql" );
+			$updater->addExtensionTable( 'mathpagesimilarity', "${dir}mathpagesimilarity.sql" );
 			if ( $wgMathWmcServer ) {
 				$wmcDir = $dir . 'wmc/persistent/';
 				$updater->addExtensionTable( 'math_wmc_ref', $wmcDir . "math_wmc_ref.sql" );
