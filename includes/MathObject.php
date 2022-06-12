@@ -37,7 +37,7 @@ class MathObject extends MathMathML {
 		return $xhash['md5'];
 	}
 
-	public static function findSimilarPages( $pid ): string {
+	public static function findSimilarPages( $pid ): void {
 		global $wgOut;
 		$out = "";
 		$dbr = wfGetDB( DB_REPLICA );
@@ -70,7 +70,7 @@ class MathObject extends MathMathML {
 			$wgOut->addWikiTextAsInterface( $out );
 		}
 		catch ( Exception $e ) {
-			return "DatabaseProblem";
+			$wgOut->addHTML( "DatabaseProblem" );
 		}
 	}
 
@@ -243,7 +243,7 @@ class MathObject extends MathMathML {
 		return $this->index_timestamp;
 	}
 
-	public function getObservations( $update = true ): string {
+	public function getObservations( $update = true ): void {
 		global $wgOut;
 		$dbr = wfGetDB( DB_REPLICA );
 		try {
@@ -263,13 +263,19 @@ class MathObject extends MathMathML {
 					'revstat_featureid = varstat_id'
 				],
 				__METHOD__, [
-					'GROUP BY' => 'mathobservation_featurename',
+					'GROUP BY' => [
+						'mathobservation_featurename',
+						'mathobservation_featuretype',
+						'varstat_featurecount',
+						'revstat_featurecount',
+					],
 					'ORDER BY' => 'varstat_featurecount'
 				]
 			);
 		}
 		catch ( Exception $e ) {
-			return "Database problem";
+			$wgOut->addHTML( "Database problem" . $e->getMessage() );
+			return;
 		}
 		$wgOut->addWikiTextAsInterface( $res->numRows() . 'results' );
 		if ( $res->numRows() == 0 ) {
