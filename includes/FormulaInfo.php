@@ -298,7 +298,11 @@ class FormulaInfo extends SpecialPage {
 		if ( self::hasPngSupport( $mode ) ) {
 			if ( method_exists( $renderer, 'getPng' ) ) {
 				$out->addWikiTextAsInterface( 'PNG (' . self::getlengh( $renderer->getPng() ) . ') :', false );
-				$out->addHTML( $renderer->getHtmlOutput() );
+				try {
+					$out->addHTML( $renderer->getHtmlOutput() );
+				} catch ( MWException $e ) {
+					$out->addHTML( 'Failed getting PNG </br>' . $e->getHTML() );
+				}
 				$out->addHTML( "<br />\n" );
 			} else {
 				try {
