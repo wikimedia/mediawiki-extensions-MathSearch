@@ -116,7 +116,12 @@
 	"SpecialPages": {
 		"MathSearch": "SpecialMathSearch",
 		"MlpEval": "SpecialMlpEval",
-		"FormulaInfo": "FormulaInfo",
+		"FormulaInfo": {
+			"class": "FormulaInfo",
+			"services": [
+				"Math.Config"
+			]
+		},
 		"GetEquationsByQuery": "GetEquationsByQuery",
 		"MathDebug": "SpecialMathDebug",
 		"MathIndex": "SpecialMathIndex",

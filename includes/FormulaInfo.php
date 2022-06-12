@@ -1,6 +1,6 @@
 <?php
 
-use MediaWiki\Extension\Math\Hooks as MathHooks;
+use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\MediaWikiServices;
 
@@ -17,9 +17,14 @@ class FormulaInfo extends SpecialPage {
 
 	/** @var bool */
 	private $purge = false;
+	/** @var MathConfig */
+	private $mathConfig;
 
-	function __construct() {
+	function __construct(
+		MathConfig $mathConfig
+	) {
 		parent::__construct( 'FormulaInfo' );
+		$this->mathConfig = $mathConfig;
 	}
 
 	/**
@@ -243,7 +248,7 @@ class FormulaInfo extends SpecialPage {
 			return;
 		}
 		$out = $this->getOutput();
-		$names = MathHooks::getMathNames();
+		$names = $this->mathConfig->getValidRenderingModeNames();
 		$name = $names[$mode];
 		$out->addWikiTextAsInterface( "=== $name rendering === " );
 		$renderer = MathRenderer::getRenderer( $tex, [], $mode );
