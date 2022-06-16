@@ -342,18 +342,21 @@ class MathSearchHooks {
 			->getRevisionLookup()
 			->getPreviousRevision( $revisionRecord );
 		$res = false;
-		if ( $previousRevisionRecord != null ) {
-			$prevRevId = $previousRevisionRecord->getId();
-			$baseXUpdater = new MathEngineBaseX();
-			try {
+		$baseXUpdater = new MathEngineBaseX();
+		try {
+			if ( $previousRevisionRecord != null ) {
+				$prevRevId = $previousRevisionRecord->getId();
+				# delete the entries previous revision.
 				$res = $baseXUpdater->update( $harvest, [ $prevRevId ] );
-			} catch ( Exception $e ) {
-				LoggerFactory::getInstance( 'MathSearch' )
-					->warning( 'Harvest update failed: {exception}',
-						[ 'exception' => $e->getMessage() ] );
+			} else {
+				# just create a new entry in index.
+				$res = $baseXUpdater->update( $harvest, [] );
+
 			}
-		} else {
-			$prevRevId = -1;
+		} catch ( Exception $e ) {
+			LoggerFactory::getInstance( 'MathSearch' )
+				->warning( 'Harvest update failed: {exception}',
+					[ 'exception' => $e->getMessage() ] );
 		}
 		if ( $res ) {
 			LoggerFactory::getInstance(
