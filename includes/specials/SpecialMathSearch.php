@@ -22,7 +22,7 @@ class SpecialMathSearch extends SpecialPage {
 	private $textpattern;
 	private $mathmlquery;
 	/** @var string */
-	private $mathEngine = 'mws';
+	private $mathEngine = 'basex';
 	private $displayQuery;
 	private $mathBackend;
 	private $resultID = 0;
