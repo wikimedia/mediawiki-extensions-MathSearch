@@ -314,6 +314,28 @@ class MathSearchHooks {
 	}
 
 	/**
+	 * This occurs when an article is undeleted (restored).
+	 * The formulae of the undeleted article are restored then in the index.
+	 * @param Title $title Title corresponding to the article restored
+	 * @param bool $create Whether or not the restoration caused the page to be created.
+	 * @param string $comment Comment explaining the undeletion.
+	 * @param int $oldPageId ID of page previously deleted. ID will be used for restored page.
+	 * @param array $restoredPages Set of page IDs that have revisions restored for undelete.
+	 */
+	public static function onArticleUndelete(
+		Title $title, $create, $comment, $oldPageId, $restoredPages
+	) {
+		$revId = $title->getLatestRevID();
+		$harvest = self::getMwsHarvest( $revId );
+		$mathEngineBaseX = new MathEngineBaseX();
+		if ( $mathEngineBaseX->update( $harvest, [] ) ) {
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId was successful." );
+		} else {
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId failed." );
+		}
+	}
+
+	/**
 	 * Occurs after the save page request has been processed.
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageSaveComplete
 	 *
@@ -342,18 +364,21 @@ class MathSearchHooks {
 			->getRevisionLookup()
 			->getPreviousRevision( $revisionRecord );
 		$res = false;
-		if ( $previousRevisionRecord != null ) {
-			$prevRevId = $previousRevisionRecord->getId();
-			$baseXUpdater = new MathEngineBaseX();
-			try {
+		$baseXUpdater = new MathEngineBaseX();
+		try {
+			if ( $previousRevisionRecord != null ) {
+				$prevRevId = $previousRevisionRecord->getId();
+				# delete the entries previous revision.
 				$res = $baseXUpdater->update( $harvest, [ $prevRevId ] );
-			} catch ( Exception $e ) {
-				LoggerFactory::getInstance( 'MathSearch' )
-					->warning( 'Harvest update failed: {exception}',
-						[ 'exception' => $e->getMessage() ] );
+			} else {
+				# just create a new entry in index.
+				$res = $baseXUpdater->update( $harvest, [] );
+				$prevRevId = -1;
 			}
-		} else {
-			$prevRevId = -1;
+		} catch ( Exception $e ) {
+			LoggerFactory::getInstance( 'MathSearch' )
+				->warning( 'Harvest update failed: {exception}',
+					[ 'exception' => $e->getMessage() ] );
 		}
 		if ( $res ) {
 			LoggerFactory::getInstance(

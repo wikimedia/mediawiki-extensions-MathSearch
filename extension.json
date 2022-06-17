@@ -64,7 +64,8 @@
 		"ArticleDeleteComplete": "MathSearchHooks::onArticleDeleteComplete",
 		"WikibaseClientDataTypes": "ContentMathWikidataHook::onWikibaseClientDataTypes",
 		"WikibaseRepoDataTypes": "ContentMathWikidataHook::onWikibaseRepoDataTypes",
-		"PageSaveComplete": "MathSearchHooks::onPageSaveComplete"
+		"PageSaveComplete": "MathSearchHooks::onPageSaveComplete",
+		"ArticleUndelete": "MathSearchHooks::onArticleUndelete"
 	},
 	"config": {
 		"MathAnalysisTableName": "mathlatexml",
