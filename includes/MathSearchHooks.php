@@ -313,6 +313,23 @@ class MathSearchHooks {
 		}
 	}
 
+    /**
+     * This occurs when an article is undeleted (restored).
+     * The formulae of the undeleted article are restored then in the index.
+     */
+	public static function onArticleUndelete(
+		Title $title, $create, $comment, $oldPageId, $restoredPages
+	) {
+		$revId = $title->getLatestRevID();
+		$harvest = self::getMwsHarvest( $revId );
+		$mathEngineBaseX = new MathEngineBaseX();
+		if ( $mathEngineBaseX->update( $harvest, [] ) ) {
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId was successful." );
+		} else {
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId failed." );
+		}
+	}
+
 	/**
 	 * Occurs after the save page request has been processed.
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageSaveComplete
