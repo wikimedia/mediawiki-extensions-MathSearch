@@ -44,6 +44,8 @@ class UpdateMath extends Maintenance {
 	private $renderingMode = 'latexml';
 	/** @var int */
 	private $chunkSize = 1000;
+	private $parser;
+	private $parserOptions;
 
 	public function __construct() {
 		parent::__construct();
@@ -103,7 +105,7 @@ class UpdateMath extends Maintenance {
 	 * @param int $cMax
 	 */
 	protected function populateSearchIndex( $n = 0, $cMax = -1 ) {
-		$s = $this->db->selectRow( 'revision', 'MAX(rev_id) AS count' );
+		$s = $this->db->selectRow( 'revision', 'MAX(rev_id) AS count', '' );
 		$count = $s->count;
 		if ( $cMax > 0 && $count > $cMax ) {
 			$count = $cMax;
@@ -119,17 +121,27 @@ class UpdateMath extends Maintenance {
 			}
 			$end = min( $n + $this->chunkSize - 1, $count );
 
-			$res = $this->db->select( [ 'page', 'revision', 'text' ],
-					[ 'page_id', 'page_namespace', 'page_title', 'old_flags', 'old_text', 'rev_id' ],
-					[ "rev_id BETWEEN $n AND $end", 'page_latest = rev_id', 'rev_text_id = old_id' ],
-					__METHOD__
+			# For filtering page by namespace add condition 'page_namespace = 4'
+			$res = $this->db->select( [ 'page', 'slots', 'content', 'text', 'revision' ],
+				[ 'page_id', 'page_namespace', 'page_title', 'page_latest',
+					'content_address', 'old_text', 'old_flags', 'rev_id' ],
+				[ "rev_id BETWEEN $n AND $end" ],
+				__METHOD__,
+				[],
+				[
+					'slots' => [ 'INNER JOIN', [ 'slot_origin = page_latest' ] ],
+					'content' => [ 'INNER JOIN', [ 'content_id = slot_content_id' ] ],
+					'text' => [ 'INNER JOIN', [ 'old_id = substr(content_address,4)' ] ],
+					'revision' => [ 'INNER JOIN', [ 'page_latest = rev_id' ] ] ]
 			);
+
 			$this->dbw->begin( __METHOD__ );
 			$revisionStore = MediaWikiServices::getInstance()->getRevisionStore();
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
-				$this->output( "\nr{$s->rev_id}" );
+				$this->output( "\nr{$s->rev_id} namespace:  {$s->page_namespace} page title: {$s->page_title}" );
 				$fCount += $this->doUpdate( $s->page_id, $s->old_text, $s->page_title, $s->rev_id );
+
 			}
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$start = microtime( true );
@@ -152,9 +164,6 @@ class UpdateMath extends Maintenance {
 	 */
 	private function doUpdate( $pid, $pText, $pTitle = "", $revId = 0 ) {
 		$notused = '';
-		$parser = new Parser();
-		$parser->mLinkID = 0;
-		$parser->mRevisionId = $revId;
 		// MathSearchHooks::setNextID($eId);
 		$math = MathObject::extractMathTagsFromWikiText( $pText );
 		$matches = count( $math );
@@ -162,7 +171,9 @@ class UpdateMath extends Maintenance {
 			echo ( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math as $formula ) {
 				$this->time = microtime( true );
-				$renderer = MathRenderer::getRenderer( $formula[1], $formula[2], $this->renderingMode );
+				/** @var MathRenderer $renderer */
+				$renderer = MediaWikiServices::getInstance()->get( 'Math.RendererFactory' )
+					->getRenderer( $formula[1], $formula[2], $this->renderingMode );
 				$this->current = $renderer;
 				$this->time( "loadClass" );
 				if ( $this->getOption( "texvccheck", false ) ) {
@@ -198,7 +209,13 @@ class UpdateMath extends Maintenance {
 				$renderer->writeCache();
 				$this->time( "write Cache" );
 				if ( !$this->getOption( "hooks", false ) ) {
-					Hooks::run( 'MathFormulaPostRender', [ $parser, &$renderer, &$notused ] );
+					$hookContainer = MediaWikiServices::getInstance()->getHookContainer();
+					$hookContainer->run(
+						'MathFormulaPostRender',
+						[ $this->getParser( $revId ),
+						&$renderer,
+						&$notused
+					] );
 					$this->time( "hooks" );
 				} else {
 					$eId = null;
@@ -220,6 +237,26 @@ class UpdateMath extends Maintenance {
 			return $matches;
 		}
 		return 0;
+	}
+
+	private function getParserOptions(): ParserOptions {
+		if ( !$this->parserOptions ) {
+			$this->parserOptions = ParserOptions::newFromAnon();
+		}
+		return $this->parserOptions;
+	}
+
+	private function getParser( $revId ): Parser {
+		if ( !$this->parser ) {
+			$this->parser = MediaWikiServices::getInstance()->getParserFactory()->create();
+		}
+		// hack to set private field mRevisionId id
+		$this->parser->preprocess(
+			'',
+			null,
+			$this->getParserOptions(),
+			$revId );
+		return $this->parser;
 	}
 
 	public function execute() {
