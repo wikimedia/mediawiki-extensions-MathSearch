@@ -29,7 +29,7 @@
 	"math-wmc-malformed-formula-reference": "שורה $1: ההפניה בנוסחה \"$2\" אינה תואמת את התבנית \"$3\".",
 	"math-wmc-wrong-formula-reference": "שורה $1: הפניה בנוסחה (גרסה \"$2\", נוסחה \"$3\") אינה חוקית.",
 	"math-wmc-wrong-query-reference": "שורה $1: ההפניה בשאילתה \"$2\" אינה חוקית.",
-	"math-wmc-importing": "מתבצע ייבוא...",
+	"math-wmc-importing": "מתבצע יבוא...",
 	"math-wmc-display-formulae-help": "לא מומלץ לקבצי קלט גדולים.",
 	"datatypes-type-contentmath": "ביטוי מתמטי (תוכן)",
 	"wikibase-listdatatypes-contentmath-head": "ביטוי מתמטי (תוכן)"
