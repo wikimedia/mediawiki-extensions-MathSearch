@@ -68,8 +68,7 @@ class MathObject extends MathMathML {
 				// .' ( pageid'.$other.'/'.$row->A.')' );
 			}
 			$wgOut->addWikiTextAsInterface( $out );
-		}
-		catch ( Exception $e ) {
+		} catch ( Exception $e ) {
 			$wgOut->addHTML( "DatabaseProblem" );
 		}
 	}
@@ -272,8 +271,7 @@ class MathObject extends MathMathML {
 					'ORDER BY' => 'varstat_featurecount'
 				]
 			);
-		}
-		catch ( Exception $e ) {
+		} catch ( Exception $e ) {
 			$wgOut->addHTML( "Database problem" . $e->getMessage() );
 			return;
 		}

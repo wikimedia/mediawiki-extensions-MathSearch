@@ -161,8 +161,7 @@ abstract class MathEngineRest {
 	protected function processResults( $res, $numProcess ) {
 		try {
 			$xres = new SimpleXMLElement( $res );
-		}
-		catch ( Exception $e ) {
+		} catch ( Exception $e ) {
 			LoggerFactory::getInstance( 'MathSearch' )->error( 'No valid XMLRESUSLT' . $res );
 			return false;
 		}

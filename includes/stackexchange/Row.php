@@ -116,8 +116,7 @@ class Row {
 				// $f->createWbItem();
 				$f->updateSearchIndex();
 			}
-		}
-		catch ( \Throwable $e ) {
+		} catch ( \Throwable $e ) {
 			$wt = $body;
 			self::getLog()->error( "Problem while concerting {body} to wikitext: {e}", [
 				'body' => $body,

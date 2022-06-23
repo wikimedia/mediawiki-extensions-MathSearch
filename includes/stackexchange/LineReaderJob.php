@@ -25,8 +25,7 @@ class LineReaderJob extends \Job {
 			try {
 				$reader = new Row( $row, $filename );
 				$reader->processBody();
-			}
-			catch ( \Throwable $e ) {
+			} catch ( \Throwable $e ) {
 				self::getLog()
 					->error( "While processing\n{row}\n the following exception appeared:\n{e} ", [
 						'row' => $row,

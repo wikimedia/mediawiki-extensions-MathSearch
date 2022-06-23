@@ -97,8 +97,7 @@ class MathSearchHooks {
 				} else {
 						self::writeMathIndex( $revId, $eid, $inputHash, $tex );
 				}
-			}
-			catch ( Exception $e ) {
+			} catch ( Exception $e ) {
 				LoggerFactory::getInstance( "MathSearch" )->error( 'Problem writing to math index!'
 					. ' You might want the rebuild the index by running:'
 					. '"php extensions/MathSearch/ReRenderMath.php". The error is'

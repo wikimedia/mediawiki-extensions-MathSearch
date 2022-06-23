@@ -200,8 +200,7 @@ class Field {
 			}
 			try {
 				$result[] = $sf->newSnak( $propertyId, 'value', $c );
-			}
-			catch ( InvalidArgumentException $e ) {
+			} catch ( InvalidArgumentException $e ) {
 				$c_ser = var_export( $c, false );
 				self::getLog()
 					->error( "Cannot create value '$c_ser' for property {$this->propertyId}",

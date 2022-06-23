@@ -240,8 +240,7 @@ are often used together.';
 		try {
 			$this->dependencyGraph = $this->getDependencyGraphFromContext();
 			$calulation = $this->getTranslations();
-		}
-		catch ( MWException $exception ) {
+		} catch ( MWException $exception ) {
 			$expected_error =
 				'The given context (dependency graph) did not contain sufficient information';
 			if ( strpos( $exception->getText(), $expected_error ) !== false ) {
