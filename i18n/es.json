@@ -8,7 +8,8 @@
 			"Ryo567",
 			"SinNovedades",
 			"Whovian Biologist",
-			"DiegoAmbrocio"
+			"DiegoAmbrocio",
+			"Francodiaz7"
 		]
 	},
 	"mathsearch": "Búsqueda matemática",
@@ -17,7 +18,7 @@
 	"mathdownload": "Descargar los resultados de la búsqueda matemática",
 	"mathindex": "Índice de matemáticas",
 	"mathupload": "Enviar los resultados de la búsqueda matemática",
-	"latextranslator": "Traductor de LaTeX a Mathematica",
+	"latextranslator": "Traductor de LaTeX a CAS",
 	"specialpages-group-mathsearch": "Búsqueda matemática",
 	"displaytopics": "Mostrar temas",
 	"mathsearch-desc": "Integra el motor [http://search.mathweb.org/about.html MathWeb Search]",
@@ -110,7 +111,7 @@
 	"math-tex2nb-header": "Especifica tu propia entrada",
 	"math-tex2nb-input": "Entrada de la fórmula",
 	"math-tex2nb-latex": "La siguiente entrada en LaTeX...",
-	"math-tex2nb-mathematica": "... se traduce al formato de salida de Mathematica ...",
+	"math-tex2nb-mathematica": "... se traduce al formato de salida de CAS ...",
 	"datatypes-type-contentmath": "Expresión matemática (contenido)",
 	"wikibase-listdatatypes-contentmath-head": "Expresión matemática (contenido)",
 	"wikibase-listdatatypes-contentmath-body": "Campo de datos literales para expresiones matemáticas, fórmulas, ecuaciones y similares, expresado en la variante DRMF/DLMF de LaTeX."
