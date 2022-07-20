@@ -25,7 +25,10 @@ class MathosphereDriver {
 			$revisionRecord = MediaWikiServices::getInstance()
 				->getRevisionLookup()
 				->getRevisionById( $revisionId );
-			$this->wikiText = $revisionRecord->getContent( SlotRecord::MAIN )->getNativeData();
+			/** @var TextContent $content */
+			'@phan-var TextContent $content';
+			$content = $revisionRecord->getContent( SlotRecord::MAIN );
+			$this->wikiText = $content->getText();
 		}
 	}
 
