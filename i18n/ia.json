@@ -4,6 +4,15 @@
 			"McDutchie"
 		]
 	},
+	"mathsearch": "Recerca mathematic",
+	"mlpeval": "Evalutation de processamento de linguage mathematic",
+	"formulainfo": "Information sur le formula",
+	"mathdownload": "Discargar resultatos de recerca mathematic",
+	"mathindex": "Indice mathematic",
+	"mathupload": "Submitter resultatos de recerca mathematic",
+	"latextranslator": "Traductor de LaTeX a CAS",
+	"specialpages-group-mathsearch": "Recerca mathematic",
+	"displaytopics": "Monstrar topicos",
 	"datatypes-type-contentmath": "Expression mathematic (contento)",
 	"wikibase-listdatatypes-contentmath-head": "Expression mathematic (contento)",
 	"wikibase-listdatatypes-contentmath-body": "Campo de datos litteral pro expressiones mathematic, formulas, equationes, etc., exprimite in le variante DRMF/DLMF de LaTeX."
