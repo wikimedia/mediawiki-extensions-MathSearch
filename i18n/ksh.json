@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Amire80",
 			"Purodha"
 		]
 	},
@@ -35,5 +36,5 @@
 	"math-tex2nb-header": "Jiff Ding eije Ennjahbe heh aan",
 	"math-tex2nb-input": "Ennjahbe",
 	"math-tex2nb-latex": "Heh di Ennjahbe en <i lang=\"en\" xml:lang=\"en\" dir=\"ltr\" title=\"Lamport TeX\">LaTeX</i>&nbsp;&hellip:",
-	"math-tex2nb-mathematica": " … weed vum Mathematica övversaz noh … !!FUZZYY!!"
+	"math-tex2nb-mathematica": "… weed vum Mathematica övversaz noh …"
 }
