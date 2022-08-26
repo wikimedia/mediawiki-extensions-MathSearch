@@ -146,6 +146,12 @@
 	"math-search-type-2": "Expression xQuery",
 	"math-search-expression-label": "Expression:",
 	"math-tex2nb-header": "Specificar tu proprie entrata",
+	"math-tex2nb-intro": "Iste maquette demonstra le concepto del conversion TeX al systema de calculo formal \"Computer Algebra System\" (CAS).\n\nLe application demonstrative converte functiones LaTeX le quales se traduce directemente a lor equivalentes CAS.\n\nFunctiones sin supporto explicite in CAS es disponibile pro traduction via un pacchetto DRMF (Digital Repository of Mathematical Formulae, in disveloppamento).",
+	"math-tex2nb-input": "Entrata de formula",
+	"math-tex2nb-wikitext": "Contexto in codice wiki",
+	"math-tex2nb-latex": "Le sequente entrata LaTeX…",
+	"math-tex2nb-mathematica": "…se traduce al resultato CAS…",
+	"math-tex2nb-purge": "Purgar le resultatos in cache.",
 	"datatypes-type-contentmath": "Expression mathematic (contento)",
 	"wikibase-listdatatypes-contentmath-head": "Expression mathematic (contento)",
 	"wikibase-listdatatypes-contentmath-body": "Campo de datos litteral pro expressiones mathematic, formulas, equationes, etc., exprimite in le variante DRMF/DLMF de LaTeX."
