@@ -12,7 +12,8 @@
 			"Thibaut120094",
 			"Urhixidur",
 			"Wladek92",
-			"Florian COLLIN"
+			"Florian COLLIN",
+			"Verdy p"
 		]
 	},
 	"mathsearch": "Recherche mathématique",
@@ -35,12 +36,12 @@
 	"math-lp-2-head": "Étape 2 : Classez l’expression mathématique",
 	"math-lp-2-intro": "Dans ce qui suit, vous verrez une expression mathématique qui a été saisie avec le balisage mathématique de MediaWiki et est traitée comme une expression mathématique par le logiciel MediaWiki.\n\nCette étape consiste à catégoriser l’expression selon son type et son domaine, étant donné que la notation mathématique n’est pas utilisée qu’en mathématiques pures.\n\nSi l’expression que vous voyez n’est pas une expression mathématique complexe, nous vous recommendons de soumettre le formulaire en cliquant sur ''{{int:math-lp-new-formula}}''.\n\nPlus bas, vous verrez une boîte grise qui peut être déroulée. L’expression qui est évaluée est affichée dans l'en-tête. Si vous cliquez sur « Dérouler », vous verrez un extrait de l’article d’où provient l’expression. Pour voir l’article en entier, vous pouvez ouvrir le lien en haut de la page dans une nouvelle fenêtre.",
 	"math-lp-2-content-label": "Sélectionnez le type le plus approprié pour l’expression",
-	"math-lp-2-content-option-1": "expression mathématique complexe (a²+b²=c²)",
+	"math-lp-2-content-option-1": "expression mathématique complexe (a² + b² = c²)",
 	"math-lp-2-content-option-2": "nombre seul (3.14)",
-	"math-lp-2-content-option-3": "identifiant seul (a, π, c₀)",
+	"math-lp-2-content-option-3": "simple identifiant (a, π, c₀)",
 	"math-lp-2-content-option-4": "symbole mathématique seul (±)",
 	"math-lp-2-content-option-5": "symbole utilisé dans un contexte non mathématique (♭ en musique)",
-	"math-lp-2-content-option-6": "structure chimique (CO₂ + C ⇌ 2 CO)",
+	"math-lp-2-content-option-6": "structure chimique (CO₂ + C ⇌ 2 CO)",
 	"math-lp-2-domain-label": "Sélectionnez le domaine de l’expression",
 	"math-lp-2-domain-option-1": "mathématiques (pures)",
 	"math-lp-2-domain-option-2": "physique",
