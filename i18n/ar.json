@@ -5,7 +5,9 @@
 			"Hiba Alshawi",
 			"Mervat Salman",
 			"SALMAN",
-			"ديفيد"
+			"ديفيد",
+			"Meno25",
+			"أَحمد"
 		]
 	},
 	"mathsearch": "بحث الرياضيات",
@@ -14,7 +16,7 @@
 	"mathdownload": "تنزيل نتائج بحث الرياضيات",
 	"mathindex": "مؤشر الرياضيات",
 	"mathupload": "تقديم نتائج بحث الرياضيات",
-	"latextranslator": "مترجم LaTeX إلى Mathematica",
+	"latextranslator": "مترجم LaTeX إلى CAS",
 	"specialpages-group-mathsearch": "بحث الرياضيات",
 	"displaytopics": "عرض المواضيع",
 	"mathsearch-desc": "يدمج محرك [http://search.mathweb.org/about.html البحث MathWeb]",
@@ -150,10 +152,12 @@
 	"math-search-type-2": "تعبير xQuery",
 	"math-search-expression-label": "التعبير:",
 	"math-tex2nb-header": "حددالمدخلات الخاصة بك",
-	"math-tex2nb-intro": "من المفترض أن يعرض هذا النموذج فكرة تحويل تخ إلى Mathematica. \n\nيحول التطبيق التجريبي وظائف لاتكس التي تُترجَم مباشرة إلى نظراء Mathematica. \n\nتتوفر الوظائف بدون دعم Mathematica الواضح للترجمة عبر حزمة DRMF (قيد التطوير).set up",
+	"math-tex2nb-intro": "يوضح هذا النموذج مفهوم تحويل TeX إلى نظام الجبر الحاسوبي (CAS).! N !! N! يحول التطبيق التجريبي وظائف LaTeX التي تترجم مباشرة إلى نظائر CAS.! الترجمة عبر حزمة DRMF (قيد التطوير).",
 	"math-tex2nb-input": "Saudi Arabia",
+	"math-tex2nb-wikitext": "سياق Wikitext",
 	"math-tex2nb-latex": "إدخال لاتكس التالي...",
-	"math-tex2nb-mathematica": "...تتم ترجمته إلى إخراج Mathematica...",
+	"math-tex2nb-mathematica": "... يترجم إلى إخراج CAS ...",
+	"math-tex2nb-purge": "نتائج ذاكرة التخزين المؤقت تطهير.",
 	"datatypes-type-contentmath": "التعبير الرياضي (المحتوى)",
 	"wikibase-listdatatypes-contentmath-head": "التعبير الرياضي (المحتوى)",
 	"wikibase-listdatatypes-contentmath-body": "حقل البيانات الحرفي للتعبيرات الرياضية والصيغ والمعادلات ومثلياتها، والتي يتم التعبير عنها في متغير DRMF / DLMF من LaTeX."
