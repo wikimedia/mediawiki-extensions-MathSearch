@@ -152,7 +152,7 @@
 	"math-search-type-2": "تعبير xQuery",
 	"math-search-expression-label": "التعبير:",
 	"math-tex2nb-header": "حددالمدخلات الخاصة بك",
-	"math-tex2nb-intro": "يوضح هذا النموذج مفهوم تحويل TeX إلى نظام الجبر الحاسوبي (CAS).! N !! N! يحول التطبيق التجريبي وظائف LaTeX التي تترجم مباشرة إلى نظائر CAS.! الترجمة عبر حزمة DRMF (قيد التطوير).",
+	"math-tex2nb-intro": "يوضح هذا النموذج مفهوم تحويل TeX إلى نظام الجبر الحاسوبي (CAS).\n\nيحول التطبيق التجريبي وظائف LaTeX التي تترجم مباشرة إلى نظائر CAS.\n\nالترجمة عبر حزمة DRMF (قيد التطوير).",
 	"math-tex2nb-input": "Saudi Arabia",
 	"math-tex2nb-wikitext": "سياق Wikitext",
 	"math-tex2nb-latex": "إدخال لاتكس التالي...",
