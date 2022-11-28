@@ -6,7 +6,8 @@
 			"Moritz Schubotz",
 			"Robby",
 			"Shirayuki",
-			"Umherirrender"
+			"Umherirrender",
+			"Verdy p"
 		]
 	},
 	"mathsearch": "{{doc-special|MathSearch}}\n\"Math Search\" is the name of the MediaWiki extension which integrates the [http://search.mathweb.org/ MathWeb Search] engine.\n\nMath Search is used to search for a formula based on their MathML representation.\n{{Identical|Math search}}",
@@ -86,7 +87,7 @@
 	"math-lp-4-integration-option-2": "option of math-lp-4-integration-label",
 	"math-lp-4-integration-option-3": "option of math-lp-4-integration-label",
 	"math-lp-4-absolute-label": "Label of the overall assessment option box.",
-	"math-lp-4-absolute-option-1": "option of math-lp-4-absolute-label",
+	"math-lp-4-absolute-option-1": "option of math-lp-4-absolute-label\n{{Identical|Good}}",
 	"math-lp-4-absolute-option-2": "option of math-lp-4-absolute-label",
 	"math-lp-4-absolute-option-3": "option of math-lp-4-absolute-label",
 	"math-lp-5-head": "Headline for survey step 5",
