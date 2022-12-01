@@ -68,7 +68,7 @@ class QueryEval extends Maintenance {
 			$dbw = wfGetDB( DB_MASTER );
 			$this->dbu = DatabaseUpdater::newForDB( $dbw );
 		}
-		$this->dbu->addExtensionTable( $name, __DIR__ . "/../db/wmc/${folder}${name}.sql" );
+		$this->dbu->addExtensionTable( $name, __DIR__ . "/../db/wmc/{$folder}{$name}.sql" );
 	}
 
 	/**

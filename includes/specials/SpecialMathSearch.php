@@ -83,7 +83,7 @@ class SpecialMathSearch extends SpecialPage {
 			if ( file_exists( __DIR__ . self::GUI_PATH ) ) {
 				$minurl = $this->getConfig()->get( 'ExtensionAssetsPath' ) . '/MathSearch' . self::GUI_PATH;
 				$this->getOutput()
-					->addHTML( "<p><a href=\"${minurl}\">Test experimental math input interface</a></p>" );
+					->addHTML( "<p><a href=\"{$minurl}\">Test experimental math input interface</a></p>" );
 			}
 		}
 		restore_error_handler();

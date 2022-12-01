@@ -52,7 +52,7 @@ class MwsDumpWriter {
 	}
 
 	public function getMwsExpression( $mathML, $revId, $eId ) {
-		$out = "\n<" . $this->mwsns . "expr url=\"${revId}#${eId}\">\n\t";
+		$out = "\n<" . $this->mwsns . "expr url=\"{$revId}#{$eId}\">\n\t";
 		$out .= $mathML;
 		$out .= "\n</" . $this->mwsns . "expr>\n";
 		return $out;

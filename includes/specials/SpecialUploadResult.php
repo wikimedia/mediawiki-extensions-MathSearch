@@ -215,8 +215,8 @@ class SpecialUploadResult extends SpecialPage {
 			->getRevisionById( $row['oldId'] );
 		$title = Title::newFromLinkTarget( $revisionRecord->getPageAsLinkTarget() );
 		$link = $title->getLinkURL() . $formulaId;
-		$this->getOutput()->addHTML( "<tr><td>${row['qId']}</td><td><a href=\"$link\" >$formulaId</a></td>
-			<td>${row['rank']}</td><td>$renderedMath</td></tr>" );
+		$this->getOutput()->addHTML( "<tr><td>{$row['qId']}</td><td><a href=\"$link\" >$formulaId</a></td>
+			<td>{$row['rank']}</td><td>$renderedMath</td></tr>" );
 	}
 
 	private function displayFeedback() {
