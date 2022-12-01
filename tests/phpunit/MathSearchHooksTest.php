@@ -108,18 +108,10 @@ EOT;
 			'page_is_redirect' => 0
 		] );
 		# Creating a math config.
-		$mathConfig = new MathConfig(
-			new ServiceOptions( MathConfig::CONSTRUCTOR_OPTIONS,  [
-					'MathDisableTexFilter' => MathConfig::ALWAYS,
-					'MathValidModes' => [ MathConfig::MODE_SOURCE ],
-				] )
-		);
+		$mathConfig = $this->createMock( MathConfig::class );
 		# Setting the revisionId to the parser with preprocess.
 		$parser->preprocess( $mytext, $page, ParserOptions::newFromAnon(), 42 );
-		$serviceOptions = new ServiceOptions(
-			RendererFactory::CONSTRUCTOR_OPTIONS,
-			$services->getMainConfig()
-		);
+		$serviceOptions = $this->createMock( ServiceOptions::class );
 		# Setting up the renderer.
 		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger );
 		$renderer = $rendererFactory->getRenderer( '' );
@@ -143,18 +135,9 @@ EOT;
 	public function testSetMathIdIdempotence() {
 		$logger = LoggerFactory::getInstance( 'mathSearchHooksTest' );
 		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
-		$services = MediaWiki\MediaWikiServices::getInstance();
-		$serviceOptions = new ServiceOptions(
-			RendererFactory::CONSTRUCTOR_OPTIONS,
-			$services->getMainConfig()
-		);
+		$serviceOptions = $this->createMock( ServiceOptions::class );
 		# Creating a math config.
-		$mathConfig = new MathConfig(
-			new ServiceOptions( MathConfig::CONSTRUCTOR_OPTIONS,  [
-				'MathDisableTexFilter' => MathConfig::ALWAYS,
-				'MathValidModes' => [ MathConfig::MODE_SOURCE ],
-			] )
-		);
+		$mathConfig = $this->createMock( MathConfig::class );
 		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger );
 		$renderer = $rendererFactory->getRenderer( '' );
 
