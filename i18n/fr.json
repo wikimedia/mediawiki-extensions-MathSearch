@@ -131,7 +131,7 @@
 	"math-wmc-SelectRun": "Nom",
 	"math-wmc-SelectRunHelp": "Spécifier un nom unique pour votre participation, ou écraser un brouillon existant.",
 	"math-wmc-FileLabel": "Fichier CSV",
-	"math-wmc-FileHelp": "Téléverser vos résultats sous forme de liste ordonnée, séparée par des virgules, de paires (Id de requête,Id de formule). Un entête de colonne de la forme <code>queryId,formulaId</code> est obligatoire.",
+	"math-wmc-FileHelp": "Téléverser vos résultats sous forme de liste ordonnée de paires (identifiant de requête,identifiant de formule) séparées par des virgules. Un entête de colonne de la forme <code>queryId,formulaId</code> est obligatoire.",
 	"math-wmc-RunAdded": "Participation « $1 » ajoutée avec l’Id « $2 »",
 	"math-wmc-RunAddError": "Erreur : Impossible d’ajouter la participation « $1 ».",
 	"math-wmc-RunAddExist": "La participation appelée « $1 » existe déjà avec l’Id « $2 »",
