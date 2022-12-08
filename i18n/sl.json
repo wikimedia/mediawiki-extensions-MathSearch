@@ -9,5 +9,11 @@
 	"math-lp-finish-label": "Končaj",
 	"math-wmc-download-button": "Prenesi",
 	"math-wmc-SelectRun": "Ime",
-	"math-search-type-label": "Vrsta:"
+	"math-search-term": "* $4 pogoj-$1: $3-izraz »$2« z {{PLURAL:$5|1 rezultatom|$5 rezultatoma|$5 rezultati}}.",
+	"math-search-relation-0": "in",
+	"math-search-relation-1": "ali",
+	"math-search-relation-2": "in ne",
+	"math-search-type-label": "Vrsta:",
+	"math-search-type-0": "Ključna beseda",
+	"math-search-type-1": "Vzorec TeX"
 }
