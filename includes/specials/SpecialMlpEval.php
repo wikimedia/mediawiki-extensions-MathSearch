@@ -666,12 +666,11 @@ class SpecialMlpEval extends SpecialPage {
 			$out->addHTML( $formula );
 		}
 		$out->addHTML( '<div class="mw-collapsible-content">' );
-		global $wgParser;
 
 		$popts = $out->parserOptions();
 		$popts->setInterfaceMessage( false );
 
-		$parserOutput = $wgParser->getFreshParser()->parse(
+		$parserOutput = MediaWikiServices::getInstance()->getParser->getFreshParser()->parse(
 			$hl->getWikiText(), $this->getRevisionTitle(), $popts )->getText();
 		if ( $filter ) {
 			call_user_func_array( $filter, [ &$parserOutput ] );
