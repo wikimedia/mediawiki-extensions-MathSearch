@@ -124,7 +124,8 @@ class MathosphereDriver {
 			"timeout"  => 60,
 			"method"   => 'POST'
 		];
-		$req = MWHttpRequest::factory( $url, $options, __METHOD__ );
+		$req = MMediaWikiServices::getInstance()->getHttpRequestFactory()
+			->create( $url, $options, __METHOD__ );
 		$status = $req->execute();
 
 		if ( $status->isOK() ) {
@@ -155,7 +156,8 @@ class MathosphereDriver {
 	}
 
 	public function checkBackend() {
-		$res = Http::get( $this->getBackendUrl() . '/_info' );
+		$res = MediaWikiServices::getInstance()->getHttpRequestFactory()
+			->get( $this->getBackendUrl() . '/_info' );
 		if ( $res ) {
 			$res = json_decode( $res );
 			if ( $res && json_last_error() === JSON_ERROR_NONE ) {

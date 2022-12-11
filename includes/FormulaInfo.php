@@ -95,7 +95,7 @@ class FormulaInfo extends SpecialPage {
 	private static function GetTranslation( $cas, $tex ) {
 		global $wgMathSearchTranslationUrl;
 		$params = [ 'cas' => $cas, 'latex' => $tex ];
-		return Http::post(
+		return MediaWikiServices::getInstance()->getHttpRequestFactory()->post(
 			$wgMathSearchTranslationUrl, [ "postData" => $params, "timeout" => 60 ]
 		);
 	}

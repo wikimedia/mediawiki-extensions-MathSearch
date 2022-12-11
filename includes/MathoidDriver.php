@@ -109,7 +109,8 @@ class MathoidDriver {
 			"timeout"  => 60,
 			"method"   => 'POST'
 		];
-		$req = MWHttpRequest::factory( $url, $options, __METHOD__ );
+		$req = MediaWikiServices::getInstance()->getHttpRequestFactory()
+			->create( $url, $options, __METHOD__ );
 		$status = $req->execute();
 
 		if ( $status->isOK() || $req->getStatus() === 400 ) {

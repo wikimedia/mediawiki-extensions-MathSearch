@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 
 /**
  * MediaWiki MathSearch extension
@@ -26,7 +27,8 @@ abstract class MathEngineRest {
 	protected $backendUrl = "http://localhost:9090";
 
 	protected static function doPost( $url, $postData ) {
-		$res = Http::post( $url, [ "postData" => $postData, "timeout" => 60 ] );
+		$res = MediaWikiServices::getInstance()->getHttpRequestFactory()
+			->post( $url, [ "postData" => $postData, "timeout" => 60 ] );
 		if ( $res === false ) {
 			if ( function_exists( 'curl_init' ) ) {
 				$handle = curl_init();
@@ -180,8 +182,8 @@ abstract class MathEngineRest {
 			ini_set( 'memory_limit', '256M' );
 			for ( $i = $numProcess; $i <= $this->size; $i += $numProcess ) {
 				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $this->postData );
-				$res =
-					Http::post( $this->backendUrl, [ "postData" => $query, "timeout" => 60 ] );
+				$res = MediaWikiServices::getInstance()->getHttpRequestFactory()
+					->post( $this->backendUrl, [ "postData" => $query, "timeout" => 60 ] );
 				LoggerFactory::getInstance( 'mathsearch' )->debug( 'MWS query:' . $query );
 				if ( $res == false ) {
 					LoggerFactory::getInstance(
