@@ -5,7 +5,10 @@
 			"Kly",
 			"LNDDYL",
 			"Liuxinyu970226",
-			"Winston Sung"
+			"Winston Sung",
+			"Diskdance",
+			"Tranve",
+			"捍粵者"
 		]
 	},
 	"mathsearch": "數學搜尋",
@@ -133,7 +136,7 @@
 	"math-wmc-too-many-results": "第 $1 行：推論出太多 $2 相關的結果。\n公式「$3」的計算排名為「$4」。這會超出提交的最大允許上限（$wgMathWmcMaxResults=$5）。",
 	"math-wmc-malformed-formula-reference": "第 $1 行：公式引用「$2」不符合模式「$3」。",
 	"math-wmc-wrong-formula-reference": "第 $1 行：公式引用（修訂「$2」，公式「$3」）無效。",
-	"math-wmc-wrong-query-reference": "第 $1 行：查詢參考「$2」無效。",
+	"math-wmc-wrong-query-reference": "第$1行：查詢參考「$2」無效。",
 	"math-wmc-importing": "匯入中...",
 	"math-wmc-display-formulae-label": "顯示提交公式的呈現",
 	"math-wmc-display-formulae-help": "不建議用於較大輸入內容的檔案。",
