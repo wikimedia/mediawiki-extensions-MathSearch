@@ -59,7 +59,9 @@
 	},
 	"Hooks": {
 		"LoadExtensionSchemaUpdates": "MathSearchHooks::onLoadExtensionSchemaUpdates",
-		"MathFormulaPostRender": "MathSearchHooks::addLinkToFormulaInfoPage",
+		"MathFormulaPostRender": [
+			"MathSearchHooks::addLinkToFormulaInfoPage",
+			"MathSearchHooks::updateMathIndex" ],
 		"ParserFirstCallInit": "MathSearchHooks::onParserFirstCallInit",
 		"ArticleDeleteComplete": "MathSearchHooks::onArticleDeleteComplete",
 		"WikibaseClientDataTypes": "ContentMathWikidataHook::onWikibaseClientDataTypes",
