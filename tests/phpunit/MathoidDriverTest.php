@@ -61,11 +61,9 @@ class MathoidDriverTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @covers MathoidDriver::getSvg
-	 * @covers MathoidDriver::getPng
 	 */
 	public function testFormats() {
 		$m = new MathoidDriver( '\\sin(x^2)' );
 		$this->assertStringContainsString( '<svg', $m->getSvg() );
-		$this->assertGreaterThan( count( $m->getPng() ), 100 );
 	}
 }

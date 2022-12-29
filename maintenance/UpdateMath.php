@@ -61,7 +61,7 @@ class UpdateMath extends Maintenance {
 		$this->addOption( 'hooks', "If set hooks will be skipped, but index will be updated.",
 			false, false );
 		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
-		$this->addOption( 'mode', 'Rendering mode to be used (png, mathml, latexml)', false, true,
+		$this->addOption( 'mode', 'Rendering mode to be used (mathml, latexml)', false, true,
 			'm' );
 		$this->addOption( 'chunk-size',
 			'Determines how many pages are updated in one database transaction.', false, true );

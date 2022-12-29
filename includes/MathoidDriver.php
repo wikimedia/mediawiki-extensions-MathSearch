@@ -173,10 +173,6 @@ class MathoidDriver {
 		return $this->getFormat( 'svg' );
 	}
 
-	public function getPng() {
-		return $this->getFormat( 'png' );
-	}
-
 	/**
 	 * @param string $format
 	 * @return bool|string

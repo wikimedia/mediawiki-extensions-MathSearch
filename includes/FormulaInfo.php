@@ -235,10 +235,6 @@ class FormulaInfo extends SpecialPage {
 		return ( $mode === 'latexml' || $mode === 'mathml' );
 	}
 
-	public static function hasPngSupport( $mode ) {
-		return ( $mode === 'mathml' );
-	}
-
 	/**
 	 * @param string $tex
 	 * @param string $mode
@@ -293,29 +289,6 @@ class FormulaInfo extends SpecialPage {
 				$out->addHTML( "<br />\n" );
 			} catch ( Exception $e ) {
 				$out->addHTML( 'Failed to get svg.' );
-			}
-		}
-		if ( self::hasPngSupport( $mode ) ) {
-			if ( method_exists( $renderer, 'getPng' ) ) {
-				$out->addWikiTextAsInterface( 'PNG (' . self::getlengh( $renderer->getPng() ) . ') :', false );
-				try {
-					$out->addHTML( $renderer->getHtmlOutput() );
-				} catch ( MWException $e ) {
-					$out->addHTML( 'Failed getting PNG </br>' . $e->getHTML() );
-				}
-				$out->addHTML( "<br />\n" );
-			} else {
-				try {
-					$renderer = MathObject::cloneFromRenderer( $renderer );
-					$rbi = $renderer->getRbi();
-					$pngUrl = preg_replace( '#/svg/#', '/png/', $rbi->getFullSvgUrl() );
-					$png = file_get_contents( $pngUrl );
-					$out->addWikiTextAsInterface( 'PNG (' . self::getlengh( $png ) . ') :', false );
-					$out->addHTML( "<img src='$pngUrl' />" );
-					$out->addHTML( "<br />\n" );
-				} catch ( Exception $e ) {
-					$out->addHTML( 'Failed to get png.' );
-				}
 			}
 		}
 		$renderer->writeCache();

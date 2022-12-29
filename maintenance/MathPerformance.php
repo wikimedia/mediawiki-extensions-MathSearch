@@ -73,8 +73,6 @@ class MathPerformance extends Maintenance {
 			case "benchmark":
 				$this->actionBenchmark();
 				break;
-			case 'png':
-				$this->actionPng();
 		}
 		$shareString = $this->getArg( 2, '' );
 		$this->vPrint( "{$shareString}Done." );
@@ -236,7 +234,6 @@ class MathPerformance extends Maintenance {
 			return;
 		}
 		$o = MathObject::cloneFromRenderer( $mathML );
-		file_put_contents( "$path/new.png", $o->getPng() );
 		file_put_contents( "$path/new.mml", $o->getMathml() );
 		file_put_contents( "$path/new.svg", $o->getSvg() );
 		file_put_contents( "$path/tex.tex", $o->getUserInputTex() );
@@ -253,7 +250,6 @@ class MathPerformance extends Maintenance {
 		}
 
 		$o = MathObject::cloneFromRenderer( $mathML );
-		file_put_contents( "$path/new-mathml.png", $o->getPng() );
 		file_put_contents( "$path/new-mathml.svg", $o->getSvg( 'force' ) );
 
 		// LaTeXML */
@@ -268,7 +264,6 @@ class MathPerformance extends Maintenance {
 		}
 
 		$o = MathObject::cloneFromRenderer( $mathML );
-		file_put_contents( "$path/new-latexml.png", $o->getPng() );
 		file_put_contents( "$path/new-latexml.svg", $o->getSvg( 'force' ) );
 		file_put_contents( "$path/new-latexml.mml", $mathML->getMathml() );
 	}

@@ -136,7 +136,6 @@ class SpecialMathDebug extends SpecialPage {
 		) {
 			$out->addWikiTextAsInterface( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
 			$out->addHTML( self::render( $t, 'source', $purge ) );
-			$out->addHTML( self::render( $t, 'png', $purge ) );
 			$out->addWikiTextAsInterface(
 				'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>'
 			);
