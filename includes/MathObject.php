@@ -19,7 +19,7 @@ class MathObject extends MathMathML {
 
 	/** @var string */
 	protected $postData = '';
-	/** @var int */
+	/** @var string */
 	protected $anchorID = 0;
 	/** @var int */
 	protected $revisionID = 0;
@@ -438,17 +438,11 @@ class MathObject extends MathMathML {
 		return "[[{$this->getPageTitle()}{$anchor}|{$pageString}Eq: {$this->getAnchorID()}]]";
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getAnchorID(): int {
+	public function getAnchorID(): string {
 		return $this->anchorID;
 	}
 
-	/**
-	 * @param int $id
-	 */
-	public function setAnchorID( int $id ) {
+	public function setAnchorID( string $id ) {
 		$this->anchorID = $id;
 	}
 
