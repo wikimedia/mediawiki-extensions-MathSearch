@@ -133,7 +133,7 @@
 	"math-wmc-importing": "Uvažanje ...",
 	"math-wmc-display-formulae-label": "Prikaži upodobitev predloženih formul",
 	"math-wmc-display-formulae-help": "Ni priporočljivo za velike vhodne datoteke.",
-	"action-mathwmcsubmit": "predložitev zadetkov opravilu iskanja matematike v Wikipediji NTCIR",
+	"action-mathwmcsubmit": "predložitev zadetkov opravilu NTICR iskanja matematike v Wikipediji",
 	"right-mathwmcsubmit": "Predložitev zadetkov opravilu iskanja matematike v Wikipediji NTCIR",
 	"math-search-term": "* $4 pogoj-$1: $3-izraz »$2« z {{PLURAL:$5|1 rezultatom|$5 rezultatoma|$5 rezultati}}.",
 	"math-search-relation-label": "Zveza:",
