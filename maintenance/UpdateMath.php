@@ -65,6 +65,8 @@ class UpdateMath extends Maintenance {
 		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
 		$this->addOption( 'mode', 'Rendering mode to be used (mathml, latexml)', false, true,
 			'm' );
+		$this->addOption( 'exportmml', 'export LaTeX and generated MathML to the specified file', false, true,
+			'e' );
 		$this->addOption( 'chunk-size',
 			'Determines how many pages are updated in one database transaction.', false, true );
 		$this->requireExtension( 'MathSearch' );
@@ -141,7 +143,6 @@ class UpdateMath extends Maintenance {
 			foreach ( $res as $s ) {
 				$this->output( "\nr{$s->rev_id} namespace:  {$s->page_namespace} page title: {$s->page_title}" );
 				$fCount += $this->doUpdate( $s->page_id, $s->old_text, $s->page_title, $s->rev_id );
-
 			}
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$start = microtime( true );
@@ -163,6 +164,8 @@ class UpdateMath extends Maintenance {
 	 * @return number
 	 */
 	private function doUpdate( $pid, $pText, $pTitle = "", $revId = 0 ) {
+		$allFormula = [];
+
 		$notused = '';
 		// MathSearchHooks::setNextID($eId);
 		$math = MathObject::extractMathTagsFromWikiText( $pText );
@@ -233,8 +236,17 @@ class UpdateMath extends Maintenance {
 						echo "\nS:\t\t" . $renderer->getMd5();
 					}
 				}
+				if ( $this->getOption( "exportmml", false ) ) {
+					$allFormula = $this->getMathMLForExport( $formula[1], $renderer, $allFormula );
+				}
 			}
+			$mmlPath = $this->getOption( "exportmml", false );
+			if ( $mmlPath ) {
+				$this->exportMMLtoFile( $mmlPath, $allFormula, $pTitle );
+			}
+
 			return $matches;
+
 		}
 		return 0;
 	}
@@ -271,6 +283,48 @@ class UpdateMath extends Maintenance {
 		$this->output( "Loaded.\n" );
 		$this->time = microtime( true );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
+	}
+
+	/**
+	 * Fetches a MathML entry for exporting formulas from renderer and forms an entry for json export.
+	 * @param string $formula formula in tex to save
+	 * @param MathRenderer $renderer mathrenderer object which contains mathml
+	 * @param array $allFormula array which is filled with formula entries
+	 * @return array modified allFormula array
+	 */
+	public function getMathMLForExport( string $formula, MathRenderer $renderer, array $allFormula ): array {
+		if ( $this->verbose ) {
+			echo "\n Fetching MML for formula: " . $formula . "\n";
+		}
+		$mathML = $renderer->getMathml();
+		if ( $this->verbose ) {
+			echo "\n Input-type is: " . $renderer->getInputType();
+			echo "\n MathML is" . substr( $mathML, 0, 50 );
+		}
+		$allFormula[] = [
+			'tex' => $formula,
+			'type' => $renderer->getInputType(),
+			'mml' => $mathML,
+		];
+		return $allFormula;
+	}
+
+	/**
+	 * Writes the MathML content in allFormula to a file named '<mmlPath>/mmlAllResults-<mode>-<pTitle>.json'
+	 * @param string $mmlPath path for saving the mathml (without filename)
+	 * @param array $allFormula all formula array with mathml for the current page
+	 * @param string $pTitle title of page
+	 * @return void
+	 * @throws InvalidArgumentException when the filepath defined by cli-arg is not a correct folder
+	 */
+	public function exportMMLtoFile( string $mmlPath, array $allFormula, string $pTitle ): void {
+		if ( !is_dir( $mmlPath ) ) {
+			throw new InvalidArgumentException( "Filepath for exportmml at not valid at: " . $mmlPath );
+		}
+		$jsonData = json_encode( $allFormula, JSON_PRETTY_PRINT );
+		$fullPath = realpath( $mmlPath ) . DIRECTORY_SEPARATOR . 'mmlRes-' . $this->renderingMode .
+			"-" . $pTitle . ".json";
+		file_put_contents( $fullPath, $jsonData );
 	}
 }
 
