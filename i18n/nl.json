@@ -42,6 +42,7 @@
 	"math-lp-4-absolute-option-1": "goed",
 	"math-lp-4-absolute-option-2": "redelijk",
 	"math-lp-4-absolute-option-3": "slecht",
+	"math-lp-5-footer": "De vooraf ingevulde waarden van dit formulier zijn gegenereerd met behulp van een grote verscheidenheid aan open source-projecten, bv. LaTeXML, MathJax, Mathoid, Mathosphere, SpeechRuleEngine, texvc, texvcjs, texvcinfo. Met dank aan de bijdragers David Cervone, Deyan Ginev, Alexey Grigorev, Martin Líška, Bruce Miller, Robert Pagel, Michal Růžička, Volker Sorge, Frédéric Wang, Garbirel Wicke en vele anderen.",
 	"math-lp-finish-label": "Voltooien",
 	"math-wmc-attach-results-help": "Soms bevat een enkele run te veel resultaten om in één bestand te uploaden. In dat geval moet de upload worden opgesplitst in meerdere bestanden.",
 	"math-wmc-attach-results-label": "Meer resultaten toevoegen aan deze run",
