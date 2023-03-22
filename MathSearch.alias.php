@@ -166,11 +166,6 @@ $specialPageAliases['vi'] = [
 	'MathUpload' => [ 'Tải_lên_toán_học' ],
 ];
 
-/** Chinese (中文) */
-$specialPageAliases['zh'] = [
-	'MathSearch' => [ '数学搜索', '數學搜尋' ],
-];
-
 /** Simplified Chinese (中文（简体）‎) */
 $specialPageAliases['zh-hans'] = [
 	'MathSearch' => [ '数学搜索' ],
