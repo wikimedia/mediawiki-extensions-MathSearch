@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"EdoAug",
 			"Jon Harald Søby"
 		]
 	},
@@ -147,7 +148,7 @@
 	"math-search-expression-label": "Uttrykk:",
 	"math-tex2nb-header": "Angi dine egne inndata",
 	"math-tex2nb-intro": "Denne testen er ment å demonstrere ideen om konvertering fra TeX til Mathematica.\n\nDemoapplikasjonen konverterer LaTeX-funksjoner som direkte oversettes til sine motparter i Mathematica.\n\nFunksjoner uten eksplisitt Mathematica-støtte kan oversettes via DRMF-pakka (under utvikling).",
-	"math-tex2nb-input": "Inndata",
+	"math-tex2nb-input": "Formelinndata",
 	"math-tex2nb-latex": "Følgende LaTeX-inndata …",
 	"math-tex2nb-mathematica": "… oversettes til følgende Mathematica-utdata …",
 	"datatypes-type-contentmath": "Matematisk uttrykk (innhold)",
