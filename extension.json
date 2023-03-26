@@ -61,7 +61,8 @@
 		"LoadExtensionSchemaUpdates": "MathSearchHooks::onLoadExtensionSchemaUpdates",
 		"MathFormulaPostRender": [
 			"MathSearchHooks::addLinkToFormulaInfoPage",
-			"MathSearchHooks::updateMathIndex" ],
+			"MathSearchHooks::updateMathIndex"
+		],
 		"ParserFirstCallInit": "MathSearchHooks::onParserFirstCallInit",
 		"ArticleDeleteComplete": "MathSearchHooks::onArticleDeleteComplete",
 		"WikibaseClientDataTypes": "ContentMathWikidataHook::onWikibaseClientDataTypes",
