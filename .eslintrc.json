@@ -4,9 +4,5 @@
 		"wikimedia/client-es5",
 		"wikimedia/jquery",
 		"wikimedia/mediawiki"
-	],
-	"rules": {
-		"es/no-object-assign": "warn",
-		"compat/compat": "warn"
-	}
+	]
 }
