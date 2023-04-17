@@ -129,7 +129,7 @@
 	"math-wmc-bad-header": "Feil: Kolonneoverskriften må være queriId,formulaId. Ekstra kolonner er ikke tillatt.",
 	"math-wmc-too-many-results": "Linje $1: Årsaken er for mange resultater for $2.\nUtregnet rang for formlene «$3» var «$4». Det er høyere enn maksimalt antall innsendinger ($wgMathWmcMaxResults=$5).",
 	"math-wmc-malformed-formula-reference": "Linje $1: Formelreferansen «$2» matcher ikke mønsteret «$3».",
-	"math-wmc-wrong-formula-reference": "Linje $1: Formelreferansen (revisjon «$2», formel «$3») er ugyldig.",
+	"math-wmc-wrong-formula-reference": "Linje $1: Formelreferansen (sideversjon «$2», formel «$3») er ugyldig.",
 	"math-wmc-wrong-query-reference": "Linje $1: Spørringsreferansen «$2» er ugyldig.",
 	"math-wmc-importing": "Importerer …",
 	"math-wmc-display-formulae-label": "Viser visningen av innsendte formler",
