@@ -5,7 +5,7 @@ module.exports = function ( grunt ) {
 	grunt.loadNpmTasks( 'grunt-eslint' );
 
 	grunt.initConfig( {
-		// eslint-disable-next-line es-x/no-object-assign, compat/compat
+		// eslint-disable-next-line es-x/no-object-assign
 		banana: Object.assign(
 			conf.MessagesDirs,
 			{
