@@ -237,7 +237,7 @@ class MathSearchHooks {
 
 	static function generateMathAnchorString( $revId, $anchorID, $prefix = "#" ) {
 		$result = "{$prefix}math.$revId.$anchorID";
-		Hooks::run( "MathSearchGenerateAnchorString",
+		MediaWikiServices::getInstance()->getHookContainer()->run( "MathSearchGenerateAnchorString",
 			[ $revId, $anchorID, $prefix, &$result ] );
 		return $result;
 	}
