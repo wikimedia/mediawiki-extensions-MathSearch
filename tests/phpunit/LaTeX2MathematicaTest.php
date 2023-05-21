@@ -35,7 +35,7 @@ class LaTeX2MathematicaTest extends MediaWikiIntegrationTestCase {
 	 * @return array [ $input $output ] where $input is the input LaTeX string and $output is the
 	 * rendered Mathematica string
 	 */
-	public function provideCoverage() {
+	public static function provideCoverage() {
 		return json_decode( file_get_contents( __DIR__ . '/tex2nb.json' ) );
 	}
 
