@@ -29,14 +29,13 @@ class MathIdGenerator {
 	/**
 	 * @param RevisionRecord $revisionRecord
 	 * @return self
-	 * @throws MWException
 	 */
 	public static function newFromRevisionRecord( RevisionRecord $revisionRecord ) {
 		$contentModel = $revisionRecord
 			->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
 			->getModel();
 		if ( $contentModel !== CONTENT_MODEL_WIKITEXT ) {
-			throw new MWException( "MathIdGenerator supports only CONTENT_MODEL_WIKITEXT" );
+			throw new RuntimeException( "MathIdGenerator supports only CONTENT_MODEL_WIKITEXT" );
 		}
 		return new self(
 			ContentHandler::getContentText( $revisionRecord->getContent( SlotRecord::MAIN ) ),

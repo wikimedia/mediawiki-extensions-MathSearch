@@ -107,7 +107,7 @@ class MathObject extends MathMathML {
 		$gen = MathIdGenerator::newFromRevisionId( $oldId );
 		$tag = $gen->getTagFromId( $eid );
 		if ( !$tag ) {
-			throw new MWException( "$eid not found in revision text $oldId" );
+			throw new RuntimeException( "$eid not found in revision text $oldId" );
 		}
 		$mo =
 			new self( $tag[MathIdGenerator::CONTENT_POS], $tag[MathIdGenerator::ATTRIB_POS] );
@@ -629,7 +629,6 @@ class MathObject extends MathMathML {
 
 	/**
 	 * @param int|long $renderingTime either in ms or as in seconds as long
-	 * @throws MWException
 	 */
 	public function setRenderingTime( $renderingTime ) {
 		$type = gettype( $renderingTime );
@@ -642,7 +641,7 @@ class MathObject extends MathMathML {
 				$this->renderingTime = $renderingTime;
 				break;
 			default:
-				throw new MWException( __METHOD__ . ": does not support type $type" );
+				throw new RuntimeException( __METHOD__ . ": does not support type $type" );
 		}
 	}
 

@@ -21,14 +21,10 @@ class MathSearchHooks {
 	 * LoadExtensionSchemaUpdates handler; set up math table on install/upgrade.
 	 *
 	 * @param DatabaseUpdater|null $updater
-	 * @throws MWException
 	 * @return bool
 	 */
 	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater = null ) {
 		global $wgMathWmcServer;
-		if ( $updater === null ) {
-			throw new MWException( "Mathsearch extension requires Mediawiki 1.18 or above" );
-		}
 		$type = $updater->getDB()->getType();
 		if ( $type == "mysql" ) {
 			$dir = __DIR__ . '/../db/';

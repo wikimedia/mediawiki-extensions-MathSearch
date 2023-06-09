@@ -63,7 +63,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 			$contentModel =
 				$revisionRecord->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )->getModel();
 			if ( $contentModel !== CONTENT_MODEL_WIKITEXT ) {
-				throw new MWException( "Only CONTENT_MODEL_WIKITEXT supported for translation." );
+				throw new RuntimeException( "Only CONTENT_MODEL_WIKITEXT supported for translation." );
 			}
 			$this->context =
 				ContentHandler::getContentText( $revisionRecord->getContent( SlotRecord::MAIN ) );
@@ -133,7 +133,6 @@ are often used together.';
 
 	/**
 	 * @return string
-	 * @throws MWException
 	 */
 	public function calculateTranslations(): string {
 		$this->log( LogLevel::INFO, "Cache miss. Calculate translation." );
@@ -150,7 +149,7 @@ are often used together.';
 		if ( $statusCode === 200 ) {
 			return $req->getContent();
 		}
-		$e = new MWException( 'Calculation endpoint failed. Error:' . $req->getContent() );
+		$e = new RuntimeException( 'Calculation endpoint failed. Error:' . $req->getContent() );
 		$this->logger->error( 'Calculation "{url}" returned ' .
 			'HTTP status code "{statusCode}" for post data "{postData}".: {exception}.', [
 			'url' => $url,
@@ -178,7 +177,6 @@ are often used together.';
 
 	/**
 	 * @return false|mixed
-	 * @throws MWException
 	 */
 	public function calculateDependencyGraphFromContext(): string {
 		$this->log( LogLevel::INFO, "Cache miss. Calculate dependency graph." );
@@ -196,7 +194,7 @@ are often used together.';
 		if ( $statusCode === 200 ) {
 			return $req->getContent();
 		}
-		$e = new MWException( 'Dependency graph endpoint failed.' );
+		$e = new RuntimeException( 'Dependency graph endpoint failed.' );
 		$this->log( LogLevel::ERROR, 'Dependency graph "{url}" returned ' .
 			'HTTP status code "{statusCode}" for post data "{postData}": {exception}.', [
 			'url' => $url,
@@ -240,7 +238,7 @@ are often used together.';
 		try {
 			$this->dependencyGraph = $this->getDependencyGraphFromContext();
 			$calulation = $this->getTranslations();
-		} catch ( MWException $exception ) {
+		} catch ( Exception $exception ) {
 			$expected_error =
 				'The given context (dependency graph) did not contain sufficient information';
 			if ( strpos( $exception->getText(), $expected_error ) !== false ) {
