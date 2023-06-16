@@ -25,10 +25,10 @@ class WikidataDriver {
 				"/w/api.php?format=json&action=wbsearchentities&uselang={$this->lang}" .
 				"&language={$this->lang}&search={$term}"
 		];
-		$serviceClient = new VirtualRESTServiceClient(
-			MediaWikiServices::getInstance()->getHttpRequestFactory()->createMultiClient()
-		);
-		$response = $serviceClient->run( $request );
+
+		$multiHttpClient = MediaWikiServices::getInstance()->getHttpRequestFactory()
+			->createMultiClient();
+		$response = $multiHttpClient->run( $request );
 		if ( $response['code'] === 200 ) {
 			$json = json_decode( $response['body'] );
 			if ( $json && json_last_error() === JSON_ERROR_NONE ) {
