@@ -4,6 +4,8 @@ use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Logger\LoggerFactory;
+use Wikimedia\Diff\Diff;
+use Wikimedia\Diff\TableDiffFormatter;
 
 class SpecialMathDebug extends SpecialPage {
 
