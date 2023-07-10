@@ -44,7 +44,8 @@
 		"ContentMathValidator": "includes/content/ContentMathValidator.php",
 		"ContentMathFormatter": "includes/content/ContentMathFormatter.php",
 		"ContentMathWikidataHook": "includes/content/ContentMathWikidataHook.php",
-		"ContentMathMLRdfBuilder": "includes/content/ContentMathMLRdfBuilder.php"
+		"ContentMathMLRdfBuilder": "includes/content/ContentMathMLRdfBuilder.php",
+		"PageCreationJob": "includes/PageCreationJob.php"
 	},
 	"AvailableRights": [
 		"mathwmcsubmit"
@@ -139,7 +140,8 @@
 		"MediaWiki\\Extension\\MathSearch\\Rest\\": "includes/rest"
 	},
 	"JobClasses": {
-		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob"
+		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob",
+		"CreateProfilePages": "PageCreationJob"
 	},
 	"RestRoutes": [
 		{
