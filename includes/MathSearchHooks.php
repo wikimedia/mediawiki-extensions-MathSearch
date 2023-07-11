@@ -123,7 +123,7 @@ class MathSearchHooks {
 				if ( $id === null ) {
 					try {
 						$id = self::getRevIdGenerator( $revId )->guessIdFromContent( $renderer->getUserInputTex() );
-					} catch ( MWException $e ) {
+					} catch ( Exception $e ) {
 						LoggerFactory::getInstance( "MathSearch" )->warning( "Error generating Math ID", [ $e ] );
 						return false;
 					}
