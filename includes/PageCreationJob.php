@@ -34,8 +34,8 @@ class PageCreationJob extends \Job {
 			$name = $row['title'];
 			$prefix = $row['prefix'];
 			self::getLog()->info( "Creating page $name." );
-			$title = Title::newFromText( $prefix . $name );
-			$pageContent = ContentHandler::makeContent( '{{Formula}}', $title );
+			$title = Title::newFromText( $prefix . ':' . $name );
+			$pageContent = ContentHandler::makeContent( '{{' . $prefix . '}}', $title );
 			MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title )
 				->doUserEditContent( $pageContent, $user,
 					'Created automatically from ' . $this->params['jobname'] );

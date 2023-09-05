@@ -29,12 +29,42 @@ class CreateProfilePages extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
-		$this->addDescription( "Mass creates pages from a CSV file " );
+		$this->addDescription( "Mass creates pages from the SPARQL endpoint " );
 		$this->addOption(
 			'overwrite', 'Overwrite existing pages with the same name.', false, false, "o"
 		);
+		$this->addOption(
+			'person', 'Create persons instead of FHP.', false, false, "p"
+		);
 		$this->requireExtension( 'MathSearch' );
 		$this->requireExtension( 'LinkedWiki' );
+	}
+
+	private function getQuery() {
+		return $this->getOption( 'person' ) ?
+			<<<SPARQL
+PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
+PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
+
+SELECT ?item ?title
+WHERE
+{
+  {
+  SELECT ?item
+  WHERE { ?item wdt:P31 wd:Q57162 .}
+  ORDER by ?item
+  LIMIT 10000 offset 100000
+  }
+  SERVICE wikibase:label {bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". ?item rdfs:label ?title.}
+}
+SPARQL
+			: <<<SPARQL
+PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
+PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
+SELECT ?item ?title
+WHERE { ?item wdt:P2 ?title ;
+              wdt:P31 wd:Q1025939}
+SPARQL;
 	}
 
 	public function execute() {
@@ -44,19 +74,12 @@ class CreateProfilePages extends Maintenance {
 		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
 		$sp = $arrEndpoint["endpoint"];
 		$table = [];
-		$rs = $sp->query( <<<SPARQL
-PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
-PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
-SELECT ?item ?title
-WHERE { ?item wdt:P2 ?title ;
-              wdt:P31 wd:Q1025939}
-SPARQL
-);
+		$rs = $sp->query( $this->getQuery() );
 		foreach ( $rs['result']['rows'] as $row ) {
 			$table[] = [
 				'qID' => preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] ),
 				'title' => $row['title'],
-				'prefix' => 'Formula:'
+				'prefix' => $this->getOption( 'person' ) ? 'Person' : 'Formula'
 			];
 		}
 		$this->overwrite = $this->getOption( 'overwrite' );
