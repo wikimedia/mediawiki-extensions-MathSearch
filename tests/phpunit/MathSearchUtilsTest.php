@@ -21,8 +21,8 @@ class MathSearchUtilsTest extends MediaWikiIntegrationTestCase {
 	 * @covers MathSearchUtils::dbRowToWikiTable
 	 */
 	public function test() {
-		$dbw = wfGetDB( DB_MASTER );
 		$this->markTestSkipped( __METHOD__ . " temporary deactivated." );
+		$dbw = wfGetDB( DB_MASTER );
 		$dbw->query( 'CREATE TEMPORARY TABLE IF NOT EXISTS tmp_math_util_test (s TEXT, i INT)' );
 		$dbw->insert(
 			"tmp_math_util_test", [ [ 's' => 'a', 'i' => 1 ], [ 's' => 'b','i' => 2 ] ]

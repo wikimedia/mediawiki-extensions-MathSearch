@@ -13,6 +13,7 @@ use MediaWiki\MediaWikiServices;
  * GPLv2 license; info in main package.
  *
  * @group MathSearch
+ * @group Database
  */
 class MathSearchHooksTest extends MediaWikiIntegrationTestCase {
 
