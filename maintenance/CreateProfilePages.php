@@ -23,7 +23,7 @@ use MediaWiki\MediaWikiServices;
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class CreateProfilePages extends Maintenance {
-	private const BATCH_SIZE = 100;
+	private const BATCH_SIZE = 1000;
 	/** @var bool */
 	private $overwrite;
 
@@ -40,7 +40,7 @@ class CreateProfilePages extends Maintenance {
 		$this->requireExtension( 'LinkedWiki' );
 	}
 
-	private function getQuery() {
+	private function getQuery( $offset, $limit = self::BATCH_SIZE ) {
 		return $this->getOption( 'person' ) ?
 			<<<SPARQL
 PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
@@ -53,7 +53,7 @@ WHERE
   SELECT ?item
   WHERE { ?item wdt:P31 wd:Q57162 .}
   ORDER by ?item
-  LIMIT 10000 offset 100000
+  LIMIT $limit OFFSET $offset
   }
   SERVICE wikibase:label {bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". ?item rdfs:label ?title.}
 }
@@ -64,41 +64,43 @@ PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
 SELECT ?item ?title
 WHERE { ?item wdt:P2 ?title ;
               wdt:P31 wd:Q1025939}
+LIMIT $limit OFFSET $offset
 SPARQL;
 	}
 
 	public function execute() {
 		$jobname = 'import' . date( 'ymdhms' );
-		$configFactory = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
-		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
-		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
-		$sp = $arrEndpoint["endpoint"];
-		$table = [];
-		$rs = $sp->query( $this->getQuery() );
-		foreach ( $rs['result']['rows'] as $row ) {
-			$table[] = [
-				'qID' => preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] ),
-				'title' => $row['title'],
-				'prefix' => $this->getOption( 'person' ) ? 'Person' : 'Formula'
-			];
-		}
 		$this->overwrite = $this->getOption( 'overwrite' );
 		if ( $this->overwrite ) {
 			$this->output( "Loaded with option overwrite enabled .\n" );
 		}
-		$this->output( 'Read ' . count( $table ) . " rows.\n" );
-		$parts = array_chunk( $table, self::BATCH_SIZE );
+		$configFactory = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
+		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
+		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
+		$sp = $arrEndpoint["endpoint"];
+		$offset = 0;
 		$partId = 0;
-		foreach ( $parts as $part ) {
+		do {
+			$rs = $sp->query( $this->getQuery( $offset ) );
+			$this->output( 'Read from offset ' . $offset . ".\n" );
+			$table = [];
+			foreach ( $rs['result']['rows'] as $row ) {
+				$table[] = [
+					'qID' => preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] ),
+					'title' => $row['title'],
+					'prefix' => $this->getOption( 'person' ) ? 'Person' : 'Formula'
+				];
+			}
 			$title = Title::newFromText( "Page creator $jobname part $partId" );
+
 			$job = new PageCreationJob( $title, [
-				'rows' => $part,
+				'rows' => $table,
 				'jobname' => $jobname,
 			] );
 			MediaWikiServices::getInstance()->getJobQueueGroup()->push( $job );
-
+			$offset += self::BATCH_SIZE;
 			$partId++;
-		}
+		} while ( count( $table ) == self::BATCH_SIZE );
 	}
 
 }
