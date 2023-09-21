@@ -23,9 +23,12 @@ use MediaWiki\MediaWikiServices;
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class CreateProfilePages extends Maintenance {
-	private const BATCH_SIZE = 1000;
+	private const BATCH_SIZE = 10000;
 	/** @var bool */
 	private $overwrite;
+
+	/** @var bool */
+	private bool $person;
 
 	public function __construct() {
 		parent::__construct();
@@ -41,22 +44,15 @@ class CreateProfilePages extends Maintenance {
 	}
 
 	private function getQuery( $offset, $limit = self::BATCH_SIZE ) {
-		return $this->getOption( 'person' ) ?
+		return $this->person ?
 			<<<SPARQL
 PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
 
-SELECT ?item ?title
-WHERE
-{
-  {
-  SELECT ?item
-  WHERE { ?item wdt:P31 wd:Q57162 .}
-  ORDER by ?item
-  LIMIT $limit OFFSET $offset
-  }
-  SERVICE wikibase:label {bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". ?item rdfs:label ?title.}
-}
+SELECT ?item
+WHERE { ?item wdt:P31 wd:Q57162 .}
+ORDER by ?item
+LIMIT $limit OFFSET $offset
 SPARQL
 			: <<<SPARQL
 PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
@@ -71,6 +67,9 @@ SPARQL;
 	public function execute() {
 		$jobname = 'import' . date( 'ymdhms' );
 		$this->overwrite = $this->getOption( 'overwrite' );
+		$this->person = $this->getOption( 'person' );
+		$jobQueueGroup = MediaWikiServices::getInstance()->getJobQueueGroup();
+
 		if ( $this->overwrite ) {
 			$this->output( "Loaded with option overwrite enabled .\n" );
 		}
@@ -79,28 +78,23 @@ SPARQL;
 		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
 		$sp = $arrEndpoint["endpoint"];
 		$offset = 0;
-		$partId = 0;
 		do {
 			$rs = $sp->query( $this->getQuery( $offset ) );
 			$this->output( 'Read from offset ' . $offset . ".\n" );
-			$table = [];
-			foreach ( $rs['result']['rows'] as $row ) {
-				$table[] = [
-					'qID' => preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] ),
-					'title' => $row['title'],
-					'prefix' => $this->getOption( 'person' ) ? 'Person' : 'Formula'
-				];
-			}
-			$title = Title::newFromText( "Page creator $jobname part $partId" );
+			foreach ( $rs['result']['rows']  as $row ) {
+				$qID = preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] );
+				$title = Title::newFromText( "Page creator $jobname, item $qID." );
 
-			$job = new PageCreationJob( $title, [
-				'rows' => $table,
-				'jobname' => $jobname,
-			] );
-			MediaWikiServices::getInstance()->getJobQueueGroup()->push( $job );
+				$job = new PageCreationJob( $title, [
+					'qID' => $qID,
+					'title' => $this->person ? $qID : $row['title'],
+					'prefix' => $this->person ? 'Person' : 'Formula',
+					'jobname' => $jobname
+				] );
+				$jobQueueGroup->lazyPush( $job );
+			}
 			$offset += self::BATCH_SIZE;
-			$partId++;
-		} while ( count( $table ) == self::BATCH_SIZE );
+		} while ( count( $rs['result']['rows'] ) == self::BATCH_SIZE );
 	}
 
 }
