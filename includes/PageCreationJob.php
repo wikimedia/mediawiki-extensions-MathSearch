@@ -41,7 +41,7 @@ class PageCreationJob extends \Job {
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
 		$item = $lookup->getEntity( ItemId::newFromNumber( $qid ) );
-		$siteLink = new SiteLink( 'mardi', $title->getBaseText() );
+		$siteLink = new SiteLink( 'mardi', $title->getPrefixedText() );
 		$item->addSiteLink( $siteLink );
 		self::getLog()->info( "Linking page $name to $qid." );
 		$store->saveEntity( $item, "Added link to MaRDI item.", $user );
