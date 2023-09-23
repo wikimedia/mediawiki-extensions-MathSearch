@@ -24,11 +24,14 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class CreateProfilePages extends Maintenance {
 	private const BATCH_SIZE = 10000;
+	private const PAGES_PER_JOB = 100;
 	/** @var bool */
 	private $overwrite;
 
 	/** @var bool */
 	private bool $person;
+	private $jobQueueGroup;
+	private $jobname;
 
 	public function __construct() {
 		parent::__construct();
@@ -65,10 +68,10 @@ SPARQL;
 	}
 
 	public function execute() {
-		$jobname = 'import' . date( 'ymdhms' );
+		$this->jobQueueGroup = MediaWikiServices::getInstance()->getJobQueueGroup();
+		$this->jobname = 'import' . date( 'ymdhms' );
 		$this->overwrite = $this->getOption( 'overwrite' );
 		$this->person = $this->getOption( 'person' );
-		$jobQueueGroup = MediaWikiServices::getInstance()->getJobQueueGroup();
 
 		if ( $this->overwrite ) {
 			$this->output( "Loaded with option overwrite enabled .\n" );
@@ -78,23 +81,43 @@ SPARQL;
 		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
 		$sp = $arrEndpoint["endpoint"];
 		$offset = 0;
+		$table = [];
+		$segment = 0;
 		do {
 			$rs = $sp->query( $this->getQuery( $offset ) );
 			$this->output( 'Read from offset ' . $offset . ".\n" );
-			foreach ( $rs['result']['rows']  as $row ) {
+			foreach ( $rs['result']['rows'] as $row ) {
 				$qID = preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] );
-				$title = Title::newFromText( "Page creator $jobname, item $qID." );
 
-				$job = new PageCreationJob( $title, [
-					'qID' => $qID,
-					'title' => $this->person ? $qID : $row['title'],
-					'prefix' => $this->person ? 'Person' : 'Formula',
-					'jobname' => $jobname
-				] );
-				$jobQueueGroup->lazyPush( $job );
+				$table[] = [
+				'qID' => $qID,
+				'title' => $this->person ? $qID : $row['title'],
+				];
+				if ( count( $table ) > self::PAGES_PER_JOB ) {
+					$this->pushJob( $table, $segment );
+					$segment++;
+					$table = [];
+				}
 			}
 			$offset += self::BATCH_SIZE;
 		} while ( count( $rs['result']['rows'] ) == self::BATCH_SIZE );
+		$this->pushJob( $table, $segment );
+	}
+
+	/**
+	 * @param array $table
+	 * @param int $segment
+	 * @return void
+	 */
+	public function pushJob(
+		array $table, int $segment
+	): void {
+		$this->jobQueueGroup->lazyPush( new PageCreationJob( [
+				'jobname' => $this->jobname,
+				'rows' => $table,
+				'segment' => $segment, // just for the logs
+				'prefix' => $this->person ? 'Person' : 'Formula'
+			] ) );
 	}
 
 }

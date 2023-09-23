@@ -7,10 +7,9 @@ use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\SiteLink;
 use Wikibase\Repo\WikibaseRepo;
 
-class PageCreationJob extends \Job {
-
-	public function __construct( $title, $params ) {
-		parent::__construct( 'CreateProfilePages', $title, $params );
+class PageCreationJob extends Job implements GenericParameterJob {
+	public function __construct( $params ) {
+		parent::__construct( 'CreateProfilePages', $params );
 	}
 
 	private static function getLog() {
@@ -28,23 +27,29 @@ class PageCreationJob extends \Job {
 				false
 			);
 		}
-
-		$qid = $this->params['qID'];
-		$name = $this->params['title'];
-		$prefix = $this->params['prefix'];
-		self::getLog()->info( "Creating page $name." );
-		$title = Title::newFromText( $prefix . ':' . $name );
-		$pageContent = ContentHandler::makeContent( '{{' . $prefix . '}}', $title );
-		MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title )
-			->doUserEditContent( $pageContent, $user,
-				'Created automatically from ' . $this->params['jobname'] );
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
-		$item = $lookup->getEntity( ItemId::newFromNumber( $qid ) );
-		$siteLink = new SiteLink( 'mardi', $title->getPrefixedText() );
-		$item->addSiteLink( $siteLink );
-		self::getLog()->info( "Linking page $name to $qid." );
-		$store->saveEntity( $item, "Added link to MaRDI item.", $user );
+		$pageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
+		foreach ( $this->params['rows'] as $row ) {
+			$name = $row['title'];
+			$qid = $row['qID'];
+			try {
+				self::getLog()->info( "Creating page $name." );
+				$title = Title::newFromText( $this->params['prefix'] . ':' . $name );
+				$pageContent = ContentHandler::makeContent(
+					'{{' . $this->params['prefix'] . '}}', $title );
+				$pageFactory->newFromTitle( $title )
+					->doUserEditContent( $pageContent, $user,
+						'Created automatically from ' . $this->params['jobname'] );
+				$item = $lookup->getEntity( ItemId::newFromNumber( $qid ) );
+				$siteLink = new SiteLink( 'mardi', $title->getPrefixedText() );
+				$item->addSiteLink( $siteLink );
+				self::getLog()->info( "Linking page $name to $qid." );
+				$store->saveEntity( $item, "Added link to MaRDI item.", $user );
+			} catch ( Throwable $ex ) {
+				self::getLog()->error( "Skip page processing page '$name' (Q$qid).", [ $ex ] );
+			}
+		}
 
 		return true;
 	}
