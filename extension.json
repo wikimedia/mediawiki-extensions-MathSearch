@@ -137,7 +137,8 @@
 	},
 	"AutoloadNamespaces": {
 		"MathSearch\\StackExchange\\": "includes/stackexchange",
-		"MediaWiki\\Extension\\MathSearch\\Rest\\": "includes/rest"
+		"MediaWiki\\Extension\\MathSearch\\Rest\\": "includes/rest",
+		"MediaWiki\\Extension\\MathSearch\\Swh\\": "includes/swh"
 	},
 	"JobClasses": {
 		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob",
