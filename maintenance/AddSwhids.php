@@ -64,7 +64,7 @@ SPARQL;
 		foreach ( $rs['result']['rows'] as $row ) {
 			$url = 'https://github.com/cran/' . $row['title'];
 			$instance = new Swhid( $rf, $url );
-			$instance->saveCodeNow();
+			$instance->fetchOrSave();
 		}
 	}
 

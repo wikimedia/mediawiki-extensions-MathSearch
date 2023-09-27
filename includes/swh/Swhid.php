@@ -40,14 +40,19 @@ class Swhid {
 		return $this->snapshotDate;
 	}
 
+	public function fetchOrSave() {
+		return $this->fetchSnapshot() || $this->saveCodeNow();
+	}
+
 	public function fetchSnapshot() {
 		$destination = "https://archive.softwareheritage.org/api/1/origin/$this->url/visit/latest/";
-		$body = $this->httpFactory->get( $destination );
+		$body = $this->getBody( $destination, 'GET' );
 		if ( $body !== null ) {
 			$content = json_decode( $body );
 			if ( $content->status === 'full' ) {
 				$this->snapshot = 'swh:1:snp:' . $content->snapshot;
 				$this->snapshotDate = $content->date;
+
 				return true;
 			}
 		}
@@ -55,14 +60,28 @@ class Swhid {
 		return false;
 	}
 
-	public function saveCodeNow() {
-		$destination = "https://archive.softwareheritage.org/api/1/origin/save/git/url/$this->url/";
-		$body = $this->httpFactory->post( $destination );
-		return $body !== null;
+	/**
+	 * @param string $destination
+	 * @return string|null
+	 */
+	public function getBody( string $destination, string $method = 'GET' ): ?string {
+		global $wgMathSearchSwhToken;
+		$req = $this->httpFactory->create( $destination, [
+			'method' => $method,
+		] );
+		if ( $wgMathSearchSwhToken ) {
+			$req->setHeader( 'Authorization', 'Bearer ' . $wgMathSearchSwhToken );
+		}
+		$res = $req->execute();
+
+		return $res->isOK() ? $req->getContent() : null;
 	}
 
-	public function fetchOrSave() {
-		return $this->fetchSnapshot() || $this->saveCodeNow();
+	public function saveCodeNow() {
+		$destination = "https://archive.softwareheritage.org/api/1/origin/save/git/url/$this->url/";
+		$body = $this->getBody( $destination, 'POST' );
+
+		return $body !== null;
 	}
 
 }
