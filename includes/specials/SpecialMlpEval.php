@@ -670,7 +670,7 @@ class SpecialMlpEval extends SpecialPage {
 		$popts = $out->parserOptions();
 		$popts->setInterfaceMessage( false );
 
-		$parserOutput = MediaWikiServices::getInstance()->getParser->getFreshParser()->parse(
+		$parserOutput = MediaWikiServices::getInstance()->getParser()->getFreshParser()->parse(
 			$hl->getWikiText(), $this->getRevisionTitle(), $popts )->getText();
 		if ( $filter ) {
 			call_user_func_array( $filter, [ &$parserOutput ] );
