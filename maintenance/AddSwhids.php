@@ -20,6 +20,10 @@
 
 use MediaWiki\Extension\MathSearch\Swh\Swhid;
 use MediaWiki\MediaWikiServices;
+use Wikibase\DataModel\Entity\ItemId;
+use Wikibase\DataModel\Entity\NumericPropertyId;
+use Wikibase\DataModel\Services\Statement\GuidGenerator;
+use Wikibase\Repo\WikibaseRepo;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
@@ -65,7 +69,39 @@ SPARQL;
 			$url = 'https://github.com/cran/' . $row['title'];
 			$instance = new Swhid( $rf, $url );
 			$instance->fetchOrSave();
+			if ( $instance->getSnapshot() !== null ) {
+				$qID = preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] );
+				$this->createWbItem( $qID, $instance->getSnapshot() );
+			}
+			if ( $instance->getStatus() === 429 ) {
+				die( "Too many requests." );
+			}
 		}
+	}
+
+	public function createWbItem( $qID, $swhid ) {
+		global $wgMathSearchPropertySwhid;
+		$lookup = WikibaseRepo::getEntityLookup();
+		$sf = WikibaseRepo::getSnakFactory();
+		$store = WikibaseRepo::getEntityStore();
+		$user = MediaWikiServices::getInstance()->getUserFactory()
+			->newFromName( 'swh import' );
+		$exists = ( $user->idForName() !== 0 );
+		if ( !$exists ) {
+			MediaWikiServices::getInstance()->getAuthManager()->autoCreateUser(
+				$user,
+				MediaWiki\Auth\AuthManager::AUTOCREATE_SOURCE_MAINT,
+				false
+			);
+		}
+		$item = $lookup->getEntity( ItemId::newFromNumber( $qID ) );
+		$guidGenerator = new GuidGenerator();
+		$statements = $item->getStatements();
+		$guid = $guidGenerator->newGuid( $item->getId() );
+		$snak = $sf->newSnak( NumericPropertyId::newFromNumber( $wgMathSearchPropertySwhid ), 'value', $swhid );
+		$statements->addNewStatement( $snak, null, null, $guid );
+		$item->setStatements( $statements );
+		$store->saveEntity( $item, "SWHID from Software Heritage", $user );
 	}
 
 }

@@ -8,9 +8,10 @@ class Swhid {
 	private $url;
 	private $httpFactory;
 
-	private string $snapshot;
+	private ?string $snapshot;
 
 	private $snapshotDate;
+	private int $status;
 
 	public function __construct(
 		HttpRequestFactory $httpFactory, string $url
@@ -52,18 +53,20 @@ class Swhid {
 			if ( $content->status === 'full' ) {
 				$this->snapshot = 'swh:1:snp:' . $content->snapshot;
 				$this->snapshotDate = $content->date;
-
 				return true;
 			}
+		} else {
+			$this->snapshot = null;
+			$this->snapshotDate = null;
 		}
 
 		return false;
 	}
 
-	/**
-	 * @param string $destination
-	 * @return string|null
-	 */
+	public function getStatus() {
+		return $this->status;
+	}
+
 	public function getBody( string $destination, string $method = 'GET' ): ?string {
 		global $wgMathSearchSwhToken;
 		$req = $this->httpFactory->create( $destination, [
@@ -73,7 +76,7 @@ class Swhid {
 			$req->setHeader( 'Authorization', 'Bearer ' . $wgMathSearchSwhToken );
 		}
 		$res = $req->execute();
-
+		$this->status = $req->getStatus();
 		return $res->isOK() ? $req->getContent() : null;
 	}
 
