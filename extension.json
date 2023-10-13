@@ -84,7 +84,8 @@
 		"MathSearchWikidataUrl": "https://wikidata.org",
 		"ContentMathEnableWikibaseDataType": true,
 		"MathSearchContentTexMaxLength": 5000,
-		"MathSearchInfoPage": "FormulaInfo"
+		"MathSearchInfoPage": "FormulaInfo",
+		"MathSearchPropertySwhid": 1454
 	},
 	"MessagesDirs": {
 		"MathSearch": [
