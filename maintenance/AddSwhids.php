@@ -24,20 +24,18 @@ use MediaWiki\MediaWikiServices;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\NumericPropertyId;
 use Wikibase\DataModel\Services\Statement\GuidGenerator;
+use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\Repo\WikibaseRepo;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class AddSwhids extends Maintenance {
-	private const BATCH_SIZE = 10000;
-	private const PAGES_PER_JOB = 100;
-	/** @var bool */
-	private $overwrite;
 
-	/** @var bool */
-	private bool $person;
-	private $jobQueueGroup;
-	private $jobname;
+	private $entityLookup;
+	private $snakFactory;
+	private $entityStore;
+	private $guidGenerator;
+	private $mwUser;
 
 	public function __construct() {
 		parent::__construct();
@@ -48,6 +46,20 @@ class AddSwhids extends Maintenance {
 		$this->addOption( 'force', 'force depositing', false, false, 'f' );
 		$this->requireExtension( 'MathSearch' );
 		$this->requireExtension( 'LinkedWiki' );
+		$this->entityLookup = WikibaseRepo::getEntityLookup();
+		$this->snakFactory = WikibaseRepo::getSnakFactory();
+		$this->entityStore = WikibaseRepo::getEntityStore();
+		$this->guidGenerator = new GuidGenerator();
+		$this->mwUser =
+			MediaWikiServices::getInstance()->getUserFactory()->newFromName( 'swh import' );
+		$exists = ( $this->mwUser->idForName() !== 0 );
+		if ( !$exists ) {
+			MediaWikiServices::getInstance()->getAuthManager()->autoCreateUser(
+				$this->mwUser,
+				MediaWiki\Auth\AuthManager::AUTOCREATE_SOURCE_MAINT,
+				false
+			);
+		}
 	}
 
 	private function getQuery() {
@@ -84,39 +96,35 @@ SPARQL;
 	}
 
 	public function createWbItem( $qID, $swhid, $url, $pit ) {
-		global $wgMathSearchPropertySwhid, $wgMathSearchPropertyScrUrl, $wgMathSearchPropertyPointInTime;
-		$lookup = WikibaseRepo::getEntityLookup();
-		$sf = WikibaseRepo::getSnakFactory();
-		$store = WikibaseRepo::getEntityStore();
-		$user = MediaWikiServices::getInstance()->getUserFactory()
-			->newFromName( 'swh import' );
-		$exists = ( $user->idForName() !== 0 );
-		if ( !$exists ) {
-			MediaWikiServices::getInstance()->getAuthManager()->autoCreateUser(
-				$user,
-				MediaWiki\Auth\AuthManager::AUTOCREATE_SOURCE_MAINT,
-				false
-			);
-		}
-		$item = $lookup->getEntity( ItemId::newFromNumber( $qID ) );
-		$guidGenerator = new GuidGenerator();
-		$statements = $item->getStatements();
-		$guid = $guidGenerator->newGuid( $item->getId() );
-		$snak = $sf->newSnak( NumericPropertyId::newFromNumber( $wgMathSearchPropertySwhid ), 'value', $swhid );
-		$snakUrl = $sf->newSnak( NumericPropertyId::newFromNumber( $wgMathSearchPropertyScrUrl ),
-			'value', $url );
+		global $wgMathSearchPropertySwhid,
+			   $wgMathSearchPropertyScrUrl,
+			   $wgMathSearchPropertyPointInTime;
+
+		$mainSnak = new PropertyValueSnak(
+			NumericPropertyId::newFromNumber( $wgMathSearchPropertySwhid ),
+			$swhid );
+		$snakUrl = new PropertyValueSnak(
+			NumericPropertyId::newFromNumber( $wgMathSearchPropertyScrUrl ),
+			 $url );
 		$time = new DateTimeImmutable( $pit );
 		$date = new TimeValue(
-			$time->format( 'X-m-d\TH:i:s\Z' ),
+			$time->format( 'Y-m-d\TH:i:s\Z' ),
 			0, 0, 0,
 			TimeValue::PRECISION_SECOND,
 			TimeValue::CALENDAR_GREGORIAN
 		);
-		$snakTime = new \Wikibase\DataModel\Snak\PropertyValueSnak( NumericPropertyId::newFromNumber(
-			$wgMathSearchPropertyPointInTime ), $date );
-		$statements->addNewStatement( $snak,  [ $snakUrl, $snakTime ], null, $guid );
+		$snakTime = new PropertyValueSnak(
+			NumericPropertyId::newFromNumber( $wgMathSearchPropertyPointInTime ),
+			$date );
+		$item = $this->entityLookup->getEntity( ItemId::newFromNumber( $qID ) );
+		$statements = $item->getStatements();
+		$statements->addNewStatement(
+			$mainSnak,
+			[ $snakUrl, $snakTime ],
+			null,
+			$this->guidGenerator->newGuid( $item->getId() ) );
 		$item->setStatements( $statements );
-		$store->saveEntity( $item, "SWHID from Software Heritage", $user );
+		$this->entityStore->saveEntity( $item, "SWHID from Software Heritage", $this->mwUser );
 	}
 
 }
