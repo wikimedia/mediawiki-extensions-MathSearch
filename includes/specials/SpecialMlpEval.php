@@ -420,22 +420,12 @@ class SpecialMlpEval extends SpecialPage {
 					case '4a':
 						// remove step 4a since PNG mode was finally removed
 					case '4b':
-						if ( method_exists( $services, 'getUserOptionsManager' ) ) {
-							// MW 1.35+
-							$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'mathml' );
-						} else {
-							$this->getUser()->setOption( 'math', 'mathml' );
-						}
+						$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'mathml' );
 						$this->printMathObjectInContext( false, false,
 							$this->getSvgRenderingAsHtmlFragment() );
 						break;
 					case '4c':
-						if ( method_exists( $services, 'getUserOptionsManager' ) ) {
-							// MW 1.35+
-							$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'mathml' );
-						} else {
-							$this->getUser()->setOption( 'math', 'mathml' );
-						}
+						$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'mathml' );
 						$this->printMathObjectInContext( false, false,
 							$this->getMathMLRenderingAsHtmlFragment(),
 							[ __CLASS__, 'removeSVGs' ] );
