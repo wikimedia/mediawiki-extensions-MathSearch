@@ -8,7 +8,7 @@ class Swhid {
 	private $url;
 	private $httpFactory;
 
-	private ?string $snapshot;
+	private ?string $snapshot = null;
 
 	private $snapshotDate;
 	private int $status;
@@ -30,7 +30,7 @@ class Swhid {
 	/**
 	 * @return string
 	 */
-	public function getSnapshot(): string {
+	public function getSnapshot(): ?string {
 		return $this->snapshot;
 	}
 

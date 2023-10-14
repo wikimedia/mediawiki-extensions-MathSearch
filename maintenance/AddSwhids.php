@@ -54,7 +54,10 @@ class AddSwhids extends Maintenance {
 PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 
 SELECT ?item ?title
-WHERE { ?item wdt:P229 ?title}
+WHERE {
+  ?item wdt:P229 ?title.
+  FILTER NOT EXISTS { ?item wdt:P1454 ?x }
+}
 SPARQL;
 	}
 
