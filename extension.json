@@ -85,7 +85,8 @@
 		"ContentMathEnableWikibaseDataType": true,
 		"MathSearchContentTexMaxLength": 5000,
 		"MathSearchInfoPage": "FormulaInfo",
-		"MathSearchPropertySwhid": 1454
+		"MathSearchPropertySwhid": 1454,
+		"MathSearchPropertyScrUrl": 339
 	},
 	"MessagesDirs": {
 		"MathSearch": [

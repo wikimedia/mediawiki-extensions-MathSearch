@@ -74,7 +74,7 @@ SPARQL;
 			$instance->fetchOrSave();
 			if ( $instance->getSnapshot() !== null ) {
 				$qID = preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] );
-				$this->createWbItem( $qID, $instance->getSnapshot() );
+				$this->createWbItem( $qID, $instance->getSnapshot(), $url );
 			}
 			if ( $instance->getStatus() === 429 ) {
 				die( "Too many requests." );
@@ -82,8 +82,8 @@ SPARQL;
 		}
 	}
 
-	public function createWbItem( $qID, $swhid ) {
-		global $wgMathSearchPropertySwhid;
+	public function createWbItem( $qID, $swhid, $url ) {
+		global $wgMathSearchPropertySwhid, $wgMathSearchPropertyScrUrl;
 		$lookup = WikibaseRepo::getEntityLookup();
 		$sf = WikibaseRepo::getSnakFactory();
 		$store = WikibaseRepo::getEntityStore();
@@ -102,6 +102,10 @@ SPARQL;
 		$statements = $item->getStatements();
 		$guid = $guidGenerator->newGuid( $item->getId() );
 		$snak = $sf->newSnak( NumericPropertyId::newFromNumber( $wgMathSearchPropertySwhid ), 'value', $swhid );
+		$statements->addNewStatement( $snak, null, null, $guid );
+		$guid = $guidGenerator->newGuid( $item->getId() );
+		$snak = $sf->newSnak( NumericPropertyId::newFromNumber( $wgMathSearchPropertyScrUrl ),
+			'value', $url );
 		$statements->addNewStatement( $snak, null, null, $guid );
 		$item->setStatements( $statements );
 		$store->saveEntity( $item, "SWHID from Software Heritage", $user );
