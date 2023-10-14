@@ -86,7 +86,8 @@
 		"MathSearchContentTexMaxLength": 5000,
 		"MathSearchInfoPage": "FormulaInfo",
 		"MathSearchPropertySwhid": 1454,
-		"MathSearchPropertyScrUrl": 339
+		"MathSearchPropertyScrUrl": 339,
+		"MathSearchPropertyPointInTime": 140
 	},
 	"MessagesDirs": {
 		"MathSearch": [

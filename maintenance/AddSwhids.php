@@ -18,6 +18,7 @@
  * @ingroup Maintenance
  */
 
+use DataValues\TimeValue;
 use MediaWiki\Extension\MathSearch\Swh\Swhid;
 use MediaWiki\MediaWikiServices;
 use Wikibase\DataModel\Entity\ItemId;
@@ -74,7 +75,7 @@ SPARQL;
 			$instance->fetchOrSave();
 			if ( $instance->getSnapshot() !== null ) {
 				$qID = preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] );
-				$this->createWbItem( $qID, $instance->getSnapshot(), $url );
+				$this->createWbItem( $qID, $instance->getSnapshot(), $url, $instance->getSnapshotDate() );
 			}
 			if ( $instance->getStatus() === 429 ) {
 				die( "Too many requests." );
@@ -82,8 +83,8 @@ SPARQL;
 		}
 	}
 
-	public function createWbItem( $qID, $swhid, $url ) {
-		global $wgMathSearchPropertySwhid, $wgMathSearchPropertyScrUrl;
+	public function createWbItem( $qID, $swhid, $url, $pit ) {
+		global $wgMathSearchPropertySwhid, $wgMathSearchPropertyScrUrl, $wgMathSearchPropertyPointInTime;
 		$lookup = WikibaseRepo::getEntityLookup();
 		$sf = WikibaseRepo::getSnakFactory();
 		$store = WikibaseRepo::getEntityStore();
@@ -102,11 +103,18 @@ SPARQL;
 		$statements = $item->getStatements();
 		$guid = $guidGenerator->newGuid( $item->getId() );
 		$snak = $sf->newSnak( NumericPropertyId::newFromNumber( $wgMathSearchPropertySwhid ), 'value', $swhid );
-		$statements->addNewStatement( $snak, null, null, $guid );
-		$guid = $guidGenerator->newGuid( $item->getId() );
-		$snak = $sf->newSnak( NumericPropertyId::newFromNumber( $wgMathSearchPropertyScrUrl ),
+		$snakUrl = $sf->newSnak( NumericPropertyId::newFromNumber( $wgMathSearchPropertyScrUrl ),
 			'value', $url );
-		$statements->addNewStatement( $snak, null, null, $guid );
+		$time = new DateTimeImmutable( $pit );
+		$date = new TimeValue(
+			$time->format( 'X-m-d\TH:i:s\Z' ),
+			0, 0, 0,
+			TimeValue::PRECISION_SECOND,
+			TimeValue::CALENDAR_GREGORIAN
+		);
+		$snakTime = new \Wikibase\DataModel\Snak\PropertyValueSnak( NumericPropertyId::newFromNumber(
+			$wgMathSearchPropertyPointInTime ), $date );
+		$statements->addNewStatement( $snak,  [ $snakUrl, $snakTime ], null, $guid );
 		$item->setStatements( $statements );
 		$store->saveEntity( $item, "SWHID from Software Heritage", $user );
 	}
