@@ -78,7 +78,7 @@ SPARQL;
 				$this->createWbItem( $qID, $instance->getSnapshot(), $url, $instance->getSnapshotDate() );
 			}
 			if ( $instance->getStatus() === 429 ) {
-				die( "Too many requests." );
+				sleep( $instance->getWait() );
 			}
 		}
 	}

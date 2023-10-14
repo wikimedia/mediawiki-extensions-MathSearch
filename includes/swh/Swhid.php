@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\MathSearch\Swh;
 
 use MediaWiki\Http\HttpRequestFactory;
+use Throwable;
 
 class Swhid {
 	private $url;
@@ -13,11 +14,17 @@ class Swhid {
 	private $snapshotDate;
 	private int $status;
 
+	private int $wait = 0;
+
 	public function __construct(
 		HttpRequestFactory $httpFactory, string $url
 	) {
 		$this->url = $url;
 		$this->httpFactory = $httpFactory;
+	}
+
+	public function getWait(): int {
+		return $this->wait;
 	}
 
 	/**
@@ -63,10 +70,6 @@ class Swhid {
 		return false;
 	}
 
-	public function getStatus() {
-		return $this->status;
-	}
-
 	public function getBody( string $destination, string $method = 'GET' ): ?string {
 		global $wgMathSearchSwhToken;
 		$req = $this->httpFactory->create( $destination, [
@@ -77,7 +80,27 @@ class Swhid {
 		}
 		$res = $req->execute();
 		$this->status = $req->getStatus();
-		return $res->isOK() ? $req->getContent() : null;
+		if ( $res->isOK() ) {
+			return $req->getContent();
+		}
+		try {
+			if ( $this->status == 429 ) {
+				$json = json_decode( $req->getContent() );
+				if ( preg_match( '/(?P<seconds>\d+)\s+[sS]/', $json->reason, $match ) ) {
+					$this->wait = $match['seconds'];
+					return null;
+				}
+			}
+		} catch ( Throwable $exception ) {
+			// empty
+		}
+		// wait for 1 hour
+		$this->wait = 3600;
+		return null;
+	}
+
+	public function getStatus() {
+		return $this->status;
 	}
 
 	public function saveCodeNow() {
