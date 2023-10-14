@@ -18,6 +18,7 @@
  * @ingroup Maintenance
  */
 
+use DataValues\StringValue;
 use DataValues\TimeValue;
 use MediaWiki\Extension\MathSearch\Swh\Swhid;
 use MediaWiki\MediaWikiServices;
@@ -32,7 +33,6 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 class AddSwhids extends Maintenance {
 
 	private $entityLookup;
-	private $snakFactory;
 	private $entityStore;
 	private $guidGenerator;
 	private $mwUser;
