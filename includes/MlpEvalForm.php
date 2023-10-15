@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\MediaWikiServices;
 
 class MlpEvalForm extends OOUIHTMLForm {
@@ -73,10 +74,14 @@ class MlpEvalForm extends OOUIHTMLForm {
 					$formDescriptor['4-best'] = [
 							'type'    => 'radio',
 							'options' => [
-									$this->eval->getMathMLRenderingAsHtmlFragment() => 'mathml',
-									$this->eval->getSvgRenderingAsHtmlFragment()    => 'svg',
+									$this->eval->getMathMLRenderingAsHtmlFragment(
+										MathConfig::MODE_MATHML ) => 'mathoid',
+									$this->eval->getMathMLRenderingAsHtmlFragment(
+										MathConfig::MODE_NATIVE_MML ) => 'native',
+									$this->eval->getMathMLRenderingAsHtmlFragment(
+										MathConfig::MODE_LATEXML ) => 'latexml',
 							],
-							'default' => 'mathml'
+							'default' => 'mathoid'
 					];
 				} else {
 					$formDescriptor['4-size'] = [
