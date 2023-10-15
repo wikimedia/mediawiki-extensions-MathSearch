@@ -28,11 +28,13 @@
 	"require": {
 		"ext-dom": "*",
 		"ext-simplexml": "*",
-		"ext-xmlreader": "*"
+		"ext-xmlreader": "*",
+		"mwstake/mediawiki-component-runjobstrigger": "~3.0"
 	},
 	"config": {
 		"allow-plugins": {
-			"dealerdirect/phpcodesniffer-composer-installer": true
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"composer/installers": true
 		}
 	}
 }
