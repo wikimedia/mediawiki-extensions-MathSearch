@@ -492,7 +492,7 @@ class SpecialMlpEval extends SpecialPage {
 			'step'        => $step,
 			'json_data'   => $json,
 			'revision_id' => $revId,
-			'anchor'      => $this->fId,
+			'anchor'      => $this->fId ?? 'undefined', // NULL is no longer allowed
 			'comment'     => $message
 		];
 		if ( $userId == 0 ) {
@@ -500,7 +500,7 @@ class SpecialMlpEval extends SpecialPage {
 			return;
 		}
 		$dbw = wfGetDB( DB_MASTER );
-		$dbw->upsert( 'math_mlp', $row, [ 'user_id', 'revision_id', 'anchor', 'step' ], $row );
+		$dbw->upsert( 'math_mlp', $row, [ [ 'user_id', 'revision_id', 'anchor', 'step' ] ], $row );
 		if ( $this->fId ) {
 			$dbw->startAtomic( __METHOD__ );
 			$cnt = $dbw->selectField( 'math_mlp', 'count( distinct user_id)', [
