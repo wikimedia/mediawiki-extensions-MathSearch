@@ -1,6 +1,5 @@
 <?php
 
-use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
@@ -29,9 +28,9 @@ class SpecialMlpEval extends SpecialPage {
 	private $subStepNames = [
 		''   => '',
 		'4'  => '',
-		'4a' => 'PNG-',
-		'4b' => 'SVG-',
-		'4c' => 'MathML-'
+		'4a' => 'Mathoid-',
+		'4b' => 'Native-',
+		'4c' => 'LaTeXML-'
 	];
 	/** @var MathObject */
 	private $selectedMathTag;
@@ -277,7 +276,7 @@ class SpecialMlpEval extends SpecialPage {
 				case '':
 					return '4';
 				case '4':
-					// skip 4a png was removed
+					return '4a';
 				case '4a':
 					return '4b';
 				case '4b':
@@ -418,16 +417,19 @@ class SpecialMlpEval extends SpecialPage {
 				$services = MediaWikiServices::getInstance();
 				switch ( $this->subStep ) {
 					case '4a':
-						// remove step 4a since PNG mode was finally removed
-					case '4b':
 						$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'mathml' );
 						$this->printMathObjectInContext( false, false,
-							$this->getSvgRenderingAsHtmlFragment() );
+							$this->getMathMLRenderingAsHtmlFragment( 'mathml' ) );
+						break;
+					case '4b':
+						$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'native' );
+						$this->printMathObjectInContext( false, false,
+							$this->getMathMLRenderingAsHtmlFragment( 'native' ) );
 						break;
 					case '4c':
-						$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'mathml' );
+						$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'latexml' );
 						$this->printMathObjectInContext( false, false,
-							$this->getMathMLRenderingAsHtmlFragment(),
+							$this->getMathMLRenderingAsHtmlFragment( 'latexml' ),
 							[ __CLASS__, 'removeSVGs' ] );
 				}
 				break;
@@ -555,26 +557,16 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @param float $factor
-	 * @param string|false $tex
-	 * @param array $options
-	 * @return string
-	 */
-	public function getSvgRenderingAsHtmlFragment( $factor = 2, $tex = false, $options = [] ) {
-		$renderer = $this->getMathMlRenderer( $tex, $options );
-		return MathObject::getReSizedSvgLink( $renderer, $factor );
-	}
-
-	/**
+	 * @param string $mode
 	 * @param float $factor
 	 * @param string|false $tex
 	 * @param array $options
 	 * @return string
 	 */
 	public function getMathMLRenderingAsHtmlFragment(
-			$factor = 2.5, $tex = false, $options = []
+		$mode, $factor = 2.5, $tex = false, $options = []
 	) {
-		$renderer = $this->getMathMlRenderer( $tex, $options );
+		$renderer = $this->getMathMlRenderer( $mode, $tex, $options );
 		$largeMathML = $renderer->getMathml();
 		$factor = round( $factor * 100 );
 		return preg_replace(
@@ -694,13 +686,14 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
+	 * @param string $mode
 	 * @param string|false $tex
 	 * @param array $options
-	 * @return MathMathML
+	 * @return MathRenderer
 	 */
-	private function getMathMlRenderer( $tex, $options ) {
+	private function getMathMlRenderer( $mode, $tex, $options ) {
 		$this->updateTex( $tex, $options );
-		$renderer = new MathMathML( $tex, $options );
+		$renderer = MathRenderer::getRenderer( $tex, $options, $mode );
 		$renderer->checkTeX();
 		$renderer->render();
 		$renderer->writeCache();
