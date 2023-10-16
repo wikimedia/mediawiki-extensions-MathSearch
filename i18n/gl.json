@@ -136,7 +136,7 @@
 	"math-wmc-importing": "Importando...",
 	"math-wmc-display-formulae-label": "Visualizar renderizado das fórmulas enviadas",
 	"math-wmc-display-formulae-help": "Non recomendado para ficheiros de entrada grandes.",
-	"action-mathwmcsubmit": "Enviar resultados á Tarefa de procura matemática da Wikipedia NTCIR",
+	"action-mathwmcsubmit": "enviar resultados á tarefa NTCIR de procura matemática da Wikipedia",
 	"math-search-term": "* $4 term-$1: $3-expression \"$2 {{PLURAL:$5|cun resultado|con $5 resultados}}.",
 	"math-search-relation-label": "Relación:",
 	"math-search-relation-0": "e",
