@@ -46,20 +46,6 @@ class AddSwhids extends Maintenance {
 		$this->addOption( 'force', 'force depositing', false, false, 'f' );
 		$this->requireExtension( 'MathSearch' );
 		$this->requireExtension( 'LinkedWiki' );
-		$this->entityLookup = WikibaseRepo::getEntityLookup();
-		$this->snakFactory = WikibaseRepo::getSnakFactory();
-		$this->entityStore = WikibaseRepo::getEntityStore();
-		$this->guidGenerator = new GuidGenerator();
-		$this->mwUser =
-			MediaWikiServices::getInstance()->getUserFactory()->newFromName( 'swh import' );
-		$exists = ( $this->mwUser->idForName() !== 0 );
-		if ( !$exists ) {
-			MediaWikiServices::getInstance()->getAuthManager()->autoCreateUser(
-				$this->mwUser,
-				MediaWiki\Auth\AuthManager::AUTOCREATE_SOURCE_MAINT,
-				false
-			);
-		}
 	}
 
 	private function getQuery() {
@@ -80,6 +66,19 @@ SPARQL;
 		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
 		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
 		$sp = $arrEndpoint["endpoint"];
+		$this->entityLookup = WikibaseRepo::getEntityLookup();
+		$this->entityStore = WikibaseRepo::getEntityStore();
+		$this->guidGenerator = new GuidGenerator();
+		$this->mwUser =
+			MediaWikiServices::getInstance()->getUserFactory()->newFromName( 'swh import' );
+		$exists = ( $this->mwUser->idForName() !== 0 );
+		if ( !$exists ) {
+			MediaWikiServices::getInstance()->getAuthManager()->autoCreateUser(
+				$this->mwUser,
+				MediaWiki\Auth\AuthManager::AUTOCREATE_SOURCE_MAINT,
+				false
+			);
+		}
 		$rs = $sp->query( $this->getQuery() );
 		foreach ( $rs['result']['rows'] as $row ) {
 			$url = 'https://github.com/cran/' . $row['title'];
@@ -99,16 +98,15 @@ SPARQL;
 		global $wgMathSearchPropertySwhid,
 			   $wgMathSearchPropertyScrUrl,
 			   $wgMathSearchPropertyPointInTime;
-
 		$mainSnak = new PropertyValueSnak(
 			NumericPropertyId::newFromNumber( $wgMathSearchPropertySwhid ),
-			$swhid );
+			new StringValue( $swhid ) );
 		$snakUrl = new PropertyValueSnak(
 			NumericPropertyId::newFromNumber( $wgMathSearchPropertyScrUrl ),
-			 $url );
+			 new StringValue( $url ) );
 		$time = new DateTimeImmutable( $pit );
 		$date = new TimeValue(
-			$time->format( 'Y-m-d\TH:i:s\Z' ),
+			$time->format( '\+Y-m-d\TH:i:s\Z' ),
 			0, 0, 0,
 			TimeValue::PRECISION_SECOND,
 			TimeValue::CALENDAR_GREGORIAN
