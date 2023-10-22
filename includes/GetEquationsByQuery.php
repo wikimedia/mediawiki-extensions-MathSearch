@@ -59,7 +59,8 @@ class GetEquationsByQuery extends SpecialPage {
 		);
 		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select(
-				[ 'math' ],
+				[ 'mathlog' ],
+				// TODO insert the missing fields to the mathlog table
 				[
 					'math_mathml', 'math_inputhash', 'math_log', 'math_tex', 'valid_xml', 'math_status'
 						, 'math_timestamp'
