@@ -52,9 +52,9 @@ class AddSwhids extends Maintenance {
 		return <<<SPARQL
 PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 
-SELECT ?item ?title
+SELECT ?item ?repo
 WHERE {
-  ?item wdt:P229 ?title.
+  ?item wdt:P339 ?repo.
   FILTER NOT EXISTS { ?item wdt:P1454 ?x }
 }
 SPARQL;
@@ -81,7 +81,7 @@ SPARQL;
 		}
 		$rs = $sp->query( $this->getQuery() );
 		foreach ( $rs['result']['rows'] as $row ) {
-			$url = 'https://github.com/cran/' . $row['title'];
+			$url = $row['repo'];
 			$instance = new Swhid( $rf, $url );
 			$instance->fetchOrSave();
 			if ( $instance->getSnapshot() !== null ) {
