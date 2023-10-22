@@ -29,7 +29,7 @@ class MwsDumpWriter {
 	 * @return string
 	 */
 	public function generateIndexString( $row ) {
-		$xml = simplexml_load_string( utf8_decode( $row->math_mathml ) );
+		$xml = simplexml_load_string( $row->math_mathml );
 		if ( !$xml ) {
 			echo "ERROR while converting:\n " . var_export( $row->math_mathml, true ) . "\n";
 			foreach ( libxml_get_errors() as $error ) {
@@ -38,7 +38,7 @@ class MwsDumpWriter {
 			libxml_clear_errors();
 			return '';
 		}
-		return $this->getMwsExpression( utf8_decode( $row->math_mathml ),
+		return $this->getMwsExpression( $row->math_mathml,
 			$row->mathindex_revision_id, $row->mathindex_anchor
 		);
 	}
