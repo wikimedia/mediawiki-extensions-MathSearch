@@ -108,7 +108,7 @@ class GenerateFeatureTable extends Maintenance {
 			$this->output( $pid . ',' . $row->varstat_id . ',' . $row->pagestat_featurecount
 						   /// $row->varstat_featurecount
 						   .
-						   "\n" );// .';'.$row->pagestat_featuretype.utf8_decode($row->pagestat_featurename)."\n");
+						   "\n" );// .';'.$row->pagestat_featuretype.$row->pagestat_featurename."\n");
 		}
 		return 0;
 	}

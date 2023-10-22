@@ -289,7 +289,7 @@ class MathObject extends MathMathML {
 		$wgOut->addWikiTextAsInterface( $res->numRows() . ' results' );
 		if ( $res ) {
 			foreach ( $res as $row ) {
-				$featureName = utf8_decode( $row->mathobservation_featurename );
+				$featureName = $row->mathobservation_featurename;
 				if ( bin2hex( $featureName ) == 'e281a2' ) {
 					$featureName = 'invisibe-times';
 				}
@@ -343,13 +343,13 @@ class MathObject extends MathMathML {
 		foreach ( $rule as $feature ) {
 			$dbw->insert( "mathobservation", [
 				"mathobservation_inputhash"   => $this->getInputHash(),
-				"mathobservation_featurename" => utf8_encode( trim( $feature[4] ) ),
-				"mathobservation_featuretype" => utf8_encode( $feature[1] ),
+				"mathobservation_featurename" => trim( $feature[4] ),
+				"mathobservation_featuretype" => $feature[1],
 			] );
 			LoggerFactory::getInstance(
 				'MathSearch'
 			)->warning( 'insert observation for ' . bin2hex( $this->getInputHash() )
-				. utf8_encode( trim( $feature[4] ) ) );
+				. trim( $feature[4] ) );
 		}
 		$dbw->endAtomic( __METHOD__ );
 	}
@@ -366,7 +366,7 @@ class MathObject extends MathMathML {
 		}
 		return $dbr->select( 'mathidentifier',
 			[ 'noun', 'evidence' ],
-			[ 'pageTitle' => $pageName, 'identifier' => utf8_encode( $identifier ) ],
+			[ 'pageTitle' => $pageName, 'identifier' => $identifier ],
 			__METHOD__,
 			[ 'ORDER BY' => 'evidence DESC', 'LIMIT' => 5 ]
 		);

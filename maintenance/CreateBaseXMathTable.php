@@ -48,7 +48,7 @@ class CreateBaseXMathTable extends IndexBase {
 	 */
 	protected function generateIndexString( $row ) {
 		$out = "";
-		$xml = simplexml_load_string( utf8_decode( $row->math_mathml ) );
+		$xml = simplexml_load_string( $row->math_mathml );
 		if ( !$xml ) {
 			echo "ERROR while converting:\n " . var_export( $row->math_mathml, true ) . "\n";
 			foreach ( libxml_get_errors() as $error ) {
@@ -60,7 +60,7 @@ class CreateBaseXMathTable extends IndexBase {
 		$out .= "\n<" . self::$mwsns . "expr url=\"" .
 				MathSearchHooks::generateMathAnchorString( $row->mathindex_revision_id,
 					$row->mathindex_anchor, '' ) . "\">\n\t";
-		$out .= utf8_decode( $row->math_mathml );// $xml->math->children()->asXML();
+		$out .= $row->math_mathml;// $xml->math->children()->asXML();
 		$out .= "\n</" . self::$mwsns . "expr>\n";
 		// TODO: This does not work yet.
 		// Find out how to insert new data without to write it into a temporary file
