@@ -28,12 +28,6 @@ class ExportMathCache extends Maintenance {
 	private const ERROR_CODE_DB_ERROR = 2;
 	private const ERROR_CODE_JSON = 3;
 
-	private static $allowedTables = [ 'mathoid' , 'mathlatexml' ];
-	private static $inputColumns = [
-		'mathoid' => 'math_input' ,
-		'mathlatexml' => 'math_inputtex'
-	];
-
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Exports a json file that consists of the input hashes and ' .
@@ -52,26 +46,27 @@ class ExportMathCache extends Maintenance {
 	}
 
 	/**
-	 * @param string $table
 	 * @param int $offset
 	 * @param int $length
 	 * @param bool $sort
 	 * @return array|false
 	 */
-	private static function getMathTagsFromDatabase( $table, $offset, $length, $sort ) {
+	private static function getMathTagsFromDatabase(
+		int $offset,
+		int $length,
+		bool $sort ) {
 		$out = [];
 		$dbr = wfGetDB( DB_REPLICA );
-		$inputColumn = self::$inputColumns[ $table ];
 		$options = [
 			'OFFSET'   => $offset,
 			'LIMIT'    => $length
 		];
 		if ( $sort === true ) {
-			$options['ORDER BY'] = $inputColumn;
+			$options['ORDER BY'] = 'math_input';
 		}
 		$res = $dbr->select(
-			$table,
-			[ 'math_inputhash', $inputColumn ],
+			'mathlog',
+			[ 'math_inputhash', 'math_input' ],
 			'',
 			__METHOD__,
 			$options );
@@ -83,27 +78,25 @@ class ExportMathCache extends Maintenance {
 			$out[] = [
 				// the binary encoded input-hash is no valid json output
 				'inputhash' => MathObject::hash2md5( $row->math_inputhash ),
-				'input'     => $row->$inputColumn
+				'input'     => $row->math_input
 			];
 		}
 		return $out;
 	}
 
 	public function execute() {
-		$table = $this->getArg( 0, self::DEFAULT_TABLE );
-		if ( !in_array( $table, self::$allowedTables ) ) {
-			$this->error( "Error:  '$table' is not allowed.", self::ERROR_CODE_TABLE_NAME );
-		}
 		$offset = $this->getOption( 'offset', 0 );
 		$length = $this->getOption( 'length', PHP_INT_MAX );
 		$sort = $this->hasOption( 'sort' );
-		$allEquations = self::getMathTagsFromDatabase( $table, $offset, $length, $sort );
+		$allEquations = self::getMathTagsFromDatabase( $offset, $length, $sort );
 		if ( !is_array( $allEquations ) ) {
-			$this->error( "Could not get equations from table '$table'", self::ERROR_CODE_DB_ERROR );
+			$this->error( "Could not get equations from table 'mathlog'",
+				self::ERROR_CODE_DB_ERROR );
 		}
 		$out = FormatJson::encode( $allEquations, true );
 		if ( $out === false ) {
-			$this->error( "Could not encode result as json string '$table'", self::ERROR_CODE_JSON );
+			$this->error( "Could not encode result as json string 'mathlog'",
+				self::ERROR_CODE_JSON );
 		}
 		$this->output( "$out\n" );
 	}

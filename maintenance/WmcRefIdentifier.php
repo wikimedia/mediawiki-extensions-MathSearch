@@ -29,12 +29,12 @@ class WmcRefIdentifier extends Maintenance {
 
 	public function execute() {
 		$dbr = wfGetDB( DB_REPLICA );
-		$res = $dbr->query( 'SELECT qID, oldId, fid, math_inputtex FROM math_wmc_ref r' .
-			' JOIN mathlatexml l WHERE  r.math_inputhash = l.math_inputhash;' );
+		$res = $dbr->query( 'SELECT qID, oldId, fid, math_input FROM math_wmc_ref r' .
+			' JOIN mathlog l WHERE  r.math_inputhash = l.math_inputhash;' );
 
 		$output = [];
 		foreach ( $res as $row ) {
-			$md = new MathoidDriver( $row->math_inputtex );
+			$md = new MathoidDriver( $row->math_input );
 			$md->texvcInfo();
 			$identifiers = array_unique( $md->getIdentifiers() );
 			$fId = "math.{$row->oldId}.{$row->fid}";

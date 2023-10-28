@@ -86,7 +86,7 @@ abstract class IndexBase extends Maintenance {
 		$db = wfGetDB( DB_REPLICA );
 		echo "getting list of all equations from the database\n";
 		$this->res =
-			$db->select( [ 'mathindex', 'mathlatexml' ], [
+			$db->select( [ 'mathindex', 'mathlog' ], [
 					'mathindex_revision_id',
 					'mathindex_anchor',
 					'math_mathml',

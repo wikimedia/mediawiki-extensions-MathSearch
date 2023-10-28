@@ -48,9 +48,9 @@ SELECT
   qVarCount,
   count( mathindex_revision_id ),
   concat('<mquery>', texQuery, '</mquery>' ),
-  concat('<math>', math_inputtex, '</math>')
+  concat('<math>', math_input, '</math>')
 FROM math_wmc_ref ref
-  NATURAL JOIN mathlatexml L
+  NATURAL JOIN mathlog L
   JOIN revision rev ON ref.oldId = rev.rev_id
   JOIN page p on rev.rev_page = p.page_id
   JOIN mathindex ON mathindex_inputhash = math_inputhash
@@ -86,13 +86,13 @@ SQL
 		$out = $this->getOutput();
 		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->query( "select
-			  math_inputtex as            rendering,
+			  math_input as            rendering,
 			  count(distinct runs.userId) cntUser,
 			  count(distinct runs.runId)  cntRun,
 			  min(`rank`)                 minRank
 			from
 			  math_wmc_results r
-			  join mathlatexml l ON r.math_inputhash = l.math_inputhash
+			  join mathlog l ON r.math_inputhash = l.math_inputhash
 			  join math_wmc_runs runs ON r.runId = runs.runId
 			where
 			  r.qId = $qId

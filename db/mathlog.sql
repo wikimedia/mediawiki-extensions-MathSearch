@@ -5,12 +5,16 @@
 CREATE TABLE /*_*/mathlog (
   -- Binary MD5 hash of math_inputtex, used as an identifier key.
   math_inputhash varbinary(16) NOT NULL,
+  -- User input mostly tex
+  math_input TEXT NOT NULL,
   -- the log input
   math_log text NOT NULL,
   -- the post request sent
   math_post text,
   -- (mathml|latexml) mode
   math_mode tinyint,
+  -- mathml rendering
+  math_mathml TEXT DEFAULT NULL,
   -- time needed to answer the request in ms
   math_rederingtime int,
   -- statuscode returned by the rendering engine
