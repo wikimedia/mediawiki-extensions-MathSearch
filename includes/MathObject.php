@@ -517,23 +517,8 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	/**
-	 * @return string
-	 */
-	protected function getMathTableName(): ?string {
-		global $wgMathAnalysisTableName;
-		if ( $this->mathTableName === null ) {
-			return $wgMathAnalysisTableName;
-		} else {
-			return $this->mathTableName;
-		}
-	}
-
-	/**
-	 * @param string $tableName mathoid or mathlatexml
-	 */
-	public function setMathTableName( $tableName ) {
-		$this->mathTableName = $tableName;
+	protected function getMathTableName(): string {
+		return 'mathlog';
 	}
 
 	/**

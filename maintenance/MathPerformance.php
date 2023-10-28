@@ -103,12 +103,11 @@ class MathPerformance extends Maintenance {
 			$options['LIMIT'] = $max - $min;
 			$options['OFFSET'] = $min;
 		}
-		$table = $this->getOption( 'table', 'mathoid' );
 		$shares = $this->getArg( 1, false ); // 'shares'
 		$share = $this->getArg( 2, 0 ); // 'share'
 		if ( $shares ) {
 			$this->vPrint( "Processing share $share of $shares." );
-			$counts = $this->db->selectField( $table, 'count(*)' );
+			$counts = $this->db->selectField( 'mathlog', 'count(*)' );
 			$bucket = ceil( $counts / $shares );
 			$min = $share * $bucket;
 			$max = $min + $bucket;
@@ -116,7 +115,7 @@ class MathPerformance extends Maintenance {
 			$options['OFFSET'] = $min;
 		}
 		$formulae = $this->db->select(
-			$table,
+			'mathlog',
 			[ $hash, $tex ],
 			'',
 			__METHOD__,

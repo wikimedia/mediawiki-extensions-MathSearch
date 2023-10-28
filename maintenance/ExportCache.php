@@ -23,8 +23,6 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ExportMathCache extends Maintenance {
 
-	private const DEFAULT_TABLE = 'mathoid';
-	private const ERROR_CODE_TABLE_NAME = 1;
 	private const ERROR_CODE_DB_ERROR = 2;
 	private const ERROR_CODE_JSON = 3;
 
@@ -32,7 +30,6 @@ class ExportMathCache extends Maintenance {
 		parent::__construct();
 		$this->addDescription( 'Exports a json file that consists of the input hashes and ' .
 			'the texvc input from the database cache.' );
-		$this->addArg( 'table', "The math table to be used (mathoid or latexml).", false );
 		$this->addOption(
 			'offset', "If set the first n equations on the table are skipped", false, true, "o"
 		);
