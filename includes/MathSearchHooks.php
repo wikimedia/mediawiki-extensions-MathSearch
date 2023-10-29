@@ -6,6 +6,7 @@ use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
+use Wikimedia\Rdbms\DBConnRef;
 
 /**
  * MediaWiki MathSearch extension
@@ -63,14 +64,21 @@ class MathSearchHooks {
 	 *
 	 * @param int $revId Page-ID
 	 * @param string $eid Equation-ID (get updated incrementally for every math element on the page)
-	 * @param string $inputHash hash of tex string (used as database entry)
-	 * @param string $tex the user input hash
+	 * @param MathRenderer $renderer
+	 * @param ?DBConnRef $dbr
 	 */
-	private static function updateIndex( $revId, $eid, $inputHash, $tex ) {
+	private static function updateIndex( int $revId, string $eid, MathRenderer $renderer,
+										 ?DBConnRef $dbr = null ) {
 		if ( $revId > 0 && $eid ) {
 			try {
-				$dbr = wfGetDB( DB_REPLICA );
-				$exists = $dbr->selectRow( 'mathindex',
+				$inputHash = $renderer->getInputHash();
+				$tex = $renderer->getTex();
+				$mo = MathObject::cloneFromRenderer( $renderer );
+				if ( !$mo->isInDatabase() ) {
+					$mo->writeToDatabase();
+				}
+				$exists = ( $dbr ?? MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+					->getReplicaDatabase() )->selectRow( 'mathindex',
 					[ 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ],
 					[
 						'mathindex_revision_id' => $revId,
@@ -147,7 +155,7 @@ class MathSearchHooks {
 					preg_replace( '/(class="mwe-math-mathml-(inline|display))/', "id=\"$eid\" \\1",
 						$Result );
 			}
-			self::updateIndex( $revId, $eid, $renderer->getInputHash(), $renderer->getTex() );
+			self::updateIndex( $revId, $eid, $renderer );
 		}
 		return true;
 	}
@@ -217,7 +225,7 @@ class MathSearchHooks {
 			return true;
 		}
 		if ( $revId > 0 ) { // Only store something if a pageid was set.
-			self::updateIndex( $revId, $eid, $renderer->getInputHash(), $renderer->getTex() );
+			self::updateIndex( $revId, $eid, $renderer );
 		}
 		if ( preg_match( '#<math(.*)?\sid="(?P<id>[\w\.]+)"#', $Result, $matches ) ) {
 			$rendererId = $matches['id'];

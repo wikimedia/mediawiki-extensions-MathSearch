@@ -10,6 +10,12 @@ class MathObject extends MathMathML {
 
 	// DEBUG VARIABLES
 	// Available, if Math extension runs in debug mode ($wgMathDebug = true) only.
+	public const MODE_2_USER_OPTION = [
+		'native' => 8,
+		'latexml' => 7,
+		'mathml' => 5,
+		'source' => 3
+	];
 	/** @var int LaTeXML return code (will be available in future Mathoid versions as well) */
 	private $statusCode = 0;
 	/** @var string|null Timestamp of the last modification of the database entry */
@@ -79,7 +85,9 @@ class MathObject extends MathMathML {
 		$instance->setSvg( $renderer->getSvg() );
 		$instance->setMode( $renderer->getMode() );
 		$instance->setMathStyle( $renderer->getMathStyle() );
-		$instance->setRestbaseInterface( $renderer->rbi );
+		if ( $renderer->rbi ) {
+			$instance->setRestbaseInterface( $renderer->rbi );
+		}
 		$instance->setInputType( $renderer->getInputType() );
 		return $instance;
 	}
@@ -608,30 +616,56 @@ class MathObject extends MathMathML {
 	 */
 	protected function dbDebugOutArray(): array {
 		return [
-			'math_inputhash' => $this->getInputHash(),
 			'math_log' => $this->getLog(),
-			'math_mode' => $this->getMode(),
+			'math_mode' => self::MODE_2_USER_OPTION[ $this->getMode() ],
 			'math_post' => $this->getPostData(),
 			'math_rederingtime' => $this->getRenderingTime(),
 		];
 	}
 
-	protected function writeDebugLog() {
-		global $wgMathDebug;
-		if ( $wgMathDebug ) {
-			$dbw = wfGetDB( DB_MASTER );
-			$outArray = $this->dbDebugOutArray();
-			$method = __METHOD__;
-			$dbw->onTransactionCommitOrIdle( static function () use ( $dbw, $outArray, $method ) {
-				$dbw->insert( 'mathlog', $outArray, $method );
+	public function writeToDatabase( $dbw = null ) {
+		# Now save it back to the DB:
+		if ( MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly() ) {
+			return;
+		}
+		$outArray = $this->dbOutArray();
+		$mathTableName = $this->getMathTableName();
+		$fname = __METHOD__;
+		if ( $this->isInDatabase() ) {
+			$this->debug( 'Update database entry' );
+			$inputHash = $this->getInputHash();
+			DeferredUpdates::addCallableUpdate( function () use (
+				$dbw, $outArray, $inputHash, $mathTableName, $fname
+			) {
+				$dbw = $dbw ?: MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getPrimaryDatabase();
+
+				$dbw->update( $mathTableName, $outArray,
+					[ 'math_inputhash' => $inputHash ], $fname );
+				$this->logger->debug(
+					'Row updated after db transaction was idle: ' .
+					var_export( $outArray, true ) . " to database" );
+			} );
+		} else {
+			$this->storedInDatabase = true;
+			$this->debug( 'Store new entry in database' );
+			DeferredUpdates::addCallableUpdate( function () use (
+				$dbw, $outArray, $mathTableName, $fname
+			) {
+				$dbw = $dbw ?: MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getPrimaryDatabase();
+				$dbw->insert( $mathTableName, $outArray, $fname, [ 'IGNORE' ] );
+				LoggerFactory::getInstance( 'Math' )->debug(
+					'Row inserted after db transaction was idle {out}.',
+					[
+						'out' => var_export( $outArray, true ),
+					]
+				);
+				if ( $dbw->affectedRows() == 0 ) {
+					// That's the price for the delayed update.
+					$this->logger->warning(
+						'Entry could not be written. Might be changed in between.' );
+				}
 			} );
 		}
-	}
-
-	public function writeToDatabase( $dbw = null ) {
-		$dbw = $dbw ?: wfGetDB( DB_MASTER );
-		parent::writeToDatabase( $dbw );
-		$this->writeDebugLog();
 	}
 
 	public function readFromDatabase(): bool {
@@ -655,6 +689,14 @@ class MathObject extends MathMathML {
 		$out = MathRenderer::dbInArray();
 		$out = array_diff( $out, [ 'math_inputtex' ] );
 		$out[] = 'math_input';
+		return $out;
+	}
+
+	protected function dbOutArray() {
+		$out = MathRenderer::dbOutArray();
+		$out['math_input'] = $out['math_inputtex'];
+		unset( $out['math_inputtex'] );
+		$out += $this->dbDebugOutArray();
 		return $out;
 	}
 

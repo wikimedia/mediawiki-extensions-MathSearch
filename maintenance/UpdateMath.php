@@ -47,13 +47,6 @@ class UpdateMath extends Maintenance {
 	private $parser;
 	private $parserOptions;
 
-	public const MODE_2_USER_OPTION = [
-		'native' => 8,
-		'latexml' => 7,
-		'mathml' => 5,
-		'source' => 3
-	];
-
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Updates the index of Mathematical formulae.' );
@@ -99,7 +92,7 @@ class UpdateMath extends Maintenance {
 				'math_inputhash' => $this->current->getInputHash(),
 				'mathperformance_name' => substr( $category, 0, 10 ),
 				'mathperformance_time' => $delta,
-				'mathperformance_mode' => self::MODE_2_USER_OPTION[ $this->renderingMode ]
+				'mathperformance_mode' => MathObject::MODE_2_USER_OPTION[ $this->renderingMode ]
 			] );
 		}
 		$this->time = microtime( true );
