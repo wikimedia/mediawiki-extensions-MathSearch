@@ -10,28 +10,19 @@ class MathIdGenerator {
 	public const CONTENT_POS = 1;
 	public const ATTRIB_POS = 2;
 
-	/** @var string */
-	private $wikiText;
-	/** @var array[] */
-	private $mathTags;
-	/** @var int */
-	private $revisionId;
+	private string $wikiText;
+	private array $mathTags;
+	private int $revisionId;
 	/** @var int[] */
 	private $contentAccessStats = [];
-	/** @var string */
-	private $format = "math.%d.%d";
-	/** @var bool */
-	private $useCustomIds = false;
+	private string $format = "math.%d.%d";
+	private bool $useCustomIds = false;
 	/** @var int[]|null */
 	private $keys;
 	/** @var string[][]|null */
 	private $contentIdMap;
 
-	/**
-	 * @param RevisionRecord $revisionRecord
-	 * @return self
-	 */
-	public static function newFromRevisionRecord( RevisionRecord $revisionRecord ) {
+	public static function newFromRevisionRecord( RevisionRecord $revisionRecord ): MathIdGenerator {
 		$contentModel = $revisionRecord
 			->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
 			->getModel();
@@ -54,11 +45,7 @@ class MathIdGenerator {
 		return $this->keys;
 	}
 
-	/**
-	 * @param string $wikiText
-	 * @param int $revisionId
-	 */
-	public function __construct( $wikiText, $revisionId = 0 ) {
+	public function __construct( string $wikiText, int $revisionId = 0 ) {
 		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
 		$this->wikiText =
 			Parser::extractTagsAndParams( [ 'nowki', 'syntaxhighlight', 'math' ], $wikiText,
@@ -69,12 +56,7 @@ class MathIdGenerator {
 		$this->revisionId = $revisionId;
 	}
 
-	/**
-	 * @param int $revId
-	 *
-	 * @return self
-	 */
-	public static function newFromRevisionId( $revId ) {
+	public static function newFromRevisionId( int $revId ): MathIdGenerator {
 		$revisionRecord = MediaWikiServices::getInstance()
 			->getRevisionLookup()
 			->getRevisionById( $revId );
@@ -82,12 +64,7 @@ class MathIdGenerator {
 		return self::newFromRevisionRecord( $revisionRecord );
 	}
 
-	/**
-	 * @param Title $title
-	 *
-	 * @return self
-	 */
-	public static function newFromTitle( Title $title ) {
+	public static function newFromTitle( Title $title ): MathIdGenerator {
 		return self::newFromRevisionId( $title->getLatestRevID() );
 	}
 
@@ -157,12 +134,7 @@ class MathIdGenerator {
 		return $this->contentIdMap;
 	}
 
-	/**
-	 * @param string $content
-	 *
-	 * @return string
-	 */
-	public function guessIdFromContent( $content ) {
+	public function guessIdFromContent( string $content ): ?string {
 		$allIds = $this->getIdsFromContent( $content );
 		$size = count( $allIds );
 		if ( $size == 0 ) {
@@ -180,40 +152,23 @@ class MathIdGenerator {
 		return $allIds[$currentIndex];
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getMathTags() {
+	public function getMathTags(): array {
 		return $this->mathTags;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getWikiText() {
+	public function getWikiText(): string {
 		return $this->wikiText;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getRevisionId() {
+	public function getRevisionId(): int {
 		return $this->revisionId;
 	}
 
-	/**
-	 * @param bool $useCustomIds
-	 */
-	public function setUseCustomIds( $useCustomIds ) {
+	public function setUseCustomIds( bool $useCustomIds ): void {
 		$this->useCustomIds = $useCustomIds;
 	}
 
-	/**
-	 * @param string $eid
-	 *
-	 * @return array|null
-	 */
-	public function getTagFromId( $eid ) {
+	public function getTagFromId( string $eid ): ?array {
 		foreach ( $this->mathTags as $key => $mathTag ) {
 			if ( $eid == $this->formatKey( $key ) ) {
 				return $mathTag;
@@ -222,14 +177,10 @@ class MathIdGenerator {
 				return $mathTag;
 			}
 		}
+		return null;
 	}
 
-	/**
-	 * @param string $eid
-	 *
-	 * @return string|null
-	 */
-	public function getUniqueFromId( $eid ) {
+	public function getUniqueFromId( string $eid ): ?string {
 		foreach ( $this->mathTags as $key => $mathTag ) {
 			if ( $eid == $this->formatKey( $key ) ) {
 				return $key;
@@ -238,13 +189,10 @@ class MathIdGenerator {
 				return $key;
 			}
 		}
+		return null;
 	}
 
-	/**
-	 * @param string $key
-	 * @return string
-	 */
-	private function formatKey( $key ) {
+	private function formatKey( string $key ): string {
 		$keys = $this->getKeys();
 		return sprintf( $this->format, $this->revisionId, $keys[$key] );
 	}
