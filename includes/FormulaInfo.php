@@ -158,6 +158,7 @@ class FormulaInfo extends SpecialPage {
 		}
 		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
+		$this->DisplayRendering( $mo->getUserInputTex(), 'native' );
 
 		self::DisplayTranslations( $mo->getUserInputTex() );
 
@@ -224,18 +225,14 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasMathMLSupport( $mode ) {
-		return ( $mode === 'latexml' || $mode === 'mathml' );
+		return in_array( $mode, [ 'latexml', 'mathml', 'native' ] );
 	}
 
 	public static function hasSvgSupport( $mode ) {
 		return ( $mode === 'latexml' || $mode === 'mathml' );
 	}
 
-	/**
-	 * @param string $tex
-	 * @param string $mode
-	 */
-	private function DisplayRendering( $tex, $mode ) {
+	private function DisplayRendering( string $tex, string $mode ) {
 		if ( !in_array( $mode, $this->getConfig()->get( 'MathValidModes' ) ) ) {
 			return;
 		}

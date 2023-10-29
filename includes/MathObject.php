@@ -309,7 +309,8 @@ class MathObject extends MathMathML {
 	public function updateObservations( $dbw = null ) {
 		$this->readFromDatabase();
 		preg_match_all(
-			"#<(mi|mo|mtext)( ([^>].*?))?>(.*?)</\\1>#u", $this->getMathml(), $rule, PREG_SET_ORDER
+			"#<(mi|mo|mtext)( ([^>].*?))?>(.*?)(<!--.*-->)?</\\1>#u", $this->getMathml(), $rule,
+			PREG_SET_ORDER
 		);
 
 		$dbw = $dbw ?: wfGetDB( DB_MASTER );
@@ -672,7 +673,7 @@ class MathObject extends MathMathML {
 		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getReplicaDatabase();
 		$rpage = $dbr->selectRow( $this->getMathTableName(),
 			$this->dbInArray(),
-			[ 'math_input' => $this->getInputHash() ],
+			[ 'math_inputhash' => $this->getInputHash() ],
 			__METHOD__ );
 		if ( $rpage !== false ) {
 			$this->initializeFromDatabaseRow( $rpage );
@@ -700,4 +701,26 @@ class MathObject extends MathMathML {
 		return $out;
 	}
 
+	/**
+	 * Reads the values from the database but does not overwrite set values with empty values
+	 * @param stdClass $rpage (a database row)
+	 */
+	protected function initializeFromDatabaseRow( $rpage ) {
+		$this->inputHash = $rpage->math_inputhash; // MUST NOT BE NULL
+		$this->md5 = '';
+		if ( !empty( $rpage->math_mathml ) ) {
+			$this->mathml = $rpage->math_mathml;
+		}
+		if ( !empty( $rpage->math_input ) ) {
+			// in the current database the field is probably not set.
+			$this->userInputTex = $rpage->math_input;
+		}
+		if ( !empty( $rpage->math_tex ) ) {
+			$this->tex = $rpage->math_tex;
+		}
+		if ( !empty( $rpage->math_svg ) ) {
+			$this->svg = $rpage->math_svg;
+		}
+		$this->changed = false;
+	}
 }
