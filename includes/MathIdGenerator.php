@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Extension\Math\MathSource;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
@@ -143,12 +144,13 @@ class MathIdGenerator {
 		if ( !$this->contentIdMap ) {
 			$this->contentIdMap = [];
 			foreach ( $this->mathTags as $key => $tag ) {
-				if ( !array_key_exists( $tag[self::CONTENT_POS],
+				$userInputTex = $this->getUserInputTex( $tag );
+				if ( !array_key_exists( $userInputTex,
 						$this->contentIdMap )
 				) {
-					$this->contentIdMap[$tag[self::CONTENT_POS]] = [];
+					$this->contentIdMap[$userInputTex] = [];
 				}
-				$this->contentIdMap[$tag[self::CONTENT_POS]][] =
+				$this->contentIdMap[$userInputTex][] =
 					$this->parserKey2fId( $key );
 			}
 		}
@@ -245,5 +247,9 @@ class MathIdGenerator {
 	private function formatKey( $key ) {
 		$keys = $this->getKeys();
 		return sprintf( $this->format, $this->revisionId, $keys[$key] );
+	}
+
+	public function getUserInputTex( array $tag ): string {
+		return ( new MathSource( $tag[self::CONTENT_POS], $tag[self::ATTRIB_POS] ) )->getUserInputTex();
 	}
 }
