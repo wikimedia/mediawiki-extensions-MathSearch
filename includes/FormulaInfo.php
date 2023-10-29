@@ -116,13 +116,7 @@ class FormulaInfo extends SpecialPage {
 		$wgOut->addHTML( '</div></div>' );
 	}
 
-	/**
-	 * @param int $oldID
-	 * @param string $eid
-	 *
-	 * @return bool
-	 */
-	public function DisplayInfo( $oldID, $eid ) {
+	public function DisplayInfo( int $oldID, string $eid ): bool {
 		$out = $this->getOutput();
 		$out->addModuleStyles( [ 'ext.mathsearch.styles' ] );
 		$out->addWikiTextAsInterface( '==General==' );
@@ -192,11 +186,13 @@ class FormulaInfo extends SpecialPage {
 			$out->addWikiTextAsInterface( '==LOG and Debug==' );
 			$this->printSource( $mo->getTimestamp(), 'Rendered at', 'text', false );
 			$this->printSource( $mo->getIndexTimestamp(), 'and indexed at', 'text', false );
-			$this->printSource( $mo->isValidMathML( $mo->getMathml() ), 'validxml', 'text', false );
-			$out->addHTML( $mo->isValidMathML( $mo->getMathml() ) ? "valid" : "invalid" );
+			$is_valid = $mo->getMathml() && $mo->isValidMathML( $mo->getMathml() );
+			$this->printSource( $is_valid, 'validxml', 'text', false );
+			$out->addHTML( $is_valid ? "valid" : "invalid" );
 			$this->printSource( $mo->getStatusCode(), 'status' );
-			$out->addHTML( htmlspecialchars( $mo->getLog(), 'status' ) );
+			$out->addHTML( htmlspecialchars( $mo->getLog() ) );
 		}
+		return true;
 	}
 
 	private function printSource( $source, $description = "", $language = "text", $linestart = true ) {

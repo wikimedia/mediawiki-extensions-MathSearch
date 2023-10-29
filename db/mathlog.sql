@@ -7,6 +7,8 @@ CREATE TABLE /*_*/mathlog (
   math_inputhash varbinary(16) NOT NULL,
   -- User input mostly tex
   math_input TEXT NOT NULL,
+  -- the tex representation
+  math_tex TEXT DEFAULT NULL,
   -- the log input
   math_log text NOT NULL,
   -- the post request sent
@@ -15,6 +17,8 @@ CREATE TABLE /*_*/mathlog (
   math_mode tinyint,
   -- mathml rendering
   math_mathml TEXT DEFAULT NULL,
+  -- svg rendering
+  math_svg TEXT DEFAULT NULL,
   -- time needed to answer the request in ms
   math_rederingtime int,
   -- statuscode returned by the rendering engine

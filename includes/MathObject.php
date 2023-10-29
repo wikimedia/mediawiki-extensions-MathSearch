@@ -136,7 +136,7 @@ class MathObject extends MathMathML {
 
 	/**
 	 * @param stdClass $res
-	 * @return bool|\self
+	 * @return bool|self
 	 */
 	public static function constructformpagerow( $res ) {
 		global $wgMathDebug;
@@ -155,11 +155,7 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	/**
-	 * @param string $wikiText
-	 * @return array
-	 */
-	public static function extractMathTagsFromWikiText( $wikiText ): array {
+	public static function extractMathTagsFromWikiText( string $wikiText ): array {
 		$idGenerator = new MathIdGenerator( $wikiText );
 		return $idGenerator->getMathTags();
 	}
@@ -186,63 +182,39 @@ class MathObject extends MathMathML {
 		// phpcs:enable Generic.Files.LineLength
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getStatusCode(): int {
 		return $this->statusCode;
 	}
 
-	/**
-	 * @param int $statusCode
-	 * @return self
-	 */
-	public function setStatusCode( $statusCode ): MathObject {
+	public function setStatusCode( int $statusCode ): MathObject {
 		$this->statusCode = $statusCode;
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getTimestamp(): ?string {
 		return $this->timestamp;
 	}
 
-	/**
-	 * @param string $timestamp
-	 * @return self
-	 */
-	public function setTimestamp( $timestamp ): MathObject {
+	public function setTimestamp( string $timestamp ): MathObject {
 		$this->timestamp = $timestamp;
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getLog(): string {
 		return $this->log;
 	}
 
-	/**
-	 * @param string $log
-	 * @return self
-	 */
-	public function setLog( $log ): MathObject {
+	public function setLog( string $log ): MathObject {
 		$this->changed = true;
 		$this->log = $log;
 		return $this;
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function getIndexTimestamp(): ?string {
 		return $this->index_timestamp;
 	}
 
-	public function getObservations( $update = true ): void {
+	public function getObservations( bool $update = true ): void {
 		global $wgOut;
 		$dbr = wfGetDB( DB_REPLICA );
 		try {
@@ -322,7 +294,7 @@ class MathObject extends MathMathML {
 		return $this->revisionID;
 	}
 
-	public function setRevisionID( $ID ) {
+	public function setRevisionID( int $ID ): void {
 		$this->revisionID = $ID;
 	}
 
@@ -660,6 +632,30 @@ class MathObject extends MathMathML {
 		$dbw = $dbw ?: wfGetDB( DB_MASTER );
 		parent::writeToDatabase( $dbw );
 		$this->writeDebugLog();
+	}
+
+	public function readFromDatabase(): bool {
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getReplicaDatabase();
+		$rpage = $dbr->selectRow( $this->getMathTableName(),
+			$this->dbInArray(),
+			[ 'math_input' => $this->getInputHash() ],
+			__METHOD__ );
+		if ( $rpage !== false ) {
+			$this->initializeFromDatabaseRow( $rpage );
+			$this->storedInDatabase = true;
+			return true;
+		} else {
+			# Missing from the database and/or the render cache
+			$this->storedInDatabase = false;
+			return false;
+		}
+	}
+
+	protected function dbInArray() {
+		$out = MathRenderer::dbInArray();
+		$out = array_diff( $out, [ 'math_inputtex' ] );
+		$out[] = 'math_input';
+		return $out;
 	}
 
 }
