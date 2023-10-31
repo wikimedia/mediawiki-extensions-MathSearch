@@ -630,7 +630,7 @@ class MathObject extends MathMathML {
 			return;
 		}
 		$outArray = $this->dbOutArray();
-		$mathTableName = $this->getMathTableName();
+		$mathTableName = 'mathlog';
 		$fname = __METHOD__;
 		if ( $this->isInDatabase() ) {
 			$this->debug( 'Update database entry' );
@@ -671,7 +671,7 @@ class MathObject extends MathMathML {
 
 	public function readFromDatabase(): bool {
 		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getReplicaDatabase();
-		$rpage = $dbr->selectRow( $this->getMathTableName(),
+		$rpage = $dbr->selectRow( 'mathlog',
 			$this->dbInArray(),
 			[ 'math_inputhash' => $this->getInputHash() ],
 			__METHOD__ );
