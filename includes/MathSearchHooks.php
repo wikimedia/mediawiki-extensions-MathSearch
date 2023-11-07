@@ -147,16 +147,23 @@ class MathSearchHooks {
 	 */
 	static function updateMathIndex( Parser $parser, MathRenderer $renderer, &$Result = null ) {
 		$revId = $parser->getRevisionId();
-		if ( $revId > 0 ) { // Only store something if a pageid was set.
-			// Use manually assigned IDs whenever possible
-			// and fallback to automatic IDs otherwise.
-			if ( self::setMathId( $eid, $renderer, $revId ) === false ) {
-				$Result =
-					preg_replace( '/(class="mwe-math-mathml-(inline|display))/', "id=\"$eid\" \\1",
-						$Result );
-			}
-			self::updateIndex( $revId, $eid, $renderer );
+		// Only store something if a pageid was set.
+		if ( $revId <= 0 ) {
+			return true;
 		}
+		// Use manually assigned IDs whenever possible
+		// and fallback to automatic IDs otherwise.
+		$hasEid = self::setMathId( $eid, $renderer, $revId );
+		if ( $eid === null ) {
+			return true;
+		}
+		if ( $hasEid === false ) {
+			$Result =
+				preg_replace( '/(class="mwe-math-mathml-(inline|display))/', "id=\"$eid\" \\1",
+					$Result );
+		}
+		self::updateIndex( $revId, $eid, $renderer );
+
 		return true;
 	}
 
