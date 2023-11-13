@@ -594,20 +594,15 @@ class MathObject extends MathMathML {
 	}
 
 	/**
-	 * @param int|long $renderingTime either in ms or as in seconds as long
+	 * @param int|float $renderingTime either in ms as int or seconds as float
 	 */
 	public function setRenderingTime( $renderingTime ) {
-		$type = gettype( $renderingTime );
-		switch ( $type ) {
-			case "double":
-			case "float":
-				$this->renderingTime = (int)( $renderingTime * 1000 );
-				break;
-			case "integer":
-				$this->renderingTime = $renderingTime;
-				break;
-			default:
-				throw new RuntimeException( __METHOD__ . ": does not support type $type" );
+		if ( is_float( $renderingTime ) ) {
+			$this->renderingTime = (int)( $renderingTime * 1000 );
+		} elseif ( is_int( $renderingTime ) ) {
+			$this->renderingTime = $renderingTime;
+		} else {
+			throw new MWException( __METHOD__ . ': does not support type ' . gettype( $renderingTime ) );
 		}
 	}
 
