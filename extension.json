@@ -41,10 +41,6 @@
 		"MathHighlighter": "includes/MathHighlighter.php",
 		"MlpEvalForm": "includes/MlpEvalForm.php",
 		"WikidataDriver": "includes/WikidataDriver.php",
-		"ContentMathValidator": "includes/content/ContentMathValidator.php",
-		"ContentMathFormatter": "includes/content/ContentMathFormatter.php",
-		"ContentMathWikidataHook": "includes/content/ContentMathWikidataHook.php",
-		"ContentMathMLRdfBuilder": "includes/content/ContentMathMLRdfBuilder.php",
 		"PageCreationJob": "includes/PageCreationJob.php"
 	},
 	"AvailableRights": [
@@ -66,8 +62,14 @@
 		],
 		"ParserFirstCallInit": "MathSearchHooks::onParserFirstCallInit",
 		"ArticleDeleteComplete": "MathSearchHooks::onArticleDeleteComplete",
-		"WikibaseClientDataTypes": "ContentMathWikidataHook::onWikibaseClientDataTypes",
-		"WikibaseRepoDataTypes": "ContentMathWikidataHook::onWikibaseRepoDataTypes",
+		"WikibaseClientDataTypes": [
+			"MediaWiki\\Extension\\MathSearch\\Wikidata\\Content\\ContentMathWikidataHook::onWikibaseClientDataTypes",
+			"MediaWiki\\Extension\\MathSearch\\Wikidata\\MathML\\MathMLWikidataHook::onWikibaseClientDataTypes"
+		],
+		"WikibaseRepoDataTypes": [
+			"MediaWiki\\Extension\\MathSearch\\Wikidata\\Content\\ContentMathWikidataHook::onWikibaseRepoDataTypes",
+			"MediaWiki\\Extension\\MathSearch\\Wikidata\\MathML\\MathMLWikidataHook::onWikibaseRepoDataTypes"
+		],
 		"PageSaveComplete": "MathSearchHooks::onPageSaveComplete",
 		"ArticleUndelete": "MathSearchHooks::onArticleUndelete"
 	},
@@ -141,7 +143,7 @@
 	"AutoloadNamespaces": {
 		"MathSearch\\StackExchange\\": "includes/stackexchange",
 		"MediaWiki\\Extension\\MathSearch\\Rest\\": "includes/rest",
-		"MediaWiki\\Extension\\MathSearch\\Swh\\": "includes/swh"
+		"MediaWiki\\Extension\\MathSearch\\Wikidata\\": "includes/wikidata"
 	},
 	"JobClasses": {
 		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob",

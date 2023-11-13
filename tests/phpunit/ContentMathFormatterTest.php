@@ -2,10 +2,11 @@
 
 use DataValues\NumberValue;
 use DataValues\StringValue;
+use MediaWiki\Extension\MathSearch\Wikidata\Content\ContentMathFormatter;
 use Wikibase\Lib\Formatters\SnakFormatter;
 
 /**
- * @covers MathFormatter
+ * @covers ContentMathFormatter
  *
  * @group MathSearch
  *
@@ -23,7 +24,7 @@ class ContentMathFormatterTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * Checks the
-	 * @covers MathFormatter::__construct()
+	 * @covers ContentMathFormatter::__construct()
 	 */
 	public function testBasics() {
 		$formatter = new ContentMathFormatter( SnakFormatter::FORMAT_PLAIN );

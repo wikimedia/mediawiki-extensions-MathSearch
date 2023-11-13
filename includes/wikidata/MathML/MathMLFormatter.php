@@ -1,7 +1,8 @@
 <?php
+namespace MediaWiki\Extension\MathSearch\Wikidata\MathML;
 
 use DataValues\StringValue;
-use MediaWiki\Extension\Math\MathLaTeXML;
+use Html;
 use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 use ValueFormatters\ValueFormatter;
 use Wikibase\Lib\Formatters\SnakFormatter;
@@ -15,7 +16,7 @@ use Wikibase\Lib\Formatters\SnakFormatter;
 * or just "text/plain"
 */
 
-class ContentMathFormatter implements ValueFormatter {
+class MathMLFormatter implements ValueFormatter {
 
 	/**
 	 * @var string One of the SnakFormatter::FORMAT_... constants.
@@ -34,61 +35,27 @@ class ContentMathFormatter implements ValueFormatter {
 	/**
 	 * @param StringValue $value
 	 *
-	 * @throws MismatchingDataValueTypeException
 	 * @return string
+	 * @throws MismatchingDataValueTypeException
 	 */
 	public function format( $value ) {
 		if ( !( $value instanceof StringValue ) ) {
 			throw new InvalidArgumentException( '$value must be a StringValue' );
 		}
 
-		$tex = $value->getValue();
+		$mml = $value->getValue();
 
 		switch ( $this->format ) {
-			case SnakFormatter::FORMAT_PLAIN:
-				return $tex;
 			case SnakFormatter::FORMAT_WIKI:
-				return "<math>$tex</math>";
+				return "<math type='pmml'>$mml</math>";
+			case SnakFormatter::FORMAT_HTML_DIFF:
+				return Html::rawElement( 'h4',
+						[ 'class' => 'wb-details wb-math-details wb-math-rendered' ], $mml ) .
+					Html::rawElement( 'div', [ 'class' => 'wb-details wb-math-details' ],
+						Html::element( 'code', [], $mml ) );
 			default:
-				$renderer = new MathLaTeXML( $tex );
-
-				if ( $renderer->checkTeX() && $renderer->render() ) {
-					$html = $renderer->getHtmlOutput();
-					$renderer->writeCache();
-				} else {
-					$html = $renderer->getLastError();
-				}
-
-				if ( $this->format === SnakFormatter::FORMAT_HTML_DIFF ) {
-					$html = $this->formatDetails( $html, $tex );
-				}
-
-				// TeX string is not valid or rendering failed
-				return $html;
+				return $mml;
 		}
-	}
-
-	/**
-	 * Constructs a detailed HTML rendering for use in diff views.
-	 *
-	 * @param string $valueHtml HTML
-	 * @param string $tex TeX
-	 *
-	 * @return string HTML
-	 */
-	private function formatDetails( $valueHtml, $tex ) {
-		$html = '';
-		$html .= Html::rawElement( 'h4',
-			[ 'class' => 'wb-details wb-math-details wb-math-rendered' ],
-			$valueHtml
-		);
-
-		$html .= Html::rawElement( 'div',
-			[ 'class' => 'wb-details wb-math-details' ],
-			Html::element( 'code', [], $tex )
-		);
-
-		return $html;
 	}
 
 	/**

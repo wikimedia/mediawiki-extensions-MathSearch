@@ -1,6 +1,7 @@
 <?php
 
 use DataValues\StringValue;
+use MediaWiki\Extension\MathSearch\Wikidata\Content\ContentMathMLRdfBuilder;
 use Wikibase\DataModel\Entity\PropertyId;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikimedia\Purtle\NTriplesRdfWriter;

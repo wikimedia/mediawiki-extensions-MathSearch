@@ -1,8 +1,9 @@
 <?php
 
+namespace MediaWiki\Extension\MathSearch\Wikidata\MathML;
+
 use DataValues\StringValue;
-use MediaWiki\Extension\Math\MathLaTeXML;
-use ValueValidators\Error;
+use ValueFormatters;
 use ValueValidators\Result;
 use ValueValidators\ValueValidator;
 
@@ -11,8 +12,7 @@ use ValueValidators\ValueValidator;
  * @author Julian Hilbig
  * @author Moritz Schubotz
  */
-
-class ContentMathValidator implements ValueValidator {
+class MathMLValidator implements ValueValidator {
 
 	/**
 	 * Validates a value with MathLaTeXML
@@ -27,27 +27,13 @@ class ContentMathValidator implements ValueValidator {
 			throw new InvalidArgumentException( '$value must be a StringValue' );
 		}
 
-		// get input String from value
-		$tex = $value->getValue();
-
-		$checker = new MathLaTeXML( $tex );
-		if ( $checker->checkTeX() ) {
-			$checker->writeCache();
-			return Result::newSuccess();
-		}
-
-		// TeX string is not valid
-		return Result::newError(
-			[
-				Error::newError( null, null, 'malformed-value', [ $checker->getLastError() ] )
-			]
-		);
+		return Result::newSuccess();
 	}
 
 	/**
+	 * @param array $options
 	 * @see ValueValidator::setOptions()
 	 *
-	 * @param array $options
 	 */
 	public function setOptions( array $options ) {
 		// Do nothing. This method shouldn't even be in the interface.
