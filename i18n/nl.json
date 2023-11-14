@@ -13,11 +13,14 @@
 		]
 	},
 	"mathsearch": "Wiskundig zoeken",
+	"mlpeval": "Evaluatie wiskundige taalverwerking",
 	"formulainfo": "Formulegegevens",
 	"mathdownload": "Zoekresultaten voor wiskunde downloaden",
 	"mathindex": "Wiskunde-index",
 	"mathupload": "Zoekresultaten voor wiskunde indienen",
+	"latextranslator": "Vertaler LaTeX naar CAS",
 	"specialpages-group-mathsearch": "Wiskundig zoeken",
+	"displaytopics": "Onderwerpen tonen",
 	"mathsearch-desc": "Integreert de [http://search.mathweb.org/about.html MathWeb Zoekmachine]",
 	"getequationsbyquery": "Vergelijkingen zoeken",
 	"xquerygenerator": "XQuerygenerator",
@@ -67,6 +70,7 @@
 	"math-wmc-display-formulae-label": "Weergave van ingediende formules",
 	"math-wmc-display-formulae-help": "Niet aanbevolen voor grote invoerbestanden.",
 	"action-mathwmcsubmit": "resultaten in te dienen bij de zoektaak van NTCIR Wikipedia Math",
+	"right-mathwmcsubmit": "Resultaten indienen bij de zoektaak van NTCIR Wikipedia Math",
 	"math-search-term": "* $4 term-$1: $3-expressie \"$2\" met {{PLURAL:$5|1 resultaat|$5 resultaten}}.",
 	"math-search-relation-label": "Relatie:",
 	"math-search-relation-0": "en",
@@ -77,5 +81,14 @@
 	"math-search-type-1": "TeX patroon",
 	"math-search-type-2": "xQuery uitdrukking",
 	"math-search-expression-label": "Uitdrukking:",
-	"math-tex2nb-input": "Formule-invoer"
+	"math-tex2nb-header": "Uw eigen invoer opgeven",
+	"math-tex2nb-intro": "Hier ziet u hoe het omzetten van TeX naar Computer Algebra System (CAS) werkt.\n\nDe demo-applicatie converteert LaTeX-functies die zich direct laten vertalen naar CAS-tegenhangers.\n\nFuncties zonder uitdrukkelijke CAS-ondersteuning kunnen worden vertaald via een DRMF-pakket (in ontwikkeling).",
+	"math-tex2nb-input": "Formule-invoer",
+	"math-tex2nb-wikitext": "Wikitekst-context",
+	"math-tex2nb-latex": "De volgende LaTeX-invoer…",
+	"math-tex2nb-mathematica": "…wordt vertaald naar de CAS-uitvoer…",
+	"math-tex2nb-purge": "Gecachte resultaten opschonen.",
+	"datatypes-type-contentmath": "Wiskundige uitdrukking (inhoud)",
+	"wikibase-listdatatypes-contentmath-head": "Wiskundige uitdrukking (inhoud)",
+	"wikibase-listdatatypes-contentmath-body": "Letterlijk gegevensveld voor wiskundige uitdrukkingen, formules, vergelijkingen en dergelijke, uitgedrukt in de DRMF/DLMF-variant van LaTeX."
 }
