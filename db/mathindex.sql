@@ -14,7 +14,7 @@ CREATE TABLE /*_*/mathindex (
 
   -- Reference to
   -- Binary MD5 hash of the latex fragment, used as an identifier key.
-  mathindex_inputhash varbinary(16) NOT NULL,
+  mathindex_inputhash varbinary(32) NOT NULL,
 
   -- Timestamp. Is set by the database automatically
   mathindex_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

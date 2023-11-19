@@ -4,7 +4,7 @@
 --
 CREATE TABLE /*_*/mathlog (
   -- Binary MD5 hash of math_inputtex, used as an identifier key.
-  math_inputhash varbinary(16) NOT NULL,
+  math_inputhash varbinary(32) NOT NULL,
   -- User input mostly tex
   math_input TEXT NOT NULL,
   -- the tex representation

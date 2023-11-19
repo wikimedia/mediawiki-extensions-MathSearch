@@ -114,7 +114,8 @@ EOT;
 		$parser->preprocess( $mytext, $page, ParserOptions::newFromAnon(), 42 );
 		$serviceOptions = $this->createMock( ServiceOptions::class );
 		# Setting up the renderer.
-		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger );
+		$cache = new WANObjectCache( [ 'cache' => new HashBagOStuff() ] );
+		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger, $cache );
 		$renderer = $rendererFactory->getRenderer( '' );
 		$renderer->setID( 'math.42.0' );
 		# Doing Assertions.
@@ -139,7 +140,8 @@ EOT;
 		$serviceOptions = $this->createMock( ServiceOptions::class );
 		# Creating a math config.
 		$mathConfig = $this->createMock( MathConfig::class );
-		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger );
+		$cache = new WANObjectCache( [ 'cache' => new HashBagOStuff() ] );
+		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger, $cache );
 		$renderer = $rendererFactory->getRenderer( '' );
 
 		$id = null;

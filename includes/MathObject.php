@@ -156,7 +156,7 @@ class MathObject extends MathMathML {
 				$instance->index_timestamp = $res->mathindex_timestamp;
 			}
 			$instance->inputHash = $res->mathindex_inputhash;
-			$instance->readFromDatabase();
+			$instance->readFromCache();
 			return $instance;
 		} else {
 			return false;
@@ -307,7 +307,7 @@ class MathObject extends MathMathML {
 	}
 
 	public function updateObservations( $dbw = null ) {
-		$this->readFromDatabase();
+		$this->readFromCache();
 		preg_match_all(
 			"#<(mi|mo|mtext)( ([^>].*?))?>(.*?)(<!--.*-->)?</\\1>#u", $this->getMathml(), $rule,
 			PREG_SET_ORDER
@@ -619,7 +619,7 @@ class MathObject extends MathMathML {
 		];
 	}
 
-	public function writeToDatabase( $dbw = null ) {
+	public function writeToCache() {
 		# Now save it back to the DB:
 		if ( MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly() ) {
 			return;
@@ -631,9 +631,9 @@ class MathObject extends MathMathML {
 			$this->debug( 'Update database entry' );
 			$inputHash = $this->getInputHash();
 			DeferredUpdates::addCallableUpdate( function () use (
-				$dbw, $outArray, $inputHash, $mathTableName, $fname
+				$outArray, $inputHash, $mathTableName, $fname
 			) {
-				$dbw = $dbw ?: MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getPrimaryDatabase();
+				$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getPrimaryDatabase();
 
 				$dbw->update( $mathTableName, $outArray,
 					[ 'math_inputhash' => $inputHash ], $fname );
@@ -642,12 +642,12 @@ class MathObject extends MathMathML {
 					var_export( $outArray, true ) . " to database" );
 			} );
 		} else {
-			$this->storedInDatabase = true;
+			$this->storedInCache = true;
 			$this->debug( 'Store new entry in database' );
 			DeferredUpdates::addCallableUpdate( function () use (
-				$dbw, $outArray, $mathTableName, $fname
+				$outArray, $mathTableName, $fname
 			) {
-				$dbw = $dbw ?: MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getPrimaryDatabase();
+				$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getPrimaryDatabase();
 				$dbw->insert( $mathTableName, $outArray, $fname, [ 'IGNORE' ] );
 				LoggerFactory::getInstance( 'Math' )->debug(
 					'Row inserted after db transaction was idle {out}.',
@@ -664,19 +664,19 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	public function readFromDatabase(): bool {
+	public function readFromCache(): bool {
 		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getReplicaDatabase();
 		$rpage = $dbr->selectRow( 'mathlog',
 			$this->dbInArray(),
 			[ 'math_inputhash' => $this->getInputHash() ],
 			__METHOD__ );
 		if ( $rpage !== false ) {
-			$this->initializeFromDatabaseRow( $rpage );
-			$this->storedInDatabase = true;
+			$this->initializeFromCache( $rpage );
+			$this->storedInCache = true;
 			return true;
 		} else {
 			# Missing from the database and/or the render cache
-			$this->storedInDatabase = false;
+			$this->storedInCache = false;
 			return false;
 		}
 	}
@@ -700,9 +700,8 @@ class MathObject extends MathMathML {
 	 * Reads the values from the database but does not overwrite set values with empty values
 	 * @param stdClass $rpage (a database row)
 	 */
-	protected function initializeFromDatabaseRow( $rpage ) {
+	public function initializeFromCache( $rpage ) {
 		$this->inputHash = $rpage->math_inputhash; // MUST NOT BE NULL
-		$this->md5 = '';
 		if ( !empty( $rpage->math_mathml ) ) {
 			$this->mathml = $rpage->math_mathml;
 		}

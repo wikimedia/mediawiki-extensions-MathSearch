@@ -1,6 +1,5 @@
 <?php
 
-use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\MediaWikiServices;
 
 /**
@@ -200,7 +199,9 @@ class SpecialUploadResult extends SpecialPage {
 		$md5 = MathObject::hash2md5( $row['math_inputhash'] );
 		if ( $this->getRequest()->getBool( "wpdisplayFormulae" ) ) {
 			$this->getOutput()->addModuleStyles( [ 'ext.math.styles' ] );
-			$renderer = MathLaTeXML::newFromMd5( $md5 );
+			$renderer = MediaWikiServices::getInstance()
+				->get( 'Math.RendererFactory' )
+				->getFromHash( $md5 );
 			if ( $renderer->render() ) {
 				$renderedMath = $renderer->getHtmlOutput();
 			} else {

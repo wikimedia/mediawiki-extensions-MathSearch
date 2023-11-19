@@ -216,7 +216,7 @@ class MathPerformance extends Maintenance {
 	private static function processImage( $folder, $input ) {
 		$log = LoggerFactory::getInstance( 'MathSearch-maint' );
 		$mathML = new MathMathML( $input );
-		$md5 = $mathML->getMd5();
+		$md5 = $mathML->getInputHash();
 		$path = self::makePath( $folder, $md5 );
 		$log->debug( 'process image', [
 			'tex' => $input,
@@ -253,7 +253,7 @@ class MathPerformance extends Maintenance {
 
 		// LaTeXML */
 		$mathML = new MathLaTeXML( $input );
-		if ( !$mathML->readFromDatabase() ) {
+		if ( !$mathML->readFromCache() ) {
 			$log->error( 'LaTeXML rendering returned false', [
 				'mathml' => $mathML,
 				'tex' => $input,

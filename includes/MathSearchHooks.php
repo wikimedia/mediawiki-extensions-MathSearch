@@ -75,7 +75,7 @@ class MathSearchHooks {
 				$tex = $renderer->getTex();
 				$mo = MathObject::cloneFromRenderer( $renderer );
 				if ( !$mo->isInDatabase() ) {
-					$mo->writeToDatabase();
+					$mo->writeToCache();
 				}
 				$exists = ( $dbr ?? MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
 					->getReplicaDatabase() )->selectRow( 'mathindex',

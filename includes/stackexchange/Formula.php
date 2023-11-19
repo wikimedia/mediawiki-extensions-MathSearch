@@ -34,7 +34,7 @@ class Formula {
 	public function updateSearchIndex() {
 		$renderer = new MathMathML( $this->text, [ 'display' => 'block' ] );
 		$hash = $renderer->getInputHash();
-		$renderer->writeToDatabase();
+		$renderer->writeToCache();
 		// TODO: Fix fake revision ID
 		\MathSearchHooks::writeMathIndex( 1, $this->id, $hash, $this->text );
 	}

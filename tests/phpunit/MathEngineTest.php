@@ -5,13 +5,13 @@ use MediaWiki\Extension\Math\MathLaTeXML;
 class MathEngineTest extends MediaWikiIntegrationTestCase {
 
 	/**
-	 * @covers MediaWiki\Extension\Math\MathMathML::getMd5
+	 * @covers MediaWiki\Extension\Math\MathMathML::getInputHash
 	 */
 	public function testHash() {
 		$test_tex = 'E=mc^2';
-		$test_hash = '826676a6a5ad24552f0d5af1593434cc';
+		$test_hash = 'cd3401b0f0692f2818f217807fa9cc48';
 		$renderer = new MathLaTeXML( $test_tex );
-		$realHash = $renderer->getMd5();
+		$realHash = $renderer->getInputHash();
 		$this->assertEquals( $realHash, $test_hash, 'wrong hash' );
 	}
 
