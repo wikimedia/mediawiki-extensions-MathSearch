@@ -13,11 +13,13 @@
 		]
 	},
 	"mathsearch": "Wiskundig zoeken",
+	"mlpeval": "Evaluatie wiskundige taalverwerking",
 	"formulainfo": "Formulegegevens",
 	"mathdownload": "Zoekresultaten voor wiskunde downloaden",
 	"mathindex": "Wiskunde-index",
 	"mathupload": "Zoekresultaten voor wiskunde indienen",
 	"specialpages-group-mathsearch": "Wiskundig zoeken",
+	"displaytopics": "Onderwerpen tonen",
 	"mathsearch-desc": "Integreert de [http://search.mathweb.org/about.html MathWeb Zoekmachine]",
 	"getequationsbyquery": "Vergelijkingen zoeken",
 	"xquerygenerator": "XQuerygenerator",
@@ -77,5 +79,10 @@
 	"math-search-type-1": "TeX patroon",
 	"math-search-type-2": "xQuery uitdrukking",
 	"math-search-expression-label": "Uitdrukking:",
-	"math-tex2nb-input": "Invoer"
+	"math-tex2nb-header": "Uw eigen invoer opgeven",
+	"math-tex2nb-input": "Invoer",
+	"math-tex2nb-latex": "De volgende LaTeX-invoer…",
+	"datatypes-type-contentmath": "Wiskundige uitdrukking (inhoud)",
+	"wikibase-listdatatypes-contentmath-head": "Wiskundige uitdrukking (inhoud)",
+	"wikibase-listdatatypes-contentmath-body": "Letterlijk gegevensveld voor wiskundige uitdrukkingen, formules, vergelijkingen en dergelijke, uitgedrukt in de DRMF/DLMF-variant van LaTeX."
 }
