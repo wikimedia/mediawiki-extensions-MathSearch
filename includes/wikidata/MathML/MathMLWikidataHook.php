@@ -15,7 +15,7 @@ use Wikimedia\Purtle\RdfWriter;
 class MathMLWikidataHook {
 
 	/**
-	 * Add Datatype "ContentMath" to the Wikibase Repository
+	 * Add Datatype "MathML" to the Wikibase Repository
 	 * @param array &$dataTypeDefinitions
 	 */
 	public static function onWikibaseRepoDataTypes( array &$dataTypeDefinitions ) {
@@ -58,7 +58,7 @@ class MathMLWikidataHook {
 	}
 
 	/**
-	 * Add Datatype "ContentMath" to the Wikibase Client
+	 * Add Datatype "MathML" to the Wikibase Client
 	 *
 	 * @param array[] &$dataTypeDefinitions
 	 */
@@ -69,7 +69,7 @@ class MathMLWikidataHook {
 			return;
 		}
 
-		$dataTypeDefinitions['PT:contentmath'] = [
+		$dataTypeDefinitions['PT:mathml'] = [
 			'value-type' => 'string',
 			'formatter-factory-callback' => static function ( $format, FormatterOptions $options ) {
 				return new MathMLFormatter( $format );
