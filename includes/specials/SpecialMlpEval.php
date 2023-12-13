@@ -187,7 +187,8 @@ class SpecialMlpEval extends SpecialPage {
 		} catch ( Exception $e ) {
 			// empty
 		}
-		$rp = new RandomPage();
+		$rp = MediaWikiServices::getInstance()->getSpecialPageFactory()->getPage( 'Randompage' );
+		$rp->setContext( $this->getContext() );
 		for ( $i = 0; $i < self::MAX_ATTEMPTS; $i++ ) {
 			$title = $rp->getRandomTitle();
 			if ( $title !== null && $this->setPage( $title ) ) {
