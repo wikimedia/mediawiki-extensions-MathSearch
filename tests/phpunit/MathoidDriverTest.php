@@ -56,7 +56,7 @@ class MathoidDriverTest extends MediaWikiIntegrationTestCase {
 		$m = new MathoidDriver( '\\sin(\\invalid)' );
 		$this->assertTrue( $m->texvcInfo() );
 		$this->assertFalse( $m->getSuccess() );
-		$this->assertObjectHasAttribute( 'message', $m->getError() );
+		$this->assertObjectHasProperty( 'message', $m->getError() );
 	}
 
 	/**
