@@ -108,7 +108,7 @@ SPARQL;
 		$date = new TimeValue(
 			$time->format( '\+Y-m-d\TH:i:s\Z' ),
 			0, 0, 0,
-			TimeValue::PRECISION_SECOND,
+			TimeValue::PRECISION_DAY, // T57755
 			TimeValue::CALENDAR_GREGORIAN
 		);
 		$snakTime = new PropertyValueSnak(
