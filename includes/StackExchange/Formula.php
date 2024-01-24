@@ -1,12 +1,12 @@
 <?php
 
-namespace MathSearch\StackExchange;
+namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use MediaWiki\Extension\Math\MathMathML;
 use User;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
-use Wikibase\DataModel\Entity\PropertyId;
+use Wikibase\DataModel\Entity\NumericPropertyId;
 use Wikibase\DataModel\Services\Statement\GuidGenerator;
 use Wikibase\DataModel\Statement\StatementList;
 use Wikibase\Repo\WikibaseRepo;
@@ -50,14 +50,14 @@ class Formula {
 		$statements = new StatementList();
 		$guid = $guidGenerator->newGuid( $item->getId() );
 		// TODO: get from settings
-		$snak = $sf->newSnak( new PropertyId( 'P1' ), 'value', $this->text );
+		$snak = $sf->newSnak( new NumericPropertyId( 'P1' ), 'value', $this->text );
 		$statements->addNewStatement( $snak, null, null, $guid );
 		$guid = $guidGenerator->newGuid( $item->getId() );
-		$snak = $sf->newSnak( new PropertyId( 'P8' ), 'value', (string)$this->id );
+		$snak = $sf->newSnak( new NumericPropertyId( 'P8' ), 'value', (string)$this->id );
 		$statements->addNewStatement( $snak, null, null, $guid );
 		$guid = $guidGenerator->newGuid( $item->getId() );
 		$snak =
-			$sf->newSnak( new PropertyId( 'P16' ), 'value',
+			$sf->newSnak( new NumericPropertyId( 'P16' ), 'value',
 				[ 'entity-type' => 'item', 'numeric-id' => (int)$this->postQId ] );
 		$statements->addNewStatement( $snak, null, null, $guid );
 		$item->setStatements( $statements );

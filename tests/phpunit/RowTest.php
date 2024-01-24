@@ -1,6 +1,6 @@
 <?php
 
-namespace MathSearch\StackExchange;
+namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use MediaWikiIntegrationTestCase;
 
@@ -17,7 +17,7 @@ class RowTest extends MediaWikiIntegrationTestCase {
 XmlFragment;
 
 	/**
-	 * @covers \MathSearch\StackExchange\Row::getFields
+	 * @covers MediaWiki\Extension\MathSearch\StackExchange\Row::getFields
 	 */
 	public function testGetFields() {
 		$f = new Row( self::SAMPLE_ROW, 'Posts_V1.0_0.xml' );
@@ -27,7 +27,7 @@ XmlFragment;
 	}
 
 	/**
-	 * @covers \MathSearch\StackExchange\Row::getIgnoredFieldCount
+	 * @covers MediaWiki\Extension\MathSearch\StackExchange\Row::getIgnoredFieldCount
 	 */
 	public function testGetIgnoredFieldCount() {
 		$f = new Row( self::SAMPLE_ROW, 'Posts_V1.0_0.xml' );

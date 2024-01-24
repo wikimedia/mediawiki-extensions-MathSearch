@@ -1,6 +1,6 @@
 <?php
 
-namespace MathSearch\StackExchange;
+namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use ArrayIterator;
 use XMLReader;

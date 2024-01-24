@@ -141,9 +141,7 @@
 		"MathDownload": "SpecialMathDownloadResult"
 	},
 	"AutoloadNamespaces": {
-		"MathSearch\\StackExchange\\": "includes/stackexchange",
-		"MediaWiki\\Extension\\MathSearch\\Rest\\": "includes/rest",
-		"MediaWiki\\Extension\\MathSearch\\Wikidata\\": "includes/wikidata"
+		"MediaWiki\\Extension\\MathSearch\\": "includes/"
 	},
 	"JobClasses": {
 		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob",

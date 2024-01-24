@@ -1,6 +1,6 @@
 <?php
 
-namespace MathSearch\StackExchange;
+namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use MediaWikiUnitTestCase;
 
@@ -59,7 +59,7 @@ class FieldTest extends MediaWikiUnitTestCase {
 //	}
 
 	/**
-	 * @covers \MathSearch\StackExchange\Field::isKnown
+	 * @covers MediaWiki\Extension\MathSearch\StackExchange\Field::isKnown
 	 */
 	public function testIsKnown() {
 		$f = new Field( 'unknown', '', '' );
@@ -69,7 +69,7 @@ class FieldTest extends MediaWikiUnitTestCase {
 	}
 
 	/**
-	 * @covers \MathSearch\StackExchange\Field::getContent
+	 * @covers MediaWiki\Extension\MathSearch\StackExchange\Field::getContent
 	 */
 	public function testGetContent() {
 		$f = new Field( 'ignore', 'content', 'ignore' );

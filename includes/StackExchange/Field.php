@@ -1,10 +1,10 @@
 <?php
 
-namespace MathSearch\StackExchange;
+namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use InvalidArgumentException;
 use MediaWiki\Logger\LoggerFactory;
-use Wikibase\DataModel\Entity\PropertyId;
+use Wikibase\DataModel\Entity\NumericPropertyId;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\Repo\WikibaseRepo;
 
@@ -167,7 +167,7 @@ class Field {
 	 */
 	public function getSnaks() {
 		$sf = WikibaseRepo::getSnakFactory();
-		$propertyId = new PropertyId( $this->propertyId );
+		$propertyId = new NumericPropertyId( $this->propertyId );
 		$type = WikibaseRepo::getPropertyDataTypeLookup()->getDataTypeIdForProperty( $propertyId );
 		$content = $this->content;
 		if ( !is_array( $content ) ) {

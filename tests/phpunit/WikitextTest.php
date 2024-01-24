@@ -1,6 +1,6 @@
 <?php
 
-namespace MathSearch\StackExchange;
+namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use MediaWikiIntegrationTestCase;
 use SimpleXMLElement;
@@ -18,7 +18,7 @@ class WikitextTest extends MediaWikiIntegrationTestCase {
 XmlFragment;
 
 	/**
-	 * @covers \MathSearch\StackExchange\WikitextGenerator::toWikitext
+	 * @covers MediaWiki\Extension\MathSearch\StackExchange\WikitextGenerator::toWikitext
 	 */
 	public function testGetFields() {
 		$row = new SimpleXMLElement( self::SAMPLE_ROW );

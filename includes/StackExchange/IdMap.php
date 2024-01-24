@@ -1,6 +1,6 @@
 <?php
 
-namespace MathSearch\StackExchange;
+namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\Repo\WikibaseRepo;

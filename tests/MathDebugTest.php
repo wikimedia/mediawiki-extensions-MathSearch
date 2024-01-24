@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @covers MathObject
+ * @group Database
+ */
 class MathDebugTest extends MediaWikiIntegrationTestCase {
 
 	private const SOME_LOG = "Test log.";
