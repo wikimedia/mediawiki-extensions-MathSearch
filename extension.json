@@ -89,7 +89,13 @@
 		"MathSearchInfoPage": "FormulaInfo",
 		"MathSearchPropertySwhid": 1454,
 		"MathSearchPropertyScrUrl": 339,
-		"MathSearchPropertyPointInTime": 140
+		"MathSearchPropertyPointInTime": 140,
+		"MathProfileQueries": {
+			"person": "?item wdt:P31 wd:Q57162",
+			"formula": "?item wdt:P31 wd:Q1025939",
+			"publication": "?item wdt:P1451 ?zblno",
+			"software": "?item wdt:P13 ?swmathID"
+		}
 	},
 	"MessagesDirs": {
 		"MathSearch": [

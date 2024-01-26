@@ -30,12 +30,10 @@ class PageCreationJob extends Job implements GenericParameterJob {
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
 		$pageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
-		foreach ( $this->params['rows'] as $row ) {
-			$name = $row['title'];
-			$qid = $row['qID'];
+		foreach ( $this->params['rows'] as $qid ) {
 			try {
-				self::getLog()->info( "Creating page $name." );
-				$title = Title::newFromText( $this->params['prefix'] . ':' . $name );
+				self::getLog()->info( "Creating page $qid." );
+				$title = Title::newFromText( $this->params['prefix'] . ':' . $qid );
 				$pageContent = ContentHandler::makeContent(
 					'{{' . $this->params['prefix'] . '}}', $title );
 				$pageFactory->newFromTitle( $title )
@@ -44,10 +42,10 @@ class PageCreationJob extends Job implements GenericParameterJob {
 				$item = $lookup->getEntity( ItemId::newFromNumber( $qid ) );
 				$siteLink = new SiteLink( 'mardi', $title->getPrefixedText() );
 				$item->addSiteLink( $siteLink );
-				self::getLog()->info( "Linking page $name to $qid." );
+				self::getLog()->info( "Linking page $qid." );
 				$store->saveEntity( $item, "Added link to MaRDI item.", $user );
 			} catch ( Throwable $ex ) {
-				self::getLog()->error( "Skip page processing page '$name' (Q$qid).", [ $ex ] );
+				self::getLog()->error( "Skip page processing page Q$qid.", [ $ex ] );
 			}
 		}
 

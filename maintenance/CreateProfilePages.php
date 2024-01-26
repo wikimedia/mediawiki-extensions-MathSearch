@@ -28,50 +28,46 @@ class CreateProfilePages extends Maintenance {
 	/** @var bool */
 	private $overwrite;
 
-	/** @var bool */
-	private bool $person;
 	private $jobQueueGroup;
 	private $jobname;
 
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( "Mass creates pages from the SPARQL endpoint " );
+		$this->addArg( 'type', 'Type of profile to be created.', true, false );
 		$this->addOption(
 			'overwrite', 'Overwrite existing pages with the same name.', false, false, "o"
 		);
-		$this->addOption(
-			'person', 'Create persons instead of FHP.', false, false, "p"
-		);
+
 		$this->requireExtension( 'MathSearch' );
 		$this->requireExtension( 'LinkedWiki' );
 	}
 
-	private function getQuery( $offset, $limit = self::BATCH_SIZE ) {
-		return $this->person ?
-			<<<SPARQL
+	private function getQuery( int $offset, int $limit = self::BATCH_SIZE ) {
+		global $wgMathProfileQueries;
+		return <<<SPARQL
 PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
-
-SELECT ?item
-WHERE { ?item wdt:P31 wd:Q57162 .}
+SELECT ?item WHERE {
+${wgMathProfileQueries[$this->getArg( 'type' )]}
+}
 ORDER by ?item
-LIMIT $limit OFFSET $offset
-SPARQL
-			: <<<SPARQL
-PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
-PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
-SELECT ?item ?title
-WHERE { ?item wdt:P2 ?title ;
-              wdt:P31 wd:Q1025939}
-LIMIT $limit OFFSET $offset
+LIMIT $limit
+OFFSET $offset
 SPARQL;
 	}
 
 	public function execute() {
+		global $wgMathProfileQueries;
+		if ( !isset( $wgMathProfileQueries[$this->getArg( 'type' )] ) ) {
+			$this->error( "Unknown type of profile to be created.\n" );
+			$this->error( "Available types are: " . implode( ', ', array_keys( $wgMathProfileQueries ) ) . "\n" );
+			return;
+		}
+
 		$this->jobQueueGroup = MediaWikiServices::getInstance()->getJobQueueGroup();
 		$this->jobname = 'import' . date( 'ymdhms' );
 		$this->overwrite = $this->getOption( 'overwrite' );
-		$this->person = $this->getOption( 'person' );
 
 		if ( $this->overwrite ) {
 			$this->output( "Loaded with option overwrite enabled .\n" );
@@ -89,10 +85,7 @@ SPARQL;
 			foreach ( $rs['result']['rows'] as $row ) {
 				$qID = preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] );
 
-				$table[] = [
-				'qID' => $qID,
-				'title' => $this->person ? $qID : $row['title'],
-				];
+				$table[] = $qID;
 				if ( count( $table ) > self::PAGES_PER_JOB ) {
 					$this->pushJob( $table, $segment );
 					$segment++;
@@ -116,7 +109,7 @@ SPARQL;
 				'jobname' => $this->jobname,
 				'rows' => $table,
 				'segment' => $segment, // just for the logs
-				'prefix' => $this->person ? 'Person' : 'Formula'
+				'prefix' => $this->getArg( 'type' ),
 			] ) );
 	}
 
