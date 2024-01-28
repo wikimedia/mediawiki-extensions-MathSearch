@@ -80,8 +80,12 @@ SPARQL;
 		$table = [];
 		$segment = 0;
 		do {
-			$rs = $sp->query( $this->getQuery( $offset ) );
 			$this->output( 'Read from offset ' . $offset . ".\n" );
+			$rs = $sp->query( $this->getQuery( $offset ) );
+			if ( !$rs ) {
+				$this->output( "No results retrieved!\n" );
+				break;
+			}
 			foreach ( $rs['result']['rows'] as $row ) {
 				$qID = preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] );
 
