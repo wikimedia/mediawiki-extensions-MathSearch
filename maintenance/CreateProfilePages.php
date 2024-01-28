@@ -23,7 +23,7 @@ use MediaWiki\MediaWikiServices;
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class CreateProfilePages extends Maintenance {
-	private const BATCH_SIZE = 10000;
+	private int $batch_size = 100000;
 	private const PAGES_PER_JOB = 100;
 	/** @var bool */
 	private $overwrite;
@@ -35,6 +35,8 @@ class CreateProfilePages extends Maintenance {
 		parent::__construct();
 		$this->addDescription( "Mass creates pages from the SPARQL endpoint " );
 		$this->addArg( 'type', 'Type of profile to be created.', true, false );
+		$this->addOption( 'batchSize',
+			'Number of items to be retrieved per SPARQL query.', false, true, "b" );
 		$this->addOption(
 			'overwrite', 'Overwrite existing pages with the same name.', false, false, "o"
 		);
@@ -43,15 +45,15 @@ class CreateProfilePages extends Maintenance {
 		$this->requireExtension( 'LinkedWiki' );
 	}
 
-	private function getQuery( int $offset, int $limit = self::BATCH_SIZE ) {
+	private function getQuery( int $offset, int $limit ) {
 		global $wgMathProfileQueries;
 		return <<<SPARQL
 PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
-SELECT ?item WHERE {
+SELECT ?qid WHERE {
+    BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid)
 ${wgMathProfileQueries[$this->getArg( 'type' )]}
 }
-ORDER by ?item
 LIMIT $limit
 OFFSET $offset
 SPARQL;
@@ -64,6 +66,7 @@ SPARQL;
 			$this->error( "Available types are: " . implode( ', ', array_keys( $wgMathProfileQueries ) ) . "\n" );
 			return;
 		}
+		$this->batch_size = $this->getOption( 'batchSize', $this->batch_size );
 
 		$this->jobQueueGroup = MediaWikiServices::getInstance()->getJobQueueGroup();
 		$this->jobname = 'import' . date( 'ymdhms' );
@@ -81,24 +84,28 @@ SPARQL;
 		$segment = 0;
 		do {
 			$this->output( 'Read from offset ' . $offset . ".\n" );
-			$rs = $sp->query( $this->getQuery( $offset ) );
+			$rs = $sp->query( $this->getQuery( $offset, $this->batch_size ) );
 			if ( !$rs ) {
 				$this->output( "No results retrieved!\n" );
 				break;
+			} else {
+				$this->output( "Retrieved " . count( $rs['result']['rows'] ) . " results.\n" );
 			}
 			foreach ( $rs['result']['rows'] as $row ) {
-				$qID = preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] );
+				$qID = preg_replace( '/.*Q?(\d+)$/', '$1', $row['qid'] );
 
 				$table[] = $qID;
 				if ( count( $table ) > self::PAGES_PER_JOB ) {
 					$this->pushJob( $table, $segment );
+					$this->output( "Pushed jobs to segment $segment.\n" );
 					$segment++;
 					$table = [];
 				}
 			}
-			$offset += self::BATCH_SIZE;
-		} while ( count( $rs['result']['rows'] ) == self::BATCH_SIZE );
+			$offset += $this->batch_size;
+		} while ( count( $rs['result']['rows'] ) == $this->batch_size );
 		$this->pushJob( $table, $segment );
+		$this->output( "Pushed jobs to last segment $segment.\n" );
 	}
 
 	/**
