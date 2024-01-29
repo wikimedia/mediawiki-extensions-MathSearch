@@ -92,7 +92,7 @@ SPARQL;
 				$this->output( "Retrieved " . count( $rs['result']['rows'] ) . " results.\n" );
 			}
 			foreach ( $rs['result']['rows'] as $row ) {
-				$qID = preg_replace( '/.*Q?(\d+)$/', '$1', $row['qid'] );
+				$qID = $row['qid'];
 
 				$table[] = $qID;
 				if ( count( $table ) > self::PAGES_PER_JOB ) {
