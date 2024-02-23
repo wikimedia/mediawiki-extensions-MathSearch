@@ -135,7 +135,7 @@
 	"math-wmc-display-formulae-label": "Viser visningen av innsendte formler",
 	"math-wmc-display-formulae-help": "Anbefales ikke for store innputtfiler.",
 	"action-mathwmcsubmit": "send resultater til NTCIR Wikipedia Math Search Task",
-	"right-mathwmcsubmit": "Kan sende resultater til NTCIR Wikipedia Math Search Task",
+	"right-mathwmcsubmit": "Sende resultater til NTCIR Wikipedia Math Search Task",
 	"math-search-term": "* $4 begrep-$1: $3-uttrykk «$2» med {{PLURAL:$5|ett resultat|$5 resultater}}.",
 	"math-search-relation-label": "Relasjon:",
 	"math-search-relation-0": "og",
