@@ -18,20 +18,19 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Extension\MathSearch\Graph\Job\SetProfileType;
 use MediaWiki\Extension\MathSearch\Graph\Map;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
-class CreateProfilePages extends Maintenance {
-	private int $batch_size = 100000;
-	private $overwrite;
+class ProfilePages extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
-		$this->addDescription( "Mass creates pages from the SPARQL endpoint " );
-		$this->addArg( 'type', 'Type of profile to be created.', true, false );
-		$this->addOption( 'batchSize',
-			'Number of items to be retrieved per SPARQL query.', false, true, "b" );
+		$this->addDescription( "Mass perform actions for profile pages." );
+		$this->addArg( 'action', 'Action to be performed. ' . $this->printAvailableActions() );
+		$this->addArg( 'type', 'Type of profile to be addressed. ' . $this->printProfileTypes() );
+		$this->setBatchSize( 100000 );
 		$this->addOption(
 			'overwrite', 'Overwrite existing pages with the same name.', false, false, "o"
 		);
@@ -41,27 +40,48 @@ class CreateProfilePages extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgMathProfileQueries;
+		global $wgMathProfileQueries, $wgMathProfileQIdMap;
 		$type = $this->getArg( 'type' );
 		if ( !isset( $wgMathProfileQueries[$type] ) ) {
 			$this->error( "Unknown type of profile to be created.\n" );
-			$this->error( "Available types are: " . implode( ', ', array_keys( $wgMathProfileQueries ) ) . "\n" );
+			$this->error( $this->printProfileTypes() );
+			return;
+		}
+		$jobOptions = [
+			'overwrite' => $this->getOption( 'overwrite' )
+		];
+		$action = $this->getArg( 'action' );
+		if ( $action === 'create' ) {
+			$jobType = PageCreationJob::class;
+		} elseif ( $action === 'load' ) {
+			$jobType = SetProfileType::class;
+			$jobOptions['qType'] = $wgMathProfileQIdMap[$type];
+		} else {
+			$this->error( "Unknown action to be performed.\n" );
+			$this->error( $this->printAvailableActions() );
 			return;
 		}
 
-		if ( $this->overwrite ) {
-			$this->output( "Loaded with option overwrite enabled .\n" );
-		}
 		( new Map() )->getJobs(
 			\Closure::fromCallable( [ $this, 'output' ] ),
-			$this->getOption( 'batchSize', $this->batch_size ),
+			$this->getOption( 'batchSize', $this->getBatchSize() ),
 			$type,
-			PageCreationJob::class
+			$jobType,
+			$jobOptions
 		);
+	}
+
+	public function printProfileTypes(): string {
+		global $wgMathProfileQueries;
+		return "Available types are: " . implode( ', ', array_keys( $wgMathProfileQueries ) ) .
+			"\n";
+	}
+
+	public function printAvailableActions(): string {
+		return "Available actions are: create, load.\n";
 	}
 
 }
 
-$maintClass = CreateProfilePages::class;
-/** @noinspection PhpIncludeInspection */
+$maintClass = ProfilePages::class;
 require_once RUN_MAINTENANCE_IF_MAIN;

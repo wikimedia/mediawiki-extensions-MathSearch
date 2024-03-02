@@ -90,11 +90,18 @@
 		"MathSearchPropertySwhid": 1454,
 		"MathSearchPropertyScrUrl": 339,
 		"MathSearchPropertyPointInTime": 140,
+		"MathSearchPropertyProfileType": 1460,
 		"MathProfileQueries": {
 			"person": "?item wdt:P31 wd:Q57162",
 			"formula": "?item wdt:P31 wd:Q1025939",
 			"publication": "?item wdt:P1451 ?zblno",
 			"software": "?item wdt:P13 ?swmathID"
+		},
+		"MathProfileQIdMap": {
+			"person": "Q5976445",
+			"formula": "Q5981696",
+			"publication": "Q5976449",
+			"software": "Q5976450"
 		}
 	},
 	"MessagesDirs": {
@@ -151,7 +158,8 @@
 	},
 	"JobClasses": {
 		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob",
-		"CreateProfilePages": "PageCreationJob"
+		"CreateProfilePages": "PageCreationJob",
+		"SetProfileType": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\SetProfileType"
 	},
 	"RestRoutes": [
 		{
