@@ -11,19 +11,20 @@ class Map {
 	private \JobQueueGroup $jobQueueGroup;
 
 	public function pushJob(
-		array $table, int $segment, string $jobname, string $type, string $jobType
+		array $table, int $segment, string $jobType, array $options
 	): void {
-		$this->jobQueueGroup->lazyPush( new $jobType( [
-			'jobname' => $jobname,
-			'rows' => $table,
-			'segment' => $segment,
-			'prefix' => $type,
-		] ) );
+		$options[ 'rows' ] = $table;
+		$options[ 'segment' ] = $segment;
+		$this->jobQueueGroup->lazyPush( new $jobType( $options ) );
 	}
 
-	public function getJobs( callable $output, int $batch_size, string $type, string $jobType ): void {
+	public function getJobs(
+		callable $output, int $batch_size, string $type, string $jobType, array $jobOptions = []
+	): void {
 		$this->jobQueueGroup = MediaWikiServices::getInstance()->getJobQueueGroup();
-		$jobname = 'import' . date( 'ymdhms' );
+		$jobOptions[ 'jobname' ] = 'import' . date( 'ymdhms' );
+		$jobOptions[ 'prefix' ] = $type;
+
 		$configFactory =
 			MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
 		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
@@ -47,7 +48,7 @@ class Map {
 
 				$table[] = $qID;
 				if ( count( $table ) > self::PAGES_PER_JOB ) {
-					$this->pushJob( $table, $segment, $jobname, $type, $jobType );
+					$this->pushJob( $table, $segment, $jobType, $jobOptions );
 					$output( "Pushed jobs to segment $segment.\n" );
 					$segment++;
 					$table = [];
@@ -55,7 +56,7 @@ class Map {
 			}
 			$offset += $this->batch_size;
 		} while ( count( $rs['result']['rows'] ) == $this->batch_size );
-		$this->pushJob( $table, $segment, $jobname, $type, $jobType );
+		$this->pushJob( $table, $segment, $jobType, $jobOptions );
 		$output( "Pushed jobs to last segment $segment.\n" );
 	}
 }
