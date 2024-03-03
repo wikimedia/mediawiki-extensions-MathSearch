@@ -40,6 +40,9 @@ class PageCreationJob extends Job implements GenericParameterJob {
 					->doUserEditContent( $pageContent, $user,
 						'Created automatically from ' . $this->params['jobname'] );
 				$item = $lookup->getEntity( ItemId::newFromNumber( $qid ) );
+				if ( $this->params['overwrite'] ) {
+					$item->removeSiteLink( 'mardi' );
+				}
 				$siteLink = new SiteLink( 'mardi', $title->getPrefixedText() );
 				$item->addSiteLink( $siteLink );
 				self::getLog()->info( "Linking page $qid." );
