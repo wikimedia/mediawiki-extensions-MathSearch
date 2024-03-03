@@ -46,7 +46,7 @@ class PageCreationJob extends Job implements GenericParameterJob {
 				$siteLink = new SiteLink( 'mardi', $title->getPrefixedText() );
 				$item->addSiteLink( $siteLink );
 				self::getLog()->info( "Linking page $qid." );
-				$store->saveEntity( $item, "Added link to MaRDI item.", $user );
+				$store->saveEntity( $item, "Added link to MaRDI item.", $user, EDIT_FORCE_BOT );
 			} catch ( Throwable $ex ) {
 				self::getLog()->error( "Skip page processing page Q$qid.", [ $ex ] );
 			}

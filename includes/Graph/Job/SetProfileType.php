@@ -40,8 +40,9 @@ class SetProfileType extends Job implements GenericParameterJob {
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
 		$guidGenerator = new GuidGenerator();
+		$pProfileType = NumericPropertyId::newFromNumber( $wgMathSearchPropertyProfileType );
 		$mainSnak = new PropertyValueSnak(
-			NumericPropertyId::newFromNumber( $wgMathSearchPropertyProfileType ),
+			$pProfileType,
 			new EntityIdValue( new ItemId( $this->params['qType'] ) ) );
 		foreach ( $this->params['rows'] as $qid ) {
 			try {
@@ -53,13 +54,25 @@ class SetProfileType extends Job implements GenericParameterJob {
 				}
 				/** @var StatementList $statements */
 				$statements = $item->getStatements();
+				$profileTypeStatements = $statements->getByPropertyId( $pProfileType );
+				if ( !$profileTypeStatements->isEmpty() ) {
+					if ( $this->params['overwrite'] ) {
+						foreach ( $profileTypeStatements->getIterator() as $snak ) {
+							$statements->removeStatementsWithGuid( $snak->getGuid() );
+						}
+					} else {
+						self::getLog()->info( "Skip page Q$qid." );
+						continue;
+					}
+				}
 				$statements->addNewStatement(
 					$mainSnak,
 					[],
 					null,
 					$guidGenerator->newGuid( $item->getId() ) );
 				$item->setStatements( $statements );
-				$store->saveEntity( $item, "Added link to MaRDI item.", $user );
+				$store->saveEntity( $item, "Set profile property.", $user,
+					EDIT_FORCE_BOT );
 			} catch ( Throwable $ex ) {
 				self::getLog()->error( "Skip page processing page Q$qid.", [ $ex ] );
 			}
