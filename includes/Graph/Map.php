@@ -35,7 +35,9 @@ class Map {
 		$segment = 0;
 		do {
 			$output( 'Read from offset ' . $offset . ".\n" );
-			$query = Query::getQueryFromConfig( $type, $offset, $batch_size );
+			$query = $jobType == 'load' ?
+				Query::getQueryFromConfig( $type, $offset, $batch_size ) :
+				Query::getQueryFromProfileType( $type, $offset, $batch_size );
 			$rs = $sp->query( $query );
 			if ( !$rs ) {
 				$output( "No results retrieved!\n" );

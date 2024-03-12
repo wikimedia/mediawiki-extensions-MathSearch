@@ -16,4 +16,18 @@ LIMIT $limit
 OFFSET $offset
 SPARQL;
 	}
+
+	public static function getQueryFromProfileType( string $type, int $offset, int $limit ) {
+		global $wgMathSearchPropertyProfileType, $wgMathProfileQIdMap;
+		return <<<SPARQL
+PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
+PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
+SELECT ?qid WHERE {
+    BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid)
+    ?item wdt:P$wgMathSearchPropertyProfileType wd:${wgMathProfileQIdMap[$type]}
+}
+LIMIT $limit
+OFFSET $offset
+SPARQL;
+	}
 }
