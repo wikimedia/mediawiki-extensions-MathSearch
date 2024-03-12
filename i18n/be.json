@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Artsiom91"
+			"Artsiom91",
+			"Plaga med"
 		]
 	},
+	"math-wmc-download-button": "Спампаваць",
 	"datatypes-type-contentmath": "Матэматычны выраз",
 	"wikibase-listdatatypes-contentmath-head": "Матэматычны выраз (змест)"
 }
