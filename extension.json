@@ -40,8 +40,7 @@
 		"MathIdGenerator": "includes/MathIdGenerator.php",
 		"MathHighlighter": "includes/MathHighlighter.php",
 		"MlpEvalForm": "includes/MlpEvalForm.php",
-		"WikidataDriver": "includes/WikidataDriver.php",
-		"PageCreationJob": "includes/PageCreationJob.php"
+		"WikidataDriver": "includes/WikidataDriver.php"
 	},
 	"AvailableRights": [
 		"mathwmcsubmit"
@@ -158,7 +157,7 @@
 	},
 	"JobClasses": {
 		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob",
-		"CreateProfilePages": "PageCreationJob",
+		"CreateProfilePages": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\PageCreation",
 		"SetProfileType": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\SetProfileType"
 	},
 	"RestRoutes": [

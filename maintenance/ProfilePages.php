@@ -18,6 +18,7 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Extension\MathSearch\Graph\Job\PageCreation;
 use MediaWiki\Extension\MathSearch\Graph\Job\SetProfileType;
 use MediaWiki\Extension\MathSearch\Graph\Map;
 
@@ -52,7 +53,7 @@ class ProfilePages extends Maintenance {
 		];
 		$action = $this->getArg( 'action' );
 		if ( $action === 'create' ) {
-			$jobType = PageCreationJob::class;
+			$jobType = PageCreation::class;
 		} elseif ( $action === 'load' ) {
 			$jobType = SetProfileType::class;
 			$jobOptions['qType'] = $wgMathProfileQIdMap[$type];
