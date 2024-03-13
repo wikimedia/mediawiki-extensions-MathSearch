@@ -105,10 +105,11 @@ SPARQL;
 			NumericPropertyId::newFromNumber( $wgMathSearchPropertyScrUrl ),
 			 new StringValue( $url ) );
 		$time = new DateTimeImmutable( $pit );
+		// Currently DAY is the maximal precision and the time must be 0:00:00 T57755
 		$date = new TimeValue(
-			$time->format( '\+Y-m-d\TH:i:s\Z' ),
+			$time->format( '\+Y-m-d\T00:00:00\Z' ),
 			0, 0, 0,
-			TimeValue::PRECISION_DAY, // T57755
+			TimeValue::PRECISION_DAY,
 			TimeValue::CALENDAR_GREGORIAN
 		);
 		$snakTime = new PropertyValueSnak(
@@ -122,7 +123,10 @@ SPARQL;
 			null,
 			$this->guidGenerator->newGuid( $item->getId() ) );
 		$item->setStatements( $statements );
-		$this->entityStore->saveEntity( $item, "SWHID from Software Heritage", $this->mwUser );
+		$this->entityStore->saveEntity( $item,
+			"SWHID from Software Heritage",
+			$this->mwUser,
+			EDIT_FORCE_BOT );
 	}
 
 }
