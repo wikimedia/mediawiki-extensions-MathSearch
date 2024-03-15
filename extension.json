@@ -96,6 +96,15 @@
 			"publication": "?item wdt:P1451 ?zblno",
 			"software": "?item wdt:P13 ?swmathID"
 		},
+		"MathOpenAlexQIdMap": {
+			"prime_landing_page_url": "P205",
+			"best_landing_page_url": "P205",
+			"best_pdf_url": "P205",
+			"doi": "P27",
+			"document": "P1451",
+			"openalex_id": "P388",
+			"openalex_title": "P159"
+		},
 		"MathProfileQIdMap": {
 			"person": "Q5976445",
 			"formula": "Q5981696",
@@ -158,7 +167,8 @@
 	"JobClasses": {
 		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob",
 		"CreateProfilePages": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\PageCreation",
-		"SetProfileType": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\SetProfileType"
+		"SetProfileType": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\SetProfileType",
+		"OpenAlex": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\OpenAlex"
 	},
 	"RestRoutes": [
 		{

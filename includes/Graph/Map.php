@@ -2,13 +2,18 @@
 
 namespace MediaWiki\Extension\MathSearch\Graph;
 
+use JobQueueGroup;
 use MediaWiki\MediaWikiServices;
 use ToolsParser;
 
 class Map {
 	private int $batch_size = 100000;
 	private const PAGES_PER_JOB = 100;
-	private \JobQueueGroup $jobQueueGroup;
+	private JobQueueGroup $jobQueueGroup;
+
+	public function __construct( JobQueueGroup $jobQueueGroup = null ) {
+		$this->jobQueueGroup = $jobQueueGroup ?? MediaWikiServices::getInstance()->getJobQueueGroup();
+	}
 
 	public function pushJob(
 		array $table, int $segment, string $jobType, array $options
@@ -21,7 +26,6 @@ class Map {
 	public function getJobs(
 		callable $output, int $batch_size, string $type, string $jobType, array $jobOptions = []
 	): void {
-		$this->jobQueueGroup = MediaWikiServices::getInstance()->getJobQueueGroup();
 		$jobOptions[ 'jobname' ] = 'import' . date( 'ymdhms' );
 		$jobOptions[ 'prefix' ] = $type;
 
