@@ -2,11 +2,6 @@
 
 namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
-use GenericParameterJob;
-use Job;
-use MediaWiki\Auth\AuthManager;
-use MediaWiki\Logger\LoggerFactory;
-use MediaWiki\MediaWikiServices;
 use Throwable;
 use Wikibase\DataModel\Entity\EntityIdValue;
 use Wikibase\DataModel\Entity\ItemId;
@@ -16,27 +11,14 @@ use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Statement\StatementList;
 use Wikibase\Repo\WikibaseRepo;
 
-class SetProfileType extends Job implements GenericParameterJob {
+class SetProfileType extends GraphJob {
 	public function __construct( $params ) {
 		parent::__construct( 'SetProfileType', $params );
 	}
 
-	private static function getLog() {
-		return LoggerFactory::getInstance( 'MathSearch' );
-	}
-
 	public function run(): bool {
 		global $wgMathSearchPropertyProfileType;
-		$user = MediaWikiServices::getInstance()->getUserFactory()
-			->newFromName( $this->params['jobname'] );
-		$exists = ( $user->idForName() !== 0 );
-		if ( !$exists ) {
-			MediaWikiServices::getInstance()->getAuthManager()->autoCreateUser(
-				$user,
-				AuthManager::AUTOCREATE_SOURCE_MAINT,
-				false
-			);
-		}
+		$user = $this->getUser();
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
 		$guidGenerator = new GuidGenerator();

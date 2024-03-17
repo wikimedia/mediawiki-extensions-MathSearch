@@ -56,6 +56,7 @@ class ImportOpenAlex extends Maintenance {
 			try {
 				$table += $this->readline( $line, $columns );
 				if ( count( $table ) > $this->getBatchSize() ) {
+					$this->output( "Push jobs to segment $segment.\n" );
 					$graphMap->pushJob(
 						$table,
 						$segment++,
@@ -77,6 +78,8 @@ class ImportOpenAlex extends Maintenance {
 				'MediaWiki\Extension\MathSearch\Graph\Job\OpenAlex',
 				[ 'jobname' => $jobname ] );
 		}
+		$this->output( "Pushed last $segment.\n" );
+
 		fclose( $handle );
 	}
 

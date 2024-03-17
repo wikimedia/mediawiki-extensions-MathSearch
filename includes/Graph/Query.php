@@ -2,6 +2,9 @@
 
 namespace MediaWiki\Extension\MathSearch\Graph;
 
+use MediaWiki\MediaWikiServices;
+use ToolsParser;
+
 class Query {
 	public static function getQueryFromConfig( string $type, int $offset, int $limit ) {
 		global $wgMathProfileQueries;
@@ -31,5 +34,31 @@ SELECT ?qid WHERE {
 LIMIT $limit
 OFFSET $offset
 SPARQL;
+	}
+
+	public static function getQidFromDe( string $des ) {
+		return /** @lang Sparql */ <<<SPARQL
+SELECT
+  (REPLACE(STR(?item), ".*Q", "") AS ?qid)
+  ?de
+WHERE {
+  VALUES ?de  { $des }
+?item wdt:P1451 ?de
+}
+SPARQL;
+	}
+
+	public static function getResults( string $query ) {
+		$configFactory =
+			MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
+		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
+		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
+		$sp = $arrEndpoint["endpoint"];
+		$rs = $sp->query( $query );
+		if ( !$rs ) {
+			return [];
+		} else {
+			return $rs['result']['rows'];
+		}
 	}
 }

@@ -2,10 +2,6 @@
 namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
 use ContentHandler;
-use GenericParameterJob;
-use Job;
-use MediaWiki\Auth\AuthManager;
-use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
 use Throwable;
@@ -13,26 +9,14 @@ use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\SiteLink;
 use Wikibase\Repo\WikibaseRepo;
 
-class PageCreation extends Job implements GenericParameterJob {
+class PageCreation extends GraphJob {
 	public function __construct( $params ) {
 		parent::__construct( 'CreateProfilePages', $params );
 	}
 
-	private static function getLog() {
-		return LoggerFactory::getInstance( 'MathSearch' );
-	}
-
 	public function run(): bool {
-		$user = MediaWikiServices::getInstance()->getUserFactory()
-			->newFromName( $this->params['jobname'] );
-		$exists = ( $user->idForName() !== 0 );
-		if ( !$exists ) {
-			MediaWikiServices::getInstance()->getAuthManager()->autoCreateUser(
-				$user,
-				AuthManager::AUTOCREATE_SOURCE_MAINT,
-				false
-			);
-		}
+		$user = $this->getUser();
+
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
 		$pageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
