@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Robby",
-			"Soued031"
+			"Soued031",
+			"Volvox"
 		]
 	},
 	"mathsearch": "Math Search",
@@ -16,6 +17,7 @@
 	"math-lp-2-domain-option-2": "Physik",
 	"math-lp-2-domain-option-3": "Chimie",
 	"math-lp-2-domain-option-4": "Biologie",
+	"math-lp-2-domain-option-6": "Informatik",
 	"math-lp-2-domain-option-7": "Medezin",
 	"math-lp-2-domain-option-8": "Economie",
 	"math-lp-3-pretty-option-3": "Ech kann et net soen.",
