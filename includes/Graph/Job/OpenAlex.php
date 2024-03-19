@@ -89,7 +89,7 @@ class OpenAlex extends GraphJob {
 			$propertyId = $this->getNumericPropertyId( $key );
 			$profileTypeStatements = $statements->getByPropertyId( $propertyId );
 			if ( !$profileTypeStatements->isEmpty() ) {
-				self::getLog()->debug( "$propertyId of Zbl $de already set." );
+				self::getLog()->debug( "$key of Zbl $de already set." );
 				continue;
 			}
 			if ( $key === $wgMathOpenAlexQIdMap['openalex_title'] && $item->getLabels()->isEmpty() ) {
