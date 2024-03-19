@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
+use DataValues\MonolingualTextValue;
 use DataValues\StringValue;
 use MediaWiki\Extension\MathSearch\Graph\Query;
 use Throwable;
@@ -96,7 +97,13 @@ class OpenAlex extends GraphJob {
 			}
 
 			$changed = true;
-			$mainSnak = new PropertyValueSnak( $propertyId, new StringValue( $value ) );
+
+			$mainSnak = new PropertyValueSnak(
+				$propertyId,
+				$key === $wgMathOpenAlexQIdMap['openalex_title'] ?
+					new MonolingualTextValue( 'en',  $value )
+					: new StringValue( $value
+				) );
 			$statements->addNewStatement( $mainSnak, [], null,
 				$this->guidGenerator->newGuid( $item->getId() ) );
 		}
