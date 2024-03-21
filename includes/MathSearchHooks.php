@@ -324,14 +324,24 @@ class MathSearchHooks {
 	 * This occurs when an article is undeleted (restored).
 	 * The formulae of the undeleted article are restored then in the index.
 	 * @param Title $title Title corresponding to the article restored
-	 * @param bool $create Whether or not the restoration caused the page to be created.
+	 * @param bool $create Whether the restoration caused the page to be created.
 	 * @param string $comment Comment explaining the undeletion.
 	 * @param int $oldPageId ID of page previously deleted. ID will be used for restored page.
 	 * @param array $restoredPages Set of page IDs that have revisions restored for undelete.
+	 * @return true
 	 */
 	public static function onArticleUndelete(
 		Title $title, $create, $comment, $oldPageId, $restoredPages
 	) {
+		if ( MediaWikiServices::getInstance()
+				->getRevisionLookup()
+				->getRevisionByPageId( $oldPageId )
+				->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
+				->getModel() !== CONTENT_MODEL_WIKITEXT
+		) {
+			// Skip pages that do not contain wikitext
+			return true;
+		}
 		$revId = $title->getLatestRevID();
 		$harvest = self::getMwsHarvest( $revId );
 		$mathEngineBaseX = new MathEngineBaseX();
@@ -340,6 +350,7 @@ class MathSearchHooks {
 		} else {
 			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId failed." );
 		}
+		return true;
 	}
 
 	/**
