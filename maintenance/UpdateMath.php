@@ -274,12 +274,16 @@ class UpdateMath extends Maintenance {
 
 	public function execute() {
 		global $wgMathValidModes;
-		$this->dbw = wfGetDB( DB_MASTER );
+		$this->dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$this->purge = $this->getOption( "purge", false );
 		$this->verbose = $this->getOption( "verbose", false );
 		$this->renderingMode = $this->getOption( "mode", 'latexml' );
 		$this->chunkSize = $this->getOption( 'chunk-size', $this->chunkSize );
-		$this->db = wfGetDB( DB_MASTER );
+		$this->db = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$wgMathValidModes[] = $this->renderingMode;
 		$this->output( "Loaded.\n" );
 		$this->time = microtime( true );

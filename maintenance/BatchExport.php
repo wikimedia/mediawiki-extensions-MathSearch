@@ -18,6 +18,7 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\MediaWikiServices;
 use UtfNormal\Utils;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
@@ -38,7 +39,9 @@ class BatchExport extends Maintenance {
 			$this->output( "{$dir} is not a directory.\n" );
 			exit( 1 );
 		}
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		// runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 		// runName VARCHAR(45),
 		// userId INT UNSIGNED,

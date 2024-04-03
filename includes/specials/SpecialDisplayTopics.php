@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * Lets the user import a CSV file with the results
  *
@@ -39,7 +41,9 @@ class SpecialDisplayTopics extends SpecialPage {
 			return;
 		}
 
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$cols = [ '#', 'fId', '#Var', '#matches', 'query', 'reference' ];
 		$res = $dbw->query( <<<SQL
 SELECT
@@ -68,7 +72,9 @@ SQL
 		}
 
 		$out = $this->getOutput();
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$qId = $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qID' => $query ] );
 		if ( !$qId ) {
 			$out->addWikiTextAsInterface( "Topic $query does not exist." );
@@ -84,7 +90,9 @@ SQL
 	 */
 	private function printMostFrequentRuns( $qId ) {
 		$out = $this->getOutput();
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$res = $dbr->query( "select
 			  math_input as            rendering,
 			  count(distinct runs.userId) cntUser,
@@ -119,7 +127,9 @@ SQL
 	private function printIndividualResults( $qId ) {
 		$out = $this->getOutput();
 		$out->addWikiTextAsInterface( "== Individual results ==" );
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		if ( !$dbr->tableExists( 'math_wmc_page_ranks' ) ) {
 			MathSearchUtils::createEvaluationTables();
 		}

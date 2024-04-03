@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * Lets the user download a CSV file with the results
  *
@@ -13,7 +15,9 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 
 	public static function run2CSV( $runId ) {
 		$out = ImportCsv::getCsvColumnHeader() . "\n";
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$res = $dbr->select( 'math_wmc_results',
 			[ 'qId' , 'oldId' , 'fId' ],
 			[ 'runId' => $runId ],

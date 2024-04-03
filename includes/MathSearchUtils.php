@@ -1,11 +1,14 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
 use Wikimedia\Rdbms\IResultWrapper;
 
 class MathSearchUtils {
 
 	private static function addExtensionTable( $name, $folder = '' ) {
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$sql = file_get_contents( __DIR__ . "/../db/wmc/{$folder}/{$name}.sql" );
 		$dbw->query( $sql );
 	}

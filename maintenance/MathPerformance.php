@@ -24,6 +24,7 @@ use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRestbaseInterface;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
@@ -61,7 +62,9 @@ class MathPerformance extends Maintenance {
 
 	public function execute() {
 		global $wgMathValidModes;
-		$this->db = wfGetDB( DB_MASTER );
+		$this->db = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$wgMathValidModes[] = $this->renderingMode;
 		$this->verbose = $this->getOption( 'verbose', false );
 		$this->vPrint( "Loaded." );

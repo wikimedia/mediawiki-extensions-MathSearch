@@ -10,6 +10,7 @@
  */
 
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\MediaWikiServices;
 
 class GetEquationsByQuery extends SpecialPage {
 
@@ -57,7 +58,9 @@ class GetEquationsByQuery extends SpecialPage {
 		$this->getOutput()->addWikiTextAsInterface(
 			"Displaying first 10 equation for query: <pre>" . var_export( $sqlFilter, true ) . '</pre>'
 		);
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$res = $dbr->select(
 				[ 'mathlog' ],
 				// TODO insert the missing fields to the mathlog table

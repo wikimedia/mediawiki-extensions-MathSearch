@@ -18,6 +18,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\MediaWikiServices;
+
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ImportDefinitions extends Maintenance {
@@ -39,7 +41,9 @@ class ImportDefinitions extends Maintenance {
 	}
 
 	public function execute() {
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$this->dir = $this->getArg( 0 );
 		$this->overwrite = $this->getOption( 'overwrite' );
 		if ( $this->overwrite ) {

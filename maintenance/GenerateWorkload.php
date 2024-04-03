@@ -21,6 +21,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\MediaWikiServices;
+
 require_once __DIR__ . '/IndexBase.php';
 
 /**
@@ -73,7 +75,9 @@ class GenerateWorkload extends IndexBase {
 		$this->id = $this->getOption( 'lastId', 0 );
 		$sel = $this->getOption( 'selectivity', 0.1 );
 		$this->selectivity = (int)( $sel * mt_getrandmax() );
-		$db = wfGetDB( DB_REPLICA );
+		$db = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		echo "getting list of all equations from the database\n";
 		$this->res =
 			$db->select( [ 'mathindex' ],

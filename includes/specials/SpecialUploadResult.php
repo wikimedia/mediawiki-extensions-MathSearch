@@ -82,7 +82,9 @@ class SpecialUploadResult extends SpecialPage {
 			return [];
 		}
 
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$formFields = [];
 		$options = [];
 		$uID = $this->getUser()->getId();
@@ -129,7 +131,9 @@ class SpecialUploadResult extends SpecialPage {
 	 * @return bool|string
 	 */
 	function runValidatorFilter() {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$uID = $this->getUser()->getId();
 		$res = $dbr->selectField( 'math_wmc_runs', 'runName',
 			[ 'isDraft' => true, 'userID' => $uID, 'runId' => $this->runId ] );
@@ -222,7 +226,9 @@ class SpecialUploadResult extends SpecialPage {
 
 	private function displayFeedback() {
 		$runId = $this->runId;
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$res = $dbr->select(
 			[ 'l' => 'math_wmc_rank_levels', 'r' => 'math_wmc_ref', 'math_wmc_results' ],
 			[
@@ -269,7 +275,9 @@ class SpecialUploadResult extends SpecialPage {
 
 	private function displayFormulaFeedback() {
 		$runId = $this->runId;
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$res = $dbr->select(
 			[ 'l' => 'math_wmc_rank_levels', 'r' => 'math_wmc_ref', 'math_wmc_results' ],
 			[

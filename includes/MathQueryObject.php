@@ -2,6 +2,7 @@
 
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 
 class MathQueryObject extends MathObject {
 
@@ -89,7 +90,9 @@ class MathQueryObject extends MathObject {
 			'isDraft' => true,
 			'math_inputhash' => $this->getInputHash()
 		]; // Store the inputhash just to be sure.
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		// Overwrite draft queries only.
 		if ( $dbw->selectField(
 			'math_wmc_ref', 'isDraft', [ 'qId' => $this->queryID ]

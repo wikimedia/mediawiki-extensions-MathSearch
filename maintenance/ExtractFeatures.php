@@ -148,9 +148,13 @@ class ExtractFeatures extends Maintenance {
 	}
 
 	public function execute() {
-		$this->dbw = wfGetDB( DB_MASTER );
+		$this->dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$this->purge = $this->getOption( 'purge', false );
-		$this->db = wfGetDB( DB_MASTER );
+		$this->db = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$this->output( "Done.\n" );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
 	}

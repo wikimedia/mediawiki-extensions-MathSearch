@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\MathSearch\StackExchange;
 
+use MediaWiki\MediaWikiServices;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\Repo\WikibaseRepo;
 
@@ -20,7 +21,10 @@ class IdMap {
 	private static $instance;
 
 	private function __construct() {
-		$this->dbw = wfGetDB( DB_MASTER );
+		$this->dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
+
 		$this->item = new Item();
 		$this->store = WikibaseRepo::getEntityStore();
 		// don't store too many keys

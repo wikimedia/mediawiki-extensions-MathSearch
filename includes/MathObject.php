@@ -38,7 +38,9 @@ class MathObject extends MathMathML {
 
 	public static function hash2md5( $hash ) {
 		// TODO: make MathRenderer::dbHash2md5 public
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$xhash = unpack( 'H32md5', $dbr->decodeBlob( $hash ) . "                " );
 		return $xhash['md5'];
 	}
@@ -46,7 +48,9 @@ class MathObject extends MathMathML {
 	public static function findSimilarPages( $pid ): void {
 		global $wgOut;
 		$out = "";
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		try {
 			$res = $dbr->select( 'mathpagesimilarity',
 				[
@@ -98,7 +102,9 @@ class MathObject extends MathMathML {
 	 * @return self instance
 	 */
 	public static function constructformpage( $pid, $eid ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$res = $dbr->selectRow(
 			[ 'mathindex' ], self::dbIndexFieldsArray(), 'mathindex_revision_id = ' . $pid
 			. ' AND mathindex_anchor= "' . $eid . '"' );
@@ -169,7 +175,9 @@ class MathObject extends MathMathML {
 	}
 
 	public static function updateStatistics() {
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$dbw->query( 'TRUNCATE TABLE `mathvarstat`' );
 		// phpcs:disable Generic.Files.LineLength
 		$dbw->query( "INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`) "
@@ -224,7 +232,9 @@ class MathObject extends MathMathML {
 
 	public function getObservations( bool $update = true ): void {
 		global $wgOut;
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		try {
 			$res = $dbr->select( [ "mathobservation", "mathvarstat", 'mathrevisionstat' ],
 				[
@@ -313,7 +323,9 @@ class MathObject extends MathMathML {
 			PREG_SET_ORDER
 		);
 
-		$dbw = $dbw ?: wfGetDB( DB_MASTER );
+		$dbw = $dbw ?: MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 
 		$dbw->startAtomic( __METHOD__ );
 		$dbw->delete( "mathobservation",
@@ -340,7 +352,9 @@ class MathObject extends MathMathML {
 	 * @return bool|ResultWrapper
 	 */
 	public function getNouns( string $identifier ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$pageName = $this->getPageTitle();
 		if ( $pageName === false ) {
 			return false;
@@ -375,7 +389,9 @@ class MathObject extends MathMathML {
 	 */
 	public function getAllOccurrences( bool $currentOnly = true ): array {
 		$out = [];
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$res = $dbr->select(
 			'mathindex', self::dbIndexFieldsArray(),
 			[ 'mathindex_inputhash' => $this->getInputHash() ]
@@ -472,7 +488,9 @@ class MathObject extends MathMathML {
 	}
 
 	public function getRelations(): array {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$selection = $dbr->select( 'mathsemantics', [ 'identifier', 'evidence', 'noun' ],
 			[ 'revision_id' => $this->revisionID ], __METHOD__,
 			[ 'ORDER BY' => 'evidence desc' ] );

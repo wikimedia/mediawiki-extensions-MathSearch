@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class ImportCsv {
 
 	/**
@@ -66,7 +68,9 @@ class ImportCsv {
 		if ( $run == '' ) {
 			return date( 'Y-m-d H:i:s (e)' );
 		}
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$uID = $this->getUser()->getId();
 		if ( is_int( $run ) ) {
 			$runId = $dbw->selectField( 'math_wmc_runs', 'runId',
@@ -217,7 +221,9 @@ class ImportCsv {
 		if ( array_key_exists( $qId, $this->validQIds ) ) {
 			return $this->validQIds[$qId];
 		}
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		if ( $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qId' => $qId ] ) ) {
 			$this->validQIds[$qId] = true;
 			return true;
@@ -233,7 +239,9 @@ class ImportCsv {
 	 * @return string|false
 	 */
 	private function getInputHash( $pId, $eId ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		return $dbr->selectField( 'mathindex', 'mathindex_inputhash',
 			[ 'mathindex_revision_id' => $pId, 'mathindex_anchor' => $eId ] );
 	}
@@ -268,7 +276,9 @@ class ImportCsv {
 	 */
 	function processInput() {
 		$this->deleteRun( $this->runId );
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		$dbw->begin( __METHOD__ );
 		foreach ( $this->results as $result ) {
 			$dbw->insert( 'math_wmc_results', $result );
@@ -282,7 +292,9 @@ class ImportCsv {
 	 */
 	public function deleteRun( $runID ) {
 		if ( $this->overwrite ) {
-			$dbw = wfGetDB( DB_MASTER );
+			$dbw = MediaWikiServices::getInstance()
+				->getConnectionProvider()
+				->getPrimaryDatabase();
 			$dbw->delete( 'math_wmc_results', [ 'runId' => $runID ] );
 		}
 	}

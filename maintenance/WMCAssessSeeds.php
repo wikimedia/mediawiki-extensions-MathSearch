@@ -18,6 +18,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\MediaWikiServices;
+
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class WMCAssessSeeds extends Maintenance {
@@ -36,7 +38,9 @@ class WMCAssessSeeds extends Maintenance {
 		$user = User::newFromName( $this->getArg( 0 ) );
 		$uId = $user->getId();
 		if ( $uId > 0 ) {
-			$dbw = wfGetDB( DB_MASTER );
+			$dbw = MediaWikiServices::getInstance()
+				->getConnectionProvider()
+				->getPrimaryDatabase();
 			$this->output( "Insert formula assessments...\n" );
 			$dbw->query( "INSERT IGNORE INTO math_wmc_assessed_formula "
 				. "SELECT {$uId}, math_inputhash, qId, {$this->DEFAULT_ASSESSMENT} "

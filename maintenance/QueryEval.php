@@ -18,6 +18,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\MediaWikiServices;
+
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 /**
@@ -65,7 +67,9 @@ class QueryEval extends Maintenance {
 
 	private function addExtensionTable( $name, $folder = '' ) {
 		if ( $this->dbu === null ) {
-			$dbw = wfGetDB( DB_MASTER );
+			$dbw = MediaWikiServices::getInstance()
+				->getConnectionProvider()
+				->getPrimaryDatabase();
 			$this->dbu = DatabaseUpdater::newForDB( $dbw );
 		}
 		$this->dbu->addExtensionTable( $name, __DIR__ . "/../db/wmc/{$folder}{$name}.sql" );
@@ -81,7 +85,9 @@ class QueryEval extends Maintenance {
 		$row->title = str_replace( [ 'π','ő' ], [ '$\\pi$', 'ö' ], $row->title );
 		$tName = $row->qId .
 			': {\\wikiLink{' . $row->title . '}{' . $row->oldId . '}{' . $row->fId . '}}';
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$res = $dbr->select( 'math_wmc_freq_hits',
 			[ 'cntRun', 'cntUser' , 'links', 'minRank', 'rendering' ],
 			[ 'qId' => $qId ] );
@@ -130,7 +136,9 @@ TEX;
 	 * TODO: Replace with DBU call
 	 */
 	private function dropUDFs() {
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getPrimaryDatabase();
 		if ( !class_exists( "MySqlFunctionDropper" ) ) {
 			createMySqlFunctionDropperClass();
 		}
@@ -148,7 +156,9 @@ TEX;
 		MathSearchUtils::createEvaluationTables();
 		$this->addExtensionTable( 'math_wmc_udf_create' );
 		$this->dbu->doUpdates( [ "extensions" ] );
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		// runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 		// runName VARCHAR(45),
 		// userId INT UNSIGNED,

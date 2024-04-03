@@ -19,6 +19,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\MediaWikiServices;
+
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ExportMathCache extends Maintenance {
@@ -53,7 +55,9 @@ class ExportMathCache extends Maintenance {
 		int $length,
 		bool $sort ) {
 		$out = [];
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()
+			->getConnectionProvider()
+			->getReplicaDatabase();
 		$options = [
 			'OFFSET'   => $offset,
 			'LIMIT'    => $length
