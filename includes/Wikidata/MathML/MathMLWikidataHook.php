@@ -2,10 +2,7 @@
 
 namespace MediaWiki\Extension\MathSearch\Wikidata\MathML;
 
-use ParserOptions;
 use ValueFormatters\FormatterOptions;
-use ValueParsers\StringParser;
-use Wikibase\Repo\Parsers\WikibaseStringValueNormalizer;
 use Wikibase\Repo\Rdf\DedupeBag;
 use Wikibase\Repo\Rdf\EntityMentionListener;
 use Wikibase\Repo\Rdf\RdfVocabulary;
@@ -38,12 +35,6 @@ class MathMLWikidataHook {
 				$validators[] = new MathMLValidator();
 
 				return $validators;
-			},
-			'parser-factory-callback' => static function ( ParserOptions $options ) {
-				$normalizer =
-					new WikibaseStringValueNormalizer( WikibaseRepo::getStringNormalizer() );
-
-				return new StringParser( $normalizer );
 			},
 			'formatter-factory-callback' => static function ( $format, FormatterOptions $options ) {
 				return new MathMLFormatter( $format );
