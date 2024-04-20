@@ -347,7 +347,7 @@ class SpecialMlpEval extends SpecialPage {
 	 * @return string
 	 */
 	private function getRandomFId() {
-		try{
+		try {
 			$uid = $this->getUser()->getId();
 			$rid = $this->revisionRecord->getId();
 			$dbr = MediaWikiServices::getInstance()

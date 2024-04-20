@@ -236,7 +236,7 @@ class SpecialUploadResult extends SpecialPage {
 				'`l`.`level`                AS `level`'
 			],
 			[
-				"(`math_wmc_results`.`rank` <= `l`.`level`)" ,
+				"(`math_wmc_results`.`rank` <= `l`.`level`)",
 				'runId' => $runId,
 				'`math_wmc_results`.`oldId` = `r`.`oldId`',
 				'`math_wmc_results`.`qId` = `r`.`qId`'

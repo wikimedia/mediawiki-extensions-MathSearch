@@ -19,10 +19,10 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 			->getConnectionProvider()
 			->getReplicaDatabase();
 		$res = $dbr->select( 'math_wmc_results',
-			[ 'qId' , 'oldId' , 'fId' ],
+			[ 'qId', 'oldId', 'fId' ],
 			[ 'runId' => $runId ],
 			__METHOD__,
-			[ 'ORDER BY' => [ 'qId' , 'rank' ] ] );
+			[ 'ORDER BY' => [ 'qId', 'rank' ] ] );
 		if ( $res !== false ) {
 			foreach ( $res as $row ) {
 				$fId = $row->fId == null ? 0 : $row->fId;

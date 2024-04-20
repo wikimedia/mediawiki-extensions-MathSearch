@@ -712,7 +712,7 @@ class LaTeXTranslator {
 	 */
 	public static function brackR( $arg ) {
 		$arg = trim( $arg, " " );
-		if ( substr( $arg, 0, 1 ) == "{" && substr( $arg,  -1 ) == "}" ) {
+		if ( substr( $arg, 0, 1 ) == "{" && substr( $arg, -1 ) == "}" ) {
 			$arg = substr( $arg, 1, strlen( $arg ) - 2 );
 		}
 		return $arg;

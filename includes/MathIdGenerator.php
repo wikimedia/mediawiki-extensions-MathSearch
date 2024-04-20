@@ -144,7 +144,7 @@ class MathIdGenerator {
 			return $allIds[0];
 		}
 		if ( array_key_exists( $content, $this->contentAccessStats ) ) {
-			$this->contentAccessStats[$content] ++;
+			$this->contentAccessStats[$content]++;
 		} else {
 			$this->contentAccessStats[$content] = 0;
 		}

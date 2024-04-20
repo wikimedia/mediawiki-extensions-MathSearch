@@ -224,7 +224,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 	}
 
 	private function addOptions( &$form ) {
-		static $elements = [ 'label','help' ];
+		static $elements = [ 'label', 'help' ];
 		foreach ( $form as $key => $control ) {
 			foreach ( $elements as $element ) {
 				$msg = "math-lp-$key-$element";
@@ -252,7 +252,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 	 * @param string $key
 	 */
 	private function saveSubstepField( $key ) {
-		$substeps = [ '4','4a','4b','4c' ];
+		$substeps = [ '4', '4a', '4b', '4c' ];
 		foreach ( $substeps as $substep ) {
 			$val = $this->getRequest()->getVal( "4-$key-$substep" );
 			if ( $val ) {

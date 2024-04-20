@@ -261,7 +261,7 @@ class SpecialMathSearch extends SpecialPage {
 				continue;
 			}
 			$out->addWikiTextAsInterface( "====[[$pagename#$anchorID|Eq: $anchorID (Result " .
-				$this->resultID ++ . ")]]====", false );
+				$this->resultID++ . ")]]====", false );
 			$out->addHTML( "<br />" );
 			$xpath = $answ[0]['xpath'];
 			// TODO: Remove hack and report to Prode that he fixes that
@@ -438,7 +438,7 @@ class SpecialMathSearch extends SpecialPage {
 	private function enableMathStyles() {
 		$out = $this->getOutput();
 		$out->addModuleStyles(
-			[ 'ext.math.styles' , 'ext.math.desktop.styles', 'ext.math.scripts' ]
+			[ 'ext.math.styles', 'ext.math.desktop.styles', 'ext.math.scripts' ]
 		);
 	}
 

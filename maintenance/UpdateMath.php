@@ -216,10 +216,12 @@ class UpdateMath extends Maintenance {
 					$hookContainer = MediaWikiServices::getInstance()->getHookContainer();
 					$hookContainer->run(
 						'MathFormulaPostRender',
-						[ $this->getParser( $revId ),
-						&$renderer,
-						&$notused
-					] );
+						[
+							$this->getParser( $revId ),
+							&$renderer,
+							&$notused
+						]
+					);
 					$this->time( "hooks" );
 				} else {
 					$eId = null;

@@ -6,7 +6,7 @@ use MediaWiki\Extension\MathSearch\Wikidata\Content\ContentMathFormatter;
 use Wikibase\Lib\Formatters\SnakFormatter;
 
 /**
- * @covers ContentMathFormatter
+ * @covers \MediaWiki\Extension\MathSearch\Wikidata\Content\ContentMathFormatter
  *
  * @group MathSearch
  *
@@ -24,7 +24,7 @@ class ContentMathFormatterTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * Checks the
-	 * @covers ContentMathFormatter::__construct()
+	 * @covers \MediaWiki\Extension\MathSearch\Wikidata\Content\ContentMathFormatter::__construct()
 	 */
 	public function testBasics() {
 		$formatter = new ContentMathFormatter( SnakFormatter::FORMAT_PLAIN );

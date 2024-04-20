@@ -9,7 +9,7 @@ use Wikimedia\Purtle\NTriplesRdfWriter;
 /**
  * @author Moritz Schubotz (physikerwelt)
  * @group ContentMath
- * @covers ContentMathMLRdfBuilder
+ * @covers \MediaWiki\Extension\MathSearch\Wikidata\Content\ContentMathMLRdfBuilder
  */
 class ContentMathMLRdfBuilderTest extends MediaWikiIntegrationTestCase {
 

@@ -65,8 +65,8 @@ class GetEquationsByQuery extends SpecialPage {
 				[ 'mathlog' ],
 				// TODO insert the missing fields to the mathlog table
 				[
-					'math_mathml', 'math_inputhash', 'math_log', 'math_tex', 'valid_xml', 'math_status'
-						, 'math_timestamp'
+					'math_mathml', 'math_inputhash', 'math_log', 'math_tex', 'valid_xml', 'math_status',
+					'math_timestamp',
 				],
 				$sqlFilter,
 				__METHOD__,

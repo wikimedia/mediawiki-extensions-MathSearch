@@ -37,7 +37,7 @@ class OpenAlex extends GraphJob {
 					self::getLog()->error( "No Qid found for Zbl $de." );
 					continue;
 				}
-				$this->processRow( $de,  $qIdMap[$de], $row );
+				$this->processRow( $de, $qIdMap[$de], $row );
 			} catch ( Throwable $ex ) {
 				self::getLog()->error( "Skip processing Zbl $de", [ 'error' => $ex ] );
 			}
@@ -101,7 +101,7 @@ class OpenAlex extends GraphJob {
 			$mainSnak = new PropertyValueSnak(
 				$propertyId,
 				$key === $wgMathOpenAlexQIdMap['openalex_title'] ?
-					new MonolingualTextValue( 'en',  $value )
+					new MonolingualTextValue( 'en', $value )
 					: new StringValue( $value
 				) );
 			$statements->addNewStatement( $mainSnak, [], null,

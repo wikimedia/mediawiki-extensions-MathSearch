@@ -33,7 +33,7 @@ class LineReaderJob extends \Job {
 					] );
 				$xml = new SimpleXMLElement( '<row/>' );
 				$rowTransposed = array_flip( $row );
-				array_walk( $rowTransposed, [ $xml,'addAttribute' ] );
+				array_walk( $rowTransposed, [ $xml, 'addAttribute' ] );
 				file_put_contents( $this->params['errFile'], "{$xml->asXML()}\n", FILE_APPEND );
 
 			}

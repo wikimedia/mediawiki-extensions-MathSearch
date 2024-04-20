@@ -261,7 +261,7 @@ class MathSearchHooks {
 			->getConnectionProvider()
 			->getPrimaryDatabase();
 		$dbw->onTransactionCommitOrIdle( static function () use ( $oldID, $eid, $inputHash, $dbw ) {
-			$dbw->replace( 'mathindex', [ [ 'mathindex_revision_id' , 'mathindex_anchor' ] ], [
+			$dbw->replace( 'mathindex', [ [ 'mathindex_revision_id', 'mathindex_anchor' ] ], [
 				'mathindex_revision_id' => $oldID,
 				'mathindex_anchor' => $eid,
 				'mathindex_inputhash' => $inputHash

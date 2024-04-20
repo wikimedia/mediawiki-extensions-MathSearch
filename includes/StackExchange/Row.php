@@ -146,7 +146,7 @@ class Row {
 		if ( $field->isKnown() ) {
 			$this->fields[$key] = $field;
 		} else {
-			$this->ignoredFieldCount ++;
+			$this->ignoredFieldCount++;
 		}
 	}
 }

@@ -29,7 +29,7 @@ class MathSearchUtilsTest extends MediaWikiIntegrationTestCase {
 			->getPrimaryDatabase();
 		$dbw->query( 'CREATE TEMPORARY TABLE IF NOT EXISTS tmp_math_util_test (s TEXT, i INT)' );
 		$dbw->insert(
-			"tmp_math_util_test", [ [ 's' => 'a', 'i' => 1 ], [ 's' => 'b','i' => 2 ] ]
+			"tmp_math_util_test", [ [ 's' => 'a', 'i' => 1 ], [ 's' => 'b', 'i' => 2 ] ]
 		);
 		$cols = [ 's', 'i' ];
 		$res = $dbw->select( 'tmp_math_util_test', $cols );
