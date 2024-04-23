@@ -29,8 +29,12 @@ class MathIdGenerator {
 		if ( $contentModel !== CONTENT_MODEL_WIKITEXT ) {
 			throw new RuntimeException( "MathIdGenerator supports only CONTENT_MODEL_WIKITEXT" );
 		}
+		$content = $revisionRecord->getContent( SlotRecord::MAIN );
+		if ( !$content instanceof TextContent ) {
+			throw new RuntimeException( "MathIdGenerator supports only TextContent" );
+		}
 		return new self(
-			ContentHandler::getContentText( $revisionRecord->getContent( SlotRecord::MAIN ) ),
+			$content->getText(),
 			$revisionRecord->getId()
 		);
 	}

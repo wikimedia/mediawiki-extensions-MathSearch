@@ -65,8 +65,12 @@ class SpecialLaTeXTranslator extends SpecialPage {
 			if ( $contentModel !== CONTENT_MODEL_WIKITEXT ) {
 				throw new RuntimeException( "Only CONTENT_MODEL_WIKITEXT supported for translation." );
 			}
-			$this->context =
-				ContentHandler::getContentText( $revisionRecord->getContent( SlotRecord::MAIN ) );
+
+			$content = $revisionRecord->getContent( SlotRecord::MAIN );
+			if ( !$content instanceof TextContent ) {
+				throw new RuntimeException( "Translation supports only TextContent" );
+			}
+			$this->context = $content->getText();
 			$mo = MathObject::newFromRevisionText( $pid, $eid );
 			$this->tex = $mo->getTex();
 			$this->displayResults();
