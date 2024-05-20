@@ -29,7 +29,7 @@
 	"math-wmc-SelectRun": "שם",
 	"math-wmc-SelectRunHelp": "נא לציין שם ייחודי עבור ההגשה שלך, או להחליף טיוטה קיימת.",
 	"math-wmc-FileLabel": "קובץ CSV",
-	"math-wmc-FileHelp": "יש להעלות את התוצאות שלך כרשימה מדורגת ומופרדת בפסיקים של זוגות (queryId,formulaId). נדרשת כותרת עמודה של הטופס <code>queryId,formulaId</code> .",
+	"math-wmc-FileHelp": "יש להעלות את התוצאות שלך כרשימה מדורגת ומופרדת בפסיקים של זוגות (queryId,formulaId). נדרשת כותרת עמודה של הטופס <code>queryId,formulaId</code>.",
 	"math-wmc-RunAdded": "נוספה שליחת \"$1\" עם המזהה \"$2\"",
 	"math-wmc-RunAddError": "שגיאה: לא ניתן להוסיף את ההגשה \"$1\".",
 	"math-wmc-RunAddExist": "הגשה בשם \"$1\" כבר קיימת עם המזהה \"$2\"",
