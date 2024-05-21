@@ -139,7 +139,7 @@
 	"math-wmc-display-formulae-label": "Відображення поданих формул",
 	"math-wmc-display-formulae-help": "Не рекомендується для великих вхідних файлів.",
 	"action-mathwmcsubmit": "надсилання результатів до NTCIR Wikipedia Math Search Task",
-	"right-mathwmcsubmit": "Можливість надсилати результати до NTCIR Wikipedia Math Search Task",
+	"right-mathwmcsubmit": "Надсилання результатів до NTCIR Wikipedia Math Search Task",
 	"math-search-term": "* $4 термін-$1: $3-вираз «$2» з {{PLURAL:$5|1 результат|$5 результатами}}.",
 	"math-search-relation-label": "Відношення:",
 	"math-search-relation-0": "і",
