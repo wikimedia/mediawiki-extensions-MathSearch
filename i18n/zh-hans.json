@@ -8,7 +8,8 @@
 			"Liuxinyu970226",
 			"Yfdyh000",
 			"Yining Chen",
-			"王庭茂"
+			"王庭茂",
+			"LittlePaw365"
 		]
 	},
 	"mathsearch": "数式搜索",
@@ -112,7 +113,7 @@
 	"math-lp-feedback-label": "附加注释（可选）",
 	"math-lp-feedback-help": "如果您有关于当前评价步骤的重要信息，请在此输入。",
 	"math-lp-formula-ref": "您正在评估数学表达式$1，渲染为$2，最后编辑于<code>$3</code>。",
-	"math-lp-submit-info": "点击下面的按钮之一，继续或关闭窗口以终止调查。",
+	"math-lp-submit-info": "点击下面的按钮，继续或关闭窗口终止调查。",
 	"math-lp-submit-label": "通过第$1步继续",
 	"math-lp-finish-label": "结束",
 	"math-lp-new-article": "通过其他条目继续",
