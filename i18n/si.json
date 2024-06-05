@@ -1,8 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Susith Chandira Gts",
-			1100100
+			1100100,
+			"Susith Chandira Gts"
 		]
 	},
 	"math-wmc-RunAddError": "දෝෂයක්: \"$1\" ඉදිරිපත් කළ අදහස එකතු කල නොහැක."
