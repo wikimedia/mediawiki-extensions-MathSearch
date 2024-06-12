@@ -11,6 +11,7 @@
 
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\SpecialPage\SpecialPage;
 
 class GetEquationsByQuery extends SpecialPage {
 

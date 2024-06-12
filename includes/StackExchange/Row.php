@@ -4,8 +4,8 @@ namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use Exception;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\User\User;
 use SimpleXMLElement;
-use User;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Services\Statement\GuidGenerator;

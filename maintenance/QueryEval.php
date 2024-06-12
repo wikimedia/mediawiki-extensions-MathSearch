@@ -18,6 +18,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Installer\DatabaseUpdater;
+use MediaWiki\Installer\MysqlUpdater;
 use MediaWiki\MediaWikiServices;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';

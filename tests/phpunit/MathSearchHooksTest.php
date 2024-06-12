@@ -5,6 +5,7 @@ use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 
 /**
  * MediaWiki MathSearch extension

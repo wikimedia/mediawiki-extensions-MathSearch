@@ -1,5 +1,8 @@
 <?php
 
+use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\SpecialPage\SpecialPage;
+
 class SpecialMathIndex extends SpecialPage {
 
 	private const SCRIPT_UPDATE_MATH = 0;

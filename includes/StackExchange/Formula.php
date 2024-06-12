@@ -3,7 +3,7 @@
 namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use MediaWiki\Extension\Math\MathMathML;
-use User;
+use MediaWiki\User\User;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\NumericPropertyId;

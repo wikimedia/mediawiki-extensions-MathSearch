@@ -19,6 +19,7 @@
  */
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\User;
 use UtfNormal\Utils;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';

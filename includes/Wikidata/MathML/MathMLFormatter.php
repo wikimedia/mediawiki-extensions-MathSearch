@@ -2,7 +2,7 @@
 namespace MediaWiki\Extension\MathSearch\Wikidata\MathML;
 
 use DataValues\StringValue;
-use Html;
+use MediaWiki\Html\Html;
 use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 use ValueFormatters\ValueFormatter;
 use Wikibase\Lib\Formatters\SnakFormatter;

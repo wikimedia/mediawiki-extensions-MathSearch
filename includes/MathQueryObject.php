@@ -3,6 +3,7 @@
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 
 class MathQueryObject extends MathObject {
 

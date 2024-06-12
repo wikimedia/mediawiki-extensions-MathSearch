@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\Extension\Math\MathConfig;
+use MediaWiki\HTMLForm\OOUIHTMLForm;
 use MediaWiki\MediaWikiServices;
 
 class MlpEvalForm extends OOUIHTMLForm {

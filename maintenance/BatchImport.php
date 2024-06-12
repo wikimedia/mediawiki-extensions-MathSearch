@@ -18,6 +18,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\User\User;
+
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class BatchImport extends Maintenance {

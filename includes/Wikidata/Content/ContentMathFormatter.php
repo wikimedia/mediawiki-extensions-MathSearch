@@ -3,9 +3,9 @@
 namespace MediaWiki\Extension\MathSearch\Wikidata\Content;
 
 use DataValues\StringValue;
-use Html;
 use InvalidArgumentException;
 use MediaWiki\Extension\Math\MathLaTeXML;
+use MediaWiki\Html\Html;
 use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 use ValueFormatters\ValueFormatter;
 use Wikibase\Lib\Formatters\SnakFormatter;

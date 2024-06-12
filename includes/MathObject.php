@@ -1,10 +1,12 @@
 <?php
 
+use MediaWiki\Deferred\DeferredUpdates;
 use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Title\Title;
 
 class MathObject extends MathMathML {
 

@@ -19,6 +19,7 @@
  */
 
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Parser\Sanitizer;
 
 /**
  * Simple dump output filter to exclude all talk pages.

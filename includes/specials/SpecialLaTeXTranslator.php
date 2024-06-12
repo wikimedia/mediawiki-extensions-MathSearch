@@ -1,10 +1,12 @@
 <?php
 
+use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LegacyLogger;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
+use MediaWiki\SpecialPage\SpecialPage;
 use Psr\Log\LogLevel;
 
 class SpecialLaTeXTranslator extends SpecialPage {
