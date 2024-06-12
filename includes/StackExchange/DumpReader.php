@@ -79,11 +79,6 @@ class DumpReader {
 			'fileName' => $this->fileName,
 			'errFile' => $this->errPath . "/$this->fileName-$part-err.xml",
 		] );
-		if ( method_exists( MediaWikiServices::class, 'getJobQueueGroup' ) ) {
-			// MW 1.37+
-			MediaWikiServices::getInstance()->getJobQueueGroup()->push( $job );
-		} else {
-			\JobQueueGroup::singleton()->push( $job );
-		}
+		MediaWikiServices::getInstance()->getJobQueueGroup()->push( $job );
 	}
 }

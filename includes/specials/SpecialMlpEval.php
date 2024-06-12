@@ -660,12 +660,7 @@ class SpecialMlpEval extends SpecialPage {
 		$popts = $out->parserOptions();
 		$popts->setInterfaceMessage( false );
 
-		if ( method_exists( ParserFactory::class, 'getInstance' ) ) {
-			// MW 1.39+
-			$parser = MediaWikiServices::getInstance()->getParserFactory()->getInstance();
-		} else {
-			$parser = MediaWikiServices::getInstance()->getParser()->getFreshParser();
-		}
+		$parser = MediaWikiServices::getInstance()->getParserFactory()->getInstance();
 		$parserOutput = $parser->parse(
 			$hl->getWikiText(), $this->getRevisionTitle(), $popts )->getText();
 		if ( $filter ) {

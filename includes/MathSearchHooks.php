@@ -450,15 +450,9 @@ class MathSearchHooks {
 	 * Enable latexml rendering mode as option by default
 	 */
 	public static function registerExtension() {
-		global $wgMathValidModes, $wgHooks;
+		global $wgMathValidModes;
 		if ( !in_array( 'latexml', $wgMathValidModes ) ) {
 			$wgMathValidModes[] = 'latexml';
-		}
-		if ( class_exists( MediaWiki\HookContainer\HookContainer::class ) ) {
-			// MW 1.35+
-			$wgHooks['PageSaveComplete'][] = 'MathSearchHooks::onPageSaveComplete';
-		} else {
-			$wgHooks['PageContentSaveComplete'][] = 'MathSearchHooks::onPageContentSaveComplete';
 		}
 	}
 
