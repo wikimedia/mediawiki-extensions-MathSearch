@@ -1,6 +1,6 @@
 CREATE TABLE math_wmc_assessed_revision (
   qId INT NOT NULL,
-  oldId INT(10) UNSIGNED NOT NULL,
+  oldId BIGINT(20) UNSIGNED NOT NULL,
   assessment SMALLINT NOT NULL ,
   assessor INT(10) UNSIGNED,
   FOREIGN KEY ( qId ) REFERENCES math_wmc_ref ( qId ) ON DELETE CASCADE,

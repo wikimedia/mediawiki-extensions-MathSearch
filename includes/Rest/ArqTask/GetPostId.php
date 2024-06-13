@@ -13,7 +13,7 @@ class GetPostId extends SimpleHandler {
 	private $dbr;
 
 	public function __construct( ILoadBalancer $lb ) {
-		$this->dbr = $lb->getConnectionRef( DB_REPLICA );
+		$this->dbr = $lb->getConnection( DB_REPLICA );
 	}
 
 	public function getParamSettings() {

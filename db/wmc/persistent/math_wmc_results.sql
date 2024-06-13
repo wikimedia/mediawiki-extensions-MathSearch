@@ -3,7 +3,7 @@ CREATE TABLE math_wmc_results (
     qId INT NOT NULL,
     rank INT NOT NULL,
     runId INT NOT NULL,
-    oldId INT(10) UNSIGNED NOT NULL,
+    oldId BIGINT(20) UNSIGNED NOT NULL,
     fId INT NOT NULL,
     UNIQUE KEY uniqueRanks( runId, qId, rank ),
     KEY runId_idx( runId ),

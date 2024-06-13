@@ -5,7 +5,7 @@
 CREATE TABLE /*_*/mathindex (
 
   -- Revision id where the equation was found.
-  mathindex_revision_id int(10) unsigned NOT NULL,
+  mathindex_revision_id bigint(20) unsigned NOT NULL,
 
   -- Position of the equation on the page
   -- Starting from math0 at the top of the page

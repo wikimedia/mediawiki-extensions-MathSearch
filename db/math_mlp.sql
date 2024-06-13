@@ -3,7 +3,7 @@ CREATE TABLE /*_*/math_mlp (
   user_id int(10) unsigned NOT NULL,
   step TINYINT NOT NULL,
   anchor varchar(50) DEFAULT NULL,
-  revision_id int(10) unsigned NOT NULL,
+  revision_id bigint(20) unsigned NOT NULL,
   json_data MEDIUMTEXT,
   comment varchar(255) DEFAULT NULL,
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
