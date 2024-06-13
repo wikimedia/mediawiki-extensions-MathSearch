@@ -13,7 +13,7 @@ PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
 SELECT ?qid WHERE {
     BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid)
-${wgMathProfileQueries[$type]}
+{$wgMathProfileQueries[$type]}
 }
 LIMIT $limit
 OFFSET $offset
@@ -27,7 +27,7 @@ PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
 SELECT ?qid WHERE {
     BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid)
-    ?item wdt:P$wgMathSearchPropertyProfileType wd:${wgMathProfileQIdMap[$type]} .
+    ?item wdt:P$wgMathSearchPropertyProfileType wd:{$wgMathProfileQIdMap[$type]} .
     ?item wikibase:sitelinks ?sitelinks .
     FILTER (?sitelinks < 1 ).
 }
@@ -44,6 +44,18 @@ SELECT
 WHERE {
   VALUES ?de  { $des }
 ?item wdt:P1451 ?de
+}
+SPARQL;
+	}
+
+	public static function getQidFromConcept( string $concepts ) {
+		return /** @lang Sparql */ <<<SPARQL
+SELECT
+  (REPLACE(STR(?item), ".*Q", "") AS ?qid)
+  ?de
+WHERE {
+  VALUES ?de  { $concepts }
+?item wdt:P1511 ?de
 }
 SPARQL;
 	}

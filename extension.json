@@ -111,6 +111,10 @@
 			"formula": "Q5981696",
 			"publication": "Q5976449",
 			"software": "Q5976450"
+		},
+		"MathIntentsQIdMap": {
+			"concept": "P1511",
+			"arity": "P1515"
 		}
 	},
 	"MessagesDirs": {
@@ -169,7 +173,8 @@
 		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob",
 		"CreateProfilePages": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\PageCreation",
 		"SetProfileType": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\SetProfileType",
-		"OpenAlex": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\OpenAlex"
+		"OpenAlex": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\OpenAlex",
+		"MathMLIntents": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\MathMLIntents"
 	},
 	"RestRoutes": [
 		{
