@@ -1,6 +1,6 @@
 CREATE TABLE math_wmc_ref (
     qId INT PRIMARY KEY NOT NULL,
-    oldId BIGINT,
+    oldId BIGINT UNSIGNED,
     fId INT,
     qVarCount SMALLINT,
     texQuery TEXT,
