@@ -19,7 +19,6 @@ CREATE TABLE /*_*/mathindex (
   -- Timestamp. Is set by the database automatically
   mathindex_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  PRIMARY KEY (mathindex_revision_id,mathindex_anchor),
-  FOREIGN KEY ( /*i*/mathindex_revision_id ) REFERENCES revision( rev_id ) ON DELETE CASCADE
+  PRIMARY KEY (mathindex_revision_id, mathindex_anchor)
 
 ) /*$wgDBTableOptions*/;

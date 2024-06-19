@@ -36,11 +36,9 @@ class MathSearchHooks {
 		if ( $type == "mysql" ) {
 			$dir = __DIR__ . '/../db/';
 			$updater->addExtensionTable( 'mathindex', $dir . 'mathindex.sql' );
-			$updater->modifyExtensionTable( 'mathindex', $dir . 'patches/mathindex-rev_id.sql' );
 			$updater->addExtensionTable( 'mathobservation', $dir . 'mathobservation.sql' );
 			$updater->addExtensionTable( 'mathvarstat', $dir . 'mathvarstat.sql' );
 			$updater->addExtensionTable( 'mathrevisionstat', $dir . 'mathrevisionstat.sql' );
-			$updater->modifyExtensionTable( 'mathrevisionstat', $dir . 'patches/mathrevisionstat-rev_id.sql' );
 			$updater->addExtensionTable( 'mathsemantics', $dir . 'mathsemantics.sql' );
 			$updater->addExtensionTable( 'mathperformance', $dir . 'mathperformance.sql' );
 			$updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
