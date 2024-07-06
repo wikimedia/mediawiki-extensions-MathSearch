@@ -7,6 +7,7 @@ use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Title\Title;
+use Wikimedia\Rdbms\IResultWrapper;
 
 class MathObject extends MathMathML {
 
@@ -351,7 +352,7 @@ class MathObject extends MathMathML {
 
 	/**
 	 * @param string $identifier
-	 * @return bool|ResultWrapper
+	 * @return bool|IResultWrapper
 	 */
 	public function getNouns( string $identifier ) {
 		$dbr = MediaWikiServices::getInstance()
