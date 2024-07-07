@@ -124,7 +124,7 @@ class SpecialMathSearch extends SpecialPage {
 		$htmlForm =	new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Search' );
 		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
-		$htmlForm->setHeaderText( "<h2>Input</h2>" );
+		$htmlForm->setHeaderHtml( "<h2>Input</h2>" );
 		// $htmlForm->show();
 		return $htmlForm;
 	}

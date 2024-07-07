@@ -103,7 +103,7 @@ are often used together.';
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Translate' );
 		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
-		$htmlForm->setHeaderText( '<h2>' . $this->msg( 'math-tex2nb-header' )->escaped() .
+		$htmlForm->setHeaderHtml( '<h2>' . $this->msg( 'math-tex2nb-header' )->escaped() .
 			'</h2>' );
 		$htmlForm->show();
 	}
