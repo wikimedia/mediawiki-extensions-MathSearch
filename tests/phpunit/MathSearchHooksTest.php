@@ -4,7 +4,6 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Logger\LoggerFactory;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
 
 /**
@@ -94,8 +93,8 @@ EOT;
 	public function testNTCIRHook() {
 		$sample = self::MATHML_SAMPLE;
 		$logger = LoggerFactory::getInstance( 'mathSearchHooksTest' );
-		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
-		$services = MediaWiki\MediaWikiServices::getInstance();
+		$services = $this->getServiceContainer();
+		$userOptionsLookup = $services->getUserOptionsLookup();
 		$services->resetServiceForTesting( 'ParserFactory' );
 		$parser = $services->getParserFactory()->create();
 
@@ -137,7 +136,7 @@ EOT;
 	 */
 	public function testSetMathIdIdempotence() {
 		$logger = LoggerFactory::getInstance( 'mathSearchHooksTest' );
-		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+		$userOptionsLookup = $this->getServiceContainer()->getUserOptionsLookup();
 		$serviceOptions = $this->createMock( ServiceOptions::class );
 		# Creating a math config.
 		$mathConfig = $this->createMock( MathConfig::class );

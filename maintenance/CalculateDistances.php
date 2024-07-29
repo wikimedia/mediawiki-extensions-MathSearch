@@ -18,8 +18,6 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\MediaWikiServices;
-
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class CalculateDistances extends Maintenance {
@@ -47,12 +45,9 @@ class CalculateDistances extends Maintenance {
 	}
 
 	public function execute() {
-		$this->dbw = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
-		$this->db = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
+		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
+		$this->dbw = $connectionProvider->getPrimaryDatabase();
+		$this->db = $connectionProvider->getPrimaryDatabase();
 		$this->pagelist = [];
 		$min = $this->getArg( 0, 0 );
 		$max = $this->getArg( 1, PHP_INT_MAX );

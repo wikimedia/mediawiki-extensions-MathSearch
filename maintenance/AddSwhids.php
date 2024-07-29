@@ -21,7 +21,6 @@
 use DataValues\StringValue;
 use DataValues\TimeValue;
 use MediaWiki\Extension\MathSearch\Swh\Swhid;
-use MediaWiki\MediaWikiServices;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\NumericPropertyId;
 use Wikibase\DataModel\Services\Statement\GuidGenerator;
@@ -61,19 +60,19 @@ SPARQL;
 	}
 
 	public function execute() {
-		$configFactory = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
-		$rf = MediaWikiServices::getInstance()->getHttpRequestFactory();
+		$services = $this->getServiceContainer();
+		$configFactory = $services->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
+		$rf = $services->getHttpRequestFactory();
 		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
 		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
 		$sp = $arrEndpoint["endpoint"];
 		$this->entityLookup = WikibaseRepo::getEntityLookup();
 		$this->entityStore = WikibaseRepo::getEntityStore();
 		$this->guidGenerator = new GuidGenerator();
-		$this->mwUser =
-			MediaWikiServices::getInstance()->getUserFactory()->newFromName( 'swh import' );
+		$this->mwUser = $services->getUserFactory()->newFromName( 'swh import' );
 		$exists = ( $this->mwUser->idForName() !== 0 );
 		if ( !$exists ) {
-			MediaWikiServices::getInstance()->getAuthManager()->autoCreateUser(
+			$services->getAuthManager()->autoCreateUser(
 				$this->mwUser,
 				MediaWiki\Auth\AuthManager::AUTOCREATE_SOURCE_MAINT,
 				false

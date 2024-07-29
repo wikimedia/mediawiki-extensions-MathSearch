@@ -23,7 +23,6 @@
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
-use MediaWiki\MediaWikiServices;
 use Wikimedia\Rdbms\IResultWrapper;
 
 /**
@@ -84,7 +83,7 @@ abstract class IndexBase extends Maintenance {
 		libxml_use_internal_errors( true );
 		$i = 0;
 		$inc = $this->getArg( 1, 100 );
-		$db = MediaWikiServices::getInstance()
+		$db = $this->getServiceContainer()
 			->getConnectionProvider()
 			->getReplicaDatabase();
 		echo "getting list of all equations from the database\n";

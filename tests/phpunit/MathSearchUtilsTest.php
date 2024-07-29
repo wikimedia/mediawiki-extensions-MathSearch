@@ -1,7 +1,5 @@
 <?php
 
-use MediaWiki\MediaWikiServices;
-
 /**
  * @group MathSearch
  */
@@ -24,7 +22,7 @@ class MathSearchUtilsTest extends MediaWikiIntegrationTestCase {
 	 */
 	public function test() {
 		$this->markTestSkipped( __METHOD__ . " temporary deactivated." );
-		$dbw = MediaWikiServices::getInstance()
+		$dbw = $this->getServiceContainer()
 			->getConnectionProvider()
 			->getPrimaryDatabase();
 		$dbw->query( 'CREATE TEMPORARY TABLE IF NOT EXISTS tmp_math_util_test (s TEXT, i INT)' );

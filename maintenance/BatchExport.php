@@ -18,7 +18,6 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;
 use UtfNormal\Utils;
 
@@ -40,7 +39,7 @@ class BatchExport extends Maintenance {
 			$this->output( "{$dir} is not a directory.\n" );
 			exit( 1 );
 		}
-		$dbr = MediaWikiServices::getInstance()
+		$dbr = $this->getServiceContainer()
 			->getConnectionProvider()
 			->getReplicaDatabase();
 		// runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,

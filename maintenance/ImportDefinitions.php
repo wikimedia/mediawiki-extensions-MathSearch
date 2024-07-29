@@ -18,7 +18,6 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
@@ -42,7 +41,7 @@ class ImportDefinitions extends Maintenance {
 	}
 
 	public function execute() {
-		$dbw = MediaWikiServices::getInstance()
+		$dbw = $this->getServiceContainer()
 			->getConnectionProvider()
 			->getPrimaryDatabase();
 		$this->dir = $this->getArg( 0 );

@@ -18,8 +18,6 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\MediaWikiServices;
-
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ExtractFeatures extends Maintenance {
@@ -63,7 +61,7 @@ class ExtractFeatures extends Maintenance {
 		}
 		$this->output( "Rebuilding index fields for {$count} pages with option {$this->purge}...\n" );
 		$fcount = 0;
-		$revisionStore = MediaWikiServices::getInstance()->getRevisionStore();
+		$revisionStore = $this->getServiceContainer()->getRevisionStore();
 
 		while ( $n < $count ) {
 			if ( $n ) {
@@ -148,13 +146,10 @@ class ExtractFeatures extends Maintenance {
 	}
 
 	public function execute() {
-		$this->dbw = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
+		$connectionProvider = $this->getServiceContainer();
+		$this->dbw = $connectionProvider->getPrimaryDatabase();
 		$this->purge = $this->getOption( 'purge', false );
-		$this->db = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
+		$this->db = $connectionProvider->getPrimaryDatabase();
 		$this->output( "Done.\n" );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
 	}

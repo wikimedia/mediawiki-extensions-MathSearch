@@ -18,8 +18,6 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\MediaWikiServices;
-
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class WmcRefIdentifier extends Maintenance {
@@ -30,7 +28,7 @@ class WmcRefIdentifier extends Maintenance {
 	}
 
 	public function execute() {
-		$dbr = MediaWikiServices::getInstance()
+		$dbr = $this->getServiceContainer()
 			->getConnectionProvider()
 			->getReplicaDatabase();
 		$res = $dbr->query( 'SELECT qID, oldId, fid, math_input FROM math_wmc_ref r' .

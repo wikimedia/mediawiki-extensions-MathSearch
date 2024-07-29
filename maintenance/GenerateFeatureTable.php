@@ -18,8 +18,6 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\MediaWikiServices;
-
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class GenerateFeatureTable extends Maintenance {
@@ -116,13 +114,10 @@ class GenerateFeatureTable extends Maintenance {
 	}
 
 	public function execute() {
-		$this->dbw = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
+		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
+		$this->dbw = $connectionProvider->getPrimaryDatabase();
 		$this->purge = $this->getOption( "purge", false );
-		$this->db = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
+		$this->db = $connectionProvider->getPrimaryDatabase();
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
 	}
 }

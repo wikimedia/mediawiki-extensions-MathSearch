@@ -20,7 +20,6 @@
  */
 
 use MediaWiki\Extension\Math\MathRenderer;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Parser\Parser;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
@@ -139,7 +138,7 @@ class UpdateMath extends Maintenance {
 			);
 
 			$this->dbw->begin( __METHOD__ );
-			$revisionStore = MediaWikiServices::getInstance()->getRevisionStore();
+			$revisionStore = $this->getServiceContainer()->getRevisionStore();
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
 				$this->output( "\nr{$s->rev_id} namespace:  {$s->page_namespace} page title: {$s->page_title}" );
@@ -176,7 +175,7 @@ class UpdateMath extends Maintenance {
 			foreach ( $math as $formula ) {
 				$this->time = microtime( true );
 				/** @var MathRenderer $renderer */
-				$renderer = MediaWikiServices::getInstance()->get( 'Math.RendererFactory' )
+				$renderer = $this->getServiceContainer()->get( 'Math.RendererFactory' )
 					->getRenderer( $formula[1], $formula[2], $this->renderingMode );
 				$this->current = $renderer;
 				$this->time( "loadClass" );
@@ -214,7 +213,7 @@ class UpdateMath extends Maintenance {
 				$renderer->writeCache();
 				$this->time( "write Cache" );
 				if ( !$this->getOption( "hooks", false ) ) {
-					$hookContainer = MediaWikiServices::getInstance()->getHookContainer();
+					$hookContainer = $this->getServiceContainer()->getHookContainer();
 					$hookContainer->run(
 						'MathFormulaPostRender',
 						[
@@ -264,7 +263,7 @@ class UpdateMath extends Maintenance {
 
 	private function getParser( $revId ): Parser {
 		if ( !$this->parser ) {
-			$this->parser = MediaWikiServices::getInstance()->getParserFactory()->create();
+			$this->parser = $this->getServiceContainer()->getParserFactory()->create();
 		}
 		// hack to set private field mRevisionId id
 		$this->parser->preprocess(
@@ -277,14 +276,14 @@ class UpdateMath extends Maintenance {
 
 	public function execute() {
 		global $wgMathValidModes;
-		$this->dbw = MediaWikiServices::getInstance()
+		$this->dbw = $this->getServiceContainer()
 			->getConnectionProvider()
 			->getPrimaryDatabase();
 		$this->purge = $this->getOption( "purge", false );
 		$this->verbose = $this->getOption( "verbose", false );
 		$this->renderingMode = $this->getOption( "mode", 'latexml' );
 		$this->chunkSize = $this->getOption( 'chunk-size', $this->chunkSize );
-		$this->db = MediaWikiServices::getInstance()
+		$this->db = $this->getServiceContainer()
 			->getConnectionProvider()
 			->getPrimaryDatabase();
 		$wgMathValidModes[] = $this->renderingMode;

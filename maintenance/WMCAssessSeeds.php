@@ -18,7 +18,6 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
@@ -39,7 +38,7 @@ class WMCAssessSeeds extends Maintenance {
 		$user = User::newFromName( $this->getArg( 0 ) );
 		$uId = $user->getId();
 		if ( $uId > 0 ) {
-			$dbw = MediaWikiServices::getInstance()
+			$dbw = $this->getServiceContainer()
 				->getConnectionProvider()
 				->getPrimaryDatabase();
 			$this->output( "Insert formula assessments...\n" );

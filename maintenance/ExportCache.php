@@ -19,8 +19,6 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\MediaWikiServices;
-
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ExportMathCache extends Maintenance {
@@ -50,12 +48,12 @@ class ExportMathCache extends Maintenance {
 	 * @param bool $sort
 	 * @return array|false
 	 */
-	private static function getMathTagsFromDatabase(
+	private function getMathTagsFromDatabase(
 		int $offset,
 		int $length,
 		bool $sort ) {
 		$out = [];
-		$dbr = MediaWikiServices::getInstance()
+		$dbr = $this->getServiceContainer()
 			->getConnectionProvider()
 			->getReplicaDatabase();
 		$options = [
@@ -89,7 +87,7 @@ class ExportMathCache extends Maintenance {
 		$offset = $this->getOption( 'offset', 0 );
 		$length = $this->getOption( 'length', PHP_INT_MAX );
 		$sort = $this->hasOption( 'sort' );
-		$allEquations = self::getMathTagsFromDatabase( $offset, $length, $sort );
+		$allEquations = $this->getMathTagsFromDatabase( $offset, $length, $sort );
 		if ( !is_array( $allEquations ) ) {
 			$this->error( "Could not get equations from table 'mathlog'",
 				self::ERROR_CODE_DB_ERROR );
