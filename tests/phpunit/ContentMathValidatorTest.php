@@ -16,7 +16,7 @@ class ContentMathValidatorTest extends MediaWikiIntegrationTestCase {
 
 	protected function setUp(): void {
 		parent::setUp();
-		$this->setMwGlobals( 'wgMathDisableTexFilter', 'always' );
+		$this->overrideConfigValue( 'MathDisableTexFilter', 'always' );
 	}
 
 	/**

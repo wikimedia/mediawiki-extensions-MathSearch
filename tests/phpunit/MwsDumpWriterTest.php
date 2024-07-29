@@ -174,33 +174,31 @@ XML;
 	public function testExtract() {
 		$revId = 28378;
 		$dw = new MwsDumpWriter();
-		$this->setMwGlobals(
-			[
-				'wgMathValidModes' => [ 'latexml' ],
-				'wgMathDefaultLaTeXMLSetting' => [
-					'format' => 'xhtml',
-					'whatsin' => 'math',
-					'whatsout' => 'math',
-					'pmml',
-					'cmml',
-					'nodefaultresources',
-					'preload' => [
-						'LaTeX.pool',
-						'article.cls',
-						'amsmath.sty',
-						'amsthm.sty',
-						'amstext.sty',
-						'amssymb.sty',
-						'eucal.sty',
-						'[dvipsnames]xcolor.sty',
-						'url.sty',
-						'hyperref.sty',
-						'[ids]latexml.sty',
-						'texvc'
-					]
+		$this->overrideConfigValues( [
+			'MathValidModes' => [ 'latexml' ],
+			'MathDefaultLaTeXMLSetting' => [
+				'format' => 'xhtml',
+				'whatsin' => 'math',
+				'whatsout' => 'math',
+				'pmml',
+				'cmml',
+				'nodefaultresources',
+				'preload' => [
+					'LaTeX.pool',
+					'article.cls',
+					'amsmath.sty',
+					'amsthm.sty',
+					'amstext.sty',
+					'amssymb.sty',
+					'eucal.sty',
+					'[dvipsnames]xcolor.sty',
+					'url.sty',
+					'hyperref.sty',
+					'[ids]latexml.sty',
+					'texvc'
 				]
 			]
-		);
+		] );
 		$gen = new MathIdGenerator( self::TEST_WIKITEXT, $revId );
 		$gen->setUseCustomIds( true );
 		$dw->addFromMathIdGenerator( $gen );
