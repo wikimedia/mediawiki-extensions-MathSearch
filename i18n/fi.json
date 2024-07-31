@@ -4,6 +4,7 @@
 			"McSalama",
 			"Nike",
 			"Pyscowicz",
+			"Samoasambia",
 			"Silvonen"
 		]
 	},
@@ -23,5 +24,7 @@
 	"math-wmc-SelectRun": "Nimi",
 	"math-search-relation-0": "ja",
 	"math-search-relation-1": "tai",
-	"math-search-relation-2": "ja ei"
+	"math-search-relation-2": "ja ei",
+	"datatypes-type-contentmath": "Matemaattinen lauseke (sisältö)",
+	"wikibase-listdatatypes-contentmath-head": "Matemaattinen lauseke (sisältö)"
 }
