@@ -137,7 +137,7 @@ class UpdateMath extends Maintenance {
 					'revision' => [ 'INNER JOIN', [ 'page_latest = rev_id' ] ] ]
 			);
 
-			$this->dbw->begin( __METHOD__ );
+			$this->beginTransaction( $this->dbw, __METHOD__ );
 			$revisionStore = $this->getServiceContainer()->getRevisionStore();
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
@@ -146,7 +146,7 @@ class UpdateMath extends Maintenance {
 			}
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$start = microtime( true );
-			$this->dbw->commit( __METHOD__ );
+			$this->commitTransaction( $this->dbw, __METHOD__ );
 			echo " committed in " . ( microtime( true ) - $start ) . "s\n\n";
 			var_dump( $this->performance );
 			// echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
