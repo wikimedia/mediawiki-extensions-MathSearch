@@ -10,6 +10,7 @@
  */
 class MathoidDriverTest extends MediaWikiIntegrationTestCase {
 
+	/** @var bool */
 	private static $hasMathoid;
 
 	public static function setUpBeforeClass(): void {

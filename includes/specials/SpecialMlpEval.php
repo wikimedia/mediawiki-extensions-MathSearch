@@ -28,6 +28,7 @@ class SpecialMlpEval extends SpecialPage {
 	public const STEP_FINISHED = 7;
 	private const MAX_ATTEMPTS = 10;
 
+	/** @var string[] */
 	private $subStepNames = [
 		''   => '',
 		'4'  => '',
@@ -49,9 +50,13 @@ class SpecialMlpEval extends SpecialPage {
 	private $fId;
 	/** @var RevisionRecord */
 	private $revisionRecord;
+	/** @var bool */
 	private $texInputChanged = false;
+	/** @var array */
 	private $identifiers = [];
+	/** @var array|null */
 	private $relations;
+	/** @var string */
 	private $speechRuleText;
 	/** @var string */
 	private $subStep = '';

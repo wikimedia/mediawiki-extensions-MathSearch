@@ -7,9 +7,11 @@ use Job;
 use MediaWiki\Auth\AuthManager;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\User;
 
 abstract class GraphJob extends Job implements GenericParameterJob {
 
+	/** @var User */
 	private $user;
 
 	protected static function getLog() {

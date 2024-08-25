@@ -20,18 +20,27 @@ class SpecialMathSearch extends SpecialPage {
 
 	private const GUI_PATH = '/modules/min/index.xhtml';
 
+	/** @var string */
 	private $mathpattern;
+	/** @var string */
 	private $textpattern;
+	/** @var string */
 	private $mathmlquery;
 	/** @var string */
 	private $mathEngine = 'mws';
+	/** @var string */
 	private $displayQuery;
+	/** @var MathEngineRest */
 	private $mathBackend;
+	/** @var int */
 	private $resultID = 0;
+	/** @var int|string */
 	private $noTerms = 1;
+	/** @var array */
 	private $terms = [];
 	/** @var int[] */
 	private $relevanceMap;
+	/** @var array */
 	private $defaults;
 
 	public static function exception_error_handler( $errno, $errstr, $errfile, $errline ) {

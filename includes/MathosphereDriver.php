@@ -14,10 +14,13 @@ class MathosphereDriver {
 	private $title = "";
 	/** @var string|null */
 	private $version;
+	/** @var mixed */
 	private $error;
 	/** @var bool|null */
 	private $success;
+	/** @var array */
 	private $relations = [];
+	/** @var array */
 	private $identifiers = [];
 
 	function __construct( $revisionId = null ) {

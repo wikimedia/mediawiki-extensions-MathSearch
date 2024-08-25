@@ -1,24 +1,33 @@
 <?php
 
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Logger\LegacyLogger;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\SpecialPage\SpecialPage;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 class SpecialLaTeXTranslator extends SpecialPage {
 
 	private const VERSION = '1.0.0';
 
+	/** @var WANObjectCache */
 	private $cache;
+	/** @var string */
 	private $dgUrl;
+	/** @var string */
 	private $compUrl;
+	/** @var HttpRequestFactory */
 	private $httpFactory;
+	/** @var LoggerInterface */
 	private $logger;
+	/** @var string */
 	private $context;
+	/** @var string */
 	private $tex;
 	/** @var bool */
 	private $purge;

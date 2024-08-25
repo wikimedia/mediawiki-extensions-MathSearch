@@ -44,7 +44,9 @@ class UpdateMath extends Maintenance {
 	private $renderingMode = 'latexml';
 	/** @var int */
 	private $chunkSize = 1000;
+	/** @var Parser */
 	private $parser;
+	/** @var ParserOptions */
 	private $parserOptions;
 
 	public function __construct() {

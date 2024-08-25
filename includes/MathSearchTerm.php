@@ -12,12 +12,17 @@ class MathSearchTerm {
 	public const REL_NAND = 2;
 	public const REL_NOR = 3;
 
+	/** @var int */
 	private $key = 0;
+	/** @var int */
 	private $rel = 0;
+	/** @var int */
 	private $type = 0;
+	/** @var string */
 	private $expr = '';
 	/** @var int[] */
 	private $relevanceMap = [];
+	/** @var SearchResult[]|array[][][] */
 	private $resultSet = [];
 
 	/**

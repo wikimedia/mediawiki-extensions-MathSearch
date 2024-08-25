@@ -22,6 +22,7 @@ use Wikimedia\Rdbms\DBConnRef;
  */
 class MathSearchHooks {
 
+	/** @var MathIdGenerator[] */
 	private static $idGenerators = [];
 
 	/**

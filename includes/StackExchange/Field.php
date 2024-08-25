@@ -10,13 +10,21 @@ use Wikibase\Repo\WikibaseRepo;
 
 class Field {
 
+	/** @var string */
 	private $seName;
+	/** @var string|null */
 	private $propertyId = null;
+	/** @var bool */
 	private $references = false;
+	/** @var bool */
 	private $known = false;
+	/** @var bool|null */
 	private $excludeFromWb = null;
+	/** @var string */
 	private $content;
+	/** @var string */
 	private $normFileName;
+	/** @var int|null */
 	private $externalIdType = null;
 
 	// TODO: read this from a config file
