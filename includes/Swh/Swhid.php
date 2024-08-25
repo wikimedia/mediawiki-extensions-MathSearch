@@ -6,8 +6,8 @@ use MediaWiki\Http\HttpRequestFactory;
 use Throwable;
 
 class Swhid {
-	private $url;
-	private $httpFactory;
+	private string $url;
+	private HttpRequestFactory $httpFactory;
 
 	private ?string $snapshot = null;
 
