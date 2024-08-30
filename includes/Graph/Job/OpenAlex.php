@@ -117,9 +117,7 @@ class OpenAlex extends GraphJob {
 	}
 
 	public function getNumericPropertyId( string $key ): NumericPropertyId {
-		if ( !isset( $this->propertyIds[$key] ) ) {
-			$this->propertyIds[$key] = new NumericPropertyId( $key );
-		}
+		$this->propertyIds[$key] ??= new NumericPropertyId( $key );
 		return $this->propertyIds[$key];
 	}
 }

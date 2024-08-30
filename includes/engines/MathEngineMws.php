@@ -24,7 +24,7 @@ class MathEngineMws extends MathEngineRest {
 	function processMathResults( $xmlRoot ) {
 		foreach ( $xmlRoot->children( "mws", true ) as $page ) {
 			$attrs = $page->attributes();
-			if ( strpos( $attrs["uri"], '#' ) ) {
+			if ( str_contains( $attrs['uri'], '#' ) ) {
 				$uri = explode( "#", $attrs["uri"] );
 				$revisionID = $uri[0];
 				$AnchorID = $uri[1];

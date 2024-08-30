@@ -16,10 +16,7 @@ class WikitextGenerator {
 	 * @param IdMap|null $idGen
 	 */
 	public function __construct( IdMap $idGen = null ) {
-		if ( $idGen === null ) {
-			$idGen = IdMap::getInstance();
-		}
-		$this->idGen = $idGen;
+		$this->idGen = $idGen ?? IdMap::getInstance();
 	}
 
 	public function getNextElement( XMLReader $xml, $postQId ): string {

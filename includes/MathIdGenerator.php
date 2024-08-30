@@ -46,9 +46,7 @@ class MathIdGenerator {
 	 * @return int[] Array mapping key names to their position
 	 */
 	public function getKeys() {
-		if ( !isset( $this->keys ) ) {
-			$this->keys = array_flip( array_keys( $this->mathTags ) );
-		}
+		$this->keys ??= array_flip( array_keys( $this->mathTags ) );
 		return $this->keys;
 	}
 
@@ -129,13 +127,7 @@ class MathIdGenerator {
 			$this->contentIdMap = [];
 			foreach ( $this->mathTags as $key => $tag ) {
 				$userInputTex = $this->getUserInputTex( $tag );
-				if ( !array_key_exists( $userInputTex,
-						$this->contentIdMap )
-				) {
-					$this->contentIdMap[$userInputTex] = [];
-				}
-				$this->contentIdMap[$userInputTex][] =
-					$this->parserKey2fId( $key );
+				$this->contentIdMap[$userInputTex][] = $this->parserKey2fId( $key );
 			}
 		}
 		return $this->contentIdMap;

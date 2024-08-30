@@ -222,9 +222,7 @@ class Field {
 	}
 
 	private function propagateFieldInfo( $fieldInfo ) {
-		$hasKey = static function ( $key ) use ( $fieldInfo ) {
-			return array_key_exists( $key, $fieldInfo );
-		};
+		$hasKey = static fn ( $key ) => array_key_exists( $key, $fieldInfo );
 		$this->known = true;
 		$isExcluded = $this->setIfDefined( 'excludeFromWb', $fieldInfo );
 		if ( $isExcluded ) {
