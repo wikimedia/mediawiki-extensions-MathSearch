@@ -22,9 +22,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	private $tex;
 	/** @var bool */
 	private $purge;
-	/**
-	 * @var false|mixed|string
-	 */
+	/** @var string|null */
 	private $dependencyGraph;
 
 	private function log( $level, $message, array $context = [] ) {
@@ -121,9 +119,6 @@ are often used together.';
 		return $this->displayResults();
 	}
 
-	/**
-	 * @return false|mixed
-	 */
 	private function getTranslations(): string {
 		$hash =
 			$this->cache->makeGlobalKey( self::class,
@@ -137,9 +132,6 @@ are often used together.';
 			[ $this, 'calculateTranslations' ] );
 	}
 
-	/**
-	 * @return string
-	 */
 	public function calculateTranslations(): string {
 		$this->log( LogLevel::INFO, "Cache miss. Calculate translation." );
 		$q = rawurlencode( $this->tex );
@@ -181,9 +173,6 @@ are often used together.';
 			[ $this, 'calculateDependencyGraphFromContext' ] );
 	}
 
-	/**
-	 * @return false|mixed
-	 */
 	public function calculateDependencyGraphFromContext(): string {
 		$this->log( LogLevel::INFO, "Cache miss. Calculate dependency graph." );
 		$url = $this->dgUrl;
@@ -232,9 +221,6 @@ are often used together.';
 		}
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function displayResults(): bool {
 		$output = $this->getOutput();
 		$output->addWikiMsg( 'math-tex2nb-latex' );
