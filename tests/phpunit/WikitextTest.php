@@ -6,7 +6,6 @@ use MediaWikiIntegrationTestCase;
 use SimpleXMLElement;
 
 /**
- * @package MathSearch\StackExchange
  * @group Database
  * @group MathSearch
  */
