@@ -112,9 +112,6 @@ class MathosphereDriver {
 	}
 
 	private function addIdentifierDefinitionTuple( $r ) {
-		if ( !isset( $this->relations[$r->identifier] ) ) {
-			$this->relations[$r->identifier] = [];
-		}
 		$this->relations[$r->identifier][] = $r;
 	}
 

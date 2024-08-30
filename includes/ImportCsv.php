@@ -219,19 +219,14 @@ class ImportCsv {
 	 * @return bool
 	 */
 	private function isValidQId( $qId ) {
-		if ( array_key_exists( $qId, $this->validQIds ) ) {
-			return $this->validQIds[$qId];
+		if ( !array_key_exists( $qId, $this->validQIds ) ) {
+			$dbr = MediaWikiServices::getInstance()
+				->getConnectionProvider()
+				->getReplicaDatabase();
+			$exists = (bool)$dbr->selectField( 'math_wmc_ref', 'qId', [ 'qId' => $qId ] );
+			$this->validQIds[$qId] = $exists;
 		}
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
-		if ( $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qId' => $qId ] ) ) {
-			$this->validQIds[$qId] = true;
-			return true;
-		} else {
-			$this->validQIds[$qId] = false;
-			return false;
-		}
+		return $this->validQIds[$qId];
 	}
 
 	/**

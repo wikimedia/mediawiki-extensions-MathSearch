@@ -155,11 +155,8 @@ class MathPerformance extends Maintenance {
 	private function time( $category = 'default' ) {
 		global $wgMathDebug;
 		$delta = ( microtime( true ) - $this->time ) * 1000;
-		if ( isset( $this->performance[$category] ) ) {
-			$this->performance[$category] += $delta;
-		} else {
-			$this->performance[$category] = $delta;
-		}
+		$this->performance[$category] ??= 0;
+		$this->performance[$category] += $delta;
 		$logData = [
 			'math_inputhash'       => $this->currentHash,
 			'mathperformance_name' => substr( $category, 0, 10 ),

@@ -149,11 +149,7 @@ class MathSearchTerm {
 	}
 
 	public function getRevisionResult( $revisionId ) {
-		if ( array_key_exists( (string)$revisionId, $this->resultSet ) ) {
-			return $this->resultSet[(string)$revisionId];
-		}
-
-		return [];
+		return $this->resultSet[$revisionId] ?? [];
 	}
 
 }

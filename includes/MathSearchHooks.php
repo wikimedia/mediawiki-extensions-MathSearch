@@ -467,9 +467,7 @@ class MathSearchHooks {
 	 * @return MathIdGenerator
 	 */
 	private static function getRevIdGenerator( $revId ) {
-		if ( !array_key_exists( $revId, self::$idGenerators ) ) {
-			self::$idGenerators[$revId] = MathIdGenerator::newFromRevisionId( $revId );
-		}
+		self::$idGenerators[$revId] ??= MathIdGenerator::newFromRevisionId( $revId );
 		return self::$idGenerators[$revId];
 	}
 

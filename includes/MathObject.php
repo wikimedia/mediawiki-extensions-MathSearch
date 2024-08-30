@@ -549,8 +549,7 @@ class MathObject extends MathMathML {
 
 	public function getMathMlAltText() {
 		$mml = $this->getMathml();
-		preg_match( '/<math.+alttext="(.*?)".*>/', $mml, $res );
-		if ( count( $res ) ) {
+		if ( preg_match( '/<math.+alttext="(.*?)".*>/', $mml, $res ) ) {
 			return $res[1];
 		}
 		return '';

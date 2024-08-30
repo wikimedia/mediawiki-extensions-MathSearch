@@ -33,11 +33,9 @@ class MathMLIntents extends GraphJob {
 		$qIdMap = $this->getConceptIdMap();
 		foreach ( $this->params['rows'] as $concept => $row ) {
 			try {
-				if ( !isset( $qIdMap[(string)$concept] ) ) {
+				$qid = $qIdMap[$concept] ?? false;
+				if ( $qid === false ) {
 					self::getLog()->debug( "No Qid found for $concept." );
-					$qid = false;
-				} else {
-					$qid = $qIdMap[$concept];
 				}
 				$this->processRow( $concept, $qid, $row );
 			} catch ( Throwable $ex ) {
@@ -127,9 +125,7 @@ class MathMLIntents extends GraphJob {
 	}
 
 	public function getNumericPropertyId( string $key ): NumericPropertyId {
-		if ( !isset( $this->propertyIds[$key] ) ) {
-			$this->propertyIds[$key] = new NumericPropertyId( $key );
-		}
+		$this->propertyIds[$key] ??= new NumericPropertyId( $key );
 		return $this->propertyIds[$key];
 	}
 }
