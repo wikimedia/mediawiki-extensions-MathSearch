@@ -83,7 +83,7 @@ class MathSearchHooks {
 				if ( !$mo->isInDatabase() ) {
 					$mo->writeToCache();
 				}
-				$exists = ( $dbr ?? MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+				$exists = ( $dbr ?? MediaWikiServices::getInstance()->getConnectionProvider()
 					->getReplicaDatabase() )->selectRow( 'mathindex',
 					[ 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ],
 					[

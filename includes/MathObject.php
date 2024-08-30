@@ -686,7 +686,7 @@ class MathObject extends MathMathML {
 	}
 
 	public function readFromCache(): bool {
-		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getReplicaDatabase();
+		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
 		$rpage = $dbr->selectRow( 'mathlog',
 			$this->dbInArray(),
 			[ 'math_inputhash' => $this->getInputHash() ],
