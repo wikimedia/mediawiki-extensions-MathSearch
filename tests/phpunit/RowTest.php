@@ -5,7 +5,6 @@ namespace MediaWiki\Extension\MathSearch\StackExchange;
 use MediaWikiIntegrationTestCase;
 
 /**
- * @package MathSearch\StackExchange
  * @group Database
  * @group MathSearch
  */
