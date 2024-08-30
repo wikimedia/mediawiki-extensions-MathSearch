@@ -490,6 +490,9 @@ class MathObject extends MathMathML {
 		return null;
 	}
 
+	/**
+	 * @return array<string,stdClass[]>
+	 */
 	public function getRelations(): array {
 		$dbr = MediaWikiServices::getInstance()
 			->getConnectionProvider()

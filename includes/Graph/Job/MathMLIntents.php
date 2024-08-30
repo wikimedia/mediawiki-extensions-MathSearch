@@ -20,6 +20,7 @@ class MathMLIntents extends GraphJob {
 	private EntityLookup $entityLookup;
 	private GuidGenerator $guidGenerator;
 
+	/** @var array<string,NumericPropertyId> */
 	private array $propertyIds = [];
 
 	public function __construct( $params ) {

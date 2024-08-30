@@ -1,12 +1,12 @@
 <?php
 
 use MediaWiki\MediaWikiServices;
-use MediaWiki\User\User;
+use MediaWiki\User\UserIdentity;
 
 class ImportCsv {
 
 	/**
-	 * @var array
+	 * @var string[]
 	 */
 	private static $columnHeaders = [ 'queryId', 'formulaId' ];
 	/**
@@ -29,15 +29,9 @@ class ImportCsv {
 	 * @var bool
 	 */
 	private $overwrite = false;
-	/**
-	 * @var User
-	 */
-	private $user;
+	private UserIdentity $user;
 
-	/**
-	 * @param User $user
-	 */
-	function __construct( User $user ) {
+	function __construct( UserIdentity $user ) {
 		$this->user = $user;
 	}
 
@@ -103,17 +97,11 @@ class ImportCsv {
 		return $this->runId;
 	}
 
-	/**
-	 * @return User
-	 */
-	public function getUser() {
+	public function getUser(): UserIdentity {
 		return $this->user;
 	}
 
-	/**
-	 * @param User $user
-	 */
-	public function setUser( $user ) {
+	public function setUser( UserIdentity $user ) {
 		$this->user = $user;
 	}
 
@@ -155,7 +143,7 @@ class ImportCsv {
 	}
 
 	/**
-	 * @param array $table
+	 * @param string[] $table
 	 * @return null|string
 	 */
 	public function importFromArray( $table ) {

@@ -11,7 +11,7 @@ class Swhid {
 
 	private ?string $snapshot = null;
 
-	/** @var mixed */
+	/** @var string|null */
 	private $snapshotDate;
 	private int $status;
 
@@ -43,7 +43,7 @@ class Swhid {
 	}
 
 	/**
-	 * @return mixed
+	 * @return string|null
 	 */
 	public function getSnapshotDate() {
 		return $this->snapshotDate;

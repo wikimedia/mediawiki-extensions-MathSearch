@@ -52,9 +52,9 @@ class SpecialMlpEval extends SpecialPage {
 	private $revisionRecord;
 	/** @var bool */
 	private $texInputChanged = false;
-	/** @var array */
+	/** @var string[] */
 	private $identifiers = [];
-	/** @var array|null */
+	/** @var array<string,string[]>|null */
 	private $relations;
 	/** @var string */
 	private $speechRuleText;
@@ -71,7 +71,7 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @return array
+	 * @return string[]
 	 */
 	public function getIdentifiers() {
 		return $this->identifiers;
@@ -679,8 +679,8 @@ class SpecialMlpEval extends SpecialPage {
 	}
 
 	/**
-	 * @param mixed|null $key
-	 * @return mixed
+	 * @param string|null $key
+	 * @return string[]|array
 	 */
 	public function getRelations( $key = null ) {
 		if ( $key ) {

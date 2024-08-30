@@ -20,6 +20,7 @@ class OpenAlex extends GraphJob {
 	private EntityLookup $entityLookup;
 	private GuidGenerator $guidGenerator;
 
+	/** @var array<string,NumericPropertyId> */
 	private array $propertyIds = [];
 
 	public function __construct( $params ) {
@@ -46,6 +47,9 @@ class OpenAlex extends GraphJob {
 		return true;
 	}
 
+	/**
+	 * @return array<string,string>
+	 */
 	private function getDeQIdMap(): array {
 		$des = '"' . implode( '" "', array_keys( $this->params['rows'] ) ) . '"';
 		$query = Query::getQidFromDe( $des );

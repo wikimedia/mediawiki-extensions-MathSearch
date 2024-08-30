@@ -5,32 +5,32 @@ use MediaWiki\MediaWikiServices;
 
 class MathoidDriver {
 
-	/** @var mixed */
+	/** @var bool */
 	private $success;
-	/** @var mixed */
+	/** @var string */
 	private $checked;
-	/** @var mixed */
+	/** @var string[] */
 	private $identifiers;
-	/** @var mixed */
+	/** @var array */
 	private $requiredPackages;
 	/** @var string */
 	private $q;
 	/** @var string */
 	private $type;
-	/** @var mixed */
+	/** @var string */
 	private $version;
-	/** @var mixed */
+	/** @var stdClass */
 	private $error;
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function getVersion() {
 		return $this->version;
 	}
 
 	/**
-	 * @return mixed
+	 * @return stdClass
 	 */
 	public function getError() {
 		return $this->error;
@@ -49,28 +49,28 @@ class MathoidDriver {
 	}
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
 	public function getSuccess() {
 		return $this->success;
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function getChecked() {
 		return $this->checked;
 	}
 
 	/**
-	 * @return mixed
+	 * @return string[]
 	 */
 	public function getIdentifiers() {
 		return $this->identifiers;
 	}
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
 	public function getRequiredPackages() {
 		return $this->requiredPackages;

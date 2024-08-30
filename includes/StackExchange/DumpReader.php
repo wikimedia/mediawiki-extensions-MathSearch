@@ -4,6 +4,8 @@ namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
+use XMLReader;
 
 class DumpReader {
 

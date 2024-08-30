@@ -14,14 +14,10 @@ class MathosphereDriver {
 	private $title = "";
 	/** @var string|null */
 	private $version;
-	/** @var mixed */
-	private $error;
 	/** @var bool|null */
 	private $success;
 	/** @var array */
 	private $relations = [];
-	/** @var array */
-	private $identifiers = [];
 
 	function __construct( $revisionId = null ) {
 		if ( $revisionId !== null ) {
@@ -82,13 +78,6 @@ class MathosphereDriver {
 	 */
 	public function getVersion() {
 		return $this->version;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function getError() {
-		return $this->error;
 	}
 
 	public function analyze() {

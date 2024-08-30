@@ -136,7 +136,7 @@ abstract class MathEngineRest {
 
 	/**
 	 * @param int $numProcess
-	 * @return mixed|string
+	 * @return string
 	 */
 	protected function getPostData( $numProcess ) {
 		global $wgMathDebug;

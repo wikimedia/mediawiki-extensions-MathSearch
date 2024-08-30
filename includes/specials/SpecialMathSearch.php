@@ -36,11 +36,11 @@ class SpecialMathSearch extends SpecialPage {
 	private $resultID = 0;
 	/** @var int|string */
 	private $noTerms = 1;
-	/** @var array */
+	/** @var array<int,MathSearchTerm> */
 	private $terms = [];
 	/** @var int[] */
 	private $relevanceMap;
-	/** @var array */
+	/** @var array<int,array<string,int|string>> */
 	private $defaults;
 
 	public static function exception_error_handler( $errno, $errstr, $errfile, $errline ) {
@@ -459,6 +459,11 @@ class SpecialMathSearch extends SpecialPage {
 		$this->defaults[$i]['expr'] = $mathpattern;
 	}
 
+	/**
+	 * @param int $i
+	 * @param string $what
+	 * @return int|string
+	 */
 	private function getDefault( $i, $what ) {
 		if ( isset( $this->defaults[$i][$what] ) ) {
 			return $this->defaults[$i][$what];
