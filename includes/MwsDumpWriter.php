@@ -53,6 +53,12 @@ class MwsDumpWriter {
 		return $this->XMLFooter;
 	}
 
+	/**
+	 * @param string $mathML
+	 * @param int $revId
+	 * @param string $eId
+	 * @return string
+	 */
 	public function getMwsExpression( $mathML, $revId, $eId ) {
 		$out = "\n<" . $this->mwsns . "expr url=\"{$revId}#{$eId}\">\n\t";
 		$out .= $mathML;
@@ -60,6 +66,12 @@ class MwsDumpWriter {
 		return $out;
 	}
 
+	/**
+	 * @param string $mathML
+	 * @param int $revId
+	 * @param string $eId
+	 * @return true
+	 */
 	public function addMwsExpression( $mathML, $revId, $eId ) {
 		$this->outBuffer .= $this->getMwsExpression( $mathML, $revId, $eId );
 		return true;

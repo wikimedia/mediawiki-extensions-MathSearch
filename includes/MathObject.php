@@ -29,7 +29,7 @@ class MathObject extends MathMathML {
 	/** @var string */
 	protected $postData = '';
 	/** @var string */
-	protected $anchorID = 0;
+	protected $anchorID;
 	/** @var int */
 	protected $revisionID = 0;
 	/** @var string|null */

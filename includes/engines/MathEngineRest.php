@@ -19,7 +19,7 @@ abstract class MathEngineRest {
 	protected $type = "mws";
 	/** @var int|false */
 	protected $size = false;
-	/** @var array[][][] */
+	/** @var array<int,array<string,array[]>> */
 	protected $resultSet = [];
 	/** @var int[] */
 	protected $relevanceMap = [];
@@ -92,7 +92,7 @@ abstract class MathEngineRest {
 	}
 
 	/**
-	 * @return array[][][]
+	 * @return array<int,array<string,array[]>>
 	 */
 	public function getResultSet() {
 		return $this->resultSet;
