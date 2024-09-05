@@ -10,6 +10,7 @@
  */
 class MathosphereDriverTest extends MediaWikiIntegrationTestCase {
 
+	/** @var bool */
 	private static $hasMathosphere;
 
 	public static function setUpBeforeClass(): void {

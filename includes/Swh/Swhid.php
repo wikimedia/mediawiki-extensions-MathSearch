@@ -11,6 +11,7 @@ class Swhid {
 
 	private ?string $snapshot = null;
 
+	/** @var mixed */
 	private $snapshotDate;
 	private int $status;
 

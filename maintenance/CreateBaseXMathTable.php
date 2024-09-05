@@ -28,8 +28,11 @@ require_once __DIR__ . '/IndexBase.php';
  */
 class CreateBaseXMathTable extends IndexBase {
 
+	/** @var string */
 	private static $mwsns = 'mws:';
+	/** @var string */
 	private static $XMLHead;
+	/** @var string */
 	private static $XMLFooter;
 	/** @var \BaseXSession */
 	private $session;

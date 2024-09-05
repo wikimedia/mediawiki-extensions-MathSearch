@@ -13,9 +13,13 @@ use Wikibase\Repo\WikibaseRepo;
 
 class Formula {
 
+	/** @var int */
 	private $id;
+	/** @var int */
 	private $qid;
+	/** @var string */
 	private $text;
+	/** @var int */
 	private $postQId;
 
 	/**

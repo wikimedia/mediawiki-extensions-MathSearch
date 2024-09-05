@@ -6,7 +6,9 @@ class MwsDumpWriter {
 
 	/** @var string */
 	private $mwsns = 'mws:';
+	/** @var string */
 	private $XMLHead;
+	/** @var string */
 	private $XMLFooter;
 	/** @var string */
 	private $outBuffer = '';

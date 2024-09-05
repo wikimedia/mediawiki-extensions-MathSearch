@@ -18,6 +18,7 @@ class IdMap {
 	 * @var \HashBagOStuff
 	 */
 	private $cache;
+	/** @var self|null */
 	private static $instance;
 
 	private function __construct() {

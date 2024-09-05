@@ -5,13 +5,21 @@ use MediaWiki\MediaWikiServices;
 
 class MathoidDriver {
 
+	/** @var mixed */
 	private $success;
+	/** @var mixed */
 	private $checked;
+	/** @var mixed */
 	private $identifiers;
+	/** @var mixed */
 	private $requiredPackages;
+	/** @var string */
 	private $q;
+	/** @var string */
 	private $type;
+	/** @var mixed */
 	private $version;
+	/** @var mixed */
 	private $error;
 
 	/**

@@ -21,19 +21,26 @@
 use DataValues\StringValue;
 use DataValues\TimeValue;
 use MediaWiki\Extension\MathSearch\Swh\Swhid;
+use MediaWiki\User\User;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\NumericPropertyId;
+use Wikibase\DataModel\Services\Lookup\EntityLookup;
 use Wikibase\DataModel\Services\Statement\GuidGenerator;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
+use Wikibase\Lib\Store\EntityStore;
 use Wikibase\Repo\WikibaseRepo;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class AddSwhids extends Maintenance {
 
+	/** @var EntityLookup */
 	private $entityLookup;
+	/** @var EntityStore */
 	private $entityStore;
+	/** @var GuidGenerator */
 	private $guidGenerator;
+	/** @var User */
 	private $mwUser;
 
 	public function __construct() {
