@@ -22,7 +22,7 @@ class MathSearchTerm {
 	private $expr = '';
 	/** @var int[] */
 	private $relevanceMap = [];
-	/** @var SearchResult[]|array[][][] */
+	/** @var array<int,SearchResult|array<string,array[]>> */
 	private $resultSet = [];
 
 	/**
@@ -102,6 +102,7 @@ class MathSearchTerm {
 				$search->setLimitOffset( 10000 );
 				$sres = $search->searchText( $this->getExpr() );
 				if ( $sres ) {
+					/** @var SearchResult $tres */
 					foreach ( $sres as $tres ) {
 						$revisionID = $tres->getTitle()->getLatestRevID();
 						$this->resultSet[(string)$revisionID] = $tres;
@@ -140,7 +141,7 @@ class MathSearchTerm {
 	}
 
 	/**
-	 * @return array
+	 * @return array<int,SearchResult|array<string,array[]>>
 	 */
 	public function getResultSet() {
 		return $this->resultSet;
@@ -153,6 +154,10 @@ class MathSearchTerm {
 		return $this->relevanceMap;
 	}
 
+	/**
+	 * @param int $revisionId
+	 * @return SearchResult|array<string,array[]>
+	 */
 	public function getRevisionResult( $revisionId ) {
 		return $this->resultSet[$revisionId] ?? [];
 	}

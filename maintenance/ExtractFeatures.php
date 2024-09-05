@@ -125,24 +125,21 @@ class ExtractFeatures extends Maintenance {
 	 * @param bool|string $purge
 	 * @param \Wikimedia\Rdbms\IDatabase $dbw
 	 *
-	 * @return number
+	 * @return int
 	 */
 	private static function doUpdate( $pText, $pTitle, $purge, $dbw ) {
-		// TODO: fix link id problem
-		$anchorID = 0;
 		$math = MathObject::extractMathTagsFromWikiText( $pText );
-		$matches = count( $math );
-		if ( $matches ) {
-			echo ( "\t processing $matches math fields for {$pTitle} page\n" );
-			foreach ( $math as $formula ) {
-				$mo = new MathObject( $formula[1] );
-				$mo->updateObservations( $dbw );
-				// Enable indexing of math formula
-				$anchorID++;
-			}
-			return $matches;
+		if ( !$math ) {
+			return 0;
 		}
-		return 0;
+
+		$matches = count( $math );
+		echo ( "\t processing $matches math fields for {$pTitle} page\n" );
+		foreach ( $math as $formula ) {
+			$mo = new MathObject( $formula[1] );
+			$mo->updateObservations( $dbw );
+		}
+		return $matches;
 	}
 
 	public function execute() {

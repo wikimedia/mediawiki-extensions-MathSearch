@@ -14,6 +14,10 @@ class MathIdGenerator {
 	public const ATTRIB_POS = 2;
 
 	private string $wikiText;
+	/**
+	 * @var array<string,array{0:string,1:string|null,2:array,3:string}> Filtered result from
+	 *  {@see Parser::extractTagsAndParams} with only <math> tags
+	 */
 	private array $mathTags;
 	private int $revisionId;
 	/** @var int[] */
@@ -22,7 +26,7 @@ class MathIdGenerator {
 	private bool $useCustomIds = false;
 	/** @var int[]|null */
 	private $keys;
-	/** @var string[][]|null */
+	/** @var array<string,?string[]>|null */
 	private $contentIdMap;
 
 	public static function newFromRevisionRecord( RevisionRecord $revisionRecord ): MathIdGenerator {
@@ -43,7 +47,7 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * @return int[] Array mapping key names to their position
+	 * @return array<string,int> Array mapping key names to their position
 	 */
 	public function getKeys() {
 		$this->keys ??= array_flip( array_keys( $this->mathTags ) );
@@ -78,7 +82,7 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * @param array $mathTags
+	 * @param array<string,mixed> $mathTags
 	 *
 	 * @return string[]
 	 */
@@ -109,7 +113,7 @@ class MathIdGenerator {
 	/**
 	 * @param string $content
 	 *
-	 * @return string[]
+	 * @return ?string[]
 	 */
 	public function getIdsFromContent( $content ) {
 		$contentIdMap = $this->getContentIdMap();
@@ -120,7 +124,7 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * @return string[][]
+	 * @return array<string,?string[]>
 	 */
 	public function getContentIdMap() {
 		if ( !$this->contentIdMap ) {
@@ -151,6 +155,9 @@ class MathIdGenerator {
 		return $allIds[$currentIndex];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getMathTags(): array {
 		return $this->mathTags;
 	}
@@ -167,6 +174,10 @@ class MathIdGenerator {
 		$this->useCustomIds = $useCustomIds;
 	}
 
+	/**
+	 * @param string $eid
+	 * @return array|null
+	 */
 	public function getTagFromId( string $eid ): ?array {
 		foreach ( $this->mathTags as $key => $mathTag ) {
 			if ( $eid == $this->formatKey( $key ) ) {
@@ -196,6 +207,10 @@ class MathIdGenerator {
 		return sprintf( $this->format, $this->revisionId, $keys[$key] );
 	}
 
+	/**
+	 * @param array{1:string,2:array} $tag
+	 * @return string
+	 */
 	public function getUserInputTex( array $tag ): string {
 		return ( new MathSource( $tag[self::CONTENT_POS], $tag[self::ATTRIB_POS] ) )->getUserInputTex();
 	}
