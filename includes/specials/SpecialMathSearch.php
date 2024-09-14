@@ -28,7 +28,7 @@ class SpecialMathSearch extends SpecialPage {
 	/** @var string */
 	private $mathmlquery;
 	/** @var string */
-	private $mathEngine = 'mws';
+	private $mathEngine = 'basex';
 	/** @var string */
 	private $displayQuery;
 	/** @var MathEngineRest */
@@ -198,7 +198,6 @@ class SpecialMathSearch extends SpecialPage {
 				$formData["expr-$i"] );
 		}
 
-		$this->mathEngine = $formData['mathEngine'];
 		$this->displayQuery = $formData['displayQuery'];
 		$this->performSearch();
 	}

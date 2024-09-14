@@ -28,7 +28,7 @@ class MathEngineBaseX extends MathEngineRest {
 	 * @return bool
 	 */
 	protected function processResults( $res, $numProcess ) {
-		$jsonResult = json_decode( $res );
+		$jsonResult = json_decode( $res ?? '' );
 		if ( $jsonResult && json_last_error() === JSON_ERROR_NONE ) {
 			if ( $jsonResult->success && $jsonResult->response ) {
 				// $xmlObject = new XmlTypeCheck( $jsonResult->response, null, false );
