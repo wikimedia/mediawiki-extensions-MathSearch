@@ -1,5 +1,8 @@
 <?php
 
+use MediaWiki\HTMLForm\Field\HTMLCheckField;
+use MediaWiki\HTMLForm\Field\HTMLTextAreaField;
+use MediaWiki\HTMLForm\Field\HTMLTextField;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Logger\LegacyLogger;
@@ -94,17 +97,17 @@ are often used together.';
 		$formDescriptor = [
 			'input' => [
 				'label-message' => 'math-tex2nb-input',
-				'class' => 'HTMLTextField',
+				'class' => HTMLTextField::class,
 				'default' => $this->tex,
 			],
 			'wikitext' => [
 				'label-message' => 'math-tex2nb-wikitext',
-				'class' => 'HTMLTextAreaField',
+				'class' => HTMLTextAreaField::class,
 				'default' => $this->context,
 			],
 			'purge' => [
 				'label-message' => 'math-tex2nb-purge',
-				'class' => 'HTMLCheckField',
+				'class' => HTMLCheckField::class,
 			],
 		];
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );

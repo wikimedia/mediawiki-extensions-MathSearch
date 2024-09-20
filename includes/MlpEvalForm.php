@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\Extension\Math\MathConfig;
+use MediaWiki\HTMLForm\Field\HTMLTitleTextField;
 use MediaWiki\HTMLForm\OOUIHTMLForm;
 use MediaWiki\MediaWikiServices;
 
@@ -33,7 +34,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 		switch ( $this->step ) {
 			case SpecialMlpEval::STEP_PAGE:
 				$formDescriptor['1-page'] = [
-					'class'         => 'HTMLTitleTextField',
+					'class'         => HTMLTitleTextField::class,
 					'default'       => $this->eval->getRandomPageText()
 				];
 				break;

@@ -2,6 +2,7 @@
 
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
+use MediaWiki\HTMLForm\Field\HTMLSelectField;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
@@ -110,7 +111,7 @@ class SpecialMathSearch extends SpecialPage {
 		$formDescriptor = [
 			'mathEngine' => [
 				'label' => 'Math engine',
-				'class' => 'HTMLSelectField',
+				'class' => HTMLSelectField::class,
 				'options' => [
 					'MathWebSearch' => 'mws',
 					'BaseX' => 'basex'

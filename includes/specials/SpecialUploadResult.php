@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\HTMLForm\Field\HTMLTextField;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -54,7 +55,7 @@ class SpecialUploadResult extends SpecialPage {
 		$formDescriptor['File'] = [
 			'label-message' => 'math-wmc-FileLabel',
 			'help-message' => 'math-wmc-FileHelp',
-			'class' => 'HTMLTextField',
+			'class' => HTMLTextField::class,
 			'type' => 'file',
 			'required' => true,
 			'validation-callback' => [ $this, 'runFileCheck' ],
