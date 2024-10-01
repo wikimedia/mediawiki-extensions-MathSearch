@@ -61,7 +61,7 @@ class ImportDefinitions extends Maintenance {
 				if ( preg_match( '/^[\s\[]*(?P<content>\{.*?\})[\s,\]]$/', $line, $matches ) ) {
 					$oJson = json_decode( $matches['content'] );
 					$title = Title::newFromText( $oJson->title );
-					$dbw->begin( __METHOD__ );
+					$this->beginTransaction( $dbw, __METHOD__ );
 					if ( $title->exists() ) {
 						$revId = $title->getLatestRevID();
 						foreach ( $oJson->relations as $relation ) {
@@ -77,7 +77,7 @@ class ImportDefinitions extends Maintenance {
 					} else {
 						$this->output( $title->getText() . " does not exist\n" );
 					}
-					$dbw->commit( __METHOD__ );
+					$this->commitTransaction( $dbw, __METHOD__ );
 				}
 			}
 		}
