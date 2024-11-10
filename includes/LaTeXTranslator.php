@@ -12,7 +12,7 @@ class LaTeXTranslator {
 	/**
 	 * @var string contains frequently occurring regex for single argument of number or Greek letter
 	 */
-	private $arg = "(\\\\[?[A-z]*\\]?|[0-9]|[A-z]{1})";
+	private $arg = "(\\\\[?[A-Za-z]*\\]?|[0-9]|[A-Za-z]{1})";
 
 	function __construct() {
 		# reference: http://stackoverflow.com/a/28611214/4521584
