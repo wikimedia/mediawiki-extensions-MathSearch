@@ -31,7 +31,7 @@ class MathSearchHooks {
 	 * @param DatabaseUpdater|null $updater
 	 * @return bool
 	 */
-	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater = null ) {
+	public static function onLoadExtensionSchemaUpdates( ?DatabaseUpdater $updater = null ) {
 		global $wgMathWmcServer;
 		$type = $updater->getDB()->getType();
 		if ( $type == "mysql" ) {

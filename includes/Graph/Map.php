@@ -11,7 +11,7 @@ class Map {
 	private const PAGES_PER_JOB = 100;
 	private JobQueueGroup $jobQueueGroup;
 
-	public function __construct( JobQueueGroup $jobQueueGroup = null ) {
+	public function __construct( ?JobQueueGroup $jobQueueGroup = null ) {
 		$this->jobQueueGroup = $jobQueueGroup ?? MediaWikiServices::getInstance()->getJobQueueGroup();
 	}
 

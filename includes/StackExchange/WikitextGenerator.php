@@ -15,7 +15,7 @@ class WikitextGenerator {
 	/**
 	 * @param IdMap|null $idGen
 	 */
-	public function __construct( IdMap $idGen = null ) {
+	public function __construct( ?IdMap $idGen = null ) {
 		$this->idGen = $idGen ?? IdMap::getInstance();
 	}
 
