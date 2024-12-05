@@ -3,16 +3,19 @@
 namespace MediaWiki\Extension\MathSearch\Graph;
 
 use JobQueueGroup;
+use MediaWiki\Extension\MathSearch\Graph\Job\NormalizeDoi;
+use MediaWiki\Extension\MathSearch\Graph\Job\SetProfileType;
 use MediaWiki\MediaWikiServices;
 use ToolsParser;
 
 class Map {
-	private int $batch_size = 100000;
+	private int $batch_size;
 	private const PAGES_PER_JOB = 100;
 	private JobQueueGroup $jobQueueGroup;
 
-	public function __construct( ?JobQueueGroup $jobQueueGroup = null ) {
+	public function __construct( ?JobQueueGroup $jobQueueGroup = null, $batch_size = 100000 ) {
 		$this->jobQueueGroup = $jobQueueGroup ?? MediaWikiServices::getInstance()->getJobQueueGroup();
+		$this->batch_size = $batch_size;
 	}
 
 	public function pushJob(
@@ -39,9 +42,16 @@ class Map {
 		$segment = 0;
 		do {
 			$output( 'Read from offset ' . $offset . ".\n" );
-			$query = $jobType == 'load' ?
-				Query::getQueryFromConfig( $type, $offset, $batch_size ) :
-				Query::getQueryFromProfileType( $type, $offset, $batch_size );
+			switch ( $jobType ) {
+				case SetProfileType::class:
+					$query = Query::getQueryFromConfig( $type, $offset, $batch_size );
+					break;
+				case NormalizeDoi::class:
+					$query = Query::getQueryForDoi( $offset, $batch_size );
+					break;
+				default:
+					$query = Query::getQueryFromProfileType( $type, $offset, $batch_size );
+			}
 			$rs = $sp->query( $query );
 			if ( !$rs ) {
 				$output( "No results retrieved!\n" );
@@ -51,8 +61,11 @@ class Map {
 			}
 			foreach ( $rs['result']['rows'] as $row ) {
 				$qID = $row['qid'];
-
-				$table[] = $qID;
+				if ( $jobType === NormalizeDoi::class ) {
+					$table[$qID] = $row['doi'];
+				} else {
+					$table[] = $qID;
+				}
 				if ( count( $table ) > self::PAGES_PER_JOB ) {
 					$this->pushJob( $table, $segment, $jobType, $jobOptions );
 					$output( "Pushed jobs to segment $segment.\n" );
@@ -61,7 +74,7 @@ class Map {
 				}
 			}
 			$offset += $this->batch_size;
-		} while ( count( $rs['result']['rows'] ) == $this->batch_size );
+		} while ( count( $rs['result']['rows'] ) === $this->batch_size );
 		$this->pushJob( $table, $segment, $jobType, $jobOptions );
 		$output( "Pushed jobs to last segment $segment.\n" );
 	}

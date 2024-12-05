@@ -87,6 +87,7 @@
 		"MathSearchContentTexMaxLength": 5000,
 		"MathSearchInfoPage": "FormulaInfo",
 		"MathSearchPropertySwhid": 1454,
+		"MathSearchPropertyDoi": 27,
 		"MathSearchPropertyScrUrl": 339,
 		"MathSearchPropertyPointInTime": 140,
 		"MathSearchPropertyProfileType": 1460,
@@ -173,7 +174,8 @@
 		"CreateProfilePages": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\PageCreation",
 		"SetProfileType": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\SetProfileType",
 		"OpenAlex": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\OpenAlex",
-		"MathMLIntents": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\MathMLIntents"
+		"MathMLIntents": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\MathMLIntents",
+		"NormalizeDoi": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\NormalizeDoi"
 	},
 	"RestRoutes": [
 		{

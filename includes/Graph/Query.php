@@ -73,4 +73,18 @@ SPARQL;
 			return $rs['result']['rows'];
 		}
 	}
+
+	public static function getQueryForDoi( int $offset, int $limit ) {
+		global $wgMathSearchPropertyDoi;
+		return <<<SPARQL
+PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
+SELECT ?qid ?doi WHERE {
+  BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid) .
+  ?item wdt:P$wgMathSearchPropertyDoi ?doi .
+  FILTER REGEX(?doi, "[a-z]")
+}
+LIMIT $limit
+OFFSET $offset
+SPARQL;
+	}
 }
