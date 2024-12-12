@@ -175,7 +175,8 @@
 		"SetProfileType": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\SetProfileType",
 		"OpenAlex": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\OpenAlex",
 		"MathMLIntents": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\MathMLIntents",
-		"NormalizeDoi": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\NormalizeDoi"
+		"NormalizeDoi": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\NormalizeDoi",
+		"FetchIdsFromWd": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\FetchIdsFromWd"
 	},
 	"RestRoutes": [
 		{

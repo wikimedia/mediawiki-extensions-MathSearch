@@ -18,6 +18,7 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Extension\MathSearch\Graph\Job\FetchIdsFromWd;
 use MediaWiki\Extension\MathSearch\Graph\Job\NormalizeDoi;
 use MediaWiki\Extension\MathSearch\Graph\Map;
 
@@ -41,6 +42,9 @@ class Properties extends Maintenance {
 		$action = $this->getArg( 'action' );
 		if ( $action === 'case-normalize' ) {
 			$jobType = NormalizeDoi::class;
+		} elseif ( $action === 'fetch-wd' ) {
+			$jobType = FetchIdsFromWd::class;
+			$type = 'wd';
 		} else {
 			$this->error( "Unknown action to be performed.\n" );
 			$this->error( $this->printAvailableActions() );
@@ -57,7 +61,7 @@ class Properties extends Maintenance {
 	}
 
 	public function printAvailableActions(): string {
-		return "Available actions are: case-normalize.\n";
+		return "Available actions are: case-normalize, fetch-wd.\n";
 	}
 
 }

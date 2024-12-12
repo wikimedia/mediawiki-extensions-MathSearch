@@ -87,4 +87,32 @@ LIMIT $limit
 OFFSET $offset
 SPARQL;
 	}
+
+	public static function getQueryForWdId(): string {
+		return <<<SPARQL
+PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
+PREFIX wikidata_wdt: <http://www.wikidata.org/prop/direct/>
+
+SELECT DISTINCT
+(REPLACE(STR(?mardi_item), ".*Q", "") AS ?qid)
+(REPLACE(STR(?wikidata), ".*Q", "Q") AS ?P12)
+WHERE {
+  SERVICE bd:sample { ?mardi_item wdt:P27 ?doi . bd:serviceParam bd:sample.limit 10000 }
+  BIND(UCASE(?doi) AS ?DOI)
+  FILTER NOT EXISTS { ?mardi_item wdt:P12 ?WikidataQID }
+  service <https://query.wikidata.org/sparql> {
+    ?wikidata wikidata_wdt:P356 ?DOI
+  }
+}
+SPARQL;
+	}
+
+	public static function getQueryEndpoint( $config = null ) {
+		$configFactory = $config ??
+			MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
+		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
+		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
+		return $arrEndpoint["endpoint"];
+	}
+
 }

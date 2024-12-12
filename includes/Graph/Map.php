@@ -3,10 +3,10 @@
 namespace MediaWiki\Extension\MathSearch\Graph;
 
 use JobQueueGroup;
+use MediaWiki\Extension\MathSearch\Graph\Job\FetchIdsFromWd;
 use MediaWiki\Extension\MathSearch\Graph\Job\NormalizeDoi;
 use MediaWiki\Extension\MathSearch\Graph\Job\SetProfileType;
 use MediaWiki\MediaWikiServices;
-use ToolsParser;
 
 class Map {
 	private int $batch_size;
@@ -32,11 +32,7 @@ class Map {
 		$jobOptions[ 'jobname' ] = 'import' . date( 'ymdhms' );
 		$jobOptions[ 'prefix' ] = $type;
 
-		$configFactory =
-			MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
-		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
-		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
-		$sp = $arrEndpoint["endpoint"];
+		$sp = Query::getQueryEndpoint();
 		$offset = 0;
 		$table = [];
 		$segment = 0;
@@ -49,6 +45,11 @@ class Map {
 				case NormalizeDoi::class:
 					$query = Query::getQueryForDoi( $offset, $batch_size );
 					break;
+				case FetchIdsFromWd::class:
+					$jobOptions[ 'batch_size' ] = $batch_size;
+					$this->pushJob( $table, $segment, $jobType, $jobOptions );
+					$output( "Pushed job.\n" );
+					return;
 				default:
 					$query = Query::getQueryFromProfileType( $type, $offset, $batch_size );
 			}
@@ -78,4 +79,5 @@ class Map {
 		$this->pushJob( $table, $segment, $jobType, $jobOptions );
 		$output( "Pushed jobs to last segment $segment.\n" );
 	}
+
 }

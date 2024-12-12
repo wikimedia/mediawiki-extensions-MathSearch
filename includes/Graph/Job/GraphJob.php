@@ -8,13 +8,14 @@ use MediaWiki\Auth\AuthManager;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;
+use Psr\Log\LoggerInterface;
 
 abstract class GraphJob extends Job implements GenericParameterJob {
 
 	/** @var User */
 	private $user;
 
-	protected static function getLog() {
+	protected static function getLog(): LoggerInterface {
 		return LoggerFactory::getInstance( 'MathSearch' );
 	}
 
