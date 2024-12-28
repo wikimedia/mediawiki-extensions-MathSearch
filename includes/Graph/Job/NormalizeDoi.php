@@ -37,21 +37,32 @@ class NormalizeDoi extends GraphJob {
 				/** @var StatementList $statements */
 				$statements = $item->getStatements();
 				$doiStatements = $statements->getByPropertyId( $pDOI );
-				if ( $doiStatements->count() !== 1 ) {
-					self::getLog()->error( "Skip page processing page Q$qid. Only 1 DOI is supported" );
+				if ( $doiStatements->count() === 0 ) {
+					self::getLog()->error( "Skip page processing page Q$qid. Only 1 ore more DOI are supported" );
 					continue;
 				}
+				$changed = false;
 				foreach ( $doiStatements->getIterator() as $snak ) {
+					$val = $snak->getMainSnak()->getDataValue()->getValue();
+					$upper = strtoupper( $val );
+					if ( $val === $upper ) {
+						continue;
+					}
+					$changed = true;
 					$statements->removeStatementsWithGuid( $snak->getGuid() );
+					$mainSnak = new PropertyValueSnak(
+						$pDOI,
+						new StringValue( $upper ) );
+					$statements->addNewStatement(
+						$mainSnak,
+						[],
+						null,
+						$guidGenerator->newGuid( $item->getId() ) );
 				}
-				$mainSnak = new PropertyValueSnak(
-					$pDOI,
-					new StringValue( strtoupper( $doi ) ) );
-				$statements->addNewStatement(
-					$mainSnak,
-					[],
-					null,
-					$guidGenerator->newGuid( $item->getId() ) );
+				if ( !$changed ) {
+					self::getLog()->warning( "Nothing changed for Q$qid." );
+					continue;
+				}
 				$item->setStatements( $statements );
 				$store->saveEntity( $item, "Normalize DOI.", $user,
 					EDIT_FORCE_BOT );
