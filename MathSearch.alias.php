@@ -20,6 +20,7 @@ $specialPageAliases['en'] = [
 	'MathDownload' => [ 'MathDownload', 'Math Download' ],
 	'LaTeXTranslator' => [ 'LaTeXTranslator', 'LaTeX Translator' ],
 	'DisplayTopics' => [ 'DisplayTopics' ],
+	'QuickSparqlStatements' => [ 'QuickSparqlStatements', 'SPARQL QuickStatements generator' ],
 ];
 
 /** Arabic (العربية) */
