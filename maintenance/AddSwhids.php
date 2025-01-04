@@ -20,7 +20,9 @@
 
 use DataValues\StringValue;
 use DataValues\TimeValue;
+use MediaWiki\Extension\MathSearch\Graph\Query;
 use MediaWiki\Extension\MathSearch\Swh\Swhid;
+use MediaWiki\Sparql\SparqlException;
 use MediaWiki\User\User;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\NumericPropertyId;
@@ -51,7 +53,6 @@ class AddSwhids extends Maintenance {
 		);
 		$this->addOption( 'force', 'force depositing', false, false, 'f' );
 		$this->requireExtension( 'MathSearch' );
-		$this->requireExtension( 'LinkedWiki' );
 	}
 
 	private function getQuery() {
@@ -66,13 +67,12 @@ WHERE {
 SPARQL;
 	}
 
+	/**
+	 * @throws SparqlException
+	 */
 	public function execute() {
 		$services = $this->getServiceContainer();
-		$configFactory = $services->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
 		$rf = $services->getHttpRequestFactory();
-		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
-		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
-		$sp = $arrEndpoint["endpoint"];
 		$this->entityLookup = WikibaseRepo::getEntityLookup();
 		$this->entityStore = WikibaseRepo::getEntityStore();
 		$this->guidGenerator = new GuidGenerator();
@@ -85,8 +85,8 @@ SPARQL;
 				false
 			);
 		}
-		$rs = $sp->query( $this->getQuery() );
-		foreach ( $rs['result']['rows'] as $row ) {
+		$rs = Query::GetResults( $this->getQuery() );
+		foreach ( $rs as $row ) {
 			$url = $row['repo'];
 			$instance = new Swhid( $rf, $url );
 			$instance->fetchOrSave();

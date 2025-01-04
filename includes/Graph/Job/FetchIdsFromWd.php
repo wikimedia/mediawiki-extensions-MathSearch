@@ -5,6 +5,7 @@ namespace MediaWiki\Extension\MathSearch\Graph\Job;
 use DataValues\StringValue;
 use MediaWiki\Extension\MathSearch\Graph\Query;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Sparql\SparqlException;
 use Throwable;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\NumericPropertyId;
@@ -18,20 +19,23 @@ class FetchIdsFromWd extends GraphJob {
 		parent::__construct( 'FetchIdsFromWd', $params );
 	}
 
+	/**
+	 * @throws SparqlException
+	 */
 	public function run(): bool {
 		$query = Query::getQueryForWdId();
-		$rs = Query::getQueryEndpoint()->query( $query );
+		$rs = Query::getResults( $query );
 		if ( !$rs ) {
 			self::getLog()->info( "No results retrieved!\n" );
 			return false;
 		}
-		self::getLog()->info( "Retrieved " . count( $rs['result']['rows'] ) . " results.\n" );
+		self::getLog()->info( "Retrieved " . count( $rs ) . " results.\n" );
 
 		$user = $this->getUser();
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
 		$guidGenerator = new GuidGenerator();
-		foreach ( $rs['result']['rows'] as $row ) {
+		foreach ( $rs as $row ) {
 			try {
 				$qid = $row['qid'];
 				unset( $row['qid'] );

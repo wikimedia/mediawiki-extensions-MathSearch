@@ -7,6 +7,7 @@ use MediaWiki\Extension\MathSearch\Graph\Job\FetchIdsFromWd;
 use MediaWiki\Extension\MathSearch\Graph\Job\NormalizeDoi;
 use MediaWiki\Extension\MathSearch\Graph\Job\SetProfileType;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Sparql\SparqlException;
 
 class Map {
 	private int $batch_size;
@@ -26,13 +27,15 @@ class Map {
 		$this->jobQueueGroup->lazyPush( new $jobType( $options ) );
 	}
 
+	/**
+	 * @throws SparqlException
+	 */
 	public function getJobs(
 		callable $output, int $batch_size, string $type, string $jobType, array $jobOptions = []
 	): void {
 		$jobOptions[ 'jobname' ] = 'import' . date( 'ymdhms' );
 		$jobOptions[ 'prefix' ] = $type;
 
-		$sp = Query::getQueryEndpoint();
 		$offset = 0;
 		$table = [];
 		$segment = 0;
@@ -53,14 +56,9 @@ class Map {
 				default:
 					$query = Query::getQueryFromProfileType( $type, $offset, $batch_size );
 			}
-			$rs = $sp->query( $query );
-			if ( !$rs ) {
-				$output( "No results retrieved!\n" );
-				break;
-			} else {
-				$output( "Retrieved " . count( $rs['result']['rows'] ) . " results.\n" );
-			}
-			foreach ( $rs['result']['rows'] as $row ) {
+			$rs = Query::getResults( $query );
+			$output( "Retrieved " . count( $rs ) . " results.\n" );
+			foreach ( $rs as $row ) {
 				$qID = $row['qid'];
 				if ( $jobType === NormalizeDoi::class ) {
 					$table[$qID] = $row['doi'];
@@ -75,7 +73,7 @@ class Map {
 				}
 			}
 			$offset += $this->batch_size;
-		} while ( count( $rs['result']['rows'] ) === $this->batch_size );
+		} while ( count( $rs ) === $this->batch_size );
 		$this->pushJob( $table, $segment, $jobType, $jobOptions );
 		$output( "Pushed jobs to last segment $segment.\n" );
 	}
