@@ -33,7 +33,6 @@ class Properties extends Maintenance {
 		$this->setBatchSize( 10000 );
 
 		$this->requireExtension( 'MathSearch' );
-		$this->requireExtension( 'LinkedWiki' );
 	}
 
 	public function execute() {

@@ -37,7 +37,6 @@ class ProfilePages extends Maintenance {
 		);
 
 		$this->requireExtension( 'MathSearch' );
-		$this->requireExtension( 'LinkedWiki' );
 	}
 
 	public function execute() {

@@ -3,7 +3,9 @@
 namespace MediaWiki\Extension\MathSearch\Graph;
 
 use MediaWiki\MediaWikiServices;
-use ToolsParser;
+use MediaWiki\Sparql\SparqlClient;
+use MediaWiki\Sparql\SparqlException;
+use Wikibase\Repo\WikibaseRepo;
 
 class Query {
 	public static function getQueryFromConfig( string $type, int $offset, int $limit ) {
@@ -60,18 +62,18 @@ WHERE {
 SPARQL;
 	}
 
-	public static function getResults( string $query ) {
-		$configFactory =
-			MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
-		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
-		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
-		$sp = $arrEndpoint["endpoint"];
-		$rs = $sp->query( $query );
-		if ( !$rs ) {
-			return [];
-		} else {
-			return $rs['result']['rows'];
+	/**
+	 * @throws SparqlException
+	 */
+	public static function getResults( string $query ): array {
+		$repoSettings = WikibaseRepo::getSettings();
+		$endPoint = $repoSettings->getSetting( 'sparqlEndpoint' );
+		if ( !$endPoint ) {
+			throw new SparqlException( 'SPARQL endpoint not defined' );
 		}
+		$client = new SparqlClient( $endPoint, MediaWikiServices::getInstance()->getHttpRequestFactory() );
+		$client->appendUserAgent( __CLASS__ );
+		return $client->query( $query );
 	}
 
 	public static function getQueryForDoi( int $offset, int $limit ) {
@@ -105,14 +107,6 @@ WHERE {
   }
 }
 SPARQL;
-	}
-
-	public static function getQueryEndpoint( $config = null ) {
-		$configFactory = $config ??
-			MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'wgLinkedWiki' );
-		$configDefault = $configFactory->get( "SPARQLServiceByDefault" );
-		$arrEndpoint = ToolsParser::newEndpoint( $configDefault, null );
-		return $arrEndpoint["endpoint"];
 	}
 
 }
