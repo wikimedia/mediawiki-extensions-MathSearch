@@ -66,8 +66,7 @@ SPARQL;
 	 * @throws SparqlException
 	 */
 	public static function getResults( string $query ): array {
-		$repoSettings = WikibaseRepo::getSettings();
-		$endPoint = $repoSettings->getSetting( 'sparqlEndpoint' );
+		$endPoint = self::getEndpoint();
 		if ( !$endPoint ) {
 			throw new SparqlException( 'SPARQL endpoint not defined' );
 		}
@@ -107,6 +106,11 @@ WHERE {
   }
 }
 SPARQL;
+	}
+
+	public static function getEndpoint(): mixed {
+		$repoSettings = WikibaseRepo::getSettings();
+		return $repoSettings->getSetting( 'sparqlEndpoint' );
 	}
 
 }

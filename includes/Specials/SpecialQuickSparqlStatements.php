@@ -2,11 +2,103 @@
 
 namespace MediaWiki\Extension\MathSearch\specials;
 
+use HTMLTextAreaField;
+use MediaWiki\Extension\MathSearch\Graph\Query;
+use MediaWiki\HTMLForm\Field\HTMLInfoField;
+use MediaWiki\HTMLForm\Field\HTMLSubmitField;
+use MediaWiki\HTMLForm\Field\HTMLTextField;
+use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Sparql\SparqlException;
 use MediaWiki\SpecialPage\SpecialPage;
 
 class SpecialQuickSparqlStatements extends SpecialPage {
 	public function __construct() {
 		parent::__construct( 'QuickSparqlStatements', 'import' );
+	}
+
+	public function execute( $subPage ): void {
+		parent::execute( $subPage );
+		# A formDescriptor Array to tell HTMLForm what to build
+		$formDescriptor = [
+			'mathEngine' => [
+				'label' => 'User',
+				'class' => HTMLInfoField::class,
+				'default' => $this->getUser()->getName(),
+			],
+			'displayQuery' => [
+				'label' => 'Endpoint',
+				'class' => HTMLInfoField::class,
+				'default' => Query::getEndpoint(),
+			],
+			'query' => [
+				'label' => 'Query',
+				'help' => 'Paste your query here.',
+				'class' => HTMLTextAreaField::class,
+			],
+			'job-title' => [
+				'label' => 'Title',
+				'help' => 'Plan text title will appear in each change.',
+				'class' => HTMLTextField::class,
+			],
+			'job-description' => [
+				'label' => 'Description',
+				'help' => 'Use Wikitext. This will be logged to a dedicated log page.',
+				'class' => HTMLTextAreaField::class,
+				'rows' => 3,
+			],
+			'preview' => [
+				'buttonlabel' => 'Preview',
+				'help' => 'Preview the effects of your job (implicitly sets limit to 1)',
+				'class' => HTMLSubmitField::class,
+			],
+		];
+		$htmlForm =	HTMLForm::factory( 'codex', $formDescriptor, $this->getContext() );
+		$htmlForm->setSubmitText( 'Run' );
+		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
+		$htmlForm->show();
+	}
+
+	public function processInput( $formData ) {
+		if ( ( $formData['preview'] ?? false ) === true ) {
+			try {
+				$query = $formData['query'] . ' LIMIT 1';
+				$res = Query::getResults( $query );
+				$this->getOutput()->addWikiTextAsContent(
+					'<h2>Preview</h2>' .
+					'<p>The following query was executed:</p>' .
+					'<syntaxhighlight lang="sparql">' .
+					$query .
+					'</syntaxhighlight>'
+				);
+				if ( count( $res ) == 0 ) {
+					$this->getOutput()->addWikiTextAsContent( 'No results returned.' );
+					return false;
+				}
+				$this->getOutput()->addWikiTextAsContent(
+					'<p>The following results was returned:</p>' .
+					'<syntaxhighlight lang="json">' .
+					json_encode( $res, JSON_PRETTY_PRINT ) .
+					'</syntaxhighlight> <h3>Checking keys:</h3>' );
+				foreach ( array_keys( $res[0] ) as $key ) {
+					$this->getOutput()->addWikiTextAsContent( "Checking $key." );
+					if ( strtolower( $key ) == 'qid' ) {
+						$this->getOutput()->addWikiTextAsContent( 'success! qID key found' );
+						continue;
+					}
+					if ( str_starts_with( $key, 'P' ) ) {
+						$this->getOutput()->addWikiTextAsContent( 'success! key starts with P' );
+						continue;
+					}
+					$this->getOutput()->addWikiTextAsContent( 'can not parse key' );
+
+				}
+
+			} catch ( SparqlException $e ) {
+				return 'SPARQL Error: ' . $e->getMessage();
+			}
+			return false;
+		}
+			return true;
 	}
 
 	protected function getGroupName(): string {
