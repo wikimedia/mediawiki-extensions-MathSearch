@@ -8,6 +8,7 @@
 			"Crochet.david",
 			"Florian COLLIN",
 			"Gomoko",
+			"Mahabarata",
 			"Metroitendo",
 			"Orlodrim",
 			"Thibaut120094",
@@ -165,6 +166,7 @@
 	"math-tex2nb-mathematica": "... est traduite en sortie CAS...",
 	"math-tex2nb-purge": "Purgez les résultats mis en cache.",
 	"datatypes-type-contentmath": "Expression mathématique (contenu)",
+	"quicksparqlstatements": "Générateur d'instructions rapides SPARQL",
 	"wikibase-listdatatypes-contentmath-head": "Expression mathématique (contenu)",
 	"wikibase-listdatatypes-contentmath-body": "Champ de donnée littéral pour les expressions mathématiques, formules, équations et autres, exprimés dans la variante DRMF/DLMF (Digital Repository/Library of Mathematical Formulae/Functions) de LaTeX."
 }

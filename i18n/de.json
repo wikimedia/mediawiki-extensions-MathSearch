@@ -155,6 +155,7 @@
 	"math-tex2nb-mathematica": "… wird zur CAS-Ausgabe übersetzt …",
 	"math-tex2nb-purge": "Zwischengespeicherte Ergebnisse bereinigen.",
 	"datatypes-type-contentmath": "Mathematischer Ausdruck (Inhalt)",
+	"quicksparqlstatements": "SPARQL QuickStatements-Generator",
 	"wikibase-listdatatypes-contentmath-head": "Mathematischer Ausdruck (Inhalt)",
 	"wikibase-listdatatypes-contentmath-body": "Literales Datenfeld für mathematische Ausdrücke, Formeln, Gleichungen und ähnliches, ausgedrückt in der DRMF/DLMF-Variante von LaTeX."
 }
