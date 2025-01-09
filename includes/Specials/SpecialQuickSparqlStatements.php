@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\MathSearch\specials;
 
 use HTMLTextAreaField;
+use MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements;
 use MediaWiki\Extension\MathSearch\Graph\Query;
 use MediaWiki\HTMLForm\Field\HTMLInfoField;
 use MediaWiki\HTMLForm\Field\HTMLSubmitField;
@@ -79,6 +80,7 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 					'<syntaxhighlight lang="json">' .
 					json_encode( $res, JSON_PRETTY_PRINT ) .
 					'</syntaxhighlight> <h3>Checking keys:</h3>' );
+				$qsFakeJob = new QuickStatements( [ 'rows' => $res ] );
 				foreach ( array_keys( $res[0] ) as $key ) {
 					$this->getOutput()->addWikiTextAsContent( "Checking $key." );
 					if ( strtolower( $key ) == 'qid' ) {
@@ -87,6 +89,10 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 					}
 					if ( str_starts_with( $key, 'P' ) ) {
 						$this->getOutput()->addWikiTextAsContent( 'success! key starts with P' );
+						$this->getOutput()->addWikiTextAsContent(
+							'<syntaxhighlight lang="json">' .
+							json_encode( $qsFakeJob->validateProperty( $key ), JSON_PRETTY_PRINT ) .
+							'</syntaxhighlight> <h3>Checking keys:</h3>' );
 						continue;
 					}
 					$this->getOutput()->addWikiTextAsContent( 'can not parse key' );
