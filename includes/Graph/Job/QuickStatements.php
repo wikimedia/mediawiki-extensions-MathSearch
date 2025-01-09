@@ -25,7 +25,19 @@ class QuickStatements extends GraphJob {
 
 	public function validateProperty( string $key ) {
 		$propertyLookup = WikibaseRepo::getPropertyInfoLookup();
-		return $propertyLookup->getPropertyInfo( $this->getNumericPropertyId( $key ) );
+		$propertyId = $this->getNumericPropertyId( $key );
+		$propertyInfo = $propertyLookup->getPropertyInfo( $propertyId );
+		if ( $propertyInfo ) {
+			$termLookup = WikibaseRepo::getTermLookup();
+			$label = $termLookup->getLabel( $propertyId, 'en' );
+			if ( $label !== null ) {
+				$propertyInfo['label'] = $label;
+			} else {
+				$propertyInfo['label'] = $propertyId->getSerialization();
+			}
+		}
+
+		return $propertyInfo;
 	}
 
 	public function run() {
