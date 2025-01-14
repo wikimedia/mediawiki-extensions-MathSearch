@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\MathSearch\specials;
 
 use Closure;
 use HTMLTextAreaField;
+use MediaWiki\Content\ContentHandler;
 use MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements;
 use MediaWiki\Extension\MathSearch\Graph\Map;
 use MediaWiki\Extension\MathSearch\Graph\Query;
@@ -11,8 +12,10 @@ use MediaWiki\HTMLForm\Field\HTMLInfoField;
 use MediaWiki\HTMLForm\Field\HTMLSubmitField;
 use MediaWiki\HTMLForm\Field\HTMLTextField;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Sparql\SparqlException;
 use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\Title\Title;
 
 class SpecialQuickSparqlStatements extends SpecialPage {
 	public function __construct() {
@@ -106,6 +109,17 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 			}
 			return false;
 		}
+		$title  = Title::newFromText(
+			'QuickSparqlStatements/' . $formData['job-title'] . '/' . date( 'ymdhms' ) );
+		$pageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
+		$text = $formData['job-description'] . '<br/><h3>Form data:</h3><syntaxhighlight lang="json">' .
+			json_encode( $formData, JSON_PRETTY_PRINT ) .
+			'</syntaxhighlight><h3>Endpoint</h3>' .
+			Query::getEndpoint();
+		$pageContent = ContentHandler::makeContent( $text, $title );
+		$pageFactory->newFromTitle( $title )
+			->doUserEditContent( $pageContent, $this->getUser(),
+				'Created automatically via QuickSparql Statements special page.' );
 		try {
 			( new Map() )->getJobs(
 				Closure::fromCallable( [ $this->getOutput(), 'addWikiTextAsContent' ] ),
