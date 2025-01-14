@@ -50,7 +50,7 @@ class Properties extends Maintenance {
 			return;
 		}
 
-		( new Map( null, $this->getBatchSize() ) )->getJobs(
+		( new Map( null ) )->getJobs(
 			Closure::fromCallable( [ $this, 'output' ] ),
 			$this->getOption( 'batchSize', $this->getBatchSize() ),
 			$type,

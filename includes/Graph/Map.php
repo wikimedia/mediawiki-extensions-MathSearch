@@ -5,18 +5,17 @@ namespace MediaWiki\Extension\MathSearch\Graph;
 use JobQueueGroup;
 use MediaWiki\Extension\MathSearch\Graph\Job\FetchIdsFromWd;
 use MediaWiki\Extension\MathSearch\Graph\Job\NormalizeDoi;
+use MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements;
 use MediaWiki\Extension\MathSearch\Graph\Job\SetProfileType;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Sparql\SparqlException;
 
 class Map {
-	private int $batch_size;
-	private const PAGES_PER_JOB = 100;
+	private const ROWS_PER_JOB = 100;
 	private JobQueueGroup $jobQueueGroup;
 
-	public function __construct( ?JobQueueGroup $jobQueueGroup = null, $batch_size = 100000 ) {
+	public function __construct( ?JobQueueGroup $jobQueueGroup = null ) {
 		$this->jobQueueGroup = $jobQueueGroup ?? MediaWikiServices::getInstance()->getJobQueueGroup();
-		$this->batch_size = $batch_size;
 	}
 
 	public function pushJob(
@@ -37,11 +36,14 @@ class Map {
 		$jobOptions[ 'prefix' ] = $type;
 
 		$offset = 0;
-		$table = [];
+		$rows = [];
 		$segment = 0;
 		do {
 			$output( 'Read from offset ' . $offset . ".\n" );
 			switch ( $jobType ) {
+				case QuickStatements::class:
+					$query = $jobOptions[ 'query' ] . "\nLIMIT $batch_size OFFSET $offset";
+					break;
 				case SetProfileType::class:
 					$query = Query::getQueryFromConfig( $type, $offset, $batch_size );
 					break;
@@ -50,7 +52,7 @@ class Map {
 					break;
 				case FetchIdsFromWd::class:
 					$jobOptions[ 'batch_size' ] = $batch_size;
-					$this->pushJob( $table, $segment, $jobType, $jobOptions );
+					$this->pushJob( $rows, $segment, $jobType, $jobOptions );
 					$output( "Pushed job.\n" );
 					return;
 				default:
@@ -59,23 +61,26 @@ class Map {
 			$rs = Query::getResults( $query );
 			$output( "Retrieved " . count( $rs ) . " results.\n" );
 			foreach ( $rs as $row ) {
-				$qID = $row['qid'];
 				if ( $jobType === NormalizeDoi::class ) {
-					$table[$qID] = $row['doi'];
+					$rows[$row['qid']] = $row['doi'];
+				} elseif ( $jobType === QuickStatements::class ) {
+					$rows[] = $row;
 				} else {
-					$table[] = $qID;
+					$rows[] = $row['qid'];
 				}
-				if ( count( $table ) > self::PAGES_PER_JOB ) {
-					$this->pushJob( $table, $segment, $jobType, $jobOptions );
-					$output( "Pushed jobs to segment $segment.\n" );
+				$cntRows = count( $rows );
+				if ( $cntRows > self::ROWS_PER_JOB ) {
+					$this->pushJob( $rows, $segment, $jobType, $jobOptions );
+					$output( "Pushed $cntRows rows to segment $segment.\n" );
 					$segment++;
-					$table = [];
+					$rows = [];
 				}
 			}
-			$offset += $this->batch_size;
-		} while ( count( $rs ) === $this->batch_size );
-		$this->pushJob( $table, $segment, $jobType, $jobOptions );
-		$output( "Pushed jobs to last segment $segment.\n" );
+			$offset += $batch_size;
+		} while ( count( $rs ) === $batch_size );
+		$this->pushJob( $rows, $segment, $jobType, $jobOptions );
+		$cntRows = count( $rows );
+		$output( "Pushed $cntRows rows to last segment $segment.\n" );
 	}
 
 }

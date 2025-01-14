@@ -2,8 +2,10 @@
 
 namespace MediaWiki\Extension\MathSearch\specials;
 
+use Closure;
 use HTMLTextAreaField;
 use MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements;
+use MediaWiki\Extension\MathSearch\Graph\Map;
 use MediaWiki\Extension\MathSearch\Graph\Query;
 use MediaWiki\HTMLForm\Field\HTMLInfoField;
 use MediaWiki\HTMLForm\Field\HTMLSubmitField;
@@ -104,10 +106,29 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 			}
 			return false;
 		}
-			return true;
+		try {
+			( new Map() )->getJobs(
+				Closure::fromCallable( [ $this->getOutput(), 'addWikiTextAsContent' ] ),
+				$this->getBatchSize( $formData ),
+				'qs',
+				QuickStatements::class,
+				$this->getJobOptions( $formData )
+			);
+		} catch ( SparqlException $e ) {
+			return 'SPARQL Error: ' . $e->getMessage();
+		}
+		return true;
 	}
 
 	protected function getGroupName(): string {
 		return 'mathsearch';
+	}
+
+	private function getBatchSize( $formData ) {
+		return $formData['batchSize'] ?? 10000;
+	}
+
+	private function getJobOptions( $formData ) {
+		return $formData;
 	}
 }
