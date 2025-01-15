@@ -98,6 +98,9 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 							'<syntaxhighlight lang="json">' .
 							json_encode( $qsFakeJob->validateProperty( $key ), JSON_PRETTY_PRINT ) .
 							'</syntaxhighlight> <h3>Checking keys:</h3>' );
+						$this->getOutput()->addWikiTextAsContent(
+							'Serialization for sample value:' .
+							$qsFakeJob->testSnak( $key, $res[0][$key] ) );
 						continue;
 					}
 					$this->getOutput()->addWikiTextAsContent( 'can not parse key' );
