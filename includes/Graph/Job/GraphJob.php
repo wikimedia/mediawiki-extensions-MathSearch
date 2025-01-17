@@ -21,8 +21,9 @@ abstract class GraphJob extends Job implements GenericParameterJob {
 
 	public function getUser() {
 		if ( !$this->user ) {
+			$username = $this->params['username'] ?? $this->params['jobname'];
 			$user = MediaWikiServices::getInstance()->getUserFactory()
-				->newFromName( $this->params['jobname'] );
+				->newFromName( $username );
 			$exists = ( $user->idForName() !== 0 );
 			if ( !$exists ) {
 				MediaWikiServices::getInstance()->getAuthManager()->autoCreateUser(

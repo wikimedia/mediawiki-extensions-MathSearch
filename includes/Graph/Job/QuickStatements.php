@@ -12,6 +12,7 @@ use Wikibase\DataModel\Services\Lookup\PropertyDataTypeLookup;
 use Wikibase\DataModel\Services\Statement\GuidGenerator;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Snak\Snak;
+use Wikibase\DataModel\Statement\StatementList;
 use Wikibase\Lib\DataTypeFactory;
 use Wikibase\Lib\Store\EntityStore;
 use Wikibase\Repo\WikibaseRepo;
@@ -62,11 +63,10 @@ class QuickStatements extends GraphJob {
 	}
 
 	public function run() {
-		$edit_summary = $this->params['title'];
 		foreach ( $this->params['rows'] as $row ) {
 			try {
 				$item = $this->getRowItem( $row );
-				$this->processRow( $row, $item, $edit_summary );
+				$this->processRow( $row, $item );
 			} catch ( Throwable $ex ) {
 				self::getLog()->error( "Skip row", [ 'error' => $ex, 'row' => $row ] );
 			}
@@ -86,13 +86,14 @@ class QuickStatements extends GraphJob {
 		return $this->propertyTypes[$key];
 	}
 
-	private function processRow( array $row, Item $item, string $edit_summary ) {
+	private function processRow( array $row, Item $item ) {
 		$statements = $item->getStatements();
 		$changed = false;
 		foreach ( $row as $P => $value ) {
 			$propertyId = $this->getNumericPropertyId( $P );
 			$currentStatements = $statements->getByPropertyId( $propertyId );
-			if ( !$currentStatements->isEmpty() ) {
+			if ( !$currentStatements->isEmpty() &&
+				!$this->removeOldStatements( $currentStatements, $value, $statements ) ) {
 				continue;
 			}
 			$changed = true;
@@ -104,7 +105,7 @@ class QuickStatements extends GraphJob {
 			return;
 		}
 		$item->setStatements( $statements );
-		$this->entityStore->saveEntity( $item, $edit_summary, $this->getUser(), EDIT_FORCE_BOT );
+		$this->entityStore->saveEntity( $item, $this->params['editsummary'], $this->getUser(), EDIT_FORCE_BOT );
 	}
 
 	private function getSnak( string $propertyKey, mixed $value ): Snak {
@@ -147,5 +148,24 @@ class QuickStatements extends GraphJob {
 		}
 		unset( $row['qid'] );
 		return $item;
+	}
+
+	private function removeOldStatements(
+		StatementList $currentStatements,
+		mixed $value,
+		StatementList $statements ): bool {
+		if ( count( $currentStatements ) > 1 ) {
+			self::getLog()->warning( "Skip row (multiple statements)." );
+			return false;
+		}
+		$statement = $currentStatements->toArray()[0];
+		$snak = $statement->getMainSnak();
+		if ( $snak instanceof PropertyValueSnak &&
+			$snak->getDataValue()->getValue() == $value ) {
+			self::getLog()->info( "Skip row (no change)." );
+			return false;
+		}
+		$statements->removeStatementsWithGuid( $statement->getGuid() );
+		return true;
 	}
 }
