@@ -112,8 +112,8 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 			}
 			return false;
 		}
-		$title  = Title::newFromText(
-			'QuickSparqlStatements/' . $formData['job-title'] . '/' . date( 'ymdhms' ) );
+		$jobParams = $this->getJobParams( $formData );
+		$title  = Title::newFromText( $jobParams['page-name'] );
 		$pageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
 		$text = $formData['job-description'] . '<br/><h3>Form data:</h3><syntaxhighlight lang="json">' .
 			json_encode( $formData, JSON_PRETTY_PRINT ) .
@@ -123,18 +123,30 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 		$pageFactory->newFromTitle( $title )
 			->doUserEditContent( $pageContent, $this->getUser(),
 				'Created automatically via QuickSparql Statements special page.' );
+
 		try {
 			( new Map() )->getJobs(
 				Closure::fromCallable( [ $this->getOutput(), 'addWikiTextAsContent' ] ),
 				$this->getBatchSize( $formData ),
 				'qs',
 				QuickStatements::class,
-				$this->getJobOptions( $formData )
+				$jobParams,
 			);
 		} catch ( SparqlException $e ) {
 			return 'SPARQL Error: ' . $e->getMessage();
 		}
 		return true;
+	}
+
+	public function getJobParams( array $formData ): array {
+		$jobData = $formData;
+		$jobDate = date( 'ymdhms' );
+		$jobtitle = $formData['job-title'];
+		$jobPage = 'QuickSparqlStatements/' . $jobtitle . '/' . $jobDate;
+		$jobData['page-name'] = $jobPage;
+		$jobData['editsummary'] = "[[$jobPage|$jobtitle]]";
+		$jobData['username'] = $this->getUser()->getName();
+		return $jobData;
 	}
 
 	protected function getGroupName(): string {
@@ -145,7 +157,4 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 		return $formData['batchSize'] ?? 10000;
 	}
 
-	private function getJobOptions( $formData ) {
-		return $formData;
-	}
 }
