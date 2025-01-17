@@ -32,17 +32,22 @@ class Map {
 	public function getJobs(
 		callable $output, int $batch_size, string $type, string $jobType, array $jobOptions = []
 	): void {
-		$jobOptions[ 'jobname' ] = 'import' . date( 'ymdhms' );
+		$jobOptions[ 'date' ] ??= date( 'ymdhms' );
+		$jobOptions[ 'jobname' ] = 'import' . $jobOptions[ 'date' ];
 		$jobOptions[ 'prefix' ] = $type;
 
 		$offset = 0;
 		$rows = [];
 		$segment = 0;
+		$total = 0;
 		do {
 			$output( 'Read from offset ' . $offset . ".\n" );
 			switch ( $jobType ) {
 				case QuickStatements::class:
-					$query = $jobOptions[ 'query' ] . "\nLIMIT $batch_size OFFSET $offset";
+					$limit = $jobOptions[ 'totalLimit' ] > 0 ?
+						min( $batch_size, $jobOptions[ 'totalLimit' ] - $total ) :
+						$batch_size;
+					$query = $jobOptions[ 'query' ] . "\nLIMIT $limit OFFSET $offset";
 					break;
 				case SetProfileType::class:
 					$query = Query::getQueryFromConfig( $type, $offset, $batch_size );
@@ -59,6 +64,7 @@ class Map {
 					$query = Query::getQueryFromProfileType( $type, $offset, $batch_size );
 			}
 			$rs = Query::getResults( $query );
+			$total += count( $rs );
 			$output( "Retrieved " . count( $rs ) . " results.\n" );
 			foreach ( $rs as $row ) {
 				if ( $jobType === NormalizeDoi::class ) {
