@@ -125,7 +125,10 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 		$jobParams = $this->getJobParams( $formData );
 		$title  = Title::newFromText( $jobParams['page-name'] );
 		$pageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
-		$text = $formData['job-description'] . '<br/><h3>Form data:</h3><syntaxhighlight lang="json">' .
+		$text = $formData['job-description'] .
+			'<br/><h3>Query</h3><syntaxhighlight lang="sparql">' .
+			$formData['query'] .
+			'</syntaxhighlight><br/><h3>Form data</h3><syntaxhighlight lang="json">' .
 			json_encode( $formData, JSON_PRETTY_PRINT ) .
 			'</syntaxhighlight><h3>Endpoint</h3>' .
 			Query::getEndpoint();
