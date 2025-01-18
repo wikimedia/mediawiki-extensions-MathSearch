@@ -9,6 +9,7 @@ use MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements;
 use MediaWiki\Extension\MathSearch\Graph\Map;
 use MediaWiki\Extension\MathSearch\Graph\Query;
 use MediaWiki\HTMLForm\Field\HTMLInfoField;
+use MediaWiki\HTMLForm\Field\HTMLIntField;
 use MediaWiki\HTMLForm\Field\HTMLSubmitField;
 use MediaWiki\HTMLForm\Field\HTMLTextField;
 use MediaWiki\HTMLForm\HTMLForm;
@@ -51,6 +52,15 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 				'help' => 'Use Wikitext. This will be logged to a dedicated log page.',
 				'class' => HTMLTextAreaField::class,
 				'rows' => 3,
+			],
+			'totalLimit' => [
+				'label' => 'Maximal limit',
+				'help' => 'Overall maximal limit for changes. 0 means no limit.',
+				'class' => HTMLIntField::class,
+				'min' => 0,
+				'default' => 0,
+				'maxlength' => 8,
+				'maximum' => PHP_INT_MAX,
 			],
 			'preview' => [
 				'buttonlabel' => 'Preview',
@@ -140,11 +150,9 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 
 	public function getJobParams( array $formData ): array {
 		$jobData = $formData;
-		$jobDate = date( 'ymdhms' );
-		$jobtitle = $formData['job-title'];
-		$jobPage = 'QuickSparqlStatements/' . $jobtitle . '/' . $jobDate;
-		$jobData['page-name'] = $jobPage;
-		$jobData['editsummary'] = "[[$jobPage|$jobtitle]]";
+		$jobData['date'] = date( 'ymdhms' );
+		$jobData['page-name'] = 'QuickSparqlStatements/' . $jobData['job-title'] . '/' . $jobData['date'];
+		$jobData['editsummary'] = "[[{$jobData['page-name']}|{$jobData['job-title']}]]";
 		$jobData['username'] = $this->getUser()->getName();
 		return $jobData;
 	}
