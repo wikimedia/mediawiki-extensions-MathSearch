@@ -5,7 +5,7 @@ use Wikimedia\Rdbms\IResultWrapper;
 
 class MathSearchUtils {
 
-	private static function addExtensionTable( $name, $folder = '' ) {
+	private static function addExtensionTable( string $name, string $folder = '' ) {
 		$dbw = MediaWikiServices::getInstance()
 			->getConnectionProvider()
 			->getPrimaryDatabase();

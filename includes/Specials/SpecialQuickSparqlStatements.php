@@ -164,7 +164,7 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 		return 'mathsearch';
 	}
 
-	private function getBatchSize( $formData ) {
+	private function getBatchSize( array $formData ): int {
 		return $formData['batchSize'] ?? 10000;
 	}
 

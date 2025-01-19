@@ -11,7 +11,7 @@ class LineReaderJob extends \Job {
 		parent::__construct( 'SeLineReader', $title, $params );
 	}
 
-	private static function getLog() {
+	private static function getLog(): \Psr\Log\LoggerInterface {
 		return LoggerFactory::getInstance( 'MathSearch' );
 	}
 

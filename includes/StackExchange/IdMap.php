@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use MediaWiki\MediaWikiServices;
 use Wikibase\DataModel\Entity\Item;
+use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\Repo\WikibaseRepo;
 
 class IdMap {
@@ -43,7 +44,7 @@ class IdMap {
 		return self::$instance;
 	}
 
-	private function getNewQid() {
+	private function getNewQid(): ?ItemId {
 		$this->item->setId( null );
 		$this->store->assignFreshId( $this->item );
 

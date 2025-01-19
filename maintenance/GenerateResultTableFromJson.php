@@ -58,7 +58,11 @@ class GenerateResultTableFromJson extends Maintenance {
 	}
 
 	private function printSource(
-		$source, $description = "", $language = "text", $linestart = true, $collapsible = true
+		string $source,
+		string $description = "",
+		string $language = "text",
+		bool $linestart = true,
+		bool $collapsible = true
 	) {
 		// TODO: deduplicate from SpecialLaTeXTranslator
 		$inline = ' inline ';

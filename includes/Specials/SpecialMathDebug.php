@@ -206,7 +206,7 @@ class SpecialMathDebug extends SpecialPage {
 		return true;
 	}
 
-	private static function render( $t, $mode, $purge = true ) {
+	private static function render( string $t, string $mode, bool $purge = true ): string {
 		$modeInt = (int)substr( $mode, 0, 1 );
 		$renderer = MathRenderer::getRenderer( $t, [], $modeInt );
 		$renderer->setPurge( $purge );
@@ -217,7 +217,7 @@ class SpecialMathDebug extends SpecialPage {
 		return $res . '<br/>';
 	}
 
-	private static function getMathTagsFromPage( $titleString = 'Testpage' ) {
+	private static function getMathTagsFromPage( string $titleString = 'Testpage' ): array {
 		$title = Title::newFromText( $titleString );
 		if ( $title->exists() ) {
 			$idGenerator = MathIdGenerator::newFromTitle( $title );
@@ -229,7 +229,7 @@ class SpecialMathDebug extends SpecialPage {
 		}
 	}
 
-	private function getTexvcTex( $tex ) {
+	private function getTexvcTex( string $tex ): string {
 		$renderer = MathRenderer::getRenderer( $tex, [], 'source' );
 		$renderer->checkTeX();
 		return $renderer->getTex();
