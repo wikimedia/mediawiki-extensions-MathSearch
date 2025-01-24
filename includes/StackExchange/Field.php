@@ -127,7 +127,7 @@ class Field {
 		],
 	];
 
-	private static function getLog() {
+	private static function getLog(): \Psr\Log\LoggerInterface {
 		return LoggerFactory::getInstance( 'MathSearch' );
 	}
 
@@ -219,7 +219,7 @@ class Field {
 		return $result;
 	}
 
-	private function setIfDefined( $key, $field ) {
+	private function setIfDefined( string $key, array $field ): bool {
 		if ( array_key_exists( $key, $field ) ) {
 			$this->$key = $field[$key];
 
@@ -229,7 +229,7 @@ class Field {
 		}
 	}
 
-	private function propagateFieldInfo( $fieldInfo ) {
+	private function propagateFieldInfo( array $fieldInfo ) {
 		$hasKey = static fn ( $key ) => array_key_exists( $key, $fieldInfo );
 		$this->known = true;
 		$isExcluded = $this->setIfDefined( 'excludeFromWb', $fieldInfo );

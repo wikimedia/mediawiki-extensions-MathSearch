@@ -65,7 +65,7 @@ class MathMLIntents extends GraphJob {
 		return $qIdMap;
 	}
 
-	private function processRow( $concept, $qid, $row ) {
+	private function processRow( string $concept, int $qid, \stdClass $row ) {
 		global $wgMathIntentsQIdMap;
 		$pDe = $this->getNumericPropertyId( $wgMathIntentsQIdMap['concept'] );
 		self::getLog()->info( "Add OpenAlex data for Zbl $concept to $qid." );

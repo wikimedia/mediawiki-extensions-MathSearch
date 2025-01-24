@@ -81,7 +81,7 @@ class SpecialMlpEval extends SpecialPage {
 		parent::__construct( 'MlpEval' );
 	}
 
-	private function setStep( $step ) {
+	private function setStep( int $step ): int {
 		$this->step = $step;
 		return $step;
 	}
@@ -211,7 +211,7 @@ class SpecialMlpEval extends SpecialPage {
 		return "";
 	}
 
-	private function setPage( Title $title ) {
+	private function setPage( Title $title ): bool {
 		if ( $title === null ) {
 			$this->lastError = "Title was null.";
 			return false;
@@ -489,7 +489,12 @@ class SpecialMlpEval extends SpecialPage {
 		}
 	}
 
-	private function writeLog( $message, $step = false, $revId = false ) {
+	/**
+	 * @param string $message
+	 * @param int|false $step
+	 * @param int|false $revId
+	 */
+	private function writeLog( string $message, $step = false, $revId = false ) {
 		$userId = $this->getUser()->getId();
 		$logData = [
 			'data'   => $this->getRequest()->getValues(),
@@ -564,7 +569,9 @@ class SpecialMlpEval extends SpecialPage {
 		$this->fId = '';
 	}
 
-	private function printSource( $source, $description = "", $language = "text", $linestart = true ) {
+	private function printSource(
+		string $source, string $description = "", string $language = "text", bool $linestart = true
+	) {
 		if ( $description ) {
 			$description .= ": ";
 		}
@@ -618,7 +625,7 @@ class SpecialMlpEval extends SpecialPage {
 		$this->getOutput()->addWikiTextAsInterface( $msg->text() );
 	}
 
-	private function getWikiTextLink() {
+	private function getWikiTextLink(): string {
 		$description = "{$this->getRevisionTitle()}#{$this->fId}";
 		return "[[Special:Permalink/{$this->oldId}#{$this->fId}|$description]]";
 	}

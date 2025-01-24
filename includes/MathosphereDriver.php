@@ -103,7 +103,7 @@ class MathosphereDriver {
 		return false;
 	}
 
-	private function addIdentifierDefinitionTuple( $r ) {
+	private function addIdentifierDefinitionTuple( \stdClass $r ) {
 		$this->relations[$r->identifier][] = $r;
 	}
 

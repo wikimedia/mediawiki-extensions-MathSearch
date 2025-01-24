@@ -55,7 +55,7 @@ class AddSwhids extends Maintenance {
 		$this->requireExtension( 'MathSearch' );
 	}
 
-	private function getQuery() {
+	private function getQuery(): string {
 		return <<<SPARQL
 PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 

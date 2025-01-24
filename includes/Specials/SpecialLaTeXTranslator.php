@@ -37,7 +37,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	/** @var string|null */
 	private $dependencyGraph;
 
-	private function log( $level, $message, array $context = [] ) {
+	private function log( int $level, string $message, array $context = [] ) {
 		$this->logger->log( $level, $message, $context );
 		if ( $this->getConfig()->get( 'ShowDebug' ) ) {
 			$msg = LegacyLogger::interpolate( $message, $context );
@@ -213,7 +213,11 @@ are often used together.';
 	}
 
 	private function printSource(
-		$source, $description = "", $language = "text", $linestart = true, $collapsible = true
+		string $source,
+		string $description = "",
+		string $language = "text",
+		bool $linestart = true,
+		bool $collapsible = true
 	) {
 		$inline = ' inline ';
 		$out = $this->getOutput();
@@ -293,7 +297,12 @@ are often used together.';
 		return false;
 	}
 
-	private function printList( $list, $description, $callable = false ): void {
+	/**
+	 * @param array $list
+	 * @param string $description
+	 * @param callable|false $callable
+	 */
+	private function printList( array $list, string $description, $callable = false ): void {
 		if ( !$list || empty( $list ) ) {
 			return;
 		}
@@ -325,6 +334,9 @@ are often used together.';
 		$this->getOutput()->addHTML( '</div></div>' );
 	}
 
+	/**
+	 * @param array $group
+	 */
 	private function displayTests( $group ) {
 		if ( !is_array( $group ) ) {
 			return;

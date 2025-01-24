@@ -260,7 +260,7 @@ class UpdateMath extends Maintenance {
 		return $this->parserOptions;
 	}
 
-	private function getParser( $revId ): Parser {
+	private function getParser( int $revId ): Parser {
 		if ( !$this->parser ) {
 			$this->parser = $this->getServiceContainer()->getParserFactory()->create();
 		}

@@ -55,7 +55,7 @@ class WikitextGenerator {
 		return $out;
 	}
 
-	private function getQId( int $fid ) {
+	private function getQId( int $fid ): int {
 		return $this->idGen->addQid( $fid, 0 );
 	}
 

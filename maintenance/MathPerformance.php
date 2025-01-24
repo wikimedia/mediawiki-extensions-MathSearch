@@ -177,13 +177,13 @@ class MathPerformance extends Maintenance {
 		$this->time = microtime( true );
 	}
 
-	private function vPrint( $string ) {
+	private function vPrint( string $string ) {
 		if ( $this->verbose ) {
 			$this->output( $string . "\n" );
 		}
 	}
 
-	private function runTest( MathRestbaseInterface $rbi, $method = 'checkTeX', $prefix = '' ) {
+	private function runTest( MathRestbaseInterface $rbi, string $method = 'checkTeX', string $prefix = '' ): bool {
 		try {
 			$this->resetTimer();
 			call_user_func( [ $rbi, $method ] );

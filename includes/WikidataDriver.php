@@ -40,7 +40,7 @@ class WikidataDriver {
 		return false;
 	}
 
-	private function element2String( $d, $desc = true ) {
+	private function element2String( \stdClass $d, bool $desc = true ): string {
 		if ( $desc && isset( $d->description ) ) {
 			return "{$d->label} ({$d->description})";
 		} else {

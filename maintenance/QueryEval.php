@@ -66,7 +66,7 @@ class QueryEval extends Maintenance {
 		$this->requireExtension( 'MathSearch' );
 	}
 
-	private function addExtensionTable( $name, $folder = '' ) {
+	private function addExtensionTable( string $name, string $folder = '' ) {
 		if ( $this->dbu === null ) {
 			$dbw = $this->getServiceContainer()
 				->getConnectionProvider()

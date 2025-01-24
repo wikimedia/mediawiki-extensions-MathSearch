@@ -36,7 +36,7 @@ class SpecialDisplayTopics extends SpecialPage {
 		}
 	}
 
-	private function displayOverview( $filter = 1 ) {
+	private function displayOverview( int $filter = 1 ) {
 		// If $wgMathWmcServer is unset there's no math_wmc_ref table to query
 		if ( !$this->getConfig()->get( 'MathWmcServer' ) ) {
 			return;
@@ -66,7 +66,7 @@ SQL
 		$this->getOutput()->addWikiTextAsInterface( MathSearchUtils::dbRowToWikiTable( $res, $cols ) );
 	}
 
-	private function displayTopic( $query ) {
+	private function displayTopic( int $query ) {
 		// If $wgMathWmcServer is unset there's no math_wmc_ref table to query
 		if ( !$this->getConfig()->get( 'MathWmcServer' ) ) {
 			return;
@@ -125,7 +125,7 @@ SQL
 		}
 	}
 
-	private function printIndividualResults( $qId ) {
+	private function printIndividualResults( int $qId ) {
 		$out = $this->getOutput();
 		$out->addWikiTextAsInterface( "== Individual results ==" );
 		$dbr = MediaWikiServices::getInstance()

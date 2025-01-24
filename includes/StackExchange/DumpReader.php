@@ -22,7 +22,7 @@ class DumpReader {
 	/** @var int */
 	private $part = 0;
 
-	private static function getLog() {
+	private static function getLog(): \Psr\Log\LoggerInterface {
 		return LoggerFactory::getInstance( 'MathSearch' );
 	}
 
@@ -37,7 +37,7 @@ class DumpReader {
 		$this->errPath = $errPath;
 	}
 
-	private function normalizeFilename( $fileName ) {
+	private function normalizeFilename( string $fileName ) {
 		// some posts file from arq20 math task were modified with additional version
 		// information by appending either .V1.0 or _V1_0
 		$fileparts = preg_split( "/[._]/", $fileName );

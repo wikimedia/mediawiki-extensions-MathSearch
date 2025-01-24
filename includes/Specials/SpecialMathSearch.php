@@ -139,7 +139,7 @@ class SpecialMathSearch extends SpecialPage {
 		return $htmlForm;
 	}
 
-	private function getSearchRows( $cnt ) {
+	private function getSearchRows( int $cnt ): array {
 		$out = [];
 		for ( $i = 1; $i <= $cnt; $i++ ) {
 			if ( $i == 1 ) {
@@ -453,7 +453,7 @@ class SpecialMathSearch extends SpecialPage {
 		);
 	}
 
-	private function addFormData( $mathpattern, $i, $TYPE_MATH, $REL_AND ) {
+	private function addFormData( string $mathpattern, int $i, int $TYPE_MATH, int $REL_AND ) {
 		$this->defaults[$i]['type'] = $TYPE_MATH;
 		$this->defaults[$i]['rel'] = $REL_AND;
 		$this->defaults[$i]['expr'] = $mathpattern;

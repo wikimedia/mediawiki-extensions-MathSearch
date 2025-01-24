@@ -39,7 +39,7 @@ class Row {
 		}
 	}
 
-	private static function getLog() {
+	private static function getLog(): \Psr\Log\LoggerInterface {
 		return LoggerFactory::getInstance( 'MathSearch' );
 	}
 

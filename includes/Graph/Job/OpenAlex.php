@@ -68,7 +68,7 @@ class OpenAlex extends GraphJob {
 		return $qIdMap;
 	}
 
-	private function processRow( $de, $qid, $row ) {
+	private function processRow( string $de, int $qid, \stdClass $row ) {
 		global $wgMathOpenAlexQIdMap;
 		$pDe = $this->getNumericPropertyId( $wgMathOpenAlexQIdMap['document'] );
 		self::getLog()->info( "Add OpenAlex data for Zbl $de to $qid." );

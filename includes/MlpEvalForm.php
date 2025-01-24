@@ -30,7 +30,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 		} );
 	}
 
-	private function addControls( &$formDescriptor ) {
+	private function addControls( array &$formDescriptor ) {
 		switch ( $this->step ) {
 			case SpecialMlpEval::STEP_PAGE:
 				$formDescriptor['1-page'] = [
@@ -225,7 +225,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 		}
 	}
 
-	private function addOptions( &$form ) {
+	private function addOptions( array &$form ) {
 		static $elements = [ 'label', 'help' ];
 		foreach ( $form as $key => $control ) {
 			foreach ( $elements as $element ) {

@@ -95,7 +95,7 @@ class FormulaInfo extends SpecialPage {
 		return true;
 	}
 
-	private static function GetTranslation( $cas, $tex ) {
+	private static function GetTranslation( string $cas, string $tex ): ?string {
 		global $wgMathSearchTranslationUrl;
 		$params = [ 'cas' => $cas, 'latex' => $tex ];
 		return MediaWikiServices::getInstance()->getHttpRequestFactory()->post(
@@ -103,7 +103,7 @@ class FormulaInfo extends SpecialPage {
 		);
 	}
 
-	private static function PrintTranslationResult( $cas, $result ) {
+	private static function PrintTranslationResult( string $cas, string $result ) {
 		global $wgOut;
 
 		$jsonResult = json_decode( $result, true );
@@ -199,7 +199,9 @@ class FormulaInfo extends SpecialPage {
 		return true;
 	}
 
-	private function printSource( $source, $description = "", $language = "text", $linestart = true ) {
+	private function printSource(
+		string $source, string $description = "", string $language = "text", bool $linestart = true
+	) {
 		if ( $description ) {
 			$description .= ": ";
 		}
@@ -207,13 +209,13 @@ class FormulaInfo extends SpecialPage {
 			$source . '</syntaxhighlight>', $linestart );
 	}
 
-	private static function getlengh( $binray ) {
+	private static function getlengh( string $binray ): string {
 		$uncompressed = strlen( $binray );
 		$compressed = strlen( gzcompress( $binray ) );
 		return self::formatBytes( $uncompressed ) . " / " . self::formatBytes( $compressed );
 	}
 
-	private static function formatBytes( $bytes, $precision = 3 ) {
+	private static function formatBytes( int $bytes, int $precision = 3 ): string {
 		$units = [ 'B', 'KB', 'MB', 'GB', 'TB' ];
 
 		$bytes = max( $bytes, 0 );
