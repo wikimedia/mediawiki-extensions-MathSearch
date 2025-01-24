@@ -68,7 +68,7 @@ class QuickStatements extends GraphJob {
 				$item = $this->getRowItem( $row );
 				$this->processRow( $row, $item );
 			} catch ( Throwable $ex ) {
-				self::getLog()->error( "Skip row", [ 'error' => $ex, 'row' => $row ] );
+				self::getLog()->error( "Skip row", [ 'exception' => $ex, 'row' => $row ] );
 			}
 		}
 		return true;
