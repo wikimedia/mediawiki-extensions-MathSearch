@@ -679,7 +679,7 @@ class SpecialMlpEval extends SpecialPage {
 		$parserOutput = $parser->parse(
 			$hl->getWikiText(), $this->getRevisionTitle(), $popts )->getText();
 		if ( $filter ) {
-			call_user_func_array( $filter, [ &$parserOutput ] );
+			$filter( $parserOutput );
 		}
 		$out->addHTML( $parserOutput );
 		$out->addHTML( '</div></div>' );
