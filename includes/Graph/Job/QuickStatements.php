@@ -88,21 +88,32 @@ class QuickStatements extends GraphJob {
 
 	private function processRow( array $row, Item $item ) {
 		$statements = $item->getStatements();
-		$changed = false;
+		$currentProperty = null;
+		$newStatements = [];
 		foreach ( $row as $P => $value ) {
+			if ( str_starts_with( $P, 'P' ) ) {
+				$currentProperty = $P;
+			}
 			$propertyId = $this->getNumericPropertyId( $P );
 			$currentStatements = $statements->getByPropertyId( $propertyId );
 			if ( !$currentStatements->isEmpty() &&
 				!$this->removeOldStatements( $currentStatements, $value, $statements ) ) {
 				continue;
 			}
-			$changed = true;
-			$statements->addNewStatement( $this->getSnak( $P, $value ), [], null,
-				$this->guidGenerator->newGuid( $item->getId() ) );
+			$newStatements[$currentProperty] = [
+				$this->getSnak( $P, $value ),
+				[],
+				null,
+				$this->guidGenerator->newGuid( $item->getId() )
+				];
+
 		}
-		if ( $changed === false ) {
+		if ( count( $newStatements ) === 0 ) {
 			self::getLog()->info( "Skip row (no change)." );
 			return;
+		}
+		foreach ( $newStatements as $statement ) {
+			$statements->addNewStatement( ...$statement );
 		}
 		$item->setStatements( $statements );
 		$this->entityStore->saveEntity( $item, $this->params['editsummary'], $this->getUser(), EDIT_FORCE_BOT );
