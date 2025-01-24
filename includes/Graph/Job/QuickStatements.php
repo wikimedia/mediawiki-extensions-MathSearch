@@ -93,6 +93,11 @@ class QuickStatements extends GraphJob {
 		foreach ( $row as $P => $value ) {
 			if ( str_starts_with( $P, 'P' ) ) {
 				$currentProperty = $P;
+			} elseif ( str_starts_with( $P, 'qal' ) ) {
+				$newStatements[$currentProperty][1][] = $this->getSnak(
+					'P' . substr( $P, 3 ),
+					$value );
+				continue;
 			}
 			$propertyId = $this->getNumericPropertyId( $P );
 			$currentStatements = $statements->getByPropertyId( $propertyId );
@@ -100,7 +105,7 @@ class QuickStatements extends GraphJob {
 				!$this->removeOldStatements( $currentStatements, $value, $statements ) ) {
 				continue;
 			}
-			$newStatements[$currentProperty] = [
+			$newStatements[ $currentProperty ] = [
 				$this->getSnak( $P, $value ),
 				[],
 				null,
