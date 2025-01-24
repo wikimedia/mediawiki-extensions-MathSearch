@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Extension\MathSearch\Graph;
 
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Sparql\SparqlClient;
 use MediaWiki\Sparql\SparqlException;
@@ -111,6 +112,31 @@ SPARQL;
 	public static function getEndpoint(): mixed {
 		$repoSettings = WikibaseRepo::getSettings();
 		return $repoSettings->getSetting( 'sparqlEndpoint' );
+	}
+
+	/**
+	 * @param array &$rows
+	 * @return array<string,string>
+	 * @throws SparqlException
+	 */
+	public static function getDeQIdMap( array &$rows ): array {
+		$logger = LoggerFactory::getInstance( 'MathSearch' );
+
+		$des = '"' . implode( '" "', array_keys( $rows ) ) . '"';
+		$query = self::getQidFromDe( $des );
+		$rs = self::getResults( $query );
+		$qIdMap = [];
+		foreach ( $rs as $row ) {
+			$de = $row['de'];
+			if ( isset( $qIdMap[$de] ) ) {
+				$logger->error( "Multiple Qid found for Zbl $de." );
+				unset( $rows[$de] );
+				continue;
+			}
+			$qIdMap[$de] = $row['qid'];
+		}
+
+		return $qIdMap;
 	}
 
 }

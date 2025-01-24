@@ -31,7 +31,7 @@ class OpenAlex extends GraphJob {
 	}
 
 	public function run(): bool {
-		$qIdMap = $this->getDeQIdMap();
+		$qIdMap = Query::getDeQIdMap( $this->params['rows'] );
 		foreach ( $this->params['rows'] as $de => $row ) {
 			try {
 				if ( !isset( $qIdMap[(string)$de] ) ) {
@@ -45,27 +45,6 @@ class OpenAlex extends GraphJob {
 		}
 
 		return true;
-	}
-
-	/**
-	 * @return array<string,string>
-	 */
-	private function getDeQIdMap(): array {
-		$des = '"' . implode( '" "', array_keys( $this->params['rows'] ) ) . '"';
-		$query = Query::getQidFromDe( $des );
-		$rs = Query::getResults( $query );
-		$qIdMap = [];
-		foreach ( $rs as $row ) {
-			$de = $row['de'];
-			if ( isset( $qIdMap[$de] ) ) {
-				self::getLog()->error( "Multiple Qid found for Zbl $de." );
-				unset( $this->params['rows'][$de] );
-				continue;
-			}
-			$qIdMap[$de] = $row['qid'];
-		}
-
-		return $qIdMap;
 	}
 
 	private function processRow( string $de, int $qid, \stdClass $row ) {
