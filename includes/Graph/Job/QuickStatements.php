@@ -129,6 +129,9 @@ class QuickStatements extends GraphJob {
 		$type = $this->getPropertyType( $propertyKey );
 		switch ( $type ) {
 			case 'wikibase-item':
+				if ( str_starts_with( $value, 'Q' ) ) {
+					$value = substr( $value, 1 );
+				}
 				$value = [ 'entity-type' => 'item', 'numeric-id' => (int)$value ];
 				break;
 			case 'quantity':
