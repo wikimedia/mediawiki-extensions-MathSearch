@@ -121,7 +121,11 @@ class QuickStatements extends GraphJob {
 			$statements->addNewStatement( ...$statement );
 		}
 		$item->setStatements( $statements );
-		$this->entityStore->saveEntity( $item, $this->params['editsummary'], $this->getUser(), EDIT_FORCE_BOT );
+		$this->entityStore->saveEntity(
+			$item,
+			$this->params['editsummary'] ?? 'job ' . $this->params['jobname'],
+			$this->getUser(),
+			EDIT_FORCE_BOT );
 	}
 
 	private function getSnak( string $propertyKey, mixed $value ): Snak {

@@ -60,14 +60,14 @@ class ImportRecommendations extends Maintenance {
 		$jobname = 'recommendation' . date( 'ymdhms' );
 		while ( $line !== false ) {
 			try {
-				$table += $this->readline( $line, $columns );
+				$table[] = $this->readline( $line, $columns );
 				if ( count( $table ) > $this->getBatchSize() ) {
 					$this->output( "Push jobs to segment $segment.\n" );
 					$graphMap->pushJob(
 						$table,
 						$segment++,
 						'MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements',
-						[ 'jobname' => $jobname ] );
+						[ 'jobname' => $jobname, 'editsummary' => 'Import recommendations run Q6534273' ] );
 					$table = [];
 				}
 			} catch ( Throwable $e ) {
@@ -115,7 +115,6 @@ class ImportRecommendations extends Maintenance {
 			'P1643' => $this->de2q( $fields['recommendation'] ),
 			'qal1659' => $fields['similarity_score'],
 			'qal1660' => 'Q6534273'
-
 		];
 	}
 
