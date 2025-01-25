@@ -8,6 +8,7 @@ use MediaWiki\Content\ContentHandler;
 use MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements;
 use MediaWiki\Extension\MathSearch\Graph\Map;
 use MediaWiki\Extension\MathSearch\Graph\Query;
+use MediaWiki\HTMLForm\Field\HTMLCheckField;
 use MediaWiki\HTMLForm\Field\HTMLInfoField;
 use MediaWiki\HTMLForm\Field\HTMLIntField;
 use MediaWiki\HTMLForm\Field\HTMLSubmitField;
@@ -52,6 +53,12 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 				'help' => 'Use Wikitext. This will be logged to a dedicated log page.',
 				'class' => HTMLTextAreaField::class,
 				'rows' => 3,
+			],
+			'overwrite' => [
+				'label' => 'Overwrite',
+				'help' => 'Overwrite existing values for the given properties',
+				'class' => HTMLCheckField::class,
+				'default' => true,
 			],
 			'totalLimit' => [
 				'label' => 'Maximal limit',

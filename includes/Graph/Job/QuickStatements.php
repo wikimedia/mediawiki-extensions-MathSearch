@@ -88,15 +88,18 @@ class QuickStatements extends GraphJob {
 
 	private function processRow( array $row, Item $item ) {
 		$statements = $item->getStatements();
-		$currentProperty = null;
+		$currentStatementKey = 0;
 		$newStatements = [];
 		foreach ( $row as $P => $value ) {
 			if ( str_starts_with( $P, 'P' ) ) {
-				$currentProperty = $P;
+				$currentStatementKey++;
 			} elseif ( str_starts_with( $P, 'qal' ) ) {
-				$newStatements[$currentProperty][1][] = $this->getSnak(
+				$newStatements[$currentStatementKey][1][] = $this->getSnak(
 					'P' . substr( $P, 3 ),
 					$value );
+				continue;
+			} else {
+				self::getLog()->warning( "Skip invalid field name.", [ $P ] );
 				continue;
 			}
 			$propertyId = $this->getNumericPropertyId( $P );
@@ -105,7 +108,7 @@ class QuickStatements extends GraphJob {
 				!$this->removeOldStatements( $currentStatements, $value, $statements ) ) {
 				continue;
 			}
-			$newStatements[ $currentProperty ] = [
+			$newStatements[ $currentStatementKey ] = [
 				$this->getSnak( $P, $value ),
 				[],
 				null,
@@ -177,18 +180,23 @@ class QuickStatements extends GraphJob {
 		StatementList $currentStatements,
 		mixed $value,
 		StatementList $statements ): bool {
-		if ( count( $currentStatements ) > 1 ) {
+		$overwrite = $this->params['overwrite'] ?? true;
+		if ( $overwrite && count( $currentStatements ) > 1 ) {
 			self::getLog()->warning( "Skip row (multiple statements)." );
 			return false;
 		}
-		$statement = $currentStatements->toArray()[0];
-		$snak = $statement->getMainSnak();
-		if ( $snak instanceof PropertyValueSnak &&
-			$snak->getDataValue()->getValue() == $value ) {
-			self::getLog()->info( "Skip row (no change)." );
-			return false;
+		foreach ( $currentStatements as $statement ) {
+			$snak = $statement->getMainSnak();
+			if ( $snak instanceof PropertyValueSnak &&
+				$snak->getDataValue()->getValue() == $value ) {
+				self::getLog()->info( "Skip statement (no change)." );
+				return false;
+			}
+			if ( $overwrite ) {
+				// there is at most one statement that will be removed
+				$statements->removeStatementsWithGuid( $statement->getGuid() );
+			}
 		}
-		$statements->removeStatementsWithGuid( $statement->getGuid() );
 		return true;
 	}
 }
