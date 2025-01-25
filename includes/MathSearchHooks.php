@@ -284,7 +284,7 @@ class MathSearchHooks {
 	 */
 	static function onParserFirstCallInit( $parser ) {
 		$parser->setHook( 'mquery', [ 'MathSearchHooks', 'mQueryTagHook' ] );
-		LoggerFactory::getInstance( 'MathSearch' )->warning( 'mquery tag registered' );
+		LoggerFactory::getInstance( 'MathSearch' )->debug( 'mquery tag registered' );
 		return true;
 	}
 
