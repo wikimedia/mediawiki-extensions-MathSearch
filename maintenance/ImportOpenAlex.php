@@ -19,71 +19,23 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\Extension\MathSearch\Graph\Map;
+require_once __DIR__ . '/BaseImport.php';
 
-require_once __DIR__ . '/../../../maintenance/Maintenance.php';
-
-class ImportOpenAlex extends Maintenance {
+class ImportOpenAlex extends BaseImport {
 
 	/** @var string */
 	private string $filename;
 
 	public function __construct() {
-		parent::__construct();
-		$this->addDescription( "Batch imports OpenAlex data from a CSV file." );
-		$this->addArg( 'file', 'The file to be read', true );
-		$this->setBatchSize( 100 );
-		$this->requireExtension( 'MathSearch' );
-	}
-
-	public function execute() {
-		$this->filename = $this->getArg( 0 );
-		if ( !is_file( $this->filename ) ) {
-			$this->output( "{$this->filename} is not a file.\n" );
-			exit( 1 );
-		}
-		$handle = fopen( $this->filename, 'r' );
-		$columns = fgetcsv( $handle );
-		$table = [];
-		if ( $columns === null ) {
-			throw new Exception( "Problem processing the csv file." );
-		}
-		$line = fgetcsv( $handle, 0, ',', '"', '' );
-		$graphMap = new Map();
-		$segment = 0;
 		$jobname = 'openalex' . date( 'ymdhms' );
-		while ( $line !== false ) {
-			try {
-				$table += $this->readline( $line, $columns );
-				if ( count( $table ) > $this->getBatchSize() ) {
-					$this->output( "Push jobs to segment $segment.\n" );
-					$graphMap->pushJob(
-						$table,
-						$segment++,
-						'MediaWiki\Extension\MathSearch\Graph\Job\OpenAlex',
-						[ 'jobname' => $jobname ] );
-					$table = [];
-				}
-			} catch ( Throwable $e ) {
-				$this->output( "Error processing line: \n" .
-					var_export( implode( ',', $line ), true ) . "\nError:" .
-					$e->getMessage() . "\n" );
-			}
-			$line = fgetcsv( $handle, 0, ',', '"', '' );
-		}
-		if ( count( $table ) ) {
-			$graphMap->pushJob(
-				$table,
-				$segment,
-				'MediaWiki\Extension\MathSearch\Graph\Job\OpenAlex',
-				[ 'jobname' => $jobname ] );
-		}
-		$this->output( "Pushed last $segment.\n" );
 
-		fclose( $handle );
+		parent::__construct( [
+			'jobname' => $jobname ],
+			'MediaWiki\Extension\MathSearch\Graph\Job\OpenAlex',
+			'Batch imports OpenAlex data from a CSV file.' );
 	}
 
-	private function readline( array $line, array $columns ): array {
+	protected function readline( array $line, array $columns ): array {
 		global $wgMathOpenAlexQIdMap;
 		$pDe = $wgMathOpenAlexQIdMap['document'];
 		$pUrl = $wgMathOpenAlexQIdMap['prime_landing_page_url'];

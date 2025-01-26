@@ -91,6 +91,8 @@ class QuickStatements extends GraphJob {
 		$currentStatementKey = 0;
 		$newStatements = [];
 		foreach ( $row as $P => $value ) {
+			// ignore suffixes (in SPARQL one can not use the same column header twice)
+			$P = preg_replace( '/(.*)_(\d+)/i', '$1', $P );
 			if ( str_starts_with( $P, 'P' ) ) {
 				$currentStatementKey++;
 			} elseif ( str_starts_with( $P, 'qal' ) ) {

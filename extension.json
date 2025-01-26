@@ -179,7 +179,8 @@
 		"MathMLIntents": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\MathMLIntents",
 		"NormalizeDoi": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\NormalizeDoi",
 		"FetchIdsFromWd": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\FetchIdsFromWd",
-		"QuickStatements": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\QuickStatements"
+		"QuickStatements": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\QuickStatements",
+		"Recommendation": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\Recommendation"
 	},
 	"RestRoutes": [
 		{

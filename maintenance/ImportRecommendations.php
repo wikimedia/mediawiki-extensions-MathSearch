@@ -21,101 +21,27 @@
  * TODO: deduplicate code from OpenAlex
  */
 
-use MediaWiki\Extension\MathSearch\Graph\Map;
-use MediaWiki\Extension\MathSearch\Graph\Query;
 use MediaWiki\Sparql\SparqlException;
 
-require_once __DIR__ . '/../../../maintenance/Maintenance.php';
+require_once __DIR__ . '/BaseImport.php';
 
-class ImportRecommendations extends Maintenance {
-
-	/** @var string */
-	private string $filename;
-
-	private array $qid_cache;
+class ImportRecommendations extends BaseImport {
 
 	public function __construct() {
-		parent::__construct();
-		$this->addDescription( "Batch imports Recommendation data from a CSV file." );
-		$this->addArg( 'file', 'The file to be read', true );
-		$this->setBatchSize( 100 );
-		$this->requireExtension( 'MathSearch' );
-	}
-
-	public function execute() {
-		$this->filename = $this->getArg( 0 );
-		if ( !is_file( $this->filename ) ) {
-			$this->output( "{$this->filename} is not a file.\n" );
-			exit( 1 );
-		}
-		$handle = fopen( $this->filename, 'r' );
-		$columns = fgetcsv( $handle );
-		$table = [];
-		if ( $columns === null ) {
-			throw new Exception( "Problem processing the csv file." );
-		}
-		$line = fgetcsv( $handle, 0, ',', '"', '' );
-		$graphMap = new Map();
-		$segment = 0;
 		$jobname = 'recommendation' . date( 'ymdhms' );
-		while ( $line !== false ) {
-			try {
-				$table[] = $this->readline( $line, $columns );
-				if ( count( $table ) > $this->getBatchSize() ) {
-					$this->output( "Push jobs to segment $segment.\n" );
-					$graphMap->pushJob(
-						$table,
-						$segment++,
-						'MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements',
-						[ 'jobname' => $jobname, 'editsummary' => 'Import recommendations run Q6534273' ] );
-					$table = [];
-				}
-			} catch ( Throwable $e ) {
-				$this->output( "Error processing line: \n" .
-					var_export( implode( ',', $line ), true ) . "\nError:" .
-					$e->getMessage() . "\n" );
-			}
-			$line = fgetcsv( $handle, 0, ',', '"', '' );
-		}
-		if ( count( $table ) ) {
-			$graphMap->pushJob(
-				$table,
-				$segment,
-				'MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements',
-				[ 'jobname' => $jobname ] );
-		}
-		$this->output( "Pushed last $segment.\n" );
-
-		fclose( $handle );
-	}
-
-	/**
-	 * @throws SparqlException
-	 * @throws Exception
-	 */
-	private function de2q( string $de ): string {
-		if ( !isset( $this->qid_cache[$de] ) ) {
-			$rows = [ $de => true ];
-			$map = Query::getDeQIdMap( $rows );
-			if ( !array_key_exists( $de, $map ) ) {
-				throw new Exception( "No document field found." );
-			}
-			$this->qid_cache[$de] = $map[$de];
-		}
-		return $this->qid_cache[$de];
+		$joboptions = [ 'jobname' => $jobname, 'editsummary' => 'Import recommendations run Q6534273' ];
+		$jobtype = 'MediaWiki\Extension\MathSearch\Graph\Job\Recommendation';
+		parent::__construct( $joboptions, $jobtype, 'Batch imports Recommendation data from a CSV file.' );
 	}
 
 	/**
 	 * @throws SparqlException
 	 */
-	private function readline( array $line, array $columns ): array {
+	protected function readline( array $line, array $columns ): array {
 		$fields = array_combine( $columns, $line );
-		return [
-			'qid' => $this->de2q( $fields['seed'] ),
-			'P1643' => $this->de2q( $fields['recommendation'] ),
-			'qal1659' => $fields['similarity_score'],
-			'qal1660' => 'Q6534273'
-		];
+		return [ $fields['seed'] => [
+			$fields['recommendation'] => $fields['similarity_score']
+		] ];
 	}
 
 }
