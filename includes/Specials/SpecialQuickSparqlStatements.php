@@ -1,6 +1,6 @@
 <?php
 
-namespace MediaWiki\Extension\MathSearch\specials;
+namespace MediaWiki\Extension\MathSearch\Specials;
 
 use Closure;
 use HTMLTextAreaField;
