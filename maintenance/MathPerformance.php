@@ -186,7 +186,7 @@ class MathPerformance extends Maintenance {
 	private function runTest( MathRestbaseInterface $rbi, string $method = 'checkTeX', string $prefix = '' ): bool {
 		try {
 			$this->resetTimer();
-			call_user_func( [ $rbi, $method ] );
+			$rbi->$method();
 			$this->time( $prefix . $method );
 			return true;
 		} catch ( Exception $e ) {
