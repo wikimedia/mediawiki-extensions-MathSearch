@@ -49,7 +49,7 @@ class MathMLIntents extends GraphJob {
 
 	private function getConceptIdMap(): array {
 		$concepts = '"' . implode( '" "', array_keys( $this->params['rows'] ) ) . '"';
-		$query = Query::getQidFromConcept( $concepts );
+		$query = Query::getQidFromPid( $concepts, 'P1511' );
 		$rs = Query::getResults( $query );
 		$qIdMap = [];
 		foreach ( $rs as $row ) {

@@ -39,26 +39,14 @@ OFFSET $offset
 SPARQL;
 	}
 
-	public static function getQidFromDe( string $des ) {
+	public static function getQidFromPid( string $values, $pid = 'P1451' ) {
 		return /** @lang Sparql */ <<<SPARQL
 SELECT
   (REPLACE(STR(?item), ".*Q", "") AS ?qid)
   ?de
 WHERE {
-  VALUES ?de  { $des }
-?item wdt:P1451 ?de
-}
-SPARQL;
-	}
-
-	public static function getQidFromConcept( string $concepts ) {
-		return /** @lang Sparql */ <<<SPARQL
-SELECT
-  (REPLACE(STR(?item), ".*Q", "") AS ?qid)
-  ?de
-WHERE {
-  VALUES ?de  { $concepts }
-?item wdt:P1511 ?de
+  VALUES ?de  { $values }
+?item wdt:$pid ?de
 }
 SPARQL;
 	}
@@ -116,20 +104,21 @@ SPARQL;
 
 	/**
 	 * @param array &$rows
+	 * @param string $pid
 	 * @return array<string,string>
 	 * @throws SparqlException
 	 */
-	public static function getDeQIdMap( array &$rows ): array {
+	public static function getDeQIdMap( array &$rows, string $pid = 'P1451' ): array {
 		$logger = LoggerFactory::getInstance( 'MathSearch' );
 
 		$des = '"' . implode( '" "', array_keys( $rows ) ) . '"';
-		$query = self::getQidFromDe( $des );
+		$query = self::getQidFromPid( $des, $pid );
 		$rs = self::getResults( $query );
 		$qIdMap = [];
 		foreach ( $rs as $row ) {
 			$de = $row['de'];
 			if ( isset( $qIdMap[$de] ) ) {
-				$logger->error( "Multiple Qid found for Zbl $de." );
+				$logger->error( "Multiple Qid found for $pid: $de." );
 				unset( $rows[$de] );
 				continue;
 			}
