@@ -160,6 +160,7 @@
 	"math-tex2nb-purge": "Message for checkbox to purge cached results on the specialpage LaTeXTrasnlator.",
 	"datatypes-type-contentmath": "The name of a data type.\n{{related|Datatypes-type}}\n{{Identical|Mathematical expression}}",
 	"quicksparqlstatements": "{{doc-special|QuickSparqlStatements}} Special page to Write and schedule the execution of SPARQL queries that change Wikibase entries according to the quick statements syntax.",
+	"pidredirect": "{{doc-special|PidRedirect}} Special page to redirect based on persistent identifiers defined in Wikibase.",
 	"wikibase-listdatatypes-contentmath-head": "{{Wikibase-datatype-head|Mathematical expression|math}}\n{{Identical|Mathematical expression}}",
 	"wikibase-listdatatypes-contentmath-body": "{{Wikibase-datatype-body|Mathematical expression}}"
 }

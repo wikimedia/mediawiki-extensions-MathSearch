@@ -21,6 +21,7 @@ $specialPageAliases['en'] = [
 	'LaTeXTranslator' => [ 'LaTeXTranslator', 'LaTeX Translator' ],
 	'DisplayTopics' => [ 'DisplayTopics' ],
 	'QuickSparqlStatements' => [ 'QuickSparqlStatements', 'SPARQL QuickStatements generator' ],
+	'PidRedirect' => [ 'PidRedirect', 'Persistent Identifier Redirection' ],
 ];
 
 /** Arabic (العربية) */
