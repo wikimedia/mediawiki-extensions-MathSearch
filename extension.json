@@ -165,7 +165,8 @@
 		"LaTeXTranslator": "SpecialLaTeXTranslator",
 		"MathUpload": "SpecialUploadResult",
 		"MathDownload": "SpecialMathDownloadResult",
-		"QuickSparqlStatements": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialQuickSparqlStatements"
+		"QuickSparqlStatements": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialQuickSparqlStatements",
+		"PidRedirect": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialPidRedirect"
 
 	},
 	"AutoloadNamespaces": {
