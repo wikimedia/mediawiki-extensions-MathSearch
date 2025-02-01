@@ -60,7 +60,8 @@ SPARQL;
 			throw new SparqlException( 'SPARQL endpoint not defined' );
 		}
 		$client = new SparqlClient( $endPoint, MediaWikiServices::getInstance()->getHttpRequestFactory() );
-		$client->appendUserAgent( __CLASS__ );
+		$client->setTimeout( 0 )
+			->appendUserAgent( __CLASS__ );
 		return $client->query( $query );
 	}
 
