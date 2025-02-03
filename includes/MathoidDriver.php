@@ -81,7 +81,7 @@ class MathoidDriver {
 		return $this->processResults( self::doPost( $url, $this->getPostData() ) );
 	}
 
-	protected function processResults( $res ) {
+	protected function processResults( string $res ): bool {
 		$jsonResult = json_decode( $res );
 		if ( $jsonResult && json_last_error() === JSON_ERROR_NONE ) {
 			if ( isset( $jsonResult->texvcinfo ) ) {
@@ -111,7 +111,7 @@ class MathoidDriver {
 		}
 	}
 
-	protected static function doPost( $url, $postData ) {
+	protected static function doPost( string $url, $postData ) {
 		$options = [
 			"postData" => $postData,
 			"timeout"  => 60,
@@ -140,7 +140,7 @@ class MathoidDriver {
 		return $config->get( "MathMathMLUrl" );
 	}
 
-	protected function getPostData() {
+	protected function getPostData(): string {
 		$post = [
 			'q' => $this->q,
 			'type' => $this->type

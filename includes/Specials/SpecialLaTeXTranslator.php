@@ -319,7 +319,7 @@ are often used together.';
 			$this->printColFooter();
 	}
 
-	protected function getGroupName() {
+	protected function getGroupName(): string {
 		return 'mathsearch';
 	}
 

@@ -26,7 +26,7 @@ abstract class MathEngineRest {
 	/** @var string */
 	protected $backendUrl = "http://localhost:9090";
 
-	protected static function doPost( $url, $postData ) {
+	protected static function doPost( string $url, $postData ) {
 		$res = MediaWikiServices::getInstance()->getHttpRequestFactory()
 			->post( $url, [ "postData" => $postData, "timeout" => 60 ] );
 		if ( $res === false ) {

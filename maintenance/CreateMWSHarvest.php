@@ -58,11 +58,11 @@ class CreateMWSHarvest extends IndexBase {
 			$row->mathindex_anchor );
 	}
 
-	protected function getHead() {
+	protected function getHead(): string {
 		return $this->dw->getHead();
 	}
 
-	protected function getFooter() {
+	protected function getFooter(): string {
 		return $this->dw->getFooter();
 	}
 

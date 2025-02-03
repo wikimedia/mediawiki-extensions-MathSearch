@@ -235,7 +235,7 @@ class SpecialMathDebug extends SpecialPage {
 		return $renderer->getTex();
 	}
 
-	protected function getGroupName() {
+	protected function getGroupName(): string {
 		return 'mathsearch';
 	}
 }

@@ -56,7 +56,7 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 		return true;
 	}
 
-	protected function getGroupName() {
+	protected function getGroupName(): string {
 		return 'mathsearch';
 	}
 }

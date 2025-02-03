@@ -480,7 +480,7 @@ class SpecialMathSearch extends SpecialPage {
 		}
 	}
 
-	protected function getGroupName() {
+	protected function getGroupName(): string {
 		return 'mathsearch';
 	}
 }
