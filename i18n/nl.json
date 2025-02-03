@@ -91,6 +91,7 @@
 	"math-tex2nb-purge": "Gecachte resultaten opschonen.",
 	"datatypes-type-contentmath": "Wiskundige uitdrukking (inhoud)",
 	"quicksparqlstatements": "SPARQL QuickStatements-generator",
+	"pidredirect": "Doorverwijzing op basis van blijvende identificatiecode",
 	"wikibase-listdatatypes-contentmath-head": "Wiskundige uitdrukking (inhoud)",
 	"wikibase-listdatatypes-contentmath-body": "Letterlijk gegevensveld voor wiskundige uitdrukkingen, formules, vergelijkingen en dergelijke, uitgedrukt in de DRMF/DLMF-variant van LaTeX."
 }

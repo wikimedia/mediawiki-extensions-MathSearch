@@ -6,6 +6,7 @@
 			"Ash Crow",
 			"Caliburn",
 			"Crochet.david",
+			"Eihel",
 			"Florian COLLIN",
 			"Gomoko",
 			"Mahabarata",
@@ -167,6 +168,7 @@
 	"math-tex2nb-purge": "Purgez les résultats mis en cache.",
 	"datatypes-type-contentmath": "Expression mathématique (contenu)",
 	"quicksparqlstatements": "Générateur d'instructions rapides SPARQL",
+	"pidredirect": "Redirection d'identifiant persistant",
 	"wikibase-listdatatypes-contentmath-head": "Expression mathématique (contenu)",
 	"wikibase-listdatatypes-contentmath-body": "Champ de donnée littéral pour les expressions mathématiques, formules, équations et autres, exprimés dans la variante DRMF/DLMF (Digital Repository/Library of Mathematical Formulae/Functions) de LaTeX."
 }
