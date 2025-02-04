@@ -332,7 +332,7 @@ class SpecialMlpEval extends SpecialPage {
 		return $this->renderingFields;
 	}
 
-	protected function getGroupName() {
+	protected function getGroupName(): string {
 		return 'mathsearch';
 	}
 

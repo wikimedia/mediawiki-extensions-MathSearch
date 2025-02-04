@@ -85,7 +85,7 @@ class MathosphereDriver {
 			$this->getPostData() ) );
 	}
 
-	protected function processResults( $res ) {
+	protected function processResults( string $res ): bool {
 		$jsonResult = json_decode( $res );
 		if ( $jsonResult &&
 			json_last_error() === JSON_ERROR_NONE &&
@@ -107,7 +107,7 @@ class MathosphereDriver {
 		$this->relations[$r->identifier][] = $r;
 	}
 
-	protected static function doPost( $url, $postData ) {
+	protected static function doPost( string $url, $postData ) {
 		$options = [
 			"postData" => $postData,
 			"timeout"  => 60,
@@ -136,7 +136,7 @@ class MathosphereDriver {
 		return $config->get( "MathSearchBaseXBackendUrl" ) . 'api';
 	}
 
-	protected function getPostData() {
+	protected function getPostData(): string {
 		$post = [
 			"wikitext" => $this->wikiText,
 			"title" => $this->title

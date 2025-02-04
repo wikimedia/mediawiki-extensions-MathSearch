@@ -71,11 +71,11 @@ class CreateBaseXMathTable extends IndexBase {
 		return $out;
 	}
 
-	protected function getHead() {
+	protected function getHead(): string {
 		return self::$XMLHead;
 	}
 
-	protected function getFooter() {
+	protected function getFooter(): string {
 		return self::$XMLFooter;
 	}
 

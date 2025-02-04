@@ -140,7 +140,7 @@ SQL
 		}
 	}
 
-	protected function getGroupName() {
+	protected function getGroupName(): string {
 		return 'mathsearch';
 	}
 }

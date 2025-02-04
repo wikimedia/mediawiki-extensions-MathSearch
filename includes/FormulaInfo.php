@@ -292,7 +292,7 @@ class FormulaInfo extends SpecialPage {
 		$renderer->writeCache();
 	}
 
-	protected function getGroupName() {
+	protected function getGroupName(): string {
 		return 'mathsearch';
 	}
 }
