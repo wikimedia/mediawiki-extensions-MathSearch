@@ -107,6 +107,11 @@ class MathosphereDriver {
 		$this->relations[$r->identifier][] = $r;
 	}
 
+	/**
+	 * @param string $url
+	 * @param array|string $postData
+	 * @return string|false
+	 */
 	protected static function doPost( string $url, $postData ) {
 		$options = [
 			"postData" => $postData,
