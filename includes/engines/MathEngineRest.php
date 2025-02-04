@@ -34,7 +34,7 @@ abstract class MathEngineRest {
 	protected static function doPost( string $url, $postData ) {
 		$res = MediaWikiServices::getInstance()->getHttpRequestFactory()
 			->post( $url, [ "postData" => $postData, "timeout" => 60 ] );
-		if ( $res === false ) {
+		if ( $res === null ) {
 			if ( function_exists( 'curl_init' ) ) {
 				$handle = curl_init();
 				$options = [
@@ -190,7 +190,7 @@ abstract class MathEngineRest {
 				$res = MediaWikiServices::getInstance()->getHttpRequestFactory()
 					->post( $this->backendUrl, [ "postData" => $query, "timeout" => 60 ] );
 				LoggerFactory::getInstance( 'mathsearch' )->debug( 'MWS query:' . $query );
-				if ( $res == false ) {
+				if ( $res == null ) {
 					LoggerFactory::getInstance(
 						'MathSearch'
 					)->error( "Nothing retrieved from $this->backendUrl. Check if mwsd is running there" );
