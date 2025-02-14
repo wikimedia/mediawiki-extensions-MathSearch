@@ -26,9 +26,4 @@ XmlFragment;
 		$this->assertStringContainsString( '<math id=\'69\'', $wikiText );
 		$this->assertCount( 7, $wtGen->getFormulae() );
 	}
-
-	protected function setUp(): void {
-		parent::setUp();
-		$this->tablesUsed[] = 'math_wbs_entity_map';
-	}
 }
