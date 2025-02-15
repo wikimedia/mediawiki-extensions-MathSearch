@@ -19,7 +19,7 @@ class MathosphereDriver {
 	/** @var array */
 	private $relations = [];
 
-	function __construct( $revisionId = null ) {
+	public function __construct( $revisionId = null ) {
 		if ( $revisionId !== null ) {
 			$revisionRecord = MediaWikiServices::getInstance()
 				->getRevisionLookup()

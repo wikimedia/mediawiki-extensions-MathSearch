@@ -67,7 +67,7 @@ class MathMLFilter extends DumpFilter {
 	 * @param stdClass $rev
 	 * @param string $string the revision text
 	 */
-	function writeRevision( $rev, $string ) {
+	public function writeRevision( $rev, $string ) {
 		if ( $this->sendingThisPage ) {
 			$string = $this->replaceMath( $string );
 			$this->sink->writeRevision( $rev, $string );

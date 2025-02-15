@@ -15,14 +15,14 @@ use MediaWiki\SpecialPage\SpecialPage;
 
 class GetEquationsByQuery extends SpecialPage {
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct( 'GetEquationsByQuery' );
 	}
 
 	/**
 	 * @param string|null $par
 	 */
-	function execute( $par ) {
+	public function execute( $par ) {
 		if ( !$this->getConfig()->get( 'MathDebug' ) ) {
 			$this->getOutput()->addWikiTextAsInterface(
 				"==Debug mode needed==  This function is only supported in math debug mode."

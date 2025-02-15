@@ -16,7 +16,7 @@ class MathEngineBaseX extends MathEngineRest {
 	/** @var string */
 	protected $type = "mws";
 
-	function __construct( $query = null ) {
+	public function __construct( $query = null ) {
 		global $wgMathSearchBaseXBackendUrl;
 		parent::__construct( $query, $wgMathSearchBaseXBackendUrl . 'mwsquery' );
 	}
@@ -60,7 +60,7 @@ class MathEngineBaseX extends MathEngineRest {
 	/**
 	 * @param SimpleXMLElement $xmlRoot
 	 */
-	function processMathResults( $xmlRoot ) {
+	protected function processMathResults( $xmlRoot ) {
 		foreach ( $xmlRoot->run->result->children() as $page ) {
 			$attrs = $page->attributes();
 			$uri = explode( "#", $attrs["id"] );
@@ -79,11 +79,11 @@ class MathEngineBaseX extends MathEngineRest {
 		$this->relevanceMap = array_unique( $this->relevanceMap );
 	}
 
-	function getPostData( $numProcess ) {
+	public function getPostData( $numProcess ) {
 		return json_encode( [ "type" => $this->type, "query" => $this->query->getCQuery() ] );
 	}
 
-	function update( $harvest = "", array $delte = [] ) {
+	public function update( $harvest = "", array $delte = [] ) {
 		global $wgMathSearchBaseXBackendUrl;
 		$json_payload = json_encode( [ "harvest" => $harvest, "delete" => $delte ] );
 		try {

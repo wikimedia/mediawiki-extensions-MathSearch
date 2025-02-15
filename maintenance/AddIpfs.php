@@ -22,7 +22,7 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class AddIpfs extends Maintenance {
 
-	function downloadPdf( $url ) {
+	private function downloadPdf( string $url ): string {
 		// Use MediaWiki's HttpRequestFactory to download the PDF
 		$httpRequestFactory = $this->getServiceContainer()->getHttpRequestFactory();
 
@@ -36,7 +36,7 @@ class AddIpfs extends Maintenance {
 		return $response;
 	}
 
-	function uploadToIPFS( $pdfData ) {
+	private function uploadToIPFS( string $pdfData ): string {
 		// Define the local IPFS API endpoint
 		$ipfsApiUrl = 'http://127.0.0.1:5001/api/v0/add';
 
@@ -82,7 +82,7 @@ class AddIpfs extends Maintenance {
 		return $json['Hash'];
 	}
 
-	function pinToIPFS( $cid ) {
+	private function pinToIPFS( string $cid ): string {
 		// Define the IPFS API endpoint for pinning
 		$ipfsPinApiUrl = 'http://127.0.0.1:5001/api/v0/pin/add?arg=' . $cid;
 

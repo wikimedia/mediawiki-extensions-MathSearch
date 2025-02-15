@@ -8,14 +8,14 @@ class SpecialMathIndex extends SpecialPage {
 	private const SCRIPT_UPDATE_MATH = 0;
 	private const SCRIPT_WRITE_INDEX = 1;
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct( 'MathIndex', 'edit', true );
 	}
 
 	/**
 	 * Sets headers - this should be called from the execute() method of all derived classes!
 	 */
-	function setHeaders() {
+	public function setHeaders() {
 		$out = $this->getOutput();
 		$out->setArticleRelated( false );
 		$out->setRobotPolicy( "noindex,nofollow" );
@@ -23,7 +23,7 @@ class SpecialMathIndex extends SpecialPage {
 	}
 
 	/** @inheritDoc */
-	function execute( $par ) {
+	public function execute( $par ) {
 		$output = $this->getOutput();
 		$this->setHeaders();
 		if ( $this->getConfig()->get( 'MathDebug' ) ) {
@@ -40,7 +40,7 @@ class SpecialMathIndex extends SpecialPage {
 		}
 	}
 
-	function testIndex() {
+	private function testIndex() {
 		$out = $this->getOutput();
 		$out->addWikiTextAsInterface( 'This is a test.' );
 		$formDescriptor = [

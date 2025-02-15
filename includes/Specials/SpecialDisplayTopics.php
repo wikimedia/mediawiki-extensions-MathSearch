@@ -23,7 +23,7 @@ class SpecialDisplayTopics extends SpecialPage {
 	 *
 	 * @throws PermissionsError
 	 */
-	function execute( $query ) {
+	public function execute( $query ) {
 		$this->setHeaders();
 		if ( !( $this->getUser()->isAllowed( 'mathwmcsubmit' ) ) ) {
 			throw new PermissionsError( 'mathwmcsubmit' );

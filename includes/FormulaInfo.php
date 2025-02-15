@@ -23,7 +23,7 @@ class FormulaInfo extends SpecialPage {
 	/** @var MathConfig */
 	private $mathConfig;
 
-	function __construct(
+	public function __construct(
 		MathConfig $mathConfig
 	) {
 		parent::__construct( 'FormulaInfo' );
@@ -33,7 +33,7 @@ class FormulaInfo extends SpecialPage {
 	/**
 	 * @param string|null $par
 	 */
-	function execute( $par ) {
+	public function execute( $par ) {
 		$pid = $this->getRequest()->getVal( 'pid' ); // Page ID
 		$eid = $this->getRequest()->getVal( 'eid' ); // Equation ID
 		$this->purge = $this->getRequest()->getVal( 'purge', false );

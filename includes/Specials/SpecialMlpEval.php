@@ -77,7 +77,7 @@ class SpecialMlpEval extends SpecialPage {
 		return $this->identifiers;
 	}
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct( 'MlpEval' );
 	}
 

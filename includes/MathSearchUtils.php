@@ -37,7 +37,7 @@ class MathSearchUtils {
 		return $out;
 	}
 
-	static function dbRowToWikiTable( IResultWrapper $resultWrapper, array $heads ) {
+	public static function dbRowToWikiTable( IResultWrapper $resultWrapper, array $heads ) {
 		$out = self::getTableHead( $heads );
 		foreach ( $resultWrapper as $row ) {
 			$out .= "\n|-";

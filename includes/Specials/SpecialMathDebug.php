@@ -11,14 +11,14 @@ use Wikimedia\Diff\TableDiffFormatter;
 
 class SpecialMathDebug extends SpecialPage {
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct( 'MathDebug' );
 	}
 
 	/**
 	 * Sets headers - this should be called from the execute() method of all derived classes!
 	 */
-	function setHeaders() {
+	public function setHeaders() {
 		$out = $this->getOutput();
 		$out->setArticleRelated( false );
 		$out->setRobotPolicy( "noindex,nofollow" );
@@ -26,7 +26,7 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	/** @inheritDoc */
-	function execute( $par ) {
+	public function execute( $par ) {
 		$offset = $this->getRequest()->getVal( 'offset', 0 );
 		$length = $this->getRequest()->getVal( 'length', 10 );
 		$page = $this->getRequest()->getVal( 'page', 'Testpage' );
@@ -55,8 +55,8 @@ class SpecialMathDebug extends SpecialPage {
 		}
 	}
 
-	function displayButtons(
-		$offset = 0, $length = 10, $page = 'Testpage', $action = 'show', $purge = ''
+	private function displayButtons(
+		int $offset = 0, int $length = 10, string $page = 'Testpage', string $action = 'show', string $purge = ''
 	) {
 		$out = $this->getOutput();
 		// TODO check if addHTML has to be sanitized
@@ -179,7 +179,7 @@ class SpecialMathDebug extends SpecialPage {
 		return true;
 	}
 
-	function generateLaTeXMLOutput( $offset = 0, $length = 10, $page = 'Testpage' ) {
+	private function generateLaTeXMLOutput( int $offset = 0, int $length = 10, string $page = 'Testpage' ): bool {
 		$out = $this->getOutput();
 		if ( !$this->getConfig()->get( 'MathUseLaTeXML' ) ) {
 			$out->addWikiTextAsInterface( "MahtML support must be enabled." );

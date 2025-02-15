@@ -45,7 +45,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 		}
 	}
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct( 'LaTeXTranslator' );
 		$mw = MediaWikiServices::getInstance();
 		$this->cache = $mw->getMainWANObjectCache();
@@ -63,7 +63,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 	 * Returns corresponding Mathematica translations of LaTeX functions
 	 * @param string|null $par
 	 */
-	function execute( $par ) {
+	public function execute( $par ) {
 		$pid = $this->getRequest()->getVal( 'pid' ); // Page ID
 		$eid = $this->getRequest()->getVal( 'eid' ); // Equation ID
 		$this->setHeaders();

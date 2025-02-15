@@ -14,7 +14,7 @@ class LaTeXTranslator {
 	 */
 	private $arg = "(\\\\[?[A-Za-z]*\\]?|[0-9]|[A-Za-z]{1})";
 
-	function __construct() {
+	public function __construct() {
 		# reference: http://stackoverflow.com/a/28611214/4521584
 		$this->replacements = [
 			[

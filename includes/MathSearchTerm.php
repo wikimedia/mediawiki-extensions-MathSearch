@@ -31,7 +31,7 @@ class MathSearchTerm {
 	 * @param int $type
 	 * @param string $expr
 	 */
-	function __construct( $i, $rel, $type, $expr ) {
+	public function __construct( $i, $rel, $type, $expr ) {
 		$this->key  = $i;
 		$this->rel  = $rel;
 		$this->type = $type;

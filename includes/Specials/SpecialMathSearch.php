@@ -52,7 +52,7 @@ class SpecialMathSearch extends SpecialPage {
 		throw new ErrorException( $errstr, 0, $errno, $errfile, $errline );
 	}
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct( 'MathSearch' );
 	}
 
@@ -387,7 +387,7 @@ class SpecialMathSearch extends SpecialPage {
 	 *
 	 * @return bool
 	 */
-	function displayRevisionResults( $revisionID ) {
+	private function displayRevisionResults( $revisionID ) {
 		$out = $this->getOutput();
 		$revisionStoreRecord = MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionById( $revisionID );
 		if ( !$revisionStoreRecord ) {
@@ -426,7 +426,7 @@ class SpecialMathSearch extends SpecialPage {
 	 * Renders the math search input to mathml
 	 * @return bool
 	 */
-	function render() {
+	private function render() {
 		$renderer = new MathLaTeXML( $this->mathpattern );
 		$renderer->setLaTeXMLSettings( 'profile=mwsquery' );
 		$renderer->setAllowedRootElements( [ 'query' ] );

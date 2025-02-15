@@ -82,7 +82,7 @@ abstract class MathEngineRest {
 	 * @param MathQueryObject|null $query
 	 * @param bool|string $url
 	 */
-	function __construct( $query = null, $url = false ) {
+	public function __construct( $query = null, $url = false ) {
 		$this->query = $query;
 		if ( $url ) {
 			$this->setBackendUrl( $url );
@@ -123,7 +123,7 @@ abstract class MathEngineRest {
 	 * Posts the query to mwsd and evaluates the result data
 	 * @return bool
 	 */
-	function postQuery() {
+	public function postQuery() {
 		$numProcess = 30000;
 		$postData = $this->getPostData( $numProcess );
 		$res = self::doPost( $this->backendUrl, $postData );
@@ -137,7 +137,7 @@ abstract class MathEngineRest {
 	/**
 	 * @param SimpleXMLElement $xmlRoot
 	 */
-	abstract function processMathResults( $xmlRoot );
+	abstract protected function processMathResults( $xmlRoot );
 
 	/**
 	 * @param int $numProcess

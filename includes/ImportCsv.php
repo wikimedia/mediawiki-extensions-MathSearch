@@ -31,7 +31,7 @@ class ImportCsv {
 	private $overwrite = false;
 	private UserIdentity $user;
 
-	function __construct( UserIdentity $user ) {
+	public function __construct( UserIdentity $user ) {
 		$this->user = $user;
 	}
 
@@ -59,7 +59,7 @@ class ImportCsv {
 	 * @param string $run
 	 * @return bool|int|string
 	 */
-	function validateRunId( $run ) {
+	public function validateRunId( $run ) {
 		if ( $run == '' ) {
 			return date( 'Y-m-d H:i:s (e)' );
 		}
@@ -258,7 +258,7 @@ class ImportCsv {
 	/**
 	 * @return true
 	 */
-	function processInput() {
+	public function processInput() {
 		$this->deleteRun( $this->runId );
 		$dbw = MediaWikiServices::getInstance()
 			->getConnectionProvider()

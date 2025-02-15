@@ -33,7 +33,7 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 		return $out;
 	}
 
-	function execute( $query ) {
+	public function execute( $query ) {
 		$this->setHeaders();
 		if ( !$this->getUser()->isAllowed( 'mathwmcsubmit' ) ) {
 			throw new PermissionsError( 'mathwmcsubmit' );
@@ -48,7 +48,7 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 		$htmlForm->show();
 	}
 
-	function processInput() {
+	public function processInput() {
 		$this->getOutput()->disable();
 		header( 'Content-Type: text/csv' );
 		header( 'Content-Disposition: attachment; filename="run' . $this->runId . '.csv"' );

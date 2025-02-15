@@ -152,7 +152,7 @@ class MathSearchHooks {
 	 * @param string|null &$Result reference to the rendering result
 	 * @return bool
 	 */
-	static function updateMathIndex( Parser $parser, MathRenderer $renderer, &$Result = null ) {
+	public static function updateMathIndex( Parser $parser, MathRenderer $renderer, &$Result = null ) {
 		$revId = $parser->getRevisionId();
 		// Only store something if a pageid was set.
 		if ( $revId <= 0 ) {
@@ -181,7 +181,7 @@ class MathSearchHooks {
 	 * @param string|null &$Result reference to the rendering result
 	 * @return bool
 	 */
-	static function addIdentifierDescription(
+	public static function addIdentifierDescription(
 		Parser $parser, MathRenderer $renderer, &$Result = null
 	) {
 		$revId = $parser->getRevisionId();
@@ -201,7 +201,7 @@ class MathSearchHooks {
 	 * @param string|null &$Result reference to the rendering result
 	 * @return bool
 	 */
-	static function addLinkToFormulaInfoPage(
+	public static function addLinkToFormulaInfoPage(
 		Parser $parser, MathRenderer $renderer, &$Result = null
 	) {
 		global $wgMathSearchInfoPage;
@@ -231,7 +231,7 @@ class MathSearchHooks {
 	 * @param string|null &$Result
 	 * @return bool
 	 */
-	static function onMathFormulaRenderedNoLink(
+	public static function onMathFormulaRenderedNoLink(
 		Parser $parser, MathRenderer $renderer, &$Result = null
 	) {
 		$revId = $parser->getRevisionId();
@@ -248,7 +248,7 @@ class MathSearchHooks {
 		return true;
 	}
 
-	static function generateMathAnchorString( $revId, $anchorID, $prefix = "#" ) {
+	public static function generateMathAnchorString( $revId, $anchorID, $prefix = "#" ) {
 		$result = "{$prefix}math.$revId.$anchorID";
 		MediaWikiServices::getInstance()->getHookContainer()->run( "MathSearchGenerateAnchorString",
 			[ $revId, $anchorID, $prefix, &$result ] );
@@ -282,7 +282,7 @@ class MathSearchHooks {
 	 * @param Parser $parser instance of Parser
 	 * @return bool true
 	 */
-	static function onParserFirstCallInit( $parser ) {
+	public static function onParserFirstCallInit( $parser ) {
 		$parser->setHook( 'mquery', [ 'MathSearchHooks', 'mQueryTagHook' ] );
 		LoggerFactory::getInstance( 'MathSearch' )->debug( 'mquery tag registered' );
 		return true;
@@ -296,7 +296,7 @@ class MathSearchHooks {
 	 * @param Parser $parser
 	 * @return string|string[]
 	 */
-	static function mQueryTagHook( $content, $attributes, $parser ) {
+	public static function mQueryTagHook( $content, $attributes, $parser ) {
 		global $wgMathDefaultLaTeXMLSetting;
 		if ( trim( $content ) === '' ) { // bug 8372
 			return '';
@@ -315,7 +315,7 @@ class MathSearchHooks {
 		return [ $renderedMath, "markerType" => 'nowiki' ];
 	}
 
-	static function onArticleDeleteComplete(
+	public static function onArticleDeleteComplete(
 		$article, User $user, $reason, $id, $content, $logEntry
 	) {
 		$revId = $article->getTitle()->getLatestRevID();

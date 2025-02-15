@@ -13,7 +13,7 @@ use MediaWiki\Logger\LoggerFactory;
  */
 class MathEngineMws extends MathEngineRest {
 
-	function __construct( $query ) {
+	public function __construct( $query ) {
 		global $wgMathSearchMWSUrl;
 		parent::__construct( $query, $wgMathSearchMWSUrl );
 	}
@@ -21,7 +21,7 @@ class MathEngineMws extends MathEngineRest {
 	/**
 	 * @param SimpleXMLElement $xmlRoot
 	 */
-	function processMathResults( $xmlRoot ) {
+	protected function processMathResults( $xmlRoot ) {
 		foreach ( $xmlRoot->children( "mws", true ) as $page ) {
 			$attrs = $page->attributes();
 			if ( str_contains( $attrs['uri'], '#' ) ) {

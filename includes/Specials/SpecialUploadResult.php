@@ -41,7 +41,7 @@ class SpecialUploadResult extends SpecialPage {
 	 *
 	 * @throws PermissionsError
 	 */
-	function execute( $query ) {
+	public function execute( $query ) {
 		$this->setHeaders();
 		if ( !$this->getUser()->isAllowed( 'mathwmcsubmit' ) ||
 			!$this->getConfig()->get( 'MathUploadEnabled' )
@@ -116,7 +116,7 @@ class SpecialUploadResult extends SpecialPage {
 	 *
 	 * @return bool|int|string
 	 */
-	function runSelectorFilter( $run ) {
+	public function runSelectorFilter( $run ) {
 		if ( $run == '' ) {
 			return date( 'Y-m-d H:i:s (e)' );
 		}
@@ -134,7 +134,7 @@ class SpecialUploadResult extends SpecialPage {
 	/**
 	 * @return bool|string
 	 */
-	function runValidatorFilter() {
+	public function runValidatorFilter() {
 		$dbr = MediaWikiServices::getInstance()
 			->getConnectionProvider()
 			->getReplicaDatabase();
@@ -151,7 +151,7 @@ class SpecialUploadResult extends SpecialPage {
 	/**
 	 * @return bool|null|string
 	 */
-	function runFileCheck() {
+	public function runFileCheck() {
 		$out = $this->getOutput();
 
 		$uploadResult = ImportStreamSource::newFromUpload( 'wpFile' );
@@ -180,7 +180,7 @@ class SpecialUploadResult extends SpecialPage {
 	/**
 	 * @return bool
 	 */
-	function processInput() {
+	public function processInput() {
 		$this->getOutput()->addWikiMsg( "math-wmc-SubmissionSuccess" );
 		$this->importer->setOverwrite( !$this->getRequest()->getBool( "wpattachResults" ) );
 		$this->importer->processInput();

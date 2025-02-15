@@ -40,7 +40,7 @@ class MathoidDriver {
 	 * @param string $q
 	 * @param string $type
 	 */
-	function __construct( $q = '', $type = 'tex' ) {
+	public function __construct( $q = '', $type = 'tex' ) {
 		$this->q = $q;
 		if ( $type === 'pmml' ) {
 			$type = 'mml';
