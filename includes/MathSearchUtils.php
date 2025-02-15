@@ -10,7 +10,7 @@ class MathSearchUtils {
 			->getConnectionProvider()
 			->getPrimaryDatabase();
 		$sql = file_get_contents( __DIR__ . "/../db/wmc/{$folder}/{$name}.sql" );
-		$dbw->query( $sql );
+		$dbw->query( $sql, __METHOD__ );
 	}
 
 	public static function createEvaluationTables() {

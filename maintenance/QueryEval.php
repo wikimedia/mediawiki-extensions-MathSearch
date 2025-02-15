@@ -91,7 +91,7 @@ class QueryEval extends Maintenance {
 			->getReplicaDatabase();
 		$res = $dbr->select( 'math_wmc_freq_hits',
 			[ 'cntRun', 'cntUser', 'links', 'minRank', 'rendering' ],
-			[ 'qId' => $qId ] );
+			[ 'qId' => $qId ], __METHOD__ );
 		$mostFrequent = "\\subsection*{Most frequent results}\n \\begin{enumerate}\n";
 		foreach ( $res as $hit ) {
 			$hit->rendering = str_replace( // TODO: preg_match replaces for by f\lor
@@ -110,7 +110,7 @@ class QueryEval extends Maintenance {
 			$relevance = '';
 		}
 		$individualResults = '';
-		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId' => $row->qId ] );
+		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId' => $row->qId ], __METHOD__ );
 		foreach ( $res as $rank ) {
 			$individualResults .= $rank->runId . ': ' . $rank->rank . '; ';
 		}
@@ -164,7 +164,7 @@ TEX;
 		// runName VARCHAR(45),
 		// userId INT UNSIGNED,
 		// isDraft TINYINT NOT NULL,
-		$res = $dbr->select( "math_wmc_query_summary", '*' );
+		$res = $dbr->select( "math_wmc_query_summary", '*', [], __METHOD__ );
 		$all = "";
 		mb_internal_encoding( 'UTF-8' );
 		mb_regex_encoding( "UTF-8" );

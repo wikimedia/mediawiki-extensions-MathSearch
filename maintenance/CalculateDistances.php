@@ -102,7 +102,7 @@ class CalculateDistances extends Maintenance {
 				$sql .= "m.revstat_revid < $pid ";
 				echo "writing entries for page $pid...";
 				$start = microtime( true );
-				$this->dbw->query( $sql );
+				$this->dbw->query( $sql, __METHOD__ );
 				echo 'done in ' . ( microtime( true ) - $start ) . "\n";
 				$n++;
 			}

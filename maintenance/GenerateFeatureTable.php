@@ -53,7 +53,7 @@ class GenerateFeatureTable extends Maintenance {
 	 * @param int $cmax
 	 */
 	protected function populateSearchIndex( $n = 0, $cmax = -1 ) {
-		$s = $this->db->selectRow( 'page', 'MAX(page_id) AS count' );
+		$s = $this->db->selectRow( 'page', 'MAX(page_id) AS count', [], __METHOD__ );
 		$count = $s->count;
 		if ( $cmax > 0 && $count > $cmax ) {
 			$count = $cmax;

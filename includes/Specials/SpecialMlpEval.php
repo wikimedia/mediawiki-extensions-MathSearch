@@ -523,22 +523,22 @@ class SpecialMlpEval extends SpecialPage {
 			->getConnectionProvider()
 			->getPrimaryDatabase();
 
-		$dbw->upsert( 'math_mlp', $row, [ [ 'user_id', 'revision_id', 'anchor', 'step' ] ], $row );
+		$dbw->upsert( 'math_mlp', $row, [ [ 'user_id', 'revision_id', 'anchor', 'step' ] ], $row, __METHOD__ );
 		if ( $this->fId ) {
 			$dbw->startAtomic( __METHOD__ );
 			$cnt = $dbw->selectField( 'math_mlp', 'count( distinct user_id)', [
 				'revision_id' => $revId,
 				'anchor' => $this->fId
-			] );
+			], __METHOD__ );
 			if ( $cnt == 1 ) {
 				$row = [
 						'revision_id' => $revId,
 						'anchor'      => $this->fId,
 						'priority'    => 2
 				];
-				$dbw->upsert( 'math_review_list', $row, [ [ 'revision_id', 'anchor' ] ], $row );
+				$dbw->upsert( 'math_review_list', $row, [ [ 'revision_id', 'anchor' ] ], $row, __METHOD__ );
 			} elseif ( $cnt > 1 ) {
-				$dbw->delete( 'math_review_list', [ 'revision_id', 'anchor' ] );
+				$dbw->delete( 'math_review_list', [ 'revision_id', 'anchor' ], __METHOD__ );
 			}
 			$dbw->endAtomic( __METHOD__ );
 		}

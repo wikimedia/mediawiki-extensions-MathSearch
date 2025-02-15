@@ -92,7 +92,7 @@ class UpdateMath extends Maintenance {
 				'mathperformance_name' => substr( $category, 0, 10 ),
 				'mathperformance_time' => $delta,
 				'mathperformance_mode' => MathObject::MODE_2_USER_OPTION[ $this->renderingMode ]
-			] );
+			], __METHOD__ );
 		}
 		$this->time = microtime( true );
 
@@ -106,7 +106,7 @@ class UpdateMath extends Maintenance {
 	 * @param int $cMax
 	 */
 	protected function populateSearchIndex( $n = 0, $cMax = -1 ) {
-		$s = $this->db->selectRow( 'revision', 'MAX(rev_id) AS count', '' );
+		$s = $this->db->selectRow( 'revision', 'MAX(rev_id) AS count', '', __METHOD__ );
 		$count = $s->count;
 		if ( $cMax > 0 && $count > $cMax ) {
 			$count = $cMax;

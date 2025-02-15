@@ -62,6 +62,8 @@ FROM math_wmc_ref ref
   WHERE $filter
   GROUP BY qId
 SQL
+			,
+			__METHOD__
 		);
 		$this->getOutput()->addWikiTextAsInterface( MathSearchUtils::dbRowToWikiTable( $res, $cols ) );
 	}
@@ -76,7 +78,7 @@ SQL
 		$dbr = MediaWikiServices::getInstance()
 			->getConnectionProvider()
 			->getReplicaDatabase();
-		$qId = $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qID' => $query ] );
+		$qId = $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qID' => $query ], __METHOD__ );
 		if ( !$qId ) {
 			$out->addWikiTextAsInterface( "Topic $query does not exist." );
 			return;
@@ -109,7 +111,8 @@ SQL
 			group by r.math_inputhash
 			having min(rank) < 50
 			order by count(distinct runs.userId) desc, min(rank) asc
-			Limit 15"
+			Limit 15",
+			__METHOD__
 		);
 		$out->addWikiTextAsInterface( "== Most frequent results ==" );
 		foreach ( $res as $hit ) {
@@ -131,10 +134,10 @@ SQL
 		$dbr = MediaWikiServices::getInstance()
 			->getConnectionProvider()
 			->getReplicaDatabase();
-		if ( !$dbr->tableExists( 'math_wmc_page_ranks' ) ) {
+		if ( !$dbr->tableExists( 'math_wmc_page_ranks', __METHOD__ ) ) {
 			MathSearchUtils::createEvaluationTables();
 		}
-		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId' => $qId ] );
+		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId' => $qId ], __METHOD__ );
 		foreach ( $res as $rank ) {
 			$out->addWikiTextAsInterface( $rank->runId . ': ' . $rank->rank );
 		}

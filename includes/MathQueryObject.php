@@ -96,11 +96,11 @@ class MathQueryObject extends MathObject {
 			->getPrimaryDatabase();
 		// Overwrite draft queries only.
 		if ( $dbw->selectField(
-			'math_wmc_ref', 'isDraft', [ 'qId' => $this->queryID ]
+			'math_wmc_ref', 'isDraft', [ 'qId' => $this->queryID ], __METHOD__
 		) && $overwrite ) {
-			return $dbw->update( 'math_wmc_ref', $fields, [ 'qId' => $this->queryID ] );
+			return $dbw->update( 'math_wmc_ref', $fields, [ 'qId' => $this->queryID ], __METHOD__ );
 		} else {
-			return $dbw->insert( 'math_wmc_ref', $fields );
+			return $dbw->insert( 'math_wmc_ref', $fields, __METHOD__ );
 		}
 	}
 

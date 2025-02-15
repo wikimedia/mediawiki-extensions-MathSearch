@@ -267,13 +267,14 @@ class MathSearchHooks {
 		$dbw = MediaWikiServices::getInstance()
 			->getConnectionProvider()
 			->getPrimaryDatabase();
-		$dbw->onTransactionCommitOrIdle( static function () use ( $oldID, $eid, $inputHash, $dbw ) {
+		$fname = __METHOD__;
+		$dbw->onTransactionCommitOrIdle( static function () use ( $oldID, $eid, $inputHash, $dbw, $fname ) {
 			$dbw->replace( 'mathindex', [ [ 'mathindex_revision_id', 'mathindex_anchor' ] ], [
 				'mathindex_revision_id' => $oldID,
 				'mathindex_anchor' => $eid,
 				'mathindex_inputhash' => $inputHash
-			] );
-		} );
+			], $fname );
+		}, $fname );
 	}
 
 	/**

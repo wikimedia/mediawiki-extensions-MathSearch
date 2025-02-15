@@ -93,7 +93,7 @@ class SpecialUploadResult extends SpecialPage {
 		$options = [];
 		$uID = $this->getUser()->getId();
 		$res = $dbr->select( 'math_wmc_runs', [ 'runName', 'runId' ],
-			[ 'isDraft' => true, 'userID' => $uID ] );
+			[ 'isDraft' => true, 'userID' => $uID ], __METHOD__ );
 		foreach ( $res as $row ) {
 			$options[ $row->runName . " (" . $row->runId . ")" ] = $row->runId;
 		}
@@ -140,7 +140,7 @@ class SpecialUploadResult extends SpecialPage {
 			->getReplicaDatabase();
 		$uID = $this->getUser()->getId();
 		$res = $dbr->selectField( 'math_wmc_runs', 'runName',
-			[ 'isDraft' => true, 'userID' => $uID, 'runId' => $this->runId ] );
+			[ 'isDraft' => true, 'userID' => $uID, 'runId' => $this->runId ], __METHOD__ );
 		if ( !$res ) {
 			return $this->msg( 'math-wmc-SelectRunHelp' )->text();
 		} else {

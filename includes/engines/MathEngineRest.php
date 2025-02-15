@@ -33,7 +33,7 @@ abstract class MathEngineRest {
 	 */
 	protected static function doPost( string $url, $postData ) {
 		$res = MediaWikiServices::getInstance()->getHttpRequestFactory()
-			->post( $url, [ "postData" => $postData, "timeout" => 60 ] );
+			->post( $url, [ "postData" => $postData, "timeout" => 60 ], __METHOD__ );
 		if ( $res === null ) {
 			if ( function_exists( 'curl_init' ) ) {
 				$handle = curl_init();
@@ -188,7 +188,7 @@ abstract class MathEngineRest {
 			for ( $i = $numProcess; $i <= $this->size; $i += $numProcess ) {
 				$query = str_replace( "limitmin=\"0\" ", "limitmin=\"$i\" ", $this->postData );
 				$res = MediaWikiServices::getInstance()->getHttpRequestFactory()
-					->post( $this->backendUrl, [ "postData" => $query, "timeout" => 60 ] );
+					->post( $this->backendUrl, [ "postData" => $query, "timeout" => 60 ], __METHOD__ );
 				LoggerFactory::getInstance( 'mathsearch' )->debug( 'MWS query:' . $query );
 				if ( $res == null ) {
 					LoggerFactory::getInstance(

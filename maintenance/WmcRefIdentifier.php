@@ -32,7 +32,7 @@ class WmcRefIdentifier extends Maintenance {
 			->getConnectionProvider()
 			->getReplicaDatabase();
 		$res = $dbr->query( 'SELECT qID, oldId, fid, math_input FROM math_wmc_ref r' .
-			' JOIN mathlog l WHERE  r.math_inputhash = l.math_inputhash;' );
+			' JOIN mathlog l WHERE  r.math_inputhash = l.math_inputhash;', __METHOD__ );
 
 		$output = [];
 		foreach ( $res as $row ) {

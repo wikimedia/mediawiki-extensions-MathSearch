@@ -61,11 +61,11 @@ class IdMap {
 			'math_external_id_type' => $extIdType,
 		];
 
-		$qid = $this->dbw->selectField( 'math_wbs_entity_map', 'math_local_qid', $fields );
+		$qid = $this->dbw->selectField( 'math_wbs_entity_map', 'math_local_qid', $fields, __METHOD__ );
 		if ( !$qid ) {
 			$qid = $this->getNewQid()->getNumericId();
 			$fields['math_local_qid'] = $qid;
-			$this->dbw->insert( 'math_wbs_entity_map', $fields );
+			$this->dbw->insert( 'math_wbs_entity_map', $fields, __METHOD__ );
 		}
 		$this->cache->set( $cacheKey, $qid );
 
@@ -77,7 +77,7 @@ class IdMap {
 			'math_local_qid' => $qid,
 		];
 		$table = 'math_wbs_text_store';
-		$entryExists = $this->dbw->selectRowCount( $table, 'math_local_qid', $cond );
+		$entryExists = $this->dbw->selectRowCount( $table, 'math_local_qid', $cond, __METHOD__ );
 
 		$fields = [
 			'math_local_qid' => $qid,
@@ -87,9 +87,9 @@ class IdMap {
 		];
 
 		if ( $entryExists ) {
-			$this->dbw->update( $table, $fields, $cond );
+			$this->dbw->update( $table, $fields, $cond, __METHOD__ );
 		} else {
-			$this->dbw->insert( $table, $fields );
+			$this->dbw->insert( $table, $fields, __METHOD__ );
 		}
 	}
 }

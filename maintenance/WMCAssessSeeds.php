@@ -45,11 +45,11 @@ class WMCAssessSeeds extends Maintenance {
 			$this->output( "Insert formula assessments...\n" );
 			$dbw->query( "INSERT IGNORE INTO math_wmc_assessed_formula "
 				. "SELECT {$uId}, math_inputhash, qId, {$this->DEFAULT_ASSESSMENT} "
-				. "FROM math_wmc_ref" );
+				. "FROM math_wmc_ref", __METHOD__ );
 			$this->output( "Inserted {$dbw->affectedRows()} formula assessments.\n" );
 			$this->output( "Insert revision assessments...\n" );
 			$dbw->query( "INSERT IGNORE INTO math_wmc_assessed_revision "
-				. "SELECT {$uId}, oldId, qId, {$this->DEFAULT_ASSESSMENT} FROM math_wmc_ref" );
+				. "SELECT {$uId}, oldId, qId, {$this->DEFAULT_ASSESSMENT} FROM math_wmc_ref", __METHOD__ );
 			$this->output( "Inserted {$dbw->affectedRows()} revision assessments.\n" );
 		} else {
 			$this->output( "User {$this->getArg( 0 )} is invalid.\n" );

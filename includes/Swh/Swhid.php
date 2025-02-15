@@ -75,7 +75,7 @@ class Swhid {
 		global $wgMathSearchSwhToken;
 		$req = $this->httpFactory->create( $destination, [
 			'method' => $method,
-		] );
+		], __METHOD__ );
 		if ( $wgMathSearchSwhToken ) {
 			$req->setHeader( 'Authorization', 'Bearer ' . $wgMathSearchSwhToken );
 		}

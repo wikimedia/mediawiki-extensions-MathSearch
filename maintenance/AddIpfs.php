@@ -26,7 +26,7 @@ class AddIpfs extends Maintenance {
 		// Use MediaWiki's HttpRequestFactory to download the PDF
 		$httpRequestFactory = $this->getServiceContainer()->getHttpRequestFactory();
 
-		$request = $httpRequestFactory->create( $url, [ 'followRedirects' => true ] );
+		$request = $httpRequestFactory->create( $url, [ 'followRedirects' => true ], __METHOD__ );
 		$request->execute();
 		$response = $request->getContent();
 		if ( !$response ) {
@@ -90,7 +90,7 @@ class AddIpfs extends Maintenance {
 		$httpRequestFactory = $this->getServiceContainer()->getHttpRequestFactory();
 
 		// Create the request
-		$request = $httpRequestFactory->create( $ipfsPinApiUrl, [ 'method' => 'POST' ] );
+		$request = $httpRequestFactory->create( $ipfsPinApiUrl, [ 'method' => 'POST' ], __METHOD__ );
 
 		// Execute the request
 		$request->execute();

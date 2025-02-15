@@ -99,7 +99,7 @@ class FormulaInfo extends SpecialPage {
 		global $wgMathSearchTranslationUrl;
 		$params = [ 'cas' => $cas, 'latex' => $tex ];
 		return MediaWikiServices::getInstance()->getHttpRequestFactory()->post(
-			$wgMathSearchTranslationUrl, [ "postData" => $params, "timeout" => 60 ]
+			$wgMathSearchTranslationUrl, [ "postData" => $params, "timeout" => 60 ], __METHOD__
 		);
 	}
 

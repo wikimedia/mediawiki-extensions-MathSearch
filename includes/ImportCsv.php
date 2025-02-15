@@ -69,17 +69,17 @@ class ImportCsv {
 		$uID = $this->getUser()->getId();
 		if ( is_int( $run ) ) {
 			$runId = $dbw->selectField( 'math_wmc_runs', 'runId',
-				[ 'isDraft' => true, 'userID' => $uID, 'runId' => $run ] );
+				[ 'isDraft' => true, 'userID' => $uID, 'runId' => $run ], __METHOD__ );
 		} else {
 			$runId = $dbw->selectField( 'math_wmc_runs', 'runId',
-				[ 'isDraft' => true, 'userID' => $uID, 'runName' => $run ] );
+				[ 'isDraft' => true, 'userID' => $uID, 'runName' => $run ], __METHOD__ );
 		}
 		if ( !$runId ) {
 			$exists = $dbw->selectField( 'math_wmc_runs', 'runId',
-					[ 'userID' => $uID, 'runName' => $run ] );
+					[ 'userID' => $uID, 'runName' => $run ], __METHOD__ );
 			if ( !$exists ) {
 				$success = $dbw->insert( 'math_wmc_runs',
-						[ 'isDraft' => true, 'userID' => $uID, 'runName' => $run ] );
+						[ 'isDraft' => true, 'userID' => $uID, 'runName' => $run ], __METHOD__ );
 				if ( $success ) {
 					$this->runId = $dbw->insertId();
 					$this->warnings[] = wfMessage( 'math-wmc-RunAdded', $run, $this->runId )->text();
@@ -211,7 +211,7 @@ class ImportCsv {
 			$dbr = MediaWikiServices::getInstance()
 				->getConnectionProvider()
 				->getReplicaDatabase();
-			$exists = (bool)$dbr->selectField( 'math_wmc_ref', 'qId', [ 'qId' => $qId ] );
+			$exists = (bool)$dbr->selectField( 'math_wmc_ref', 'qId', [ 'qId' => $qId ], __METHOD__ );
 			$this->validQIds[$qId] = $exists;
 		}
 		return $this->validQIds[$qId];
@@ -227,7 +227,7 @@ class ImportCsv {
 			->getConnectionProvider()
 			->getReplicaDatabase();
 		return $dbr->selectField( 'mathindex', 'mathindex_inputhash',
-			[ 'mathindex_revision_id' => $pId, 'mathindex_anchor' => $eId ] );
+			[ 'mathindex_revision_id' => $pId, 'mathindex_anchor' => $eId ], __METHOD__ );
 	}
 
 	/**
@@ -265,7 +265,7 @@ class ImportCsv {
 			->getPrimaryDatabase();
 		$dbw->begin( __METHOD__ );
 		foreach ( $this->results as $result ) {
-			$dbw->insert( 'math_wmc_results', $result );
+			$dbw->insert( 'math_wmc_results', $result, __METHOD__ );
 		}
 		$dbw->commit( __METHOD__ );
 		return true;
@@ -279,7 +279,7 @@ class ImportCsv {
 			$dbw = MediaWikiServices::getInstance()
 				->getConnectionProvider()
 				->getPrimaryDatabase();
-			$dbw->delete( 'math_wmc_results', [ 'runId' => $runID ] );
+			$dbw->delete( 'math_wmc_results', [ 'runId' => $runID ], __METHOD__ );
 		}
 	}
 

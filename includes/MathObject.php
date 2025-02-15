@@ -110,7 +110,7 @@ class MathObject extends MathMathML {
 			->getReplicaDatabase();
 		$res = $dbr->selectRow(
 			[ 'mathindex' ], self::dbIndexFieldsArray(), 'mathindex_revision_id = ' . $pid
-			. ' AND mathindex_anchor= "' . $eid . '"' );
+			. ' AND mathindex_anchor= "' . $eid . '"', __METHOD__ );
 		return self::constructformpagerow( $res );
 	}
 
@@ -181,7 +181,7 @@ class MathObject extends MathMathML {
 		$dbw = MediaWikiServices::getInstance()
 			->getConnectionProvider()
 			->getPrimaryDatabase();
-		$dbw->query( 'TRUNCATE TABLE `mathvarstat`' );
+		$dbw->query( 'TRUNCATE TABLE `mathvarstat`', __METHOD__ );
 		// phpcs:disable Generic.Files.LineLength
 		$dbw->query( "INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`) "
 			.
@@ -189,15 +189,15 @@ class MathObject extends MathMathML {
 			. "FROM `mathobservation` "
 			. "JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash "
 			. "GROUP BY `mathobservation_featurename` , `mathobservation_featuretype` "
-			. "ORDER BY CNT DESC" );
-		$dbw->query( 'TRUNCATE TABLE `mathrevisionstat`' );
+			. "ORDER BY CNT DESC", __METHOD__ );
+		$dbw->query( 'TRUNCATE TABLE `mathrevisionstat`', __METHOD__ );
 		$dbw->query( 'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`) '
 			. 'SELECT varstat_id, mathindex_revision_id, count(*) AS CNT FROM `mathobservation` '
 			. 'JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash '
 			.
 			'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype` '
 			.
-			'GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_revision_id ORDER BY CNT DESC' );
+			'GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_revision_id ORDER BY CNT DESC', __METHOD__ );
 		// phpcs:enable Generic.Files.LineLength
 	}
 
@@ -332,7 +332,7 @@ class MathObject extends MathMathML {
 
 		$dbw->startAtomic( __METHOD__ );
 		$dbw->delete( "mathobservation",
-			[ "mathobservation_inputhash" => $this->getInputHash() ] );
+			[ "mathobservation_inputhash" => $this->getInputHash() ], __METHOD__ );
 		LoggerFactory::getInstance(
 			'MathSearch'
 		)->warning( 'delete obervations for ' . bin2hex( $this->getInputHash() ) );
@@ -341,7 +341,7 @@ class MathObject extends MathMathML {
 				"mathobservation_inputhash"   => $this->getInputHash(),
 				"mathobservation_featurename" => trim( $feature[4] ),
 				"mathobservation_featuretype" => $feature[1],
-			] );
+			], __METHOD__ );
 			LoggerFactory::getInstance(
 				'MathSearch'
 			)->warning( 'insert observation for ' . bin2hex( $this->getInputHash() )
@@ -397,7 +397,8 @@ class MathObject extends MathMathML {
 			->getReplicaDatabase();
 		$res = $dbr->select(
 			'mathindex', self::dbIndexFieldsArray(),
-			[ 'mathindex_inputhash' => $this->getInputHash() ]
+			[ 'mathindex_inputhash' => $this->getInputHash() ],
+			__METHOD__
 		);
 
 		foreach ( $res as $row ) {

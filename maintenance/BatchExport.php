@@ -46,7 +46,7 @@ class BatchExport extends Maintenance {
 		// runName VARCHAR(45),
 		// userId INT UNSIGNED,
 		// isDraft TINYINT NOT NULL,
-		$res = $dbr->select( 'math_wmc_runs', '*' );
+		$res = $dbr->select( 'math_wmc_runs', '*', [], __METHOD__ );
 		// TODO: Implement support for isDraft.
 		foreach ( $res as $row ) {
 			$user = User::newFromId( $row->userId );

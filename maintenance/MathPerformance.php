@@ -109,7 +109,7 @@ class MathPerformance extends Maintenance {
 		$share = $this->getArg( 2, 0 ); // 'share'
 		if ( $shares ) {
 			$this->vPrint( "Processing share $share of $shares." );
-			$counts = $this->db->selectField( 'mathlog', 'count(*)' );
+			$counts = $this->db->selectField( 'mathlog', 'count(*)', [], __METHOD__ );
 			$bucket = ceil( $counts / $shares );
 			$min = $share * $bucket;
 			$max = $min + $bucket;
@@ -164,7 +164,7 @@ class MathPerformance extends Maintenance {
 			'mathperformance_mode' => MathHooks::mathModeToHashKey( $this->renderingMode )
 		];
 		if ( $wgMathDebug ) {
-			$this->db->insert( 'mathperformance', $logData );
+			$this->db->insert( 'mathperformance', $logData, __METHOD__ );
 		} else {
 			$logData['math_inputhash'] = base64_encode( $logData['math_inputhash'] );
 			echo json_encode( $logData ) . "\n";

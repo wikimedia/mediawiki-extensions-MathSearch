@@ -54,7 +54,7 @@ class ExtractFeatures extends Maintenance {
 	 * @param int $cmax
 	 */
 	protected function populateSearchIndex( $n = 0, $cmax = -1 ) {
-		$s = $this->db->selectRow( 'page', 'MAX(page_id) AS count' );
+		$s = $this->db->selectRow( 'page', 'MAX(page_id) AS count', [], __METHOD__ );
 		$count = $s->count;
 		if ( $cmax > 0 && $count > $cmax ) {
 			$count = $cmax;
@@ -93,7 +93,7 @@ class ExtractFeatures extends Maintenance {
 		}
 		$this->output( "Clear mathvarstat\n" );
 		$sql = 'DELETE FROM `mathvarstat`';
-		$this->dbw->query( $sql );
+		$this->dbw->query( $sql, __METHOD__ );
 		$this->output( "Generate mathvarstat\n" );
 		$sql =
 			'INSERT INTO `mathvarstat` (`varstat_featurename` , `varstat_featuretype`, `varstat_featurecount`)' .
@@ -102,10 +102,10 @@ class ExtractFeatures extends Maintenance {
 			'JOIN mathindex ON `mathobservation_inputhash` = mathindex_inputhash ' .
 			'GROUP BY `mathobservation_featurename` , `mathobservation_featuretype` ' .
 			'ORDER BY CNT DESC';
-		$this->dbw->query( $sql );
+		$this->dbw->query( $sql, __METHOD__ );
 		$this->output( "Clear mathrevisionstat\n" );
 		$sql = 'DELETE FROM `mathrevisionstat`';
-		$this->dbw->query( $sql );
+		$this->dbw->query( $sql, __METHOD__ );
 		$this->output( "Generate mathrevisionstat\n" );
 		$sql =
 			'INSERT INTO `mathrevisionstat`(`revstat_featureid`,`revstat_revid`,`revstat_featurecount`) ' .
@@ -115,7 +115,7 @@ class ExtractFeatures extends Maintenance {
 			. 'AND varstat_featuretype = `mathobservation_featuretype` ' .
 			' GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`, '
 			. 'mathindex_revision_id ORDER BY CNT DESC';
-		$this->dbw->query( $sql );
+		$this->dbw->query( $sql, __METHOD__ );
 		$this->output( "Updated {$fcount} formulae!\n" );
 	}
 

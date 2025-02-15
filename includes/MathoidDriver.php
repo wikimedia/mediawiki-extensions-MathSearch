@@ -156,7 +156,7 @@ class MathoidDriver {
 	public function checkBackend() {
 		$res = MediaWikiServices::getInstance()
 				->getHttpRequestFactory()
-				->get( ( $this->getBackendUrl() . '/_info' ) );
+				->get( $this->getBackendUrl() . '/_info', [], __METHOD__ );
 		if ( $res ) {
 			$res = json_decode( $res );
 			if ( $res && json_last_error() === JSON_ERROR_NONE ) {
