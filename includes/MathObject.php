@@ -696,11 +696,9 @@ class MathObject extends MathMathML {
 			__METHOD__ );
 		if ( $rpage !== false ) {
 			$this->initializeFromCache( $rpage );
-			$this->storedInCache = true;
 			return true;
 		} else {
 			# Missing from the database and/or the render cache
-			$this->storedInCache = false;
 			return false;
 		}
 	}
