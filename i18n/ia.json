@@ -153,6 +153,8 @@
 	"math-tex2nb-mathematica": "…se traduce al resultato CAS…",
 	"math-tex2nb-purge": "Purgar le resultatos in cache.",
 	"datatypes-type-contentmath": "Expression mathematic (contento)",
+	"quicksparqlstatements": "Generator de QuickStatements SPARQL",
+	"pidredirect": "Redirection de identificator persistente",
 	"wikibase-listdatatypes-contentmath-head": "Expression mathematic (contento)",
 	"wikibase-listdatatypes-contentmath-body": "Campo de datos litteral pro expressiones mathematic, formulas, equationes, etc., exprimite in le variante DRMF/DLMF de LaTeX."
 }
