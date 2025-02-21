@@ -38,11 +38,11 @@ class ImportIpfs extends BaseImport {
 	 * @throws SparqlException
 	 */
 	protected function readline( array $line, array $columns ): array {
-		global $wgMathSearchPropertyIpfs;
+		global $wgMathSearchPropertyIpfs, $wgMathOpenAlexQIdMap;
 		$fields = array_combine( $columns, $line );
 		$qId = preg_replace( '/^DONE:/', '', $fields['document'] );
 		return [ $qId => [
-			'qid' => $qId,
+			"q" . $wgMathOpenAlexQIdMap['document'] => $qId,
 			"P$wgMathSearchPropertyIpfs" => $fields['cid']
 		] ];
 	}

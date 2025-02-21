@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
 use Exception;
+use MediaWiki\Extension\MathSearch\Graph\PidLookup;
 use Throwable;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
@@ -28,6 +29,7 @@ class QuickStatements extends GraphJob {
 	private array $propertyTypes = [];
 	private PropertyDataTypeLookup $propertyDataTypeLookup;
 	private DataTypeFactory $dataTypeFactory;
+	private array $qid_cache = [];
 
 	public function __construct( $params ) {
 		parent::__construct( 'QuickStatements', $params );
@@ -168,7 +170,17 @@ class QuickStatements extends GraphJob {
 			WikibaseRepo::getDataValueDeserializer()->deserialize( $value ) );
 	}
 
+	private function getPidCache( int $pid ): PidLookup {
+		if ( !isset( $this->qid_cache[$pid] ) ) {
+			$this->qid_cache[$pid] = new PidLookup( "P$pid" );
+		}
+		return $this->qid_cache[$pid];
+	}
+
 	private function getRowItem( array &$row ): Item {
+		if ( !isset( $row['qid'] ) ) {
+			return $this->getRowItemFromPID( $row );
+		}
 		$qID = preg_replace( '/.*?Q?(\d+)/i', '$1', $row['qid'] );
 		$item = $this->entityLookup->getEntity( ItemId::newFromNumber( $qID ) );
 		if ( !$item instanceof Item ) {
@@ -200,5 +212,20 @@ class QuickStatements extends GraphJob {
 			}
 		}
 		return true;
+	}
+
+	private function getRowItemFromPID( array &$row ): Item {
+		foreach ( $row as $key => $value ) {
+			if ( str_starts_with( $key, 'qP' ) ) {
+				$pidLookup = $this->getPidCache( substr( $key, 2 ) );
+				$q = $pidLookup->getQ( $value );
+				$item = $this->entityLookup->getEntity( ItemId::newFromNumber( $q ) );
+				if ( !$item instanceof Item ) {
+					throw new Exception( "Item Q$q not found." );
+				}
+				return $item;
+			}
+		}
+		throw new Exception( "No Item element not found." );
 	}
 }

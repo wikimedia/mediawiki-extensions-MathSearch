@@ -1,9 +1,8 @@
 <?php
 
-namespace MediaWiki\Extension\MathSearch\Graph\Job;
+namespace MediaWiki\Extension\MathSearch\Graph;
 
 use Exception;
-use MediaWiki\Extension\MathSearch\Graph\Query;
 use MediaWiki\Sparql\SparqlException;
 
 class PidLookup {
