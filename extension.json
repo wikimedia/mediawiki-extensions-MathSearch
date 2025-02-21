@@ -91,6 +91,7 @@
 		"MathSearchPropertyScrUrl": 339,
 		"MathSearchPropertyPointInTime": 140,
 		"MathSearchPropertyProfileType": 1460,
+		"MathSearchPropertyIpfs": 1633,
 		"MathProfileQueries": {
 			"person": "?item wdt:P31 wd:Q57162",
 			"formula": "?item wdt:P31 wd:Q1025939",
