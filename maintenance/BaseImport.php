@@ -27,6 +27,7 @@ abstract class BaseImport extends Maintenance {
 		}
 		$handle = fopen( $filename, 'r' );
 		$columns = fgetcsv( $handle );
+		$columns = array_map( 'trim', $columns );
 		$table = [];
 		$line = fgetcsv( $handle, 0, ',', '"', '' );
 		$graphMap = new Map();
