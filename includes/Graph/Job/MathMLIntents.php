@@ -68,7 +68,7 @@ class MathMLIntents extends GraphJob {
 	private function processRow( string $concept, int $qid, \stdClass $row ) {
 		global $wgMathIntentsQIdMap;
 		$pDe = $this->getNumericPropertyId( $wgMathIntentsQIdMap['concept'] );
-		self::getLog()->info( "Add OpenAlex data for Zbl $concept to $qid." );
+		self::getLog()->info( "Add MathML data for concept $concept to $qid." );
 		if ( $qid ) {
 			$item = $this->entityLookup->getEntity( ItemId::newFromNumber( $qid ) );
 			if ( !$item instanceof Item ) {
@@ -117,11 +117,11 @@ class MathMLIntents extends GraphJob {
 				$this->guidGenerator->newGuid( $item->getId() ) );
 		}
 		if ( $changed === false ) {
-			self::getLog()->info( "Skip Zbl $concept  (no change)." );
+			self::getLog()->info( "Skip content $concept (no change)." );
 			return;
 		}
 		$item->setStatements( $statements );
-		$this->entityStore->saveEntity( $item, "Set OpenAlex properties.", $this->getUser(),
+		$this->entityStore->saveEntity( $item, "Set intent properties.", $this->getUser(),
 			EDIT_FORCE_BOT );
 	}
 
