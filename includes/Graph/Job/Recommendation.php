@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
 use MediaWiki\Extension\MathSearch\Graph\Map;
+use MediaWiki\Extension\MathSearch\Graph\PidLookup;
 
 class Recommendation extends GraphJob {
 
@@ -48,7 +49,7 @@ class Recommendation extends GraphJob {
 	}
 
 	private function extractDes(): void {
-		$this->qid_cache->warmup( $this->params['rows'] );
+		$this->qid_cache->warmupFromKeys( $this->params['rows'] );
 	}
 
 }

@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
 use Exception;
 use MediaWiki\Extension\MathSearch\Graph\PidLookup;
+use MediaWiki\Sparql\SparqlException;
 use Throwable;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
@@ -214,10 +215,18 @@ class QuickStatements extends GraphJob {
 		return true;
 	}
 
-	private function getRowItemFromPID( array &$row ): Item {
+	/**
+	 * @throws SparqlException
+	 * @throws Exception
+	 */
+	private function getRowItemFromPID( array $row ): Item {
 		foreach ( $row as $key => $value ) {
 			if ( str_starts_with( $key, 'qP' ) ) {
 				$pidLookup = $this->getPidCache( substr( $key, 2 ) );
+				if ( $pidLookup->count() === 0 ) {
+					$values = $this->getValuesFromColumn( $key );
+					$pidLookup->warmupFromValues( $values );
+				}
 				$q = $pidLookup->getQ( $value );
 				$item = $this->entityLookup->getEntity( ItemId::newFromNumber( $q ) );
 				if ( !$item instanceof Item ) {
@@ -228,4 +237,13 @@ class QuickStatements extends GraphJob {
 		}
 		throw new Exception( "No Item element not found." );
 	}
+
+	private function getValuesFromColumn( string $key ): array {
+		$values = [];
+		foreach ( $this->params['rows'] as $row ) {
+			$values[] = $row[$key];
+		}
+		return $values;
+	}
+
 }

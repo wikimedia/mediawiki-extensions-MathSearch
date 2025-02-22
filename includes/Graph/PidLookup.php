@@ -35,13 +35,28 @@ class PidLookup {
 		return $this->de2q( $key );
 	}
 
-	public function warmup( $rows ): void {
+	public function warmupFromKeys( array $rows ): void {
 		foreach ( $rows as $seed => $row ) {
 			$this->de2q( $seed, true );
 			foreach ( $row as $de => $value ) {
 				$this->de2q( $de, true );
 			}
 		}
+		$this->requestDes();
+	}
+
+	/**
+	 * Warms up the cache with the given values.
+	 *
+	 * @param string[] $values The values to warm up the cache with.
+	 * @return void
+	 * @throws SparqlException
+	 */
+	public function warmupFromValues( array $values ): void {
+		foreach ( $values as $value ) {
+			$this->de2q( $value, true );
+		}
+		$this->requestDes();
 	}
 
 	/**
@@ -55,4 +70,7 @@ class PidLookup {
 		$this->qid_cache = $map + $this->qid_cache;
 	}
 
+	public function count(): int {
+		return count( $this->qid_cache );
+	}
 }
