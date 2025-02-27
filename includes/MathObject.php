@@ -714,6 +714,7 @@ class MathObject extends MathMathML {
 		$out = MathRenderer::dbOutArray();
 		$out['math_input'] = $out['math_inputtex'];
 		unset( $out['math_inputtex'] );
+		unset( $out['math_mode'] );
 		$out += $this->dbDebugOutArray();
 		return $out;
 	}
