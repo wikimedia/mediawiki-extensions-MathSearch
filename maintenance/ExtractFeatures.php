@@ -143,7 +143,7 @@ class ExtractFeatures extends Maintenance {
 	}
 
 	public function execute() {
-		$connectionProvider = $this->getServiceContainer();
+		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
 		$this->dbw = $connectionProvider->getPrimaryDatabase();
 		$this->purge = $this->getOption( 'purge', false );
 		$this->db = $connectionProvider->getPrimaryDatabase();

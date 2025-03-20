@@ -118,7 +118,7 @@ class MathosphereDriver {
 			"timeout"  => 60,
 			"method"   => 'POST'
 		];
-		$req = MMediaWikiServices::getInstance()->getHttpRequestFactory()
+		$req = MediaWikiServices::getInstance()->getHttpRequestFactory()
 			->create( $url, $options, __METHOD__ );
 		$status = $req->execute();
 
