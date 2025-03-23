@@ -32,12 +32,19 @@ class SpecialMathIndex extends SpecialPage {
 			} else {
 				$this->testIndex();
 			}
+			$this->displayStats();
 		} else {
 			$output->addWikiTextAsInterface(
 				'\'\'\'This page is available in math debug mode only.\'\'\'' . "\n\n" .
 				'Enable the math debug mode by setting <code> $wgMathDebug = true</code> .'
 			);
 		}
+	}
+
+	private function displayStats() {
+		$basex = new \MathEngineBaseX();
+		$basex->getTotalIndexed();
+		$this->getOutput()->addHTML( "<p> Total indexed in baseX: {$basex->getTotalIndexed()}</p>" );
 	}
 
 	private function testIndex() {

@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 
 /**
  * MediaWiki MathSearch extension
@@ -83,7 +84,7 @@ class MathEngineBaseX extends MathEngineRest {
 		return json_encode( [ "type" => $this->type, "query" => $this->query->getCQuery() ] );
 	}
 
-	public function update( $harvest = "", array $delte = [] ) {
+	public function update( $harvest = "", array $delte = [] ): bool {
 		global $wgMathSearchBaseXBackendUrl;
 		$json_payload = json_encode( [ "harvest" => $harvest, "delete" => $delte ] );
 		try {
@@ -103,5 +104,16 @@ class MathEngineBaseX extends MathEngineRest {
 					[ 'exception' => $e->getMessage() ] );
 		}
 		return false;
+	}
+
+	public function getTotalIndexed(): int {
+		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXRequestOptions;
+		$requestFactory = MediaWikiServices::getInstance()->getHttpRequestFactory();
+		$res = $requestFactory->get( $wgMathSearchBaseXBackendUrl . '?query=count(.)',
+			$wgMathSearchBaseXRequestOptions );
+		if ( $res && is_numeric( $res ) ) {
+			return $res;
+		}
+		return 0;
 	}
 }
