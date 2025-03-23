@@ -1,4 +1,5 @@
 <?php
+namespace MediaWiki\Extension\MathSearch\Specials;
 
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -19,7 +20,6 @@ class SpecialMathIndex extends SpecialPage {
 		$out = $this->getOutput();
 		$out->setArticleRelated( false );
 		$out->setRobotPolicy( "noindex,nofollow" );
-		$out->setPageTitle( $this->getDescription() );
 	}
 
 	/** @inheritDoc */
@@ -34,15 +34,13 @@ class SpecialMathIndex extends SpecialPage {
 			}
 		} else {
 			$output->addWikiTextAsInterface(
-				'\'\'\'This page is avaliblible in math debug mode only.\'\'\'' . "\n\n" .
+				'\'\'\'This page is available in math debug mode only.\'\'\'' . "\n\n" .
 				'Enable the math debug mode by setting <code> $wgMathDebug = true</code> .'
 			);
 		}
 	}
 
 	private function testIndex() {
-		$out = $this->getOutput();
-		$out->addWikiTextAsInterface( 'This is a test.' );
 		$formDescriptor = [
 			'script' => [
 				'label' => 'Script', # What's the label of the field
@@ -54,8 +52,6 @@ class SpecialMathIndex extends SpecialPage {
 					'UpdateMath' => self::SCRIPT_UPDATE_MATH,
 					# "Option 1" is the displayed content, "1" is the value
 					'ExportIndex' => self::SCRIPT_WRITE_INDEX,
-					# Hmtl Result = <option value="option2id">Option 2</option>
-					'something else' => 'option2id'
 				]
 			]
 		];
@@ -75,12 +71,12 @@ class SpecialMathIndex extends SpecialPage {
 			case self::SCRIPT_UPDATE_MATH:
 				require_once __DIR__ . '/../../maintenance/UpdateMath.php';
 				$updater = new UpdateMath();
-				$updater->loadParamsAndArgs( null, [ "max" => 1 ], null );
+				$updater->loadParamsAndArgs( null, [ "max" => 1 ] );
 				$updater->execute();
 				break;
 			case self::SCRIPT_WRITE_INDEX:
-				require_once __DIR__ . '/../../maintenance/CreateMathIndex.php';
-				$updater = new CreateMathIndex();
+				require_once __DIR__ . '/../../maintenance/CreateMWSHarvest.php';
+				$updater = new CreateMWSHarvest();
 				$updater->loadParamsAndArgs( null, [ "mwsns" => 'mws:' ],
 					[ __DIR__ . '/mws/data/wiki' ]
 				);
