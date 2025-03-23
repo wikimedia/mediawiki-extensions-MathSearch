@@ -30,31 +30,23 @@ class GetEquationsByQuery extends SpecialPage {
 			return;
 		}
 
-		$filterID = $this->getRequest()->getInt( 'filterID', 1000 );
+		$filterID = $this->getRequest()->getInt( 'filterID', 1 );
 		switch ( $filterID ) {
-			case 0:
-				$sqlFilter = [ 'valid_xml' => '0' ];
-				break;
 			case 1:
-				$sqlFilter = [ 'math_status' => '3' ];
+				$sqlFilter = [ 'math_statuscode' => '3' ];
 				break;
 			case 2:
 				$math5 = $this->getRequest()->getVal( 'first5', null );
 				$sqlFilter = [
-					'valid_xml' => '0',
 					'left(math_mathml,5)' => $math5
 				];
 				break;
 			case 3:
 				$math5 = $this->getRequest()->getVal( 'first5', null );
 				$sqlFilter = [
-					'valid_xml' => '0',
-						'left(math_tex,5)' => $math5
+					'left(math_tex,5)' => $math5
 				];
 				break;
-			case 1000:
-			default:
-				$sqlFilter = [ 'math_status' => '3', 'valid_xml' => '0' ];
 		}
 		$this->getOutput()->addWikiTextAsInterface(
 			"Displaying first 10 equation for query: <pre>" . var_export( $sqlFilter, true ) . '</pre>'
@@ -64,10 +56,8 @@ class GetEquationsByQuery extends SpecialPage {
 			->getReplicaDatabase();
 		$res = $dbr->select(
 				[ 'mathlog' ],
-				// TODO insert the missing fields to the mathlog table
 				[
-					'math_mathml', 'math_inputhash', 'math_log', 'math_tex', 'valid_xml', 'math_status',
-					'math_timestamp',
+					'math_mathml', 'math_inputhash', 'math_log', 'math_tex', 'math_statuscode', 'math_timestamp'
 				],
 				$sqlFilter,
 				__METHOD__,
@@ -89,7 +79,7 @@ class GetEquationsByQuery extends SpecialPage {
 				$tend = microtime( true );
 				$this->getOutput()->addWikiTextAsInterface( ":rendering in " . ( $tend - $tstart ) . "s.", false );
 				$renderer->writeCache();
-				$this->getOutput()->addHTML( "Output:" . $result . "<br/>" );
+				$this->getOutput()->addHTML( "Output:" . $renderer->getHtmlOutput() . "<br/>" );
 			}
 
 		}
