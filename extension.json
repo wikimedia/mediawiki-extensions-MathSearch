@@ -20,7 +20,6 @@
 		"FormulaInfo": "includes/FormulaInfo.php",
 		"MathObject": "includes/MathObject.php",
 		"MathQueryObject": "includes/MathQueryObject.php",
-		"GetEquationsByQuery": "includes/GetEquationsByQuery.php",
 		"SpecialMathDebug": "includes/Specials/SpecialMathDebug.php",
 		"SpecialMathIndex": "includes/Specials/SpecialMathIndex.php",
 		"SpecialDisplayTopics": "includes/Specials/SpecialDisplayTopics.php",
@@ -159,7 +158,7 @@
 				"Math.Config"
 			]
 		},
-		"GetEquationsByQuery": "GetEquationsByQuery",
+		"GetEquationsByQuery": "\\MediaWiki\\Extension\\MathSearch\\Specials\\GetEquationsByQuery",
 		"MathDebug": "SpecialMathDebug",
 		"MathIndex": "SpecialMathIndex",
 		"DisplayTopics": "SpecialDisplayTopics",
