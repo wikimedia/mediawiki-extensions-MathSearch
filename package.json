@@ -4,7 +4,8 @@
 	"private": true,
 	"description": "Build tools for the MathSearch extension.",
 	"scripts": {
-		"test": "grunt test"
+		"test": "grunt test",
+		"fix": "grunt --fix test"
 	},
 	"devDependencies": {
 		"eslint-config-wikimedia": "0.28.2",
