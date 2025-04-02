@@ -47,21 +47,25 @@ class AddSwhids extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
-		$this->addDescription( "Script to get the SoftWare Heritage IDentifier (SWHID) from a git url" );
+		$this->addDescription( "Script to get the SoftWare Heritage Identifier (SWHID) from a git url" );
 		$this->addOption(
 			'repo', 'The repoURL.', false, true, "r"
 		);
 		$this->addOption( 'force', 'force depositing', false, false, 'f' );
+		$this->addOption( 'propertyId', 'the property Id that represents the repository url. default "P339"',
+			false, true, 'p' );
+
 		$this->requireExtension( 'MathSearch' );
 	}
 
 	private function getQuery(): string {
+		$pID = $this->getOption( 'propertyId', 'P339' );
 		return <<<SPARQL
 PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 
 SELECT ?item ?repo
 WHERE {
-  ?item wdt:P339 ?repo.
+  ?item wdt:$pID ?repo.
   FILTER NOT EXISTS { ?item wdt:P1454 ?x }
 }
 SPARQL;
