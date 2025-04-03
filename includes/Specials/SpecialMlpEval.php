@@ -86,7 +86,7 @@ class SpecialMlpEval extends SpecialPage {
 		return $step;
 	}
 
-	private function loadData() {
+	private function loadData(): int {
 		$req = $this->getRequest();
 		$revId = $req->getInt( 'oldId' );
 		if ( $req->getText( 'wp1-page' ) ) {
@@ -544,7 +544,7 @@ class SpecialMlpEval extends SpecialPage {
 		}
 	}
 
-	private function resetPage() {
+	private function resetPage(): int {
 		$req = $this->getRequest();
 		$rndRev = $req->getInt( 'oldId' );
 		$oldStep = $req->getInt( 'oldStep' );

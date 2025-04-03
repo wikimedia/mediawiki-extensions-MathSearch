@@ -703,6 +703,7 @@ class MathObject extends MathMathML {
 		}
 	}
 
+	/** @inheritDoc */
 	protected function dbInArray() {
 		$out = MathRenderer::dbInArray();
 		$out = array_diff( $out, [ 'math_inputtex' ] );
@@ -710,6 +711,7 @@ class MathObject extends MathMathML {
 		return $out;
 	}
 
+	/** @inheritDoc */
 	protected function dbOutArray() {
 		$out = MathRenderer::dbOutArray();
 		$out['math_input'] = $out['math_inputtex'];
