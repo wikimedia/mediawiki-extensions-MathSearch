@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 abstract class BaseImport extends Maintenance {
 
-	private array $jobOptions;
+	protected array $jobOptions;
 	private string $jobType;
 
 	public function __construct( array $jobOptions, string $jobType, string $description = 'The file to be read' ) {
