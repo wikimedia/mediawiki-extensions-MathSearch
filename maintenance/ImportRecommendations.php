@@ -28,11 +28,11 @@ require_once __DIR__ . '/BaseImport.php';
 class ImportRecommendations extends BaseImport {
 
 	public function __construct() {
-		$this->addOption( 'runid', 'The QID of the item that represents the run.', false, true, 'r' );
 		$jobname = 'recommendation' . date( 'ymdhms' );
 		$joboptions = [ 'jobname' => $jobname, 'editsummary' => 'Import recommendations run Q6534273' ];
 		$jobtype = 'MediaWiki\Extension\MathSearch\Graph\Job\Recommendation';
 		parent::__construct( $joboptions, $jobtype, 'Batch imports Recommendation data from a CSV file.' );
+		$this->addOption( 'runid', 'The QID of the item that represents the run.', false, true, 'r' );
 	}
 
 	public function execute() {
