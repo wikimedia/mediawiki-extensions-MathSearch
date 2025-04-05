@@ -208,10 +208,10 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * @param array{1:string,2:array} $tag
+	 * @param array{1:string,2:array} $tag under unknown circumstances the first argument might be null T391163
 	 * @return string
 	 */
 	public function getUserInputTex( array $tag ): string {
-		return ( new MathSource( $tag[self::CONTENT_POS], $tag[self::ATTRIB_POS] ) )->getUserInputTex();
+		return ( new MathSource( $tag[self::CONTENT_POS] ?? '', $tag[self::ATTRIB_POS] ) )->getUserInputTex();
 	}
 }
