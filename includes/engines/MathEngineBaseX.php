@@ -109,7 +109,7 @@ class MathEngineBaseX extends MathEngineRest {
 	public function getTotalIndexed(): int {
 		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXRequestOptions;
 		$requestFactory = MediaWikiServices::getInstance()->getHttpRequestFactory();
-		$res = $requestFactory->get( $wgMathSearchBaseXBackendUrl . '?query=count(.)',
+		$res = $requestFactory->get( $wgMathSearchBaseXBackendUrl . '?query=count(//*:expr)',
 			$wgMathSearchBaseXRequestOptions );
 		if ( $res && is_numeric( $res ) ) {
 			return $res;
