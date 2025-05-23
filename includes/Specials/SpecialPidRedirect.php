@@ -3,12 +3,16 @@
 namespace MediaWiki\Extension\MathSearch\Specials;
 
 use Exception;
+use MediaWiki\Extension\Math\Widget\WikibaseEntitySelector;
 use MediaWiki\Extension\MathSearch\Graph\Query;
-use MediaWiki\HTMLForm\Field\HTMLCheckField;
-use MediaWiki\HTMLForm\Field\HTMLTextField;
-use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\Title;
+use OOUI\ButtonInputWidget;
+use OOUI\CheckboxInputWidget;
+use OOUI\FieldLayout;
+use OOUI\FieldsetLayout;
+use OOUI\FormLayout;
+use OOUI\TextInputWidget;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\NumericPropertyId;
@@ -27,7 +31,15 @@ class SpecialPidRedirect extends SpecialPage {
 
 	public function execute( $subPage ) {
 		parent::execute( $subPage );
-		$pid = $this->getRequest()->getInt( 'propertyId', 0 );
+		$pid = $this->getRequest()->getInt( 'propertyId' );
+		if ( $pid === 0 ) {
+			$pText = $this->getRequest()->getText( 'propertyId' );
+			// Check if the string starts with 'P' and remove it
+			if ( strpos( $pText, 'P' ) === 0 ) {
+				// Remove the 'P' and convert the rest to an integer
+				$pid = (int)substr( $pText, 1 );
+			}
+		}
 		$val = $this->getRequest()->getText( 'value' );
 		$linkToItem = $this->getRequest()->getBool( 'item' );
 		$siteId = $this->getRequest()->getText( 'siteId', 'mardi' );
@@ -68,33 +80,64 @@ class SpecialPidRedirect extends SpecialPage {
 	}
 
 	private function showForm() {
-		$formDescriptor = [
-			'propertyID' => [
-				'label' => 'Property',
-				'class' => HTMLTextField::class,
-				'name' => 'propertyId',
-			],
-			'value' => [
-				'label' => 'Value',
-				'class' => HTMLTextField::class,
-				'name' => 'value',
-			],
-			'item' => [
-				'label' => 'Item',
-				'help' => 'Link to the item page instead of the site link',
-				'name' => 'item',
-				'class' => HTMLCheckField::class,
-			],
-		];
-		$htmlForm =	HTMLForm::factory( 'codex', $formDescriptor, $this->getContext() );
-		$htmlForm->setSubmitText( 'Redirect' );
-		$htmlForm->setMethod( 'get' );
-		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
-		$htmlForm->show();
-	}
+		$out = $this->getOutput();
+		$out->enableOOUI();
+		$out->addModules( [ 'mw.widgets.MathWbEntitySelector' ] );
+		$this->getOutput()->addHTML( new FormLayout(
+			[
+				'method' => 'GET',
+				'items' => [
+					new FieldsetLayout( [
+						'label' => 'Your Form',
+						'items' => [
+							new FieldLayout(
+								new WikibaseEntitySelector( [
+									'name' => 'propertyId',
+									'paramType' => 'property',
+									'infusable' => true,
+									'id' => 'wbEntitySelector',
+									'value' => $this->getRequest()->getText( 'propertyId' ),
+								] ),
+								[
+									'label' => 'Property',
+									'align' => 'top',
+								]
+							),
+							new FieldLayout(
+								new TextInputWidget( [
+									'name' => 'value',
+									'value' => $this->getRequest()->getText( 'value' ),
+								] ),
+								[
+									'label' => 'Value',
+									'align' => 'top',
+								]
+							),
+							new FieldLayout(
+								new CheckboxInputWidget( [
+									'name' => 'item',
+									'checked' => $this->getRequest()->getBool( 'item' ),
+								] ),
+								[
+									'label' => 'Item (Link to the item page instead of the site link)',
+									'align' => 'inline',
+								]
+							),
+							new FieldLayout(
+								new ButtonInputWidget( [
+									'name' => 'submit',
+									'label' => 'Redirect',
+									'type' => 'submit',
+									'flags' => [ 'primary', 'progressive' ],
+									'icon' => 'check',
+								] ),
+								[
+									'label' => null,
+									'align' => 'top',
 
-	public function processInput( $formData ) {
-		return false;
+								] )
+						] ] )
+				] ] ) );
 	}
 
 	protected function getGroupName(): string {
