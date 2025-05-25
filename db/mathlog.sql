@@ -8,17 +8,17 @@ CREATE TABLE /*_*/mathlog (
   -- User input mostly tex
   math_input TEXT NOT NULL,
   -- the tex representation
-  math_tex TEXT DEFAULT NULL,
+  math_tex TEXT,
   -- the log input
-  math_log text NOT NULL,
+  math_log text,
   -- the post request sent
   math_post text,
   -- (mathml|latexml) mode
   math_mode tinyint,
   -- mathml rendering
-  math_mathml TEXT DEFAULT NULL,
+  math_mathml TEXT,
   -- svg rendering
-  math_svg TEXT DEFAULT NULL,
+  math_svg TEXT,
   -- time needed to answer the request in ms
   math_rederingtime int,
   -- statuscode returned by the rendering engine
