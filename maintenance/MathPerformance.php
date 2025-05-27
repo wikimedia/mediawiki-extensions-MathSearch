@@ -19,10 +19,10 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\Extension\Math\Hooks as MathHooks;
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRestbaseInterface;
+use MediaWiki\Extension\Math\WikiTexVC\TexVC;
 use MediaWiki\Logger\LoggerFactory;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
@@ -40,7 +40,7 @@ class MathPerformance extends Maintenance {
 	/** @var float[] */
 	private $performance = [];
 	/** @var string */
-	private $renderingMode = 'mathml';
+	private $renderingMode = 'native';
 
 	public function __construct() {
 		parent::__construct();
@@ -126,12 +126,41 @@ class MathPerformance extends Maintenance {
 		return $formulae;
 	}
 
+	private function runNativeTest( string $tex ): void {
+		$texVC = new TexVC();
+		try {
+			$this->resetTimer();
+			$result = $texVC->check( $tex, [
+				'debug' => false,
+				'usemathrm' => false,
+				'oldtexvc' => false
+			] );
+			$this->time( 'check' );
+			if ( $result['status'] !== '+' ) {
+				$this->vPrint( 'checking failed:' . $result['details'] );
+				return;
+			}
+			$mathml = $result["input"]->renderMML();
+			$this->time( 'render' );
+
+		} catch ( PhpPegJs\SyntaxError $ex ) {
+			$message = "Syntax error: " . $ex->getMessage() .
+				' at line ' . $ex->grammarLine . ' column ' .
+				$ex->grammarColumn . ' offset ' . $ex->grammarOffset;
+			$this->vPrint( $message );
+		}
+	}
+
 	private function actionBenchmark() {
 		$tex = $this->getOption( 'input', 'math_input' );
 		$hash = $this->getOption( 'hash', 'math_inputhash' );
 		$formulae = $this->getFormulae( $hash, $tex );
 		foreach ( $formulae as $formula ) {
 			$this->currentHash = $formula->$hash;
+			if ( $this->renderingMode === 'native' ) {
+				$this->runNativeTest( $formula->$tex );
+				continue;
+			}
 			$rbi = new MathRestbaseInterface( $formula->$tex, false );
 			if ( $this->runTest( $rbi ) ) {
 				if ( round( rand( 0, 1 ) ) ) {
@@ -161,7 +190,7 @@ class MathPerformance extends Maintenance {
 			'math_inputhash'       => $this->currentHash,
 			'mathperformance_name' => substr( $category, 0, 10 ),
 			'mathperformance_time' => $delta,
-			'mathperformance_mode' => MathHooks::mathModeToHashKey( $this->renderingMode )
+			'mathperformance_mode' => MathObject::MODE_2_USER_OPTION[ $this->renderingMode ]
 		];
 		if ( $wgMathDebug ) {
 			$this->db->insert( 'mathperformance', $logData, __METHOD__ );
