@@ -36,7 +36,7 @@ class MathPerformance extends Maintenance {
 	/** @var string|null */
 	private $currentHash;
 	/** @var float */
-	private $time = 0.0; // microtime( true );
+	private $time = 0.0;
 	/** @var float[] */
 	private $performance = [];
 	/** @var string */
@@ -183,7 +183,7 @@ class MathPerformance extends Maintenance {
 	 */
 	private function time( $category = 'default' ) {
 		global $wgMathDebug;
-		$delta = ( microtime( true ) - $this->time ) * 1000;
+		$delta = ( hrtime( true ) - $this->time ) / 1e6;
 		$this->performance[$category] ??= 0;
 		$this->performance[$category] += $delta;
 		$logData = [
@@ -203,7 +203,7 @@ class MathPerformance extends Maintenance {
 	}
 
 	private function resetTimer() {
-		$this->time = microtime( true );
+		$this->time = hrtime( true );
 	}
 
 	private function vPrint( string $string ) {
