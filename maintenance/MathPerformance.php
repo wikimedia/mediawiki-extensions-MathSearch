@@ -125,7 +125,7 @@ class MathPerformance extends Maintenance {
 		}
 		$fields = [ $hash, $tex ];
 		if ( $action !== 'benchmark' ) {
-			$fields += [ 'math_tex', 'math_mathml', 'math_statuscode' ];
+			array_push( $fields, 'math_tex', 'math_mathml', 'math_statuscode' );
 		}
 		$formulae = $this->db->select(
 			'mathlog',
@@ -185,14 +185,22 @@ class MathPerformance extends Maintenance {
 					'debug' => false,
 					'usemathrm' => false,
 					'oldtexvc' => false,
-					'mhchem' => true,
+					'usemhchem' => true,
 				] );
 				$this->time( 'check' );
 			}
+			$status = $result['status'];
+
 			if ( $status !== '+' ) {
 				$this->vPrint( bin2hex( $formula->$hash ) . ' checking failed:' . $result['details'] );
 				if ( $action === 'fix' ) {
 					$this->saveResult( $tex, $hash, $formula, $result );
+				} elseif ( $action === 'compare' ) {
+					$old_status = chr( $formula->math_statuscode );
+					if ( $status !== $old_status ) {
+						$this->vPrint( bin2hex( $formula->$hash ) .
+							' changed status ' . $old_status . ' to ' . $status );
+					}
 				}
 				return;
 			}
@@ -200,6 +208,14 @@ class MathPerformance extends Maintenance {
 			$this->time( 'render' );
 			if ( $action === 'fix' ) {
 				$this->saveResult( $tex, $hash, $formula, $result, $mathml, $mhchem );
+			} elseif ( $action === 'compare' ) {
+				if ( $formula->math_tex !== $result["output"] ) {
+					$this->vPrint( bin2hex( $formula->$hash ) .
+						' changed tex ' . $formula->math_tex . ' to ' . $result["output"] );
+				}
+				if ( $formula->math_mathml !== $mathml ) {
+					$this->vPrint( bin2hex( $formula->$hash ) . ' changed mathml' );
+				}
 			}
 		} catch ( PhpPegJs\SyntaxError $ex ) {
 			$message = "Syntax error: " . $ex->getMessage() .
