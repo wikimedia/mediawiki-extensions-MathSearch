@@ -640,6 +640,7 @@ class MathObject extends MathMathML {
 			'math_mode' => self::MODE_2_USER_OPTION[ $this->getMode() ],
 			'math_post' => $this->getPostData(),
 			'math_rederingtime' => $this->getRenderingTime(),
+			'math_statuscode' => $this->getStatusCode(),
 		];
 	}
 
@@ -741,5 +742,9 @@ class MathObject extends MathMathML {
 			$this->svg = $rpage->math_svg;
 		}
 		$this->changed = false;
+	}
+
+	public function setInputHash( string $hash ) {
+		$this->inputHash = $hash;
 	}
 }
