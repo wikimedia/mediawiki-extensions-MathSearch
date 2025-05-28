@@ -75,6 +75,12 @@ class MathPerformance extends Maintenance {
 			case "benchmark":
 				$this->actionBenchmark();
 				break;
+			case "fix-results":
+				$this->actionBenchmark( 'fix' );
+				break;
+			case "compare-results":
+				$this->actionBenchmark( 'compare' );
+				break;
 		}
 		$shareString = $this->getArg( 2, '' );
 		$this->vPrint( "{$shareString}Done." );
@@ -95,9 +101,10 @@ class MathPerformance extends Maintenance {
 	/**
 	 * @param string $hash
 	 * @param string $tex
+	 * @param string $action
 	 * @return bool|\Wikimedia\Rdbms\IResultWrapper
 	 */
-	private function getFormulae( $hash, $tex ) {
+	private function getFormulae( $hash, $tex, $action = 'benchmark' ) {
 		$min = $this->getOption( 'min', 0 );
 		$max = $this->getOption( 'max', 0 );
 		$options = [];
@@ -116,9 +123,13 @@ class MathPerformance extends Maintenance {
 			$options['LIMIT'] = $max - $min;
 			$options['OFFSET'] = $min;
 		}
+		$fields = [ $hash, $tex ];
+		if ( $action !== 'benchmark' ) {
+			$fields += [ 'math_tex', 'math_mathml', 'math_statuscode' ];
+		}
 		$formulae = $this->db->select(
 			'mathlog',
-			[ $hash, $tex ],
+			$fields,
 			'',
 			__METHOD__,
 			$options
@@ -126,7 +137,36 @@ class MathPerformance extends Maintenance {
 		return $formulae;
 	}
 
-	private function runNativeTest( string $tex ): void {
+	private function saveResult(
+		string $tex,
+		string $hash,
+		object $formula,
+		array $result,
+		?string $mathml = null,
+		bool $mhchem = false
+	): void {
+		$mo = new MathObject( $tex );
+		$mo->setInputHash( $formula->$hash );
+		$mo->setMode( $this->renderingMode );
+		$mo->readFromCache();
+		if ( isset( $result['output'] ) ) {
+			$mo->setTex( $result['output'] );
+		}
+		if ( $mathml ) {
+			$mo->setMathml( $mathml );
+		}
+		$mo->setStatusCode( ord( $result['status'] ) );
+		if ( $result['status'] !== '+' ) {
+			$mo->setLog( 'checking failed:' . $result['details'] );
+		} elseif ( $mhchem ) {
+			$mo->setLog( 'mhchem_required' );
+		}
+		$mo->writeToCache();
+	}
+
+	private function runNativeTest( object $formula, string $action, string $hash ): void {
+		$tex = $formula->{$this->getOption( 'input', 'math_input' )};
+		$mhchem = false;
 		$texVC = new TexVC();
 		try {
 			$this->resetTimer();
@@ -136,29 +176,47 @@ class MathPerformance extends Maintenance {
 				'oldtexvc' => false
 			] );
 			$this->time( 'check' );
-			if ( $result['status'] !== '+' ) {
-				$this->vPrint( 'checking failed:' . $result['details'] );
+
+			$status = $result['status'];
+			if ( $status === 'C' ) {
+				$this->resetTimer();
+				$mhchem = true;
+				$result = $texVC->check( $tex, [
+					'debug' => false,
+					'usemathrm' => false,
+					'oldtexvc' => false,
+					'mhchem' => true,
+				] );
+				$this->time( 'check' );
+			}
+			if ( $status !== '+' ) {
+				$this->vPrint( bin2hex( $formula->$hash ) . ' checking failed:' . $result['details'] );
+				if ( $action === 'fix' ) {
+					$this->saveResult( $tex, $hash, $formula, $result );
+				}
 				return;
 			}
 			$mathml = $result["input"]->renderMML();
 			$this->time( 'render' );
-
+			if ( $action === 'fix' ) {
+				$this->saveResult( $tex, $hash, $formula, $result, $mathml, $mhchem );
+			}
 		} catch ( PhpPegJs\SyntaxError $ex ) {
 			$message = "Syntax error: " . $ex->getMessage() .
 				' at line ' . $ex->grammarLine . ' column ' .
 				$ex->grammarColumn . ' offset ' . $ex->grammarOffset;
-			$this->vPrint( $message );
+			$this->vPrint( $formula->$hash . ':' . $message );
 		}
 	}
 
-	private function actionBenchmark() {
+	private function actionBenchmark( string $action = 'benchmark' ) {
 		$tex = $this->getOption( 'input', 'math_input' );
 		$hash = $this->getOption( 'hash', 'math_inputhash' );
-		$formulae = $this->getFormulae( $hash, $tex );
+		$formulae = $this->getFormulae( $hash, $tex, $action );
 		foreach ( $formulae as $formula ) {
 			$this->currentHash = $formula->$hash;
 			if ( $this->renderingMode === 'native' ) {
-				$this->runNativeTest( $formula->$tex );
+				$this->runNativeTest( $formula, $action, $hash );
 				continue;
 			}
 			$rbi = new MathRestbaseInterface( $formula->$tex, false );
