@@ -1,5 +1,5 @@
 CREATE TABLE `mathperformance` (
-  `math_inputhash` VARBINARY(16) NOT NULL,
+  `math_inputhash` VARBINARY(32) NOT NULL,
   `mathperformance_name` CHAR(10) NOT NULL,
   `mathperformance_time` DOUBLE NOT NULL,
   `mathperformance_mode` TINYINT NOT NULL,
