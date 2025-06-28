@@ -22,7 +22,7 @@ class SpecialMathDebug extends SpecialPage {
 		$out = $this->getOutput();
 		$out->setArticleRelated( false );
 		$out->setRobotPolicy( "noindex,nofollow" );
-		$out->setPageTitle( $this->getDescription() );
+		$out->setPageTitle( (string)$this->getDescription() );
 	}
 
 	/** @inheritDoc */

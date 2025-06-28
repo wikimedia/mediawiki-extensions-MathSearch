@@ -73,11 +73,17 @@
 	"config": {
 		"MathAnalysisTableName": "mathlatexml",
 		"MathDebug": false,
-		"MathSearchBaseXBackendUrl": "http://localhost:10043/",
+		"MathSearchBaseXBackendUrl": "http://localhost:8080/rest",
+		"MathSearchBaseXDatabaseName": "mathsearch",
 		"MathSearchBaseXRequestOptions": {
 			"timeout": 60,
 			"username": "admin",
 			"password": "admin"
+		},
+		"MathSearchBaseXRequestOptionsReadonly": {
+			"timeout": 60,
+			"username": "test",
+			"password": "test"
 		},
 		"MathSearchMWSUrl": "http://localhost:9090/",
 		"MathSearchTranslationUrl": "http://vmext-demo.wmflabs.org/math/translation",

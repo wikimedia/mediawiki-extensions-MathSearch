@@ -321,10 +321,17 @@ class MathSearchHooks {
 	) {
 		$revId = $article->getTitle()->getLatestRevID();
 		$mathEngineBaseX = new MathEngineBaseX();
-		if ( $mathEngineBaseX->update( "", [ $revId ] ) ) {
-			LoggerFactory::getInstance( 'MathSearch' )->warning( "Deletion of $revId was successful." );
+		$updated = false;
+		$detail = '';
+		try {
+			$updated = $mathEngineBaseX->update( "", [ $revId ] );
+		} catch ( Exception $e ) {
+			$detail = $e->getMessage();
+		}
+		if ( $updated ) {
+			LoggerFactory::getInstance( 'MathSearch' )->info( "Deletion of $revId was successful." );
 		} else {
-			LoggerFactory::getInstance( 'MathSearch' )->warning( "Deletion of $revId failed." );
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Deletion of $revId failed: $detail" );
 		}
 	}
 
@@ -352,11 +359,20 @@ class MathSearchHooks {
 		}
 		$revId = $title->getLatestRevID();
 		$harvest = self::getMwsHarvest( $revId );
+
 		$mathEngineBaseX = new MathEngineBaseX();
-		if ( $mathEngineBaseX->update( $harvest, [] ) ) {
+		$updated = false;
+		$detail = '';
+		try {
+			$updated = $mathEngineBaseX->update( $harvest );
+		} catch ( Exception $e ) {
+			$detail = $e->getMessage();
+		}
+		if ( $updated ) {
 			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId was successful." );
+
 		} else {
-			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId failed." );
+			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId failed: $detail" );
 		}
 		return true;
 	}
@@ -378,12 +394,14 @@ class MathSearchHooks {
 	) {
 		if ( $revisionRecord
 			->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
-			->getModel() !== CONTENT_MODEL_WIKITEXT
+			->getModel() !== CONTENT_MODEL_WIKITEXT ||
+			// Bug T399394 GrowthExperiments does not allow logging
+			str_contains( $user->getName(), 'TestUser' ) || $user->getName() == 'UTSysop'
 		) {
 			// Skip pages that do not contain wikitext
 			return true;
 		}
-
+		$prevRevId = -1;
 		$revId = $revisionRecord->getId();
 		$harvest = self::getMwsHarvest( $revId );
 		$previousRevisionRecord = MediaWikiServices::getInstance()
@@ -399,7 +417,6 @@ class MathSearchHooks {
 			} else {
 				# just create a new entry in index.
 				$res = $baseXUpdater->update( $harvest, [] );
-				$prevRevId = -1;
 			}
 		} catch ( Exception $e ) {
 			LoggerFactory::getInstance( 'MathSearch' )

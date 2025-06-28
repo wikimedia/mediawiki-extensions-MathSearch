@@ -1,5 +1,6 @@
 <?php
 
+use GuzzleHttp\Exception\GuzzleException;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 
@@ -16,10 +17,78 @@ class MathEngineBaseX extends MathEngineRest {
 
 	/** @var string */
 	protected $type = "mws";
+	private ?string $content;
 
 	public function __construct( $query = null ) {
 		global $wgMathSearchBaseXBackendUrl;
 		parent::__construct( $query, $wgMathSearchBaseXBackendUrl . 'mwsquery' );
+	}
+
+	protected static function doPost( string $url, string $postData ): string {
+		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXRequestOptionsReadonly;
+
+		$options = $wgMathSearchBaseXRequestOptionsReadonly;
+
+		$postData = str_replace( [ '{', '}' ], [ '{{', '}}' ], $postData );
+
+		$query = new SimpleXMLElement( '<query xmlns="http://basex.org/rest"></query>' );
+		$query->addChild( 'text', $postData );
+
+		$options['postData'] = $query->asXML();
+
+		$requestFactory = MediaWikiServices::getInstance()->getHttpRequestFactory();
+		$req = $requestFactory->create( $wgMathSearchBaseXBackendUrl, $options );
+		$res = $req->execute();
+		if ( $res->isOK() ) {
+			return $req->getContent();
+		}
+		return false;
+	}
+
+	public function executeQuery( string $xq, string $db = '', ?array $options = null ) {
+		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXRequestOptions;
+
+		$doc = new DOMDocument();
+		$query = $doc->createElement( 'query' );
+		$query->setAttribute( 'xmlns', 'http://basex.org/rest' );
+		$doc->appendChild( $query );
+		$text = $doc->createElement( 'text', $xq );
+		$query->appendChild( $text );
+
+		$options ??= $this->getBasicHttpOptions( $wgMathSearchBaseXRequestOptions );
+		$options['method'] = 'POST';
+		$options['postData'] = $doc->saveXML();
+
+		$requestFactory = MediaWikiServices::getInstance()->getHttpRequestFactory();
+		$req = $requestFactory->create( $wgMathSearchBaseXBackendUrl . "/$db", $options );
+		$res = $req->execute();
+		$this->content = $req->getContent();
+		return $res->isOK();
+	}
+
+	/**
+	 * Retrieves the last recorded error.
+	 *
+	 * @return string|null The last error value stored, or null if no error exists.
+	 */
+	public function getContent(): ?string {
+		return $this->content;
+	}
+
+	/**
+	 * Gets the timeouts and authentication information from the config
+	 * @param bool $readOnly
+	 * @return array
+	 */
+	private function getBasicHttpOptions( bool $readOnly = false ): array {
+		global $wgMathSearchBaseXRequestOptions, $wgMathSearchBaseXRequestOptionsReadonly;
+		$options = $readOnly ? $wgMathSearchBaseXRequestOptionsReadonly : $wgMathSearchBaseXRequestOptions;
+		// See T399373 why this is required
+		if ( isset( $options['username'] ) && isset( $options['password'] ) ) {
+			$options['headers']['Authorization'] = 'Basic ' .
+				base64_encode( $options['username'] . ':' . $options['password'] );
+		}
+		return $options;
 	}
 
 	/**
@@ -80,40 +149,46 @@ class MathEngineBaseX extends MathEngineRest {
 		$this->relevanceMap = array_unique( $this->relevanceMap );
 	}
 
-	public function getPostData( $numProcess ) {
-		return json_encode( [ "type" => $this->type, "query" => $this->query->getCQuery() ] );
-	}
-
 	public function update( $harvest = "", array $delte = [] ): bool {
-		global $wgMathSearchBaseXBackendUrl;
-		$json_payload = json_encode( [ "harvest" => $harvest, "delete" => $delte ] );
+		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXDatabaseName;
+
+		$options = $this->getBasicHttpOptions( false );
+		$options['body'] = $harvest;
+		$options['method'] = 'PUT';
+		$options['headers']['Content-Type'] = 'application/xml';
+
+		$url = $wgMathSearchBaseXBackendUrl . '/' . $wgMathSearchBaseXDatabaseName . '/' . md5( $harvest ) . '.xml';
+
+		$client = MediaWikiServices::getInstance()->getHttpRequestFactory()->createGuzzleClient( $options );
 		try {
-			$res = self::doPost( $wgMathSearchBaseXBackendUrl . 'update', $json_payload );
-			if ( $res ) {
-				$resJson = json_decode( $res );
-				if ( $resJson->success == true ) {
-					return true;
-				} else {
-					LoggerFactory::getInstance( 'MathSearch' )->warning( 'harvest update failed' .
-						var_export( $resJson, true ) );
-				}
-			}
-		} catch ( Exception $e ) {
-			LoggerFactory::getInstance( 'MathSearch' )
-				->warning( 'Harvest update failed: {exception}',
-					[ 'exception' => $e->getMessage() ] );
+			$res = $client->put( $url, $options );
+		} catch ( GuzzleException $e ) {
+			LoggerFactory::getInstance( 'MathSearch' )->info( 'Can not update basex formula index:'
+				. $e->getMessage() );
+			return false;
 		}
-		return false;
+		return $res->getStatusCode() === 201;
 	}
 
 	public function getTotalIndexed(): int {
-		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXRequestOptions;
+		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXRequestOptionsReadonly, $wgMathSearchBaseXDatabaseName;
 		$requestFactory = MediaWikiServices::getInstance()->getHttpRequestFactory();
-		$res = $requestFactory->get( $wgMathSearchBaseXBackendUrl . '?query=count(//*:expr)',
-			$wgMathSearchBaseXRequestOptions );
+		$res = $requestFactory->get(
+			$wgMathSearchBaseXBackendUrl . '/' . $wgMathSearchBaseXDatabaseName . '?query=count(//*:expr)',
+			$wgMathSearchBaseXRequestOptionsReadonly );
 		if ( $res && is_numeric( $res ) ) {
 			return $res;
 		}
 		return 0;
+	}
+
+	public function getDatabases(): Traversable {
+		global $wgMathSearchBaseXBackendUrl;
+		$requestFactory = MediaWikiServices::getInstance()->getHttpRequestFactory();
+		$res = $requestFactory->get( $wgMathSearchBaseXBackendUrl, $this->getBasicHttpOptions( false ) );
+		$xml = simplexml_load_string( $res, null, 0, 'http://basex.org/rest' );
+		foreach ( $xml->database as $database ) {
+			yield (string)$database;
+		}
 	}
 }

@@ -21,96 +21,72 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Maintenance\Maintenance;
+
 require_once __DIR__ . '/IndexBase.php';
 
 /**
  * @author Moritz Schubotz
  */
-class CreateBaseXMathTable extends IndexBase {
-
-	/** @var string */
-	private static $mwsns = 'mws:';
-	/** @var string */
-	private static $XMLHead;
-	/** @var string */
-	private static $XMLFooter;
-	/** @var \BaseXSession */
-	private $session;
-
+class CreateBaseXMathTable extends Maintenance {
 	public function __construct() {
 		parent::__construct();
-		$this->addDescription( 'Generates harvest files for the MathWebSearch Daemon.' );
-		$this->addOption( 'mwsns', 'The namespace or mws normally "mws:"', false );
-		$this->addOption( 'truncate', 'If set the database will be recreated.' );
-	}
-
-	/**
-	 * @param stdClass $row
-	 *
-	 * @return string
-	 */
-	protected function generateIndexString( $row ) {
-		$out = "";
-		$xml = simplexml_load_string( $row->math_mathml );
-		if ( !$xml ) {
-			echo "ERROR while converting:\n " . var_export( $row->math_mathml, true ) . "\n";
-			foreach ( libxml_get_errors() as $error ) {
-				echo "\t", $error->message;
-			}
-			libxml_clear_errors();
-			return "";
-		}
-		$out .= "\n<" . self::$mwsns . "expr url=\"" .
-				MathSearchHooks::generateMathAnchorString( $row->mathindex_revision_id,
-					$row->mathindex_anchor, '' ) . "\">\n\t";
-		$out .= $row->math_mathml;// $xml->math->children()->asXML();
-		$out .= "\n</" . self::$mwsns . "expr>\n";
-		// TODO: This does not work yet.
-		// Find out how to insert new data without to write it into a temporary file
-		// $this->session->execute("insert node $out ");
-		return $out;
-	}
-
-	protected function getHead(): string {
-		return self::$XMLHead;
-	}
-
-	protected function getFooter(): string {
-		return self::$XMLFooter;
-	}
-
-	/**
-	 * @param string $fn
-	 * @param int $min
-	 * @param int $inc
-	 *
-	 * @return bool
-	 */
-	protected function wFile( $fn, $min, $inc ) {
-		$retval = parent::wFile( $fn, $min, $inc );
-		$this->session->execute( "add $fn" );
-		return $retval;
+		$this->addDescription( 'Setup and seeds baseX math search database.' );
+		$this->addOption( 'overwrite', 'Overwrite existing databases or users.' );
+		$this->addDefaultParams();
 	}
 
 	public function execute() {
-		global $wgMathSearchBaseXDatabaseName;
-		self::$mwsns = $this->getOption( 'mwsns', '' );
-		self::$XMLHead =
-			"<?xml version=\"1.0\"?>\n<" . self::$mwsns .
-			"harvest xmlns:mws=\"http://search.mathweb.org/ns\" xmlns:m=\"http://www.w3.org/1998/Math/MathML\">";
-		self::$XMLFooter = "</" . self::$mwsns . "harvest>";
-		$this->session = new BaseXSession();
-		if ( $this->getOption( 'truncate', false ) ) {
-			$this->session->execute( "open " . $wgMathSearchBaseXDatabaseName );
-		} else {
-			$this->session->execute( "create db " . $wgMathSearchBaseXDatabaseName );
+		global $wgMathSearchBaseXDatabaseName, $wgMathSearchBaseXRequestOptionsReadonly;
+		$b = new MathEngineBaseX();
+		$dbs = iterator_to_array( $b->getDatabases() );
+		if ( !$dbs ) {
+			echo "ERROR: No BaseX Databases found.\n";
+			echo "Please check your BaseX configuration.\n";
+			echo "Check that basexhttp is running and the password matches your configuration.\n";
+			echo "You can start basexhttp with the adminpassword 'admin' via:\n";
+			echo "  basexhttp -c\"PASSWORD admin\"\n\n";
+			echo "See https://www.mediawiki.org/wiki/Extension:MathSearch#Prerequisites for more information.\n";
+			exit( 1 );
 		}
-		parent::execute();
+		$db_exists = in_array( $wgMathSearchBaseXDatabaseName, $dbs );
+		if ( $db_exists ) {
+			echo "Database $wgMathSearchBaseXDatabaseName exists.\n";
+		}
+		$isOverwrite = $this->getOption( 'overwrite', false );
+		if ( !$db_exists || $isOverwrite ) {
+			echo "Creating database $wgMathSearchBaseXDatabaseName.\n";
+			$res = $b->executeQuery( "db:create('$wgMathSearchBaseXDatabaseName')" );
+			if ( !$res ) {
+				echo "ERROR: Could not create database $wgMathSearchBaseXDatabaseName. Error:\n";
+				echo $b->getContent();
+				exit( 1 );
+			}
+		}
+		// db setup complete
+		$readUser = $wgMathSearchBaseXRequestOptionsReadonly['username'];
+		$b->executeQuery( "user:list-details()[@name = '$readUser']" );
+		if ( $b->getContent() === '' ) {
+			echo "Warning: Could not find user $readUser.\n";
+			if ( !$isOverwrite ) {
+				echo "Please create user $readUser. Or use the option overwrite to have the user created.\n";
+			}
+			echo "Creating user $readUser.\n";
+			$readPwd = $wgMathSearchBaseXRequestOptionsReadonly['password'];
+			$b->executeQuery( "user:create('$readUser', '$readPwd', 'read', '$wgMathSearchBaseXDatabaseName')" );
+		}
+		$b->executeQuery(
+			"<result>{count(//*)}</result>",
+			$wgMathSearchBaseXDatabaseName,
+			$wgMathSearchBaseXRequestOptionsReadonly );
+		$xml = simplexml_load_string( $b->getContent() );
+		if ( (string)$xml !== '0' ) {
+			echo "Warning: Database $wgMathSearchBaseXDatabaseName is not empty.\n";
+			echo "Exiting.\n";
+			exit( 1 );
+		}
 	}
 
-	public function __destruct() {
-		$this->session->close();
-	}
 }
 
 $maintClass = CreateBaseXMathTable::class;

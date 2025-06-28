@@ -20,7 +20,7 @@ class MwsDumpWriter {
 
 	public function InitializeHeader() {
 		$ns = $this->mwsns;
-		$this->XMLHead = "<?xml version=\"1.0\"?>\n<" . $ns .
+		$this->XMLHead = "<" . $ns .
 			'harvest xmlns:mws="http://search.mathweb.org/ns" xmlns:m="http://www.w3.org/1998/Math/MathML">';
 		$this->XMLFooter = '</' . $ns . 'harvest>';
 	}

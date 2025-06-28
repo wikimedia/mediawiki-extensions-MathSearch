@@ -28,10 +28,10 @@ abstract class MathEngineRest {
 
 	/**
 	 * @param string $url
-	 * @param array|string $postData
+	 * @param string $postData
 	 * @return string|false
 	 */
-	protected static function doPost( string $url, $postData ) {
+	protected static function doPost( string $url, string $postData ) {
 		$res = MediaWikiServices::getInstance()->getHttpRequestFactory()
 			->post( $url, [ "postData" => $postData, "timeout" => 60 ], __METHOD__ );
 		if ( $res === null ) {
@@ -126,7 +126,7 @@ abstract class MathEngineRest {
 	public function postQuery() {
 		$numProcess = 30000;
 		$postData = $this->getPostData( $numProcess );
-		$res = self::doPost( $this->backendUrl, $postData );
+		$res = $this->doPost( $this->backendUrl, $postData );
 		if ( $res === false ) {
 			return false;
 		} else {
