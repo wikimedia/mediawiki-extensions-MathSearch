@@ -2,7 +2,6 @@
 
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
-use MediaWiki\HTMLForm\Field\HTMLSelectField;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
@@ -27,8 +26,6 @@ class SpecialMathSearch extends SpecialPage {
 	private $textpattern;
 	/** @var string */
 	private $mathmlquery;
-	/** @var string */
-	private $mathEngine = 'basex';
 	/** @var string */
 	private $displayQuery;
 	/** @var MathEngineRest */
@@ -109,15 +106,6 @@ class SpecialMathSearch extends SpecialPage {
 	private function searchForm() {
 		# A formDescriptor Array to tell HTMLForm what to build
 		$formDescriptor = [
-			'mathEngine' => [
-				'label' => 'Math engine',
-				'class' => HTMLSelectField::class,
-				'options' => [
-					'MathWebSearch' => 'mws',
-					'BaseX' => 'basex'
-				],
-				'default' => $this->mathEngine,
-			],
 			'displayQuery' => [
 				'label' => 'Display search query',
 				'type' => 'check',
@@ -206,13 +194,7 @@ class SpecialMathSearch extends SpecialPage {
 		$out = $this->getOutput();
 		$out->addWikiTextAsInterface( '==Results==' );
 		$out->addWikiTextAsInterface( 'You searched for the following terms:' );
-		switch ( $this->mathEngine ) {
-			case 'basex':
-				$this->mathBackend = new MathEngineBaseX( null );
-				break;
-			default:
-				$this->mathBackend = new MathEngineMws( null );
-		}
+		$this->mathBackend = new MathEngineBaseX( null );
 		/** @var MathSearchTerm $term */
 		foreach ( $this->terms as $term ) {
 			if ( $term->getExpr() == "" ) {

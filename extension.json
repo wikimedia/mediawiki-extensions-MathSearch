@@ -22,7 +22,6 @@
 		"MathQueryObject": "includes/MathQueryObject.php",
 		"SpecialMathDebug": "includes/Specials/SpecialMathDebug.php",
 		"SpecialDisplayTopics": "includes/Specials/SpecialDisplayTopics.php",
-		"MathEngineMws": "includes/engines/MathEngineMws.php",
 		"MathEngineBaseX": "includes/engines/MathEngineBaseX.php",
 		"MathEngineRest": "includes/engines/MathEngineRest.php",
 		"ImportCsv": "includes/ImportCsv.php",
@@ -85,7 +84,6 @@
 			"username": "test",
 			"password": "test"
 		},
-		"MathSearchMWSUrl": "http://localhost:9090/",
 		"MathSearchTranslationUrl": "http://vmext-demo.wmflabs.org/math/translation",
 		"MathUpdateObservations": false,
 		"MathUploadEnabled": false,

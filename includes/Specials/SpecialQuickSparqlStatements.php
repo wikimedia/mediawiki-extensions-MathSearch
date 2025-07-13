@@ -28,7 +28,7 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 		parent::execute( $subPage );
 		# A formDescriptor Array to tell HTMLForm what to build
 		$formDescriptor = [
-			'mathEngine' => [
+			'user' => [
 				'label' => 'User',
 				'class' => HTMLInfoField::class,
 				'default' => $this->getUser()->getName(),
