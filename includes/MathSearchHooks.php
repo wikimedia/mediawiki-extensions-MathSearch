@@ -2,6 +2,8 @@
 
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Extension\MathSearch\Engine\BaseX;
+use MediaWiki\Extension\MathSearch\Engine\MathIndex;
 use MediaWiki\Installer\DatabaseUpdater;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
@@ -84,6 +86,7 @@ class MathSearchHooks {
 				if ( !$mo->isInDatabase() ) {
 					$mo->writeToCache();
 				}
+				( new BaseX() )->storeMathObject( $mo );
 				$exists = ( $dbr ?? MediaWikiServices::getInstance()->getConnectionProvider()
 					->getReplicaDatabase() )->selectRow( 'mathindex',
 					[ 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ],
@@ -320,11 +323,11 @@ class MathSearchHooks {
 		$article, User $user, $reason, $id, $content, $logEntry
 	) {
 		$revId = $article->getTitle()->getLatestRevID();
-		$mathEngineBaseX = new MathEngineBaseX();
+		$engine = new MathIndex();
 		$updated = false;
 		$detail = '';
 		try {
-			$updated = $mathEngineBaseX->update( "", [ $revId ] );
+			$updated = $engine->delete( $revId );
 		} catch ( Exception $e ) {
 			$detail = $e->getMessage();
 		}
@@ -358,9 +361,9 @@ class MathSearchHooks {
 			return true;
 		}
 		$revId = $title->getLatestRevID();
-		$harvest = self::getMwsHarvest( $revId );
+		$harvest = self::getIndexUpdates( $revId );
 
-		$mathEngineBaseX = new MathEngineBaseX();
+		$mathEngineBaseX = new MathIndex();
 		$updated = false;
 		$detail = '';
 		try {
@@ -403,20 +406,20 @@ class MathSearchHooks {
 		}
 		$prevRevId = -1;
 		$revId = $revisionRecord->getId();
-		$harvest = self::getMwsHarvest( $revId );
+		$harvest = self::getIndexUpdates( $revId );
 		$previousRevisionRecord = MediaWikiServices::getInstance()
 			->getRevisionLookup()
 			->getPreviousRevision( $revisionRecord );
 		$res = false;
-		$baseXUpdater = new MathEngineBaseX();
+		$index = new MathIndex();
 		try {
 			if ( $previousRevisionRecord != null ) {
 				$prevRevId = $previousRevisionRecord->getId();
 				# delete the entries previous revision.
-				$res = $baseXUpdater->update( $harvest, [ $prevRevId ] );
+				$res = $index->update( $harvest, [ $prevRevId ] );
 			} else {
 				# just create a new entry in index.
-				$res = $baseXUpdater->update( $harvest, [] );
+				$res = $index->update( $harvest, [] );
 			}
 		} catch ( Exception $e ) {
 			LoggerFactory::getInstance( 'MathSearch' )
@@ -490,17 +493,12 @@ class MathSearchHooks {
 		return self::$idGenerators[$revId];
 	}
 
-	/**
-	 * @param int|null $revId
-	 * @return string
-	 */
-	protected static function getMwsHarvest( ?int $revId ): string {
+	protected static function getIndexUpdates( ?int $revId ): array {
 		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
 		$mathTags = $idGenerator->getMathTags();
-		$harvest = "";
+		$harvest = [];
 		try {
 			if ( $mathTags ) {
-				$dw = new MwsDumpWriter();
 				foreach ( $mathTags as $tag ) {
 					$id = null;
 					$tagContent = $tag[MathIdGenerator::CONTENT_POS];
@@ -508,9 +506,12 @@ class MathSearchHooks {
 					$renderer = MathRenderer::getRenderer( $tagContent, $attributes, 'latexml' );
 					$renderer->render();
 					self::setMathId( $id, $renderer, $revId );
-					$dw->addMwsExpression( $renderer->getMathml(), $revId, $id );
+					$harvest[] = [
+						'mathindex_revision_id' => $revId,
+						'mathindex_anchor' => $id,
+						'mathindex_inputhash' => $renderer->getInputHash()
+					];
 				}
-				$harvest = $dw->getOutput();
 			}
 		} catch ( Exception $e ) {
 			LoggerFactory::getInstance( 'MathSearch' )

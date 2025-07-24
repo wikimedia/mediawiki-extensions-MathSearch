@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\MediaWikiServices;
 
 class MathSearchTerm {
@@ -130,7 +131,7 @@ class MathSearchTerm {
 			case self::TYPE_XMATH:
 				$query = new MathQueryObject( '' );
 				$query->setXQuery( $this->getExpr() );
-				$backend = new MathEngineBaseX( $query );
+				$backend = new BaseX( $query );
 				$backend->setType( 'xquery' );
 				if ( !$backend->postQuery() ) {
 					return false;

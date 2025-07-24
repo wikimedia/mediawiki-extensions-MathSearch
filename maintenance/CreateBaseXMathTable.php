@@ -21,6 +21,7 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\Maintenance\Maintenance;
 
 require_once __DIR__ . '/IndexBase.php';
@@ -38,7 +39,7 @@ class CreateBaseXMathTable extends Maintenance {
 
 	public function execute() {
 		global $wgMathSearchBaseXDatabaseName, $wgMathSearchBaseXRequestOptionsReadonly;
-		$b = new MathEngineBaseX();
+		$b = new BaseX();
 		$dbs = iterator_to_array( $b->getDatabases() );
 		if ( !$dbs ) {
 			echo "ERROR: No BaseX Databases found.\n";

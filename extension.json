@@ -22,8 +22,6 @@
 		"MathQueryObject": "includes/MathQueryObject.php",
 		"SpecialMathDebug": "includes/Specials/SpecialMathDebug.php",
 		"SpecialDisplayTopics": "includes/Specials/SpecialDisplayTopics.php",
-		"MathEngineBaseX": "includes/engines/MathEngineBaseX.php",
-		"MathEngineRest": "includes/engines/MathEngineRest.php",
 		"ImportCsv": "includes/ImportCsv.php",
 		"MathSearchUtils": "includes/MathSearchUtils.php",
 		"MathSearchTerm": "includes/MathSearchTerm.php",

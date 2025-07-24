@@ -1,8 +1,14 @@
 <?php
+namespace MediaWiki\Extension\MathSearch\Engine;
 
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
+use MathObject;
+use MathQueryObject;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use SimpleXMLElement;
+use Traversable;
 
 /**
  * MediaWiki MathSearch extension
@@ -13,15 +19,27 @@ use MediaWiki\MediaWikiServices;
  * @file
  * @ingroup extensions
  */
-class MathEngineBaseX extends MathEngineRest {
+class BaseX {
 
 	/** @var string */
 	protected $type = "mws";
+	/** @var int[] */
+	protected $relevanceMap = [];
+	/** @var int|false */
+	protected $size = false;
+	/** @var MathQueryObject the query to be answered */
+	protected $query;
+	/** @var string */
+	protected $backendUrl = "http://localhost:9090";
+
+	/** @var array<int,array<string,array[]>> */
+	protected $resultSet = [];
 	private ?string $content;
 
 	public function __construct( $query = null ) {
 		global $wgMathSearchBaseXBackendUrl;
-		parent::__construct( $query, $wgMathSearchBaseXBackendUrl . 'mwsquery' );
+		$this->query = $query;
+		$this->setBackendUrl( $wgMathSearchBaseXBackendUrl . 'mwsquery' );
 	}
 
 	protected static function doPost( string $url, string $postData ): string {
@@ -92,6 +110,28 @@ class MathEngineBaseX extends MathEngineRest {
 	}
 
 	/**
+	 * @return int|false
+	 */
+	public function getSize() {
+		return $this->size;
+	}
+
+	/**
+	 * Posts the query to mwsd and evaluates the result data
+	 * @return bool
+	 */
+	public function postQuery() {
+		$numProcess = 30000;
+		$postData = $this->getPostData( $numProcess );
+		$res = $this->doPost( $this->backendUrl, $postData );
+		if ( $res === false ) {
+			return false;
+		} else {
+			return $this->processResults( $res, $numProcess );
+		}
+	}
+
+	/**
 	 * TODO: Add error handling.
 	 * @param string $res
 	 * @param int $numProcess
@@ -115,16 +155,13 @@ class MathEngineBaseX extends MathEngineRest {
 				} else {
 					global $wgOut;
 					$wgOut->addWikiTextAsInterface( "Result was empty." );
-					return false;
 				}
 			} else {
 				global $wgOut;
 				$wgOut->addWikiTextAsInterface( "<code>{$jsonResult->response}</code>" );
-				return false;
 			}
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -149,7 +186,7 @@ class MathEngineBaseX extends MathEngineRest {
 		$this->relevanceMap = array_unique( $this->relevanceMap );
 	}
 
-	public function update( $harvest = "", array $delte = [] ): bool {
+	public function update( $harvest = "", array $delte = [], ?string $hash = null ): bool {
 		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXDatabaseName;
 
 		$options = $this->getBasicHttpOptions( false );
@@ -157,7 +194,8 @@ class MathEngineBaseX extends MathEngineRest {
 		$options['method'] = 'PUT';
 		$options['headers']['Content-Type'] = 'application/xml';
 
-		$url = $wgMathSearchBaseXBackendUrl . '/' . $wgMathSearchBaseXDatabaseName . '/' . md5( $harvest ) . '.xml';
+		$url = $wgMathSearchBaseXBackendUrl . '/' . $wgMathSearchBaseXDatabaseName . '/'
+			. $hash ?? md5( $harvest ) . '.xml';
 
 		$client = MediaWikiServices::getInstance()->getHttpRequestFactory()->createGuzzleClient( $options );
 		try {
@@ -190,5 +228,98 @@ class MathEngineBaseX extends MathEngineRest {
 		foreach ( $xml->database as $database ) {
 			yield (string)$database;
 		}
+	}
+
+	public function storeMathObject( MathObject $mo ): bool {
+		$hash = $mo->getInputHash();
+		$mml = $mo->getMathML();
+		$this->update( $mml, [], $hash );
+
+		return true;
+	}
+
+	/**
+	 * @return int[]
+	 */
+	public function getRelevanceMap() {
+		return $this->relevanceMap;
+	}
+
+	/**
+	 * @param string $type
+	 */
+	public function setType( $type ) {
+		$this->type = $type;
+	}
+
+	/**
+	 * @param int $numProcess
+	 * @return string
+	 */
+	protected function getPostData( $numProcess ) {
+		global $wgMathDebug;
+		if ( $this->query->getXQuery() ) {
+			return $this->query->getXQuery();
+		} else {
+			$tmp =
+				str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"",
+					$this->getQuery()->getCQuery() );
+			$postData = str_replace( "m:", "", $tmp );
+			if ( $wgMathDebug ) {
+				LoggerFactory::getInstance( 'MathSearch' )->debug( 'MWS query:' . $postData );
+				return $postData;
+			}
+			return $postData;
+		}
+	}
+
+	/**
+	 * @param MathQueryObject $query
+	 * @return BaseX
+	 */
+	public function setQuery( MathQueryObject $query ) {
+		$this->query = $query;
+		return $this;
+	}
+
+	/**
+	 * @param string $backendUrl
+	 */
+	public function setBackendUrl( $backendUrl ) {
+		$this->backendUrl = $backendUrl;
+	}
+
+	/**
+	 * @return array<int,array<string,array[]>>
+	 */
+	public function getResultSet() {
+		return $this->resultSet;
+	}
+
+	public function resetResults() {
+		$this->size = false;
+		$this->resultSet = [];
+		$this->relevanceMap = [];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getType() {
+		return $this->type;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getBackendUrl() {
+		return $this->backendUrl;
+	}
+
+	/**
+	 * @return MathQueryObject
+	 */
+	public function getQuery() {
+		return $this->query;
 	}
 }

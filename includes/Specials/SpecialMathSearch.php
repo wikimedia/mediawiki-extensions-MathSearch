@@ -2,6 +2,7 @@
 
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
+use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
@@ -194,7 +195,7 @@ class SpecialMathSearch extends SpecialPage {
 		$out = $this->getOutput();
 		$out->addWikiTextAsInterface( '==Results==' );
 		$out->addWikiTextAsInterface( 'You searched for the following terms:' );
-		$this->mathBackend = new MathEngineBaseX( null );
+		$this->mathBackend = new BaseX( null );
 		/** @var MathSearchTerm $term */
 		foreach ( $this->terms as $term ) {
 			if ( $term->getExpr() == "" ) {

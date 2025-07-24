@@ -1,6 +1,7 @@
 <?php
 namespace MediaWiki\Extension\MathSearch\Specials;
 
+use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\SpecialPage\SpecialPage;
 
@@ -42,7 +43,7 @@ class SpecialMathIndex extends SpecialPage {
 	}
 
 	private function displayStats() {
-		$basex = new \MathEngineBaseX();
+		$basex = new BaseX();
 		$basex->getTotalIndexed();
 		$this->getOutput()->addHTML( "<p> Total indexed in baseX: {$basex->getTotalIndexed()}</p>" );
 	}
