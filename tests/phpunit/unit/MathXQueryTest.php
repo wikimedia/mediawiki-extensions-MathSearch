@@ -90,7 +90,7 @@ let $m := .for $x in $m//*:ci
 fn:count($x/*) = 0
 
  return
-<element><x>{$x}</x><p>{data(functx:path-to-node($x))}</p></element>}
+<element><h>{fn:substring-after($x/fn:base-uri(), '/')}</h><x>{$x}</x><p>{data(functx:path-to-node($x))}</p></element>}
 </result>
 EOT;
 
@@ -111,7 +111,7 @@ fn:count($x/*[1]/*) = 0
  and fn:count($x/*) = 3
 
  return
-<element><x>{$x}</x><p>{data(functx:path-to-node($x))}</p></element>}
+<element><h>{fn:substring-after($x/fn:base-uri(), '/')}</h><x>{$x}</x><p>{data(functx:path-to-node($x))}</p></element>}
 </result>
 EOT;
 
@@ -130,7 +130,7 @@ fn:count($x/*[2]/*) = 0
  and fn:count($x/*) = 2
 
  return
-<element><x>{$x}</x><p>{data(functx:path-to-node($x))}</p></element>}
+<element><h>{fn:substring-after($x/fn:base-uri(), '/')}</h><x>{$x}</x><p>{data(functx:path-to-node($x))}</p></element>}
 </result>
 EOT;
 
@@ -150,7 +150,7 @@ fn:count($x/*[1]/*) = 0
  and fn:count($x/*) = 3
 
  return
-<element><x>{$x}</x><p>{data(functx:path-to-node($x))}</p></element>}
+<element><h>{fn:substring-after($x/fn:base-uri(), '/')}</h><x>{$x}</x><p>{data(functx:path-to-node($x))}</p></element>}
 </result>
 EOT;
 	private string $rqx2x = <<<'EOT'
@@ -170,7 +170,7 @@ fn:count($x/*[2]/*[1]/*) = 0
  and fn:count($x/*) = 3
  and $x/*[2]/*[2] = $x/*[3]
  return
-<element><x>{$x}</x><p>{data(functx:path-to-node($x))}</p></element>}
+<element><h>{fn:substring-after($x/fn:base-uri(), '/')}</h><x>{$x}</x><p>{data(functx:path-to-node($x))}</p></element>}
 </result>
 EOT;
 	// phpcs:enable

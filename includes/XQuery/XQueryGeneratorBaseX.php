@@ -23,9 +23,6 @@ class XQueryGeneratorBaseX extends XQueryGenerator {
 	private const XQUERY_HEADER = "declare default element namespace \"http://www.w3.org/1998/Math/MathML\";\n"
 	. self::FN_PATH_FROM_ROOT . "<result>{\nlet \$m := .";
 
-	private const XQUERY_FOOTER = "<element><x>{\$x}</x><p>{data(functx:path-to-node(\$x))}</p></element>}\n"
-	. "</result>";
-
 	/**
 	 * Returns the XQUERY_HEADER string
 	 *
@@ -41,6 +38,8 @@ class XQueryGeneratorBaseX extends XQueryGenerator {
 	 * @return string
 	 */
 	protected function getFooter() {
-		return self::XQUERY_FOOTER;
+		global $wgMathSearchBaseXDatabaseName;
+		return "<element><h>{fn:substring-after(\$x/fn:base-uri(), '$wgMathSearchBaseXDatabaseName/')}</h>" .
+		"<x>{\$x}</x><p>{data(functx:path-to-node(\$x))}</p></element>}\n</result>";
 	}
 }

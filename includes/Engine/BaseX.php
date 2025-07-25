@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\MathSearch\Engine;
 use GuzzleHttp\Exception\GuzzleException;
 use MathObject;
 use MathQueryObject;
+use MediaWiki\Extension\MathSearch\XQuery\XQueryGeneratorBaseX;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use SimpleXMLElement;
@@ -26,28 +27,20 @@ class BaseX {
 	protected $relevanceMap = [];
 	/** @var int|false */
 	protected $size = false;
-	/** @var MathQueryObject the query to be answered */
-	protected $query;
-	/** @var string */
-	protected $backendUrl = "http://localhost:9090";
+	protected ?MathQueryObject $query;
 
 	/** @var array<int,array<string,array[]>> */
 	protected $resultSet = [];
 	private ?string $content;
 
-	public function __construct( $query = null ) {
-		global $wgMathSearchBaseXBackendUrl;
+	public function __construct( ?MathQueryObject $query = null ) {
 		$this->query = $query;
-		$this->setBackendUrl( $wgMathSearchBaseXBackendUrl . 'mwsquery' );
 	}
 
 	protected function doSearch( string $postData ): string {
 		global $wgMathSearchBaseXRequestOptionsReadonly;
 
 		$options = $wgMathSearchBaseXRequestOptionsReadonly;
-
-		$postData = str_replace( [ '{', '}' ], [ '{{', '}}' ], $postData );
-
 		$query = new SimpleXMLElement( '<query xmlns="http://basex.org/rest"></query>' );
 		$query->addChild( 'text', $postData );
 
@@ -157,7 +150,7 @@ class BaseX {
 		$this->relevanceMap = array_unique( $this->relevanceMap );
 	}
 
-	public function update( $harvest = "", array $delte = [], ?string $hash = null ): bool {
+	public function update( $harvest = "", ?string $hash = null ): bool {
 		$options = $this->getBasicHttpOptions( false );
 		$options['body'] = $harvest;
 		$options['method'] = 'PUT';
@@ -200,7 +193,7 @@ class BaseX {
 	public function storeMathObject( MathObject $mo ): bool {
 		$hash = $mo->getInputHash();
 		$mml = $mo->getMathML();
-		$this->update( $mml, [], $hash );
+		$this->update( $mml, $hash );
 
 		return true;
 	}
@@ -233,9 +226,10 @@ class BaseX {
 			$postData = str_replace( "m:", "", $tmp );
 			if ( $wgMathDebug ) {
 				LoggerFactory::getInstance( 'MathSearch' )->debug( 'MWS query:' . $postData );
-				return $postData;
 			}
-			return $postData;
+			$xqGen = new XQueryGeneratorBaseX( $postData );
+
+			return $xqGen->getXQuery();
 		}
 	}
 
@@ -246,13 +240,6 @@ class BaseX {
 	public function setQuery( MathQueryObject $query ) {
 		$this->query = $query;
 		return $this;
-	}
-
-	/**
-	 * @param string $backendUrl
-	 */
-	public function setBackendUrl( $backendUrl ) {
-		$this->backendUrl = $backendUrl;
 	}
 
 	/**
@@ -273,13 +260,6 @@ class BaseX {
 	 */
 	public function getType() {
 		return $this->type;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getBackendUrl() {
-		return $this->backendUrl;
 	}
 
 	/**
