@@ -29,8 +29,7 @@ class SpecialMathSearch extends SpecialPage {
 	private $mathmlquery;
 	/** @var string */
 	private $displayQuery;
-	/** @var MathEngineRest */
-	private $mathBackend;
+	private BaseX $mathBackend;
 	/** @var int */
 	private $resultID = 0;
 	/** @var int|string */

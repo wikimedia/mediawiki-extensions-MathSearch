@@ -95,7 +95,7 @@ class MathSearchTerm {
 		$this->expr = $expr;
 	}
 
-	public function doSearch( MathEngineRest $backend ) {
+	public function doSearch( BaseX $backend ) {
 		$backend->resetResults();
 		switch ( $this->getType() ) {
 			case self::TYPE_TEXT:

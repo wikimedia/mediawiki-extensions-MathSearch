@@ -1,7 +1,6 @@
 <?php
 namespace MediaWiki\Extension\MathSearch\Engine;
 
-use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use MathObject;
 use MathQueryObject;
@@ -42,8 +41,8 @@ class BaseX {
 		$this->setBackendUrl( $wgMathSearchBaseXBackendUrl . 'mwsquery' );
 	}
 
-	protected static function doPost( string $url, string $postData ): string {
-		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXRequestOptionsReadonly;
+	protected function doSearch( string $postData ): string {
+		global $wgMathSearchBaseXRequestOptionsReadonly;
 
 		$options = $wgMathSearchBaseXRequestOptionsReadonly;
 
@@ -53,9 +52,10 @@ class BaseX {
 		$query->addChild( 'text', $postData );
 
 		$options['postData'] = $query->asXML();
+		$options['method'] = 'POST';
 
 		$requestFactory = MediaWikiServices::getInstance()->getHttpRequestFactory();
-		$req = $requestFactory->create( $wgMathSearchBaseXBackendUrl, $options );
+		$req = $requestFactory->create( $this->getDatabaseUrl(), $options );
 		$res = $req->execute();
 		if ( $res->isOK() ) {
 			return $req->getContent();
@@ -117,51 +117,22 @@ class BaseX {
 	}
 
 	/**
-	 * Posts the query to mwsd and evaluates the result data
-	 * @return bool
+	 * Posts the query to basex and evaluates the result data
 	 */
-	public function postQuery() {
-		$numProcess = 30000;
-		$postData = $this->getPostData( $numProcess );
-		$res = $this->doPost( $this->backendUrl, $postData );
-		if ( $res === false ) {
-			return false;
-		} else {
-			return $this->processResults( $res, $numProcess );
-		}
+	public function postQuery(): void {
+		$postData = $this->getPostData();
+		$res = $this->doSearch( $postData );
+		$this->processResults( $res );
 	}
 
 	/**
 	 * TODO: Add error handling.
 	 * @param string $res
-	 * @param int $numProcess
 	 * @return bool
 	 */
-	protected function processResults( $res, $numProcess ) {
-		$jsonResult = json_decode( $res ?? '' );
-		if ( $jsonResult && json_last_error() === JSON_ERROR_NONE ) {
-			if ( $jsonResult->success && $jsonResult->response ) {
-				// $xmlObject = new XmlTypeCheck( $jsonResult->response, null, false );
-				try {
-					$xRes = new SimpleXMLElement( $jsonResult->response );
-				} catch ( Exception $e ) {
-					global $wgOut;
-					$wgOut->addWikiTextAsInterface( "invalid XML <code>{$jsonResult->response}</code>" );
-					return false;
-				}
-				if ( $xRes->run->result ) {
-					$this->processMathResults( $xRes );
-					return true;
-				} else {
-					global $wgOut;
-					$wgOut->addWikiTextAsInterface( "Result was empty." );
-				}
-			} else {
-				global $wgOut;
-				$wgOut->addWikiTextAsInterface( "<code>{$jsonResult->response}</code>" );
-			}
-		}
-		return false;
+	private function processResults( $res ): void {
+		global $wgOut;
+		$wgOut->addWikiTextAsInterface( "<code>{$res}</code>" );
 	}
 
 	/**
@@ -187,15 +158,12 @@ class BaseX {
 	}
 
 	public function update( $harvest = "", array $delte = [], ?string $hash = null ): bool {
-		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXDatabaseName;
-
 		$options = $this->getBasicHttpOptions( false );
 		$options['body'] = $harvest;
 		$options['method'] = 'PUT';
 		$options['headers']['Content-Type'] = 'application/xml';
 
-		$url = $wgMathSearchBaseXBackendUrl . '/' . $wgMathSearchBaseXDatabaseName . '/'
-			. $hash ?? md5( $harvest ) . '.xml';
+		$url = $this->getDatabaseUrl() . '/' . $hash ?? md5( $harvest ) . '.xml';
 
 		$client = MediaWikiServices::getInstance()->getHttpRequestFactory()->createGuzzleClient( $options );
 		try {
@@ -209,10 +177,9 @@ class BaseX {
 	}
 
 	public function getTotalIndexed(): int {
-		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXRequestOptionsReadonly, $wgMathSearchBaseXDatabaseName;
+		global $wgMathSearchBaseXRequestOptionsReadonly;
 		$requestFactory = MediaWikiServices::getInstance()->getHttpRequestFactory();
-		$res = $requestFactory->get(
-			$wgMathSearchBaseXBackendUrl . '/' . $wgMathSearchBaseXDatabaseName . '?query=count(//*:expr)',
+		$res = $requestFactory->get( $this->getDatabaseUrl() . '?query=count(//*:expr)',
 			$wgMathSearchBaseXRequestOptionsReadonly );
 		if ( $res && is_numeric( $res ) ) {
 			return $res;
@@ -253,16 +220,15 @@ class BaseX {
 	}
 
 	/**
-	 * @param int $numProcess
 	 * @return string
 	 */
-	protected function getPostData( $numProcess ) {
+	protected function getPostData() {
 		global $wgMathDebug;
 		if ( $this->query->getXQuery() ) {
 			return $this->query->getXQuery();
 		} else {
 			$tmp =
-				str_replace( "answsize=\"30\"", "answsize=\"$numProcess\" totalreq=\"yes\"",
+				str_replace( "answsize=\"30\"", " totalreq=\"yes\"",
 					$this->getQuery()->getCQuery() );
 			$postData = str_replace( "m:", "", $tmp );
 			if ( $wgMathDebug ) {
@@ -321,5 +287,15 @@ class BaseX {
 	 */
 	public function getQuery() {
 		return $this->query;
+	}
+
+	/**
+	 * Returns the full BaseX database URL.
+	 *
+	 * @return string
+	 */
+	private function getDatabaseUrl(): string {
+		global $wgMathSearchBaseXBackendUrl, $wgMathSearchBaseXDatabaseName;
+		return rtrim( $wgMathSearchBaseXBackendUrl, '/' ) . '/' . $wgMathSearchBaseXDatabaseName;
 	}
 }
