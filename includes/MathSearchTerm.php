@@ -116,17 +116,10 @@ class MathSearchTerm {
 
 			case self::TYPE_MATH:
 				$query = new MathQueryObject( $this->getExpr() );
-				$cQuery = $query->getCQuery();
-				if ( $cQuery ) {
-					$backend->setQuery( $query );
-					if ( !$backend->postQuery() ) {
-						return false;
-					}
-					$this->relevanceMap = $backend->getRelevanceMap();
-					$this->resultSet = $backend->getResultSet();
-				} else {
-					return false;
-				}
+				$backend->setQuery( $query );
+				$backend->postQuery();
+				$this->relevanceMap = $backend->getRelevanceMap();
+				$this->resultSet = $backend->getResultSet();
 				break;
 			case self::TYPE_XMATH:
 				$query = new MathQueryObject( '' );

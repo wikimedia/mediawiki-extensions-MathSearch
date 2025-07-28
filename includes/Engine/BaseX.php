@@ -220,18 +220,23 @@ class BaseX {
 	 * @return string
 	 */
 	protected function getPostData() {
-		global $wgMathDebug;
+		global $wgMathDebug, $wgMathSearchMode;
 		if ( $this->query->getXQuery() ) {
 			return $this->query->getXQuery();
 		} else {
-			$tmp =
-				str_replace( "answsize=\"30\"", " totalreq=\"yes\"",
-					$this->getQuery()->getCQuery() );
-			$postData = str_replace( "m:", "", $tmp );
+			if ( $wgMathSearchMode === 'native' ) {
+				$postData = $this->getQuery()->getPQuery();
+				$xqGen = new XQueryGeneratorBaseX( $postData, 'math' );
+			} else {
+				$tmp = str_replace( "answsize=\"30\"", " totalreq=\"yes\"",
+						$this->getQuery()->getCQuery() );
+				$postData = str_replace( "m:", "", $tmp );
+				$xqGen = new XQueryGeneratorBaseX( $postData );
+
+			}
 			if ( $wgMathDebug ) {
 				LoggerFactory::getInstance( 'MathSearch' )->debug( 'MWS query:' . $postData );
 			}
-			$xqGen = new XQueryGeneratorBaseX( $postData );
 
 			return $xqGen->getXQuery();
 		}

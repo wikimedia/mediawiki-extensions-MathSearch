@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\Extension\Math\MathLaTeXML;
+use MediaWiki\Extension\Math\MathNativeMML;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
@@ -261,10 +262,7 @@ TeX;
 	 * @return string
 	 */
 	public function generatePresentationQueryString() {
-		$renderer = new MathLaTeXML( $this->getTeXQuery() );
-		// $renderer->setXMLValidaton( false );
-		// $renderer->setAllowedRootElements( array( 'query' ) );
-		$renderer->setLaTeXMLSettings( self::PMML_SETTINGS );
+		$renderer = new MathNativeMML( $this->getUserInputTex() );
 		if ( $renderer->render( true ) ) {
 			$this->pquery = $renderer->getMathml();
 			return $this->pquery;

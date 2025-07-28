@@ -21,22 +21,25 @@ abstract class XQueryGenerator {
 	private string $lengthConstraint = '';
 	/** @var DOMDocument the MWS XML */
 	private $xml;
+	private string $rootElementName;
 
 	/**
-	 *
 	 * @param string $cmmlQueryString that contains the MathML query expression
+	 * @param string $rootName the root element tag name of the indexed expression
 	 */
-	public function __construct( $cmmlQueryString ) {
+	public function __construct( string $cmmlQueryString, string $rootName = 'expr' ) {
 		$this->xml = new DOMDocument();
 		$this->xml->preserveWhiteSpace = false;
 		$this->xml->loadXML( $cmmlQueryString );
+		$this->rootElementName = $rootName;
 	}
 
 	/**
 	 * @return string the XQueryExpression.
 	 */
 	public function getXQuery() {
-		$fixedConstraints = $this->generateConstraint( $this->xml->getElementsByTagName( 'expr' )->item( 0 ), true );
+		$fixedConstraints = $this->generateConstraint(
+			$this->xml->getElementsByTagName( $this->rootElementName )->item( 0 ), true );
 		$qvarConstraintString = '';
 		foreach ( $this->qvar as $key => $value ) {
 			$addstr = '';
@@ -63,9 +66,9 @@ abstract class XQueryGenerator {
 			}
 		}
 		$query = 'for $x in $m//*:' .
-			$this->xml->getElementsByTagName( 'expr' )->item( 0 )->firstChild->localName . PHP_EOL .
+			$this->xml->getElementsByTagName( $this->rootElementName )->item( 0 )->firstChild->localName . PHP_EOL .
 			$fixedConstraints . PHP_EOL .
-			' where' . PHP_EOL .
+			( ( $qvarConstraintString || $this->lengthConstraint ) ? ' where' : '' ) . PHP_EOL .
 			$this->lengthConstraint .
 			( ( ( $qvarConstraintString && $this->lengthConstraint ) ? ' and ' : '' ) ) .
 			$qvarConstraintString . PHP_EOL .
