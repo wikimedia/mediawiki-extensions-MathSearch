@@ -191,7 +191,11 @@ class BaseX {
 	}
 
 	public function storeMathObject( MathObject $mo ): bool {
+		global $wgMathSearchMode;
 		$hash = $mo->getInputHash();
+		if ( $mo->getMode() !== $wgMathSearchMode ) {
+			return false;
+		}
 		$mml = $mo->getMathML();
 		$this->update( $mml, $hash );
 

@@ -68,7 +68,6 @@
 		"ArticleUndelete": "MathSearchHooks::onArticleUndelete"
 	},
 	"config": {
-		"MathAnalysisTableName": "mathlatexml",
 		"MathDebug": false,
 		"MathSearchBaseXBackendUrl": "http://localhost:8080/rest",
 		"MathSearchBaseXDatabaseName": "mathsearch",
@@ -97,6 +96,7 @@
 		"MathSearchPropertyPointInTime": 140,
 		"MathSearchPropertyProfileType": 1460,
 		"MathSearchPropertyIpfs": 1633,
+		"MathSearchMode": "latexml",
 		"MathProfileQueries": {
 			"person": "?item wdt:P31 wd:Q57162",
 			"formula": "?item wdt:P31 wd:Q1025939",
