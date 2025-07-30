@@ -397,9 +397,7 @@ class MathSearchHooks {
 	) {
 		if ( $revisionRecord
 			->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
-			->getModel() !== CONTENT_MODEL_WIKITEXT ||
-			// Bug T399394 GrowthExperiments does not allow logging
-			str_contains( $user->getName(), 'TestUser' ) || $user->getName() == 'UTSysop'
+			->getModel() !== CONTENT_MODEL_WIKITEXT
 		) {
 			// Skip pages that do not contain wikitext
 			return true;
