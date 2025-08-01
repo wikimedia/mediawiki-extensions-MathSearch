@@ -237,8 +237,9 @@ class BaseX {
 			if ( $wgMathDebug ) {
 				LoggerFactory::getInstance( 'MathSearch' )->debug( 'MWS query:' . $postData );
 			}
-
-			return $xqGen->getXQuery();
+			$xQuery = $xqGen->getXQuery();
+			$this->query->setXQuery( $xQuery );
+			return $xQuery;
 		}
 	}
 

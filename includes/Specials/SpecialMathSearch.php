@@ -322,6 +322,11 @@ class SpecialMathSearch extends SpecialPage {
 			$this->msg( "math-search-type-{$term->getType()}" )->text(),
 			$term->getRel() == '' ? '' : $this->msg( "math-search-relation-{$term->getRel()}" )->text(),
 			count( $term->getRelevanceMap() ) );
+		if ( $this->displayQuery ) {
+			$this->getOutput()->addWikiTextAsInterface( 'The query for this term is: <code>' .
+				$term->getXQuery() . '</code>' );
+			$this->printSource( $term->getXQuery(), 'xquery' );
+		}
 	}
 
 	/**

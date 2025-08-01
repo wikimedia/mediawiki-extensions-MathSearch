@@ -26,6 +26,8 @@ class MathSearchTerm {
 	/** @var array<int,SearchResult|array<string,array[]>> */
 	private $resultSet = [];
 
+	private string $xQuery = '';
+
 	/**
 	 * @param int $i
 	 * @param int $rel
@@ -118,6 +120,7 @@ class MathSearchTerm {
 				$query = new MathQueryObject( $this->getExpr() );
 				$backend->setQuery( $query );
 				$backend->postQuery();
+				$this->xQuery = $query->getXQuery();
 				$this->relevanceMap = $backend->getRelevanceMap();
 				$this->resultSet = $backend->getResultSet();
 				break;
@@ -154,6 +157,10 @@ class MathSearchTerm {
 	 */
 	public function getRevisionResult( $revisionId ) {
 		return $this->resultSet[$revisionId] ?? [];
+	}
+
+	public function getXQuery(): string {
+		return $this->xQuery;
 	}
 
 }
