@@ -747,4 +747,12 @@ class MathObject extends MathMathML {
 	public function setInputHash( string $hash ) {
 		$this->inputHash = $hash;
 	}
+
+	public static function newFromHash( string $inputHash, string $mode ): MathObject {
+		$mo = new MathObject( '' );
+		$mo->setInputHash( $inputHash );
+		$mo->setMode( $mode );
+		$mo->readFromCache();
+		return $mo;
+	}
 }

@@ -1,6 +1,7 @@
 <?php
 namespace MediaWiki\Extension\MathSearch\Engine;
 
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use MathObject;
 use MathQueryObject;
@@ -9,6 +10,7 @@ use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use SimpleXMLElement;
 use Traversable;
+use function Eris\Generator\string;
 
 /**
  * MediaWiki MathSearch extension
@@ -125,29 +127,34 @@ class BaseX {
 	 */
 	private function processResults( $res ): void {
 		global $wgOut;
-		$wgOut->addWikiTextAsInterface( "<code>{$res}</code>" );
+		try {
+			$xRes = new SimpleXMLElement( $res );
+		} catch ( Exception $e ) {
+			global $wgOut;
+			$wgOut->addWikiTextAsInterface( "invalid XML <code>$res</code>" );
+			return;
+		}
+		foreach ( $xRes as $result ) {
+
+			$wgOut->addWikiTextAsInterface( "<code>{$res}</code>" );
+			$this->processMathResults( $result );
+		}
 	}
 
-	/**
-	 * @param SimpleXMLElement $xmlRoot
-	 */
-	protected function processMathResults( $xmlRoot ) {
-		foreach ( $xmlRoot->run->result->children() as $page ) {
-			$attrs = $page->attributes();
-			$uri = explode( "#", $attrs["id"] );
-			if ( count( $uri ) != 2 ) {
-				LoggerFactory::getInstance( 'MathSearch' )->error( 'Can not parse' . $attrs['id'] );
-				continue;
-			}
-			$revisionID = $uri[0];
-			$AnchorID = $uri[1];
+	protected function processMathResults( SimpleXMLElement $result ): void {
+		global $wgMathSearchMode;
+		$hash = (string)$result->h;
+		$xPath = (string)$result->p;
+		$element = $result->x;
+		$mo = MathObject::newFromHash( $hash, $wgMathSearchMode );
+		foreach ( $mo->getAllOccurrences() as $occurrence ) {
+			$revisionID = $occurrence->getRevisionID();
+			$anchorID = $occurrence->getAnchorID();
 			$this->relevanceMap[] = $revisionID;
-			$substarr = [];
-			// TODO: Add hit support.
-			$this->resultSet[(string)$revisionID][(string)$AnchorID][] =
-				[ "xpath" => (string)$attrs["xpath"], "mappings" => $substarr ];
+			$this->resultSet[(string)$revisionID][$anchorID][] =
+				// TODO: Add hit support.
+				[ "xpath" => $xPath, "mappings" => [] ];
 		}
-		$this->relevanceMap = array_unique( $this->relevanceMap );
 	}
 
 	public function update( $harvest = "", ?string $hash = null ): bool {

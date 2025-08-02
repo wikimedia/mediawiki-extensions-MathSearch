@@ -283,8 +283,10 @@ class SpecialMathSearch extends SpecialPage {
 				$out->addHTML( $renderer->getHtmlOutput() );
 				$renderer->writeCache();
 			} else {
-				$res->render();
-				$out->addHTML( $res->getHtmlOutput() );
+				if ( $res->getMathml() === '' ) {
+					$res->render();
+				}
+				$out->addHTML( $res->getMathml() );
 			}
 
 		}
@@ -382,7 +384,7 @@ class SpecialMathSearch extends SpecialPage {
 			return false;
 		}
 		$title = $revisionStoreRecord->getPageAsLinkTarget(); # MCR migration note: this replaced Revision::getTitle
-		$pagename = (string)$title;
+		$pagename = $title->getText();
 		$mathElements = [];
 		$textElements = [];
 		/** @var MathSearchTerm $term */
