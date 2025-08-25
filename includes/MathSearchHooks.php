@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Extension\Math\Hooks\MathFormulaPostRenderRevisionHook;
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Extension\MathSearch\Engine\BaseX;
@@ -22,7 +23,8 @@ use Wikimedia\Rdbms\DBConnRef;
  * (c) 2012 various MediaWiki contributors
  * GPLv2 license; info in main package.
  */
-class MathSearchHooks {
+class MathSearchHooks
+	implements MathFormulaPostRenderRevisionHook {
 
 	/** @var MathIdGenerator[] */
 	private static $idGenerators = [];
@@ -150,15 +152,38 @@ class MathSearchHooks {
 
 	/**
 	 * Callback function that is called after a formula was rendered
-	 * @param Parser $parser
+	 *
+	 * @param RevisionRecord|null $revisionRecord
+	 * @param MathRenderer $renderer
+	 * @param string|null &$Result
+	 * @return true
+	 */
+	public function onMathFormulaPostRenderRevision(
+		?RevisionRecord $revisionRecord,
+		MathRenderer $renderer,
+		&$Result = null
+	): bool {
+		$revId = $revisionRecord?->getId() ?? 0;
+		$this->addLinkToFormulaInfoPage( $revId, $renderer, $Result );
+		$this->updateMathIndex( $revId, $renderer, $Result );
+		return true;
+	}
+
+	/**
+	 * Callback function that is called after a formula was rendered
+	 *
+	 * @param int $revId
 	 * @param MathRenderer $renderer
 	 * @param string|null &$Result reference to the rendering result
 	 * @return bool
 	 */
-	public static function updateMathIndex( Parser $parser, MathRenderer $renderer, &$Result = null ) {
-		$revId = $parser->getRevisionId();
+	private static function updateMathIndex(
+		int $revId,
+		MathRenderer $renderer,
+		?string &$Result = null
+	) {
 		// Only store something if a pageid was set.
-		if ( $revId <= 0 ) {
+		if ( $revId === 0 ) {
 			return true;
 		}
 		// Use manually assigned IDs whenever possible
@@ -199,17 +224,20 @@ class MathSearchHooks {
 
 	/**
 	 * Callback function that is called after a formula was rendered
-	 * @param Parser $parser
+	 *
+	 * @param int $revId
 	 * @param MathRenderer $renderer
 	 * @param string|null &$Result reference to the rendering result
+	 *
 	 * @return bool
 	 */
-	public static function addLinkToFormulaInfoPage(
-		Parser $parser, MathRenderer $renderer, &$Result = null
+	private static function addLinkToFormulaInfoPage(
+		int $revId,
+		MathRenderer $renderer,
+		?string &$Result = null
 	) {
 		global $wgMathSearchInfoPage;
-		$revId = $parser->getRevisionId();
-		if ( $revId == 0 || self::setMathId( $eid, $renderer, $revId ) === false ) {
+		if ( $revId === 0 || self::setMathId( $eid, $renderer, $revId ) === false ) {
 			return true;
 		}
 		$url = SpecialPage::getTitleFor( $wgMathSearchInfoPage )->getLocalURL( [

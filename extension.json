@@ -48,12 +48,14 @@
 			"mathwmcsubmit": true
 		}
 	},
+	"HookHandlers": {
+		"main": {
+			"class": "MathSearchHooks"
+		}
+	},
 	"Hooks": {
 		"LoadExtensionSchemaUpdates": "MathSearchHooks::onLoadExtensionSchemaUpdates",
-		"MathFormulaPostRender": [
-			"MathSearchHooks::addLinkToFormulaInfoPage",
-			"MathSearchHooks::updateMathIndex"
-		],
+		"MathFormulaPostRenderRevision": "main",
 		"ParserFirstCallInit": "MathSearchHooks::onParserFirstCallInit",
 		"ArticleDeleteComplete": "MathSearchHooks::onArticleDeleteComplete",
 		"WikibaseClientDataTypes": [
