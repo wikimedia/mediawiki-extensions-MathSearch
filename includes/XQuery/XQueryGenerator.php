@@ -77,7 +77,6 @@ abstract class XQueryGenerator {
 	}
 
 	/**
-	 *
 	 * @param \DOMNode $node
 	 * @param bool $isRoot
 	 * @return string

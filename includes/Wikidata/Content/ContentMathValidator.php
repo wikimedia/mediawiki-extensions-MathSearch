@@ -51,7 +51,6 @@ class ContentMathValidator implements ValueValidator {
 	/**
 	 * @param array $options
 	 * @see ValueValidator::setOptions()
-	 *
 	 */
 	public function setOptions( array $options ) {
 		// Do nothing. This method shouldn't even be in the interface.

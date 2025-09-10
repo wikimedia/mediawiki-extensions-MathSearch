@@ -30,7 +30,6 @@ class ContentMathValidatorTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @covers MediaWiki\Extension\MathSearch\Wikidata\Content\ContentMathValidator::validate
-	 *
 	 */
 	public function testNullValue() {
 		$validator = new ContentMathValidator();
