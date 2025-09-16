@@ -204,8 +204,10 @@ class MathPerformance extends Maintenance {
 				}
 				return;
 			}
-			$mathml = $result["input"]->renderMML();
+			$mathml = $result["input"]->toMMLTree();
 			$this->time( 'render' );
+			$mathml = (string)$mathml;
+			$this->time( 'print' );
 			if ( $action === 'fix' ) {
 				$this->saveResult( $tex, $hash, $formula, $result, $mathml, $mhchem );
 			} elseif ( $action === 'compare' ) {
@@ -221,6 +223,9 @@ class MathPerformance extends Maintenance {
 			$message = "Syntax error: " . $ex->getMessage() .
 				' at line ' . $ex->grammarLine . ' column ' .
 				$ex->grammarColumn . ' offset ' . $ex->grammarOffset;
+			$this->vPrint( $formula->$hash . ':' . $message );
+		} catch ( Exception $e ) {
+			$message = "Unexpected error: " . $e->getMessage();
 			$this->vPrint( $formula->$hash . ':' . $message );
 		}
 	}
