@@ -2,8 +2,6 @@
 
 namespace MediaWiki\Extension\MathSearch\XQuery;
 
-use DOMDocument;
-
 /**
  * MediaWiki MathSearch extension
  *
@@ -12,6 +10,11 @@ use DOMDocument;
  *
  * 2012/04/25 Changed LaTeXML for the MathML rendering which is passed to MathJAX
  * @file
+ */
+
+use DOMDocument;
+
+/**
  * @ingroup extensions
  */
 abstract class XQueryGenerator {

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * MediaWiki MathSearch extension
+ *
+ * (c) 2015 Moritz Schubotz
+ * GPLv2 license; info in main package.
+ *
+ * @file
+ */
+
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
@@ -9,12 +18,6 @@ use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\Title;
 
 /**
- * MediaWiki MathSearch extension
- *
- * (c) 2015 Moritz Schubotz
- * GPLv2 license; info in main package.
- *
- * @file
  * @ingroup extensions
  */
 class SpecialMlpEval extends SpecialPage {

@@ -8,6 +8,9 @@ namespace MediaWiki\Extension\MathSearch\XQuery;
  * GPLv2 license; info in main package.
  *
  * @file
+ */
+
+/**
  * @ingroup extensions
  */
 class XQueryGeneratorBaseX extends XQueryGenerator {

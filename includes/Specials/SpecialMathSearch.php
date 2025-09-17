@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * MediaWiki MathSearch extension
+ *
+ * (c) 2012 Moritz Schubotz
+ * GPLv2 license; info in main package.
+ *
+ * @file
+ */
+
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\MathSearch\Engine\BaseX;
@@ -9,12 +18,6 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 
 /**
- * MediaWiki MathSearch extension
- *
- * (c) 2012 Moritz Schubotz
- * GPLv2 license; info in main package.
- *
- * @file
  * @ingroup extensions
  */
 class SpecialMathSearch extends SpecialPage {

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * MediaWiki MathSearch extension
+ *
+ * (c) 2012 Moritz Schubotz
+ * GPLv2 license; info in main package.
+ *
+ * @file
+ */
+
 use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Html\Html;
@@ -8,12 +17,6 @@ use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\Title;
 
 /**
- * MediaWiki MathSearch extension
- *
- * (c) 2012 Moritz Schubotz
- * GPLv2 license; info in main package.
- *
- * @file
  * @ingroup extensions
  */
 class FormulaInfo extends SpecialPage {

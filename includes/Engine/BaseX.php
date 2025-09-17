@@ -1,6 +1,15 @@
 <?php
 namespace MediaWiki\Extension\MathSearch\Engine;
 
+/**
+ * MediaWiki MathSearch extension
+ *
+ * (c) 2014 Moritz Schubotz
+ * GPLv2 license; info in main package.
+ *
+ * @file
+ */
+
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use MathObject;
@@ -13,12 +22,6 @@ use Traversable;
 use function Eris\Generator\string;
 
 /**
- * MediaWiki MathSearch extension
- *
- * (c) 2014 Moritz Schubotz
- * GPLv2 license; info in main package.
- *
- * @file
  * @ingroup extensions
  */
 class BaseX {
