@@ -160,6 +160,8 @@
 	"math-tex2nb-mathematica": "...被轉譯成 CAS 輸出...",
 	"math-tex2nb-purge": "清除快取結果。",
 	"datatypes-type-contentmath": "數學表現式（內容）",
+	"quicksparqlstatements": "SPARQL QuickStatements 產生器",
+	"pidredirect": "永久標識碼重新導向",
 	"wikibase-listdatatypes-contentmath-head": "數學表現式（內容）",
 	"wikibase-listdatatypes-contentmath-body": "用於數學表達式、公式、方程式等資料的立即數欄位，以 LaTeX 中的 DRMF/DLMF 變體表達。"
 }
