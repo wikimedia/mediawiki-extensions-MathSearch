@@ -214,9 +214,9 @@ class UpdateMath extends Maintenance {
 				if ( !$this->getOption( "hooks", false ) ) {
 					$hookContainer = $this->getServiceContainer()->getHookContainer();
 					$hookContainer->run(
-						'MathFormulaPostRender',
+						'MathFormulaPostRenderRevision',
 						[
-							$this->getParser( $revId ),
+							$this->getParser( $revId )->getRevisionRecordObject(),
 							&$renderer,
 							&$notused
 						]
