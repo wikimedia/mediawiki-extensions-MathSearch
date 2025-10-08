@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\MathSearch\StackExchange;
 
 use MediaWiki\Extension\Math\MathMathML;
+use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
@@ -22,6 +23,8 @@ class Formula {
 	/** @var int */
 	private $postQId;
 
+	private \MathSearchHooks $mathSearchHooks;
+
 	/**
 	 * @param int $id
 	 * @param int $qid
@@ -33,6 +36,10 @@ class Formula {
 		$this->qid = $qid;
 		$this->text = $text;
 		$this->postQId = $postQId;
+		$this->mathSearchHooks = new \MathSearchHooks(
+			MediaWikiServices::getInstance()->getConnectionProvider(),
+			MediaWikiServices::getInstance()->getRevisionLookup()
+		);
 	}
 
 	public function updateSearchIndex() {
@@ -40,7 +47,7 @@ class Formula {
 		$hash = $renderer->getInputHash();
 		$renderer->writeToCache();
 		// TODO: Fix fake revision ID
-		\MathSearchHooks::writeMathIndex( 1, $this->id, $hash, $this->text );
+		$this->mathSearchHooks->writeMathIndex( 1, $this->id, $hash, $this->text );
 	}
 
 	public function createWbItem() {

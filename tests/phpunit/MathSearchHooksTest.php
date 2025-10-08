@@ -84,6 +84,13 @@ class MathSearchHooksTest extends MediaWikiIntegrationTestCase {
 </math>
 EOT;
 
+	public function makeMathSearchHooks() {
+		return new MathSearchHooks(
+			$this->getServiceContainer()->getConnectionProvider(),
+			$this->getServiceContainer()->getRevisionLookup()
+		);
+	}
+
 	/**
 	 * Tests if ID's for math elements are replaced correctly
 	 * //TODO: Update test
@@ -118,9 +125,10 @@ EOT;
 		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger, $cache );
 		$renderer = $rendererFactory->getRenderer( '' );
 		$renderer->setID( 'math.42.0' );
+		$mathSearchHooks = $this->makeMathSearchHooks();
 		# Doing Assertions.
 		$this->assertTrue(
-			MathSearchHooks::onMathFormulaRenderedNoLink(
+			$mathSearchHooks->onMathFormulaRenderedNoLink(
 				$parser, $renderer, $sample
 			), 'Hook did not return true'
 		);
@@ -143,12 +151,13 @@ EOT;
 		$cache = new WANObjectCache( [ 'cache' => new HashBagOStuff() ] );
 		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger, $cache );
 		$renderer = $rendererFactory->getRenderer( '' );
+		$mathSearchHooks = $this->makeMathSearchHooks();
 
 		$id = null;
-		MathSearchHooks::setMathId( $id, $renderer, 0 );
+		$mathSearchHooks->setMathId( $id, $renderer, 0 );
 		$this->assertEquals( $id, $renderer->getID() );
 		$id0 = $id;
-		MathSearchHooks::setMathId( $id, $renderer, 0 );
+		$mathSearchHooks->setMathId( $id, $renderer, 0 );
 		$this->assertEquals( $id0, $id );
 	}
 }

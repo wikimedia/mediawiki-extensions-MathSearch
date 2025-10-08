@@ -5,17 +5,21 @@ use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\Extension\MathSearch\Engine\MathIndex;
+use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\Installer\DatabaseUpdater;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Page\Hook\ArticleDeleteCompleteHook;
+use MediaWiki\Page\Hook\ArticleUndeleteHook;
 use MediaWiki\Parser\Parser;
+use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\SpecialPage\SpecialPage;
-use MediaWiki\Status\Status;
+use MediaWiki\Storage\Hook\PageSaveCompleteHook;
 use MediaWiki\Title\Title;
-use MediaWiki\User\User;
 use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
  * MediaWiki MathSearch extension
@@ -23,11 +27,21 @@ use Wikimedia\Rdbms\DBConnRef;
  * (c) 2012 various MediaWiki contributors
  * GPLv2 license; info in main package.
  */
-class MathSearchHooks
-	implements MathFormulaPostRenderRevisionHook {
-
+class MathSearchHooks implements
+	ArticleDeleteCompleteHook,
+	ArticleUndeleteHook,
+	MathFormulaPostRenderRevisionHook,
+	PageSaveCompleteHook,
+	ParserFirstCallInitHook
+{
 	/** @var MathIdGenerator[] */
-	private static $idGenerators = [];
+	private array $idGenerators = [];
+
+	public function __construct(
+		private IConnectionProvider $connectionProvider,
+		private RevisionLookup $revisionLookup
+	) {
+	}
 
 	/**
 	 * LoadExtensionSchemaUpdates handler; set up math table on install/upgrade.
@@ -78,8 +92,9 @@ class MathSearchHooks
 	 * @param MathRenderer $renderer
 	 * @param ?DBConnRef $dbr
 	 */
-	private static function updateIndex( int $revId, string $eid, MathRenderer $renderer,
-										 ?DBConnRef $dbr = null ) {
+	private function updateIndex(
+		int $revId, string $eid, MathRenderer $renderer, ?DBConnRef $dbr = null
+	) {
 		if ( $revId > 0 && $eid ) {
 			try {
 				$inputHash = $renderer->getInputHash();
@@ -89,7 +104,7 @@ class MathSearchHooks
 					$mo->writeToCache();
 				}
 				( new BaseX() )->storeMathObject( $mo );
-				$exists = ( $dbr ?? MediaWikiServices::getInstance()->getConnectionProvider()
+				$exists = ( $dbr ?? $this->connectionProvider
 					->getReplicaDatabase() )->selectRow( 'mathindex',
 					[ 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ],
 					[
@@ -106,7 +121,7 @@ class MathSearchHooks
 						'MathSearch'
 					)->warning( "$revId-$eid with hash " . bin2hex( $inputHash ) );
 				} else {
-						self::writeMathIndex( $revId, $eid, $inputHash, $tex );
+						$this->writeMathIndex( $revId, $eid, $inputHash, $tex );
 				}
 			} catch ( Exception $e ) {
 				LoggerFactory::getInstance( "MathSearch" )->error( 'Problem writing to math index!'
@@ -129,7 +144,7 @@ class MathSearchHooks
 	 * @return bool|null true if an ID has been assigned manually,
 	 * false if the automatic fallback math{$id} was used.
 	 */
-	public static function setMathId( &$id, MathRenderer $renderer, $revId ) {
+	public function setMathId( &$id, MathRenderer $renderer, $revId ) {
 		if ( $revId > 0 ) {
 			if ( $renderer->getID() ) {
 				$id = $renderer->getID();
@@ -137,7 +152,7 @@ class MathSearchHooks
 			} else {
 				if ( $id === null ) {
 					try {
-						$id = self::getRevIdGenerator( $revId )->guessIdFromContent( $renderer->getUserInputTex() );
+						$id = $this->getRevIdGenerator( $revId )->guessIdFromContent( $renderer->getUserInputTex() );
 					} catch ( Exception $e ) {
 						LoggerFactory::getInstance( "MathSearch" )->warning( "Error generating Math ID", [ $e ] );
 						return false;
@@ -176,7 +191,7 @@ class MathSearchHooks
 	 * @param MathRenderer $renderer
 	 * @param string|null &$Result reference to the rendering result
 	 */
-	private static function updateMathIndex(
+	private function updateMathIndex(
 		int $revId,
 		MathRenderer $renderer,
 		?string &$Result = null
@@ -187,7 +202,7 @@ class MathSearchHooks
 		}
 		// Use manually assigned IDs whenever possible
 		// and fallback to automatic IDs otherwise.
-		$hasEid = self::setMathId( $eid, $renderer, $revId );
+		$hasEid = $this->setMathId( $eid, $renderer, $revId );
 		if ( $eid === null ) {
 			return;
 		}
@@ -196,7 +211,7 @@ class MathSearchHooks
 				preg_replace( '/(class="mwe-math-mathml-(inline|display))/', "id=\"$eid\" \\1",
 					$Result );
 		}
-		self::updateIndex( $revId, $eid, $renderer );
+		$this->updateIndex( $revId, $eid, $renderer );
 	}
 
 	/**
@@ -206,11 +221,11 @@ class MathSearchHooks
 	 * @param string|null &$Result reference to the rendering result
 	 * @return bool
 	 */
-	public static function addIdentifierDescription(
+	public function addIdentifierDescription(
 		Parser $parser, MathRenderer $renderer, &$Result = null
 	) {
 		$revId = $parser->getRevisionId();
-		self::setMathId( $eid, $renderer, $revId );
+		$this->setMathId( $eid, $renderer, $revId );
 		$mo = MathObject::cloneFromRenderer( $renderer );
 		$mo->setRevisionID( $revId );
 		$mo->setID( $eid );
@@ -226,13 +241,13 @@ class MathSearchHooks
 	 * @param MathRenderer $renderer
 	 * @param string|null &$Result reference to the rendering result
 	 */
-	private static function addLinkToFormulaInfoPage(
+	private function addLinkToFormulaInfoPage(
 		int $revId,
 		MathRenderer $renderer,
 		?string &$Result = null
 	): void {
 		global $wgMathSearchInfoPage;
-		if ( $revId === 0 || self::setMathId( $eid, $renderer, $revId ) === false ) {
+		if ( $revId === 0 || $this->setMathId( $eid, $renderer, $revId ) === false ) {
 			return;
 		}
 		$url = SpecialPage::getTitleFor( $wgMathSearchInfoPage )->getLocalURL( [
@@ -256,15 +271,15 @@ class MathSearchHooks
 	 * @param string|null &$Result
 	 * @return bool
 	 */
-	public static function onMathFormulaRenderedNoLink(
+	public function onMathFormulaRenderedNoLink(
 		Parser $parser, MathRenderer $renderer, &$Result = null
 	) {
 		$revId = $parser->getRevisionId();
-		if ( !self::setMathId( $eid, $renderer, $revId ) ) {
+		if ( !$this->setMathId( $eid, $renderer, $revId ) ) {
 			return true;
 		}
 		if ( $revId > 0 ) { // Only store something if a pageid was set.
-			self::updateIndex( $revId, $eid, $renderer );
+			$this->updateIndex( $revId, $eid, $renderer );
 		}
 		if ( preg_match( '#<math(.*)?\sid="(?P<id>[\w\.]+)"#', $Result, $matches ) ) {
 			$rendererId = $matches['id'];
@@ -286,12 +301,10 @@ class MathSearchHooks
 	 * @param string $inputHash
 	 * @param string $tex
 	 */
-	public static function writeMathIndex( $oldID, $eid, $inputHash, $tex ) {
+	public function writeMathIndex( $oldID, $eid, $inputHash, $tex ) {
 		LoggerFactory::getInstance( "MathSearch" )->warning(
 			"Store index for \$$tex\$ in database with id $eid for revision $oldID." );
-		$dbw = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
+		$dbw = $this->connectionProvider->getPrimaryDatabase();
 		$fname = __METHOD__;
 		$dbw->onTransactionCommitOrIdle( static function () use ( $oldID, $eid, $inputHash, $dbw, $fname ) {
 			$dbw->replace( 'mathindex', [ [ 'mathindex_revision_id', 'mathindex_anchor' ] ], [
@@ -308,7 +321,7 @@ class MathSearchHooks
 	 * @param Parser $parser instance of Parser
 	 * @return bool true
 	 */
-	public static function onParserFirstCallInit( $parser ) {
+	public function onParserFirstCallInit( $parser ) {
 		$parser->setHook( 'mquery', [ 'MathSearchHooks', 'mQueryTagHook' ] );
 		LoggerFactory::getInstance( 'MathSearch' )->debug( 'mquery tag registered' );
 		return true;
@@ -341,10 +354,10 @@ class MathSearchHooks
 		return [ $renderedMath, "markerType" => 'nowiki' ];
 	}
 
-	public static function onArticleDeleteComplete(
-		$article, User $user, $reason, $id, $content, $logEntry
+	public function onArticleDeleteComplete(
+		$wikiPage, $user, $reason, $id, $content, $logEntry, $archivedRevisionCount
 	) {
-		$revId = $article->getTitle()->getLatestRevID();
+		$revId = $wikiPage->getTitle()->getLatestRevID();
 		$engine = new MathIndex();
 		$updated = false;
 		$detail = '';
@@ -370,11 +383,10 @@ class MathSearchHooks
 	 * @param array $restoredPages Set of page IDs that have revisions restored for undelete.
 	 * @return true
 	 */
-	public static function onArticleUndelete(
-		Title $title, $create, $comment, $oldPageId, $restoredPages
+	public function onArticleUndelete(
+		$title, $create, $comment, $oldPageId, $restoredPages
 	) {
-		if ( MediaWikiServices::getInstance()
-				->getRevisionLookup()
+		if ( $this->revisionLookup
 				->getRevisionByPageId( $oldPageId )
 				->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
 				->getModel() !== CONTENT_MODEL_WIKITEXT
@@ -383,7 +395,7 @@ class MathSearchHooks
 			return true;
 		}
 		$revId = $title->getLatestRevID();
-		$harvest = self::getIndexUpdates( $revId );
+		$harvest = $this->getIndexUpdates( $revId );
 
 		$mathEngineBaseX = new MathIndex();
 		$updated = false;
@@ -404,18 +416,11 @@ class MathSearchHooks
 
 	/**
 	 * Occurs after the save page request has been processed.
+	 * @inheritDoc
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageSaveComplete
-	 *
-	 * @param WikiPage $wikiPage
-	 * @param MediaWiki\User\UserIdentity $user
-	 * @param string $summary
-	 * @param int $flags
-	 * @param MediaWiki\Revision\RevisionRecord $revisionRecord
-	 *
-	 * @return bool
 	 */
-	public static function onPageSaveComplete(
-		WikiPage $wikiPage, $user, $summary, $flags, $revisionRecord
+	public function onPageSaveComplete(
+		$wikiPage, $user, $summary, $flags, $revisionRecord, $editResult
 	) {
 		if ( $revisionRecord
 			->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
@@ -426,9 +431,8 @@ class MathSearchHooks
 		}
 		$prevRevId = -1;
 		$revId = $revisionRecord->getId();
-		$harvest = self::getIndexUpdates( $revId );
-		$previousRevisionRecord = MediaWikiServices::getInstance()
-			->getRevisionLookup()
+		$harvest = $this->getIndexUpdates( $revId );
+		$previousRevisionRecord = $this->revisionLookup
 			->getPreviousRevision( $revisionRecord );
 		$res = false;
 		$index = new MathIndex();
@@ -458,43 +462,6 @@ class MathSearchHooks
 	}
 
 	/**
-	 * Occurs after the save page request has been processed.
-	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageContentSaveComplete
-	 * @deprecated
-	 * PageContentSaveComplete: legacy hook, deprecated in favor of PageSaveComplete
-	 *
-	 * @param WikiPage $wikiPage
-	 * @param User $user
-	 * @param Content $content
-	 * @param string $summary
-	 * @param bool $isMinor
-	 * @param bool $isWatch
-	 * @param string $section Deprecated
-	 * @param int $flags
-	 * @param Revision|null $revision
-	 * @param Status $status
-	 * @param int $baseRevId
-	 *
-	 * @return bool
-	 */
-	public static function onPageContentSaveComplete(
-		WikiPage $wikiPage, $user, $content, $summary, $isMinor,
-		$isWatch, $section, $flags, $revision, $status, $baseRevId
-	) {
-		// TODO: Update to JOB
-		if ( $revision == null ) {
-			LoggerFactory::getInstance(
-				'MathSearch'
-			)->warning( "Empty update for {$wikiPage->getTitle()->getFullText()}." );
-			return true;
-		}
-		$revisionRecord = $revision->getRevisionRecord();
-		self::onPageSaveComplete( $wikiPage, $user, $summary, $flags, $revisionRecord );
-
-		return true;
-	}
-
-	/**
 	 * Enable latexml rendering mode as option by default
 	 */
 	public static function registerExtension() {
@@ -512,12 +479,12 @@ class MathSearchHooks
 	 * @param int $revId
 	 * @return MathIdGenerator
 	 */
-	private static function getRevIdGenerator( $revId ) {
-		self::$idGenerators[$revId] ??= MathIdGenerator::newFromRevisionId( $revId );
-		return self::$idGenerators[$revId];
+	private function getRevIdGenerator( $revId ) {
+		$this->idGenerators[$revId] ??= MathIdGenerator::newFromRevisionId( $revId );
+		return $this->idGenerators[$revId];
 	}
 
-	protected static function getIndexUpdates( ?int $revId ): array {
+	protected function getIndexUpdates( ?int $revId ): array {
 		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
 		$mathTags = $idGenerator->getMathTags();
 		$harvest = [];
@@ -529,7 +496,7 @@ class MathSearchHooks
 					$attributes = $tag[MathIdGenerator::ATTRIB_POS];
 					$renderer = MathRenderer::getRenderer( $tagContent, $attributes, 'latexml' );
 					$renderer->render();
-					self::setMathId( $id, $renderer, $revId );
+					$this->setMathId( $id, $renderer, $revId );
 					$harvest[] = [
 						'mathindex_revision_id' => $revId,
 						'mathindex_anchor' => $id,

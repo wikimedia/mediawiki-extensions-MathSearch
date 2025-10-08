@@ -50,14 +50,20 @@
 	},
 	"HookHandlers": {
 		"main": {
-			"class": "MathSearchHooks"
+			"class": "MathSearchHooks",
+			"services": [
+				"ConnectionProvider",
+				"RevisionLookup"
+			]
 		}
 	},
 	"Hooks": {
 		"LoadExtensionSchemaUpdates": "MathSearchHooks::onLoadExtensionSchemaUpdates",
+		"ArticleDeleteComplete": "main",
+		"ArticleUndelete": "main",
 		"MathFormulaPostRenderRevision": "main",
-		"ParserFirstCallInit": "MathSearchHooks::onParserFirstCallInit",
-		"ArticleDeleteComplete": "MathSearchHooks::onArticleDeleteComplete",
+		"PageSaveComplete": "main",
+		"ParserFirstCallInit": "main",
 		"WikibaseClientDataTypes": [
 			"MediaWiki\\Extension\\MathSearch\\Wikidata\\Content\\ContentMathWikidataHook::onWikibaseClientDataTypes",
 			"MediaWiki\\Extension\\MathSearch\\Wikidata\\MathML\\MathMLWikidataHook::onWikibaseClientDataTypes"
@@ -65,9 +71,7 @@
 		"WikibaseRepoDataTypes": [
 			"MediaWiki\\Extension\\MathSearch\\Wikidata\\Content\\ContentMathWikidataHook::onWikibaseRepoDataTypes",
 			"MediaWiki\\Extension\\MathSearch\\Wikidata\\MathML\\MathMLWikidataHook::onWikibaseRepoDataTypes"
-		],
-		"PageSaveComplete": "MathSearchHooks::onPageSaveComplete",
-		"ArticleUndelete": "MathSearchHooks::onArticleUndelete"
+		]
 	},
 	"config": {
 		"MathDebug": false,

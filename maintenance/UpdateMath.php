@@ -165,8 +165,13 @@ class UpdateMath extends Maintenance {
 	private function doUpdate( $pid, $pText, $pTitle = "", $revId = 0 ) {
 		$allFormula = [];
 
+		$mathSearchHooks = new MathSearchHooks(
+			MediaWikiServices::getInstance()->getConnectionProvider(),
+			MediaWikiServices::getInstance()->getRevisionLookup()
+		);
+
 		$notused = '';
-		// MathSearchHooks::setNextID($eId);
+		// $mathSearchHooks->setNextID($eId);
 		$math = MathObject::extractMathTagsFromWikiText( $pText );
 		$matches = count( $math );
 		if ( $matches ) {
@@ -224,8 +229,8 @@ class UpdateMath extends Maintenance {
 					$this->time( "hooks" );
 				} else {
 					$eId = null;
-					MathSearchHooks::setMathId( $eId, $renderer, $revId );
-					MathSearchHooks::writeMathIndex( $revId, $eId, $renderer->getInputHash(), '' );
+					$mathSearchHooks->setMathId( $eId, $renderer, $revId );
+					$mathSearchHooks->writeMathIndex( $revId, $eId, $renderer->getInputHash(), '' );
 					$this->time( "index" );
 				}
 				if ( $renderer->getLastError() ) {
