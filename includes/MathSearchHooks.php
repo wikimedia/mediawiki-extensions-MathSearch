@@ -175,22 +175,21 @@ class MathSearchHooks
 	 * @param int $revId
 	 * @param MathRenderer $renderer
 	 * @param string|null &$Result reference to the rendering result
-	 * @return bool
 	 */
 	private static function updateMathIndex(
 		int $revId,
 		MathRenderer $renderer,
 		?string &$Result = null
-	) {
+	): void {
 		// Only store something if a pageid was set.
 		if ( $revId === 0 ) {
-			return true;
+			return;
 		}
 		// Use manually assigned IDs whenever possible
 		// and fallback to automatic IDs otherwise.
 		$hasEid = self::setMathId( $eid, $renderer, $revId );
 		if ( $eid === null ) {
-			return true;
+			return;
 		}
 		if ( $hasEid === false ) {
 			$Result =
@@ -198,8 +197,6 @@ class MathSearchHooks
 					$Result );
 		}
 		self::updateIndex( $revId, $eid, $renderer );
-
-		return true;
 	}
 
 	/**
@@ -228,24 +225,21 @@ class MathSearchHooks
 	 * @param int $revId
 	 * @param MathRenderer $renderer
 	 * @param string|null &$Result reference to the rendering result
-	 *
-	 * @return bool
 	 */
 	private static function addLinkToFormulaInfoPage(
 		int $revId,
 		MathRenderer $renderer,
 		?string &$Result = null
-	) {
+	): void {
 		global $wgMathSearchInfoPage;
 		if ( $revId === 0 || self::setMathId( $eid, $renderer, $revId ) === false ) {
-			return true;
+			return;
 		}
 		$url = SpecialPage::getTitleFor( $wgMathSearchInfoPage )->getLocalURL( [
 			'pid' => $revId,
 			'eid' => $eid
 		] );
 		$Result = "<span><a href=\"$url\" id=\"$eid\" style=\"color:inherit;\">$Result</a></span>";
-		return true;
 	}
 
 	/**
