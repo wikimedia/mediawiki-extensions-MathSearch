@@ -586,7 +586,6 @@ class MathObject extends MathMathML {
 		$height = $height[1] * $factor . $height[2];
 		$reflector = new ReflectionObject( $renderer );
 		$method = $reflector->getMethod( 'getFallbackImage' );
-		$method->setAccessible( true );
 		$fbi = $method->invoke( $renderer );
 		$fbi = preg_replace( "/width: (.*?)(ex|px|em)/", "width: $width", $fbi );
 		return preg_replace( "/height: (.*?)(ex|px|em)/", "height: $height", $fbi );
