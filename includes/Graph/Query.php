@@ -12,8 +12,6 @@ class Query {
 	public static function getQueryFromConfig( string $type, int $offset, int $limit ) {
 		global $wgMathProfileQueries;
 		return <<<SPARQL
-PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
-PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
 SELECT ?qid WHERE {
     BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid)
 {$wgMathProfileQueries[$type]}
@@ -26,8 +24,6 @@ SPARQL;
 	public static function getQueryFromProfileType( string $type, int $offset, int $limit ) {
 		global $wgMathSearchPropertyProfileType, $wgMathProfileQIdMap;
 		return <<<SPARQL
-PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
-PREFIX wd: <https://portal.mardi4nfdi.de/entity/>
 SELECT ?qid WHERE {
     BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid)
     ?item wdt:P$wgMathSearchPropertyProfileType wd:{$wgMathProfileQIdMap[$type]} .
@@ -68,7 +64,6 @@ SPARQL;
 	public static function getQueryForDoi( int $offset, int $limit ) {
 		global $wgMathSearchPropertyDoi;
 		return <<<SPARQL
-PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 SELECT ?qid ?doi WHERE {
   BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid) .
   ?item wdt:P$wgMathSearchPropertyDoi ?doi .
@@ -81,7 +76,6 @@ SPARQL;
 
 	public static function getQueryForWdId(): string {
 		return <<<SPARQL
-PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
 PREFIX wikidata_wdt: <http://www.wikidata.org/prop/direct/>
 
 SELECT DISTINCT

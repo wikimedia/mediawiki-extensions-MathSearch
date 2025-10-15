@@ -61,8 +61,6 @@ class AddSwhids extends Maintenance {
 	private function getQuery(): string {
 		$pID = $this->getOption( 'propertyId', 'P339' );
 		return <<<SPARQL
-PREFIX wdt: <https://portal.mardi4nfdi.de/prop/direct/>
-
 SELECT ?item ?repo
 WHERE {
   ?item wdt:$pID ?repo.
