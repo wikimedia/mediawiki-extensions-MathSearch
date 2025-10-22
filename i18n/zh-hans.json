@@ -162,6 +162,8 @@
 	"math-tex2nb-mathematica": "...被翻译至CAS输出...",
 	"math-tex2nb-purge": "清除已缓存结果。",
 	"datatypes-type-contentmath": "数学表达式（内容）",
+	"quicksparqlstatements": "SPARQL QuickStatements生成器",
+	"pidredirect": "永久标识符重定向",
 	"wikibase-listdatatypes-contentmath-head": "数学表达式（内容）",
 	"wikibase-listdatatypes-contentmath-body": "用于数学表达式、公式、方程等的文字数据字段，以LaTeX的DRMF/DLMF变体表达。"
 }
