@@ -24,11 +24,14 @@ SPARQL;
 	public static function getQueryFromProfileType( string $type, int $offset, int $limit ) {
 		global $wgMathSearchPropertyProfileType, $wgMathProfileQIdMap;
 		return <<<SPARQL
+PREFIX hint: <http://www.bigdata.com/queryHints#>
+
 SELECT ?qid WHERE {
-    BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid)
-    ?item wdt:P$wgMathSearchPropertyProfileType wd:{$wgMathProfileQIdMap[$type]} .
-    ?item wikibase:sitelinks ?sitelinks .
-    FILTER (?sitelinks < 1 ).
+   ?item wikibase:sitelinks ?sitelinks .
+   hint:Prior hint:runFirst true .
+   FILTER (?sitelinks < 1 ).
+   ?item wdt:P$wgMathSearchPropertyProfileType wd:{$wgMathProfileQIdMap[$type]} .
+   BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid)
 }
 LIMIT $limit
 OFFSET $offset
