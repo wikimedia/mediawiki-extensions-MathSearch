@@ -432,6 +432,10 @@ class MathSearchHooks implements
 		$prevRevId = -1;
 		$revId = $revisionRecord->getId();
 		$harvest = $this->getIndexUpdates( $revId );
+		if ( count( $harvest ) === 0 ) {
+			// No math to index
+			return true;
+		}
 		$previousRevisionRecord = $this->revisionLookup
 			->getPreviousRevision( $revisionRecord );
 		$res = false;
