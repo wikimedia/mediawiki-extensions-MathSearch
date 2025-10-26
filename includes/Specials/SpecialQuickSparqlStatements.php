@@ -145,7 +145,7 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 				'Created automatically via QuickSparql Statements special page.' );
 
 		try {
-			( new Map() )->getJobs(
+			( new Map() )->scheduleJobs(
 				Closure::fromCallable( [ $this->getOutput(), 'addWikiTextAsContent' ] ),
 				$this->getBatchSize( $formData ),
 				'qs',

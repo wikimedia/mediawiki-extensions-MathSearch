@@ -29,7 +29,7 @@ class Map {
 	/**
 	 * @throws SparqlException
 	 */
-	public function getJobs(
+	public function scheduleJobs(
 		callable $output, int $batch_size, string $type, string $jobType, array $jobOptions = []
 	): void {
 		$jobOptions[ 'date' ] ??= date( 'ymdhms' );

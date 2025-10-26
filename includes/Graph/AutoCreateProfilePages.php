@@ -28,14 +28,17 @@ class AutoCreateProfilePages implements IHandler {
 	 * @throws SparqlException
 	 */
 	public function run(): void {
+		$map = new Map( $this->jobQueueGroup );
 		foreach ( array_keys( $this->config->get( 'MathProfileQueries' ) ) as  $type ) {
-			( new Map( $this->jobQueueGroup ) )->getJobs(
-				$this->output( ... ),
+			$this->output( "Scheduling jobs for profile type: $type" );
+			$map->scheduleJobs(
+				static fn ( string $msg ) => LoggerFactory::getInstance( 'MathSearch' )->info( $msg ),
 				100000,
 				$type,
 				PageCreation::class
 			);
 		}
+		$this->output( 'All types are scheduled. Done!' );
 	}
 
 	public function getInterval(): Interval {
