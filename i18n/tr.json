@@ -141,7 +141,7 @@
 	"math-wmc-display-formulae-label": "Gönderilen formüllerin görüntülenmesini görüntüle",
 	"math-wmc-display-formulae-help": "Büyük giriş dosyaları için önerilmez.",
 	"action-mathwmcsubmit": "sonuçları NTCIR Vikipedi Matematik Arama Görevine gönder",
-	"right-mathwmcsubmit": "Sonuçları NTCIR Vikipedi Matematik Arama Görevine gönderebilir",
+	"right-mathwmcsubmit": "Sonuçları NTCIR Vikipedi Matematik Arama Görevi'ne gönder",
 	"math-search-term": "* $4 terim-$1: $3-ifade \"$2\" {{PLURAL:$5|1 sonuç|$5 sonuç}}.",
 	"math-search-relation-label": "İlişki:",
 	"math-search-relation-0": "ve",
