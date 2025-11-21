@@ -98,7 +98,7 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 					return false;
 				}
 				$this->getOutput()->addWikiTextAsContent(
-					'<p>The following results was returned:</p>' .
+					'<p>The following results were returned:</p>' .
 					'<syntaxhighlight lang="json">' .
 					json_encode( $res, JSON_PRETTY_PRINT ) .
 					'</syntaxhighlight> <h3>Checking keys:</h3>' );
@@ -118,6 +118,18 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 						$this->getOutput()->addWikiTextAsContent(
 							'Serialization for sample value:' .
 							$qsFakeJob->testSnak( $key, $res[0][$key] ) );
+						continue;
+					}
+					if ( str_starts_with( $key, 'L' ) ) {
+						$this->getOutput()->addWikiTextAsContent( 'success! key starts with L' );
+						$languageCode = substr( $key, 1 );
+						if ( MediaWikiServices::getInstance()->getLanguageNameUtils()->isValidCode( $languageCode ) ) {
+							$this->getOutput()->addWikiTextAsContent(
+								'Language code ' . $languageCode . ' is valid for label/descriptions/aliases.' );
+						} else {
+							$this->getOutput()->addWikiTextAsContent(
+								'Language code ' . $languageCode . ' is NOT valid for label/descriptions/aliases.' );
+						}
 						continue;
 					}
 					$this->getOutput()->addWikiTextAsContent( 'can not parse key' );

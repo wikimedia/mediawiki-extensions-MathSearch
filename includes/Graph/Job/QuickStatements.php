@@ -4,6 +4,8 @@ namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
 use Exception;
 use MediaWiki\Extension\MathSearch\Graph\PidLookup;
+use MediaWiki\Language\LanguageNameUtils;
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Sparql\SparqlException;
 use Throwable;
 use Wikibase\DataModel\Entity\Item;
@@ -30,6 +32,8 @@ class QuickStatements extends GraphJob {
 	private array $propertyTypes = [];
 	private PropertyDataTypeLookup $propertyDataTypeLookup;
 	private DataTypeFactory $dataTypeFactory;
+
+	private LanguageNameUtils $languageNameUtils;
 	private array $qid_cache = [];
 
 	public function __construct( $params ) {
@@ -39,6 +43,7 @@ class QuickStatements extends GraphJob {
 		$this->guidGenerator = new GuidGenerator();
 		$this->propertyDataTypeLookup = WikibaseRepo::getPropertyDataTypeLookup();
 		$this->dataTypeFactory = WikibaseRepo::getDataTypeFactory();
+		$this->languageNameUtils = MediaWikiServices::getInstance()->getLanguageNameUtils();
 	}
 
 	public function validateProperty( string $key ) {
@@ -94,7 +99,7 @@ class QuickStatements extends GraphJob {
 		$currentStatementKey = 0;
 		$newStatements = [];
 		foreach ( $row as $P => $value ) {
-			// ignore suffixes (in SPARQL one can not use the same column header twice)
+			// ignore suffixes (in SPARQL one cannot use the same column header twice)
 			$P = preg_replace( '/(.*)_(\d+)/i', '$1', $P );
 			if ( str_starts_with( $P, 'P' ) ) {
 				$currentStatementKey++;
@@ -102,6 +107,14 @@ class QuickStatements extends GraphJob {
 				$newStatements[$currentStatementKey][1][] = $this->getSnak(
 					'P' . substr( $P, 3 ),
 					$value );
+				continue;
+			} elseif ( str_starts_with( $P, 'L' ) ) {
+				$languageCode = substr( $P, 1 );
+				if ( $this->languageNameUtils->isValidCode( $languageCode ) ) {
+					$item->setLabel( $languageCode, $value );
+				} else {
+					self::getLog()->warning( "Skip invalid language code.", [ $P ] );
+				}
 				continue;
 			} else {
 				self::getLog()->warning( "Skip invalid field name.", [ $P ] );
