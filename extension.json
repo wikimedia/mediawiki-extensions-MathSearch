@@ -96,6 +96,7 @@
 		"ContentMathEnableWikibaseDataType": true,
 		"MathSearchContentTexMaxLength": 5000,
 		"MathSearchInfoPage": "FormulaInfo",
+		"MathSearchImporterUrl": "http://importer",
 		"MathSearchPropertySwhid": 1454,
 		"MathSearchPropertyDoi": 27,
 		"MathSearchPropertyScrUrl": 339,
@@ -171,6 +172,13 @@
 			]
 		},
 		"GetEquationsByQuery": "\\MediaWiki\\Extension\\MathSearch\\Specials\\GetEquationsByQuery",
+		"ImportFromPid": {
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialImport",
+			"services": [
+				"HttpRequestFactory",
+				"MainConfig"
+			]
+		},
 		"MathDebug": "SpecialMathDebug",
 		"MathIndex": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialMathIndex",
 		"DisplayTopics": "SpecialDisplayTopics",

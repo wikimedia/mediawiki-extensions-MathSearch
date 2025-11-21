@@ -22,6 +22,7 @@ $specialPageAliases['en'] = [
 	'DisplayTopics' => [ 'DisplayTopics' ],
 	'QuickSparqlStatements' => [ 'QuickSparqlStatements', 'SPARQL QuickStatements generator' ],
 	'PidRedirect' => [ 'PidRedirect', 'Persistent Identifier Redirection' ],
+	'ImportFromPid' => [ 'ImportFromPid', 'Import from persistent Identifier' ],
 ];
 
 /** Arabic (العربية) */
