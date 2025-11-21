@@ -98,6 +98,7 @@ class QuickStatements extends GraphJob {
 		$statements = $item->getStatements();
 		$currentStatementKey = 0;
 		$newStatements = [];
+		$labelChanges = false;
 		foreach ( $row as $P => $value ) {
 			// ignore suffixes (in SPARQL one cannot use the same column header twice)
 			$P = preg_replace( '/(.*)_(\d+)/i', '$1', $P );
@@ -111,6 +112,7 @@ class QuickStatements extends GraphJob {
 			} elseif ( str_starts_with( $P, 'L' ) ) {
 				$languageCode = substr( $P, 1 );
 				if ( $this->languageNameUtils->isValidCode( $languageCode ) ) {
+					$labelChanges = true;
 					$item->setLabel( $languageCode, $value );
 				} else {
 					self::getLog()->warning( "Skip invalid language code.", [ $P ] );
@@ -134,7 +136,7 @@ class QuickStatements extends GraphJob {
 				];
 
 		}
-		if ( count( $newStatements ) === 0 ) {
+		if ( count( $newStatements ) === 0 && !$labelChanges ) {
 			self::getLog()->info( "Skip row (no change)." );
 			return;
 		}
@@ -195,10 +197,10 @@ class QuickStatements extends GraphJob {
 		if ( !isset( $row['qid'] ) ) {
 			return $this->getRowItemFromPID( $row );
 		}
-		$qID = preg_replace( '/.*?Q?(\d+)/i', '$1', $row['qid'] );
-		$item = $this->entityLookup->getEntity( ItemId::newFromNumber( $qID ) );
+		$qID = preg_replace( '/.*?(Q\d+)/i', '$1', $row['qid'] );
+		$item = $this->entityLookup->getEntity( new ItemId( $qID ) );
 		if ( !$item instanceof Item ) {
-			throw new Exception( "Item Q$qID not found." );
+			throw new Exception( "Item $qID not found." );
 		}
 		unset( $row['qid'] );
 		return $item;
