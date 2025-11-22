@@ -49,7 +49,7 @@ class SpecialPidRedirect extends SpecialPage {
 			$this->showForm();
 			return;
 		}
-		$propertyId = NumericPropertyId::newFromNumber( $pid );
+		$propertyId = new NumericPropertyId( "P$pid" );
 		$dataType = WikibaseRepo::getPropertyDataTypeLookup()->getDataTypeIdForProperty( $propertyId );
 		if ( !in_array( $dataType, [ 'string', 'external-id' ] ) ) {
 			$this->getOutput()->addWikiTextAsContent( 'Invalid property type: ' . $dataType );
@@ -61,12 +61,12 @@ class SpecialPidRedirect extends SpecialPage {
 		foreach ( $results as $row ) {
 			$qid = $row['qid'];
 			if ( $linkToItem ) {
-				$title = Title::makeTitle( 120, "Q$qid" );
+				$title = Title::makeTitle( 120, "$qid" );
 			} else {
-				$item = WikibaseRepo::getEntityLookup()->getEntity( ItemId::newFromNumber( $qid ) );
+				$item = WikibaseRepo::getEntityLookup()->getEntity( new ItemId( $qid ) );
 
 				if ( !$item instanceof Item ) {
-					throw new Exception( "Item Q$qid not found." );
+					throw new Exception( "Item $qid not found." );
 				}
 				$link = $item->getSiteLink( $siteId );
 				$title = Title::newFromText( $link->getPageName() );

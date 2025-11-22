@@ -12,12 +12,12 @@ use Wikibase\DataModel\Statement\StatementList;
 use Wikibase\Repo\WikibaseRepo;
 
 class NormalizeDoi extends GraphJob {
-	private int $pDoi;
+	private string $pDoi;
 
 	public function __construct( $params ) {
 		global $wgMathSearchPropertyDoi;
 		parent::__construct( 'NormalizeDoi', $params );
-		$this->pDoi = $this->params['pDoi'] ?? $wgMathSearchPropertyDoi;
+		$this->pDoi = $this->params['pDoi'] ?? "P$wgMathSearchPropertyDoi";
 	}
 
 	public function run(): bool {
@@ -25,20 +25,20 @@ class NormalizeDoi extends GraphJob {
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
 		$guidGenerator = new GuidGenerator();
-		$pDOI = NumericPropertyId::newFromNumber( $this->pDoi );
+		$pDOI = new NumericPropertyId( $this->pDoi );
 		foreach ( $this->params['rows'] as $qid => $doi ) {
 			try {
 				self::getLog()->info( "Update DOI for $qid." );
-				$item = $lookup->getEntity( ItemId::newFromNumber( $qid ) );
+				$item = $lookup->getEntity( new ItemId( $qid ) );
 				if ( $item === null ) {
-					self::getLog()->error( "Item Q$qid not found." );
+					self::getLog()->error( "Item $qid not found." );
 					continue;
 				}
 				/** @var StatementList $statements */
 				$statements = $item->getStatements();
 				$doiStatements = $statements->getByPropertyId( $pDOI );
 				if ( $doiStatements->count() === 0 ) {
-					self::getLog()->error( "Skip page processing page Q$qid. Only 1 ore more DOI are supported" );
+					self::getLog()->error( "Skip page processing page $qid. Only 1 ore more DOI are supported" );
 					continue;
 				}
 				$changed = false;
@@ -60,14 +60,14 @@ class NormalizeDoi extends GraphJob {
 						$guidGenerator->newGuid( $item->getId() ) );
 				}
 				if ( !$changed ) {
-					self::getLog()->warning( "Nothing changed for Q$qid." );
+					self::getLog()->warning( "Nothing changed for $qid." );
 					continue;
 				}
 				$item->setStatements( $statements );
 				$store->saveEntity( $item, "Normalize DOI.", $user,
 					EDIT_FORCE_BOT );
 			} catch ( Throwable $ex ) {
-				self::getLog()->error( "Skip page processing page Q$qid.", [ $ex ] );
+				self::getLog()->error( "Skip page processing page $qid.", [ $ex ] );
 			}
 		}
 

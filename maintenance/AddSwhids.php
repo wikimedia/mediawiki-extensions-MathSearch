@@ -93,7 +93,7 @@ SPARQL;
 			$instance = new Swhid( $rf, $url );
 			$instance->fetchOrSave();
 			if ( $instance->getSnapshot() !== null ) {
-				$qID = preg_replace( '/.*Q(\d+)$/', '$1', $row['item'] );
+				$qID = preg_replace( '/.*(Q\d+)$/', '$1', $row['item'] );
 				$this->createWbItem( $qID, $instance->getSnapshot(), $url, $instance->getSnapshotDate() );
 			}
 			if ( $instance->getStatus() === 429 ) {
@@ -102,15 +102,15 @@ SPARQL;
 		}
 	}
 
-	public function createWbItem( $qID, $swhid, $url, $pit ) {
+	private function createWbItem( string $qID, string $swhid, string $url, string $pit ) {
 		global $wgMathSearchPropertySwhid,
 			   $wgMathSearchPropertyScrUrl,
 			   $wgMathSearchPropertyPointInTime;
 		$mainSnak = new PropertyValueSnak(
-			NumericPropertyId::newFromNumber( $wgMathSearchPropertySwhid ),
+			new NumericPropertyId( "P$wgMathSearchPropertySwhid" ),
 			new StringValue( $swhid ) );
 		$snakUrl = new PropertyValueSnak(
-			NumericPropertyId::newFromNumber( $wgMathSearchPropertyScrUrl ),
+			new NumericPropertyId( "P$wgMathSearchPropertyScrUrl" ),
 			 new StringValue( $url ) );
 		$time = new DateTimeImmutable( $pit );
 		// Currently DAY is the maximal precision and the time must be 0:00:00 T57755
@@ -121,9 +121,9 @@ SPARQL;
 			TimeValue::CALENDAR_GREGORIAN
 		);
 		$snakTime = new PropertyValueSnak(
-			NumericPropertyId::newFromNumber( $wgMathSearchPropertyPointInTime ),
+			new NumericPropertyId( "P$wgMathSearchPropertyPointInTime" ),
 			$date );
-		$item = $this->entityLookup->getEntity( ItemId::newFromNumber( $qID ) );
+		$item = $this->entityLookup->getEntity( new ItemId( "$qID" ) );
 		$statements = $item->getStatements();
 		$statements->addNewStatement(
 			$mainSnak,

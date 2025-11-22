@@ -55,7 +55,7 @@ class Formula {
 		$store = WikibaseRepo::getEntityStore();
 		$user = User::newFromName( 'Maintenance script' );
 		$item = new Item();
-		$item->setId( ItemId::newFromNumber( $this->qid ) );
+		$item->setId( new ItemId( "Q$this->qid" ) );
 		$item->setLabel( 'en', "Formula {$this->id}" );
 		$guidGenerator = new GuidGenerator();
 		$statements = new StatementList();

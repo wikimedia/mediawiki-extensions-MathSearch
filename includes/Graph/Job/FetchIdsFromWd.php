@@ -39,10 +39,10 @@ class FetchIdsFromWd extends GraphJob {
 			try {
 				$qid = $row['qid'];
 				unset( $row['qid'] );
-				self::getLog()->info( "Update Properties for Q$qid." );
-				$item = $lookup->getEntity( ItemId::newFromNumber( $qid ) );
+				self::getLog()->info( "Update Properties for $qid." );
+				$item = $lookup->getEntity( new ItemId( $qid ) );
 				if ( $item === null ) {
-					self::getLog()->error( "Item Q$qid not found." );
+					self::getLog()->error( "Item $qid not found." );
 					continue;
 				}
 				/** @var StatementList $statements */
@@ -54,10 +54,10 @@ class FetchIdsFromWd extends GraphJob {
 							->warning( "Result column '$colname' does not start with P followed by a number." );
 						continue;
 					}
-					$pid = NumericPropertyId::newFromNumber( substr( $colname, 1 ) );
+					$pid = new NumericPropertyId( $colname );
 					$pidStatements = $statements->getByPropertyId( $pid );
 					if ( !$pidStatements->isEmpty() ) {
-						self::getLog()->info( "$colname of Zbl Q$qid already set." );
+						self::getLog()->info( "$colname of Zbl $qid already set." );
 						continue;
 					}
 					$changed = true;
@@ -71,7 +71,7 @@ class FetchIdsFromWd extends GraphJob {
 						$guidGenerator->newGuid( $item->getId() ) );
 				}
 				if ( !$changed ) {
-					self::getLog()->info( "No changes for Zbl Q$qid." );
+					self::getLog()->info( "No changes for Zbl $qid." );
 					continue;
 				}
 				$item->setStatements( $statements );
@@ -79,7 +79,7 @@ class FetchIdsFromWd extends GraphJob {
 				$store->saveEntity( $item, "Add wikidata reference.", $user,
 					EDIT_FORCE_BOT );
 			} catch ( Throwable $ex ) {
-				self::getLog()->error( "Skip page processing page Q$qid.", [ $ex ] );
+				self::getLog()->error( "Skip page processing page $qid.", [ $ex ] );
 				self::getLog()->info( $ex->getMessage() );
 				self::getLog()->info( $ex->getTraceAsString() );
 			}

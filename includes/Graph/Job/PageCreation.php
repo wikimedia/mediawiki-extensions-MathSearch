@@ -29,7 +29,7 @@ class PageCreation extends GraphJob {
 				$pageFactory->newFromTitle( $title )
 					->doUserEditContent( $pageContent, $user,
 						'Created automatically from ' . $this->params['jobname'] );
-				$item = $lookup->getEntity( ItemId::newFromNumber( $qid ) );
+				$item = $lookup->getEntity( new ItemId( $qid ) );
 				if ( $this->params['overwrite'] ?? false ) {
 					$item->removeSiteLink( 'mardi' );
 				}

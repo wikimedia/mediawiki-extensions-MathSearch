@@ -47,11 +47,11 @@ class OpenAlex extends GraphJob {
 		return true;
 	}
 
-	private function processRow( string $de, int $qid, \stdClass $row ) {
+	private function processRow( string $de, string $qid, \stdClass $row ) {
 		global $wgMathOpenAlexQIdMap;
 		$pDe = $this->getNumericPropertyId( $wgMathOpenAlexQIdMap['document'] );
 		self::getLog()->info( "Add OpenAlex data for Zbl $de to $qid." );
-		$item = $this->entityLookup->getEntity( ItemId::newFromNumber( $qid ) );
+		$item = $this->entityLookup->getEntity( new ItemId( $qid ) );
 		if ( !$item instanceof Item ) {
 			self::getLog()->error( "Item Q$qid not found." );
 			return;

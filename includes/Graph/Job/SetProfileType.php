@@ -22,16 +22,16 @@ class SetProfileType extends GraphJob {
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
 		$guidGenerator = new GuidGenerator();
-		$pProfileType = NumericPropertyId::newFromNumber( $wgMathSearchPropertyProfileType );
+		$pProfileType = new NumericPropertyId( "P$wgMathSearchPropertyProfileType" );
 		$mainSnak = new PropertyValueSnak(
 			$pProfileType,
 			new EntityIdValue( new ItemId( $this->params['qType'] ) ) );
 		foreach ( $this->params['rows'] as $qid ) {
 			try {
 				self::getLog()->info( "Add profile type for $qid." );
-				$item = $lookup->getEntity( ItemId::newFromNumber( $qid ) );
+				$item = $lookup->getEntity( new ItemId( $qid ) );
 				if ( $item === null ) {
-					self::getLog()->error( "Item Q$qid not found." );
+					self::getLog()->error( "Item $qid not found." );
 					continue;
 				}
 				/** @var StatementList $statements */
@@ -43,7 +43,7 @@ class SetProfileType extends GraphJob {
 							$statements->removeStatementsWithGuid( $snak->getGuid() );
 						}
 					} else {
-						self::getLog()->info( "Skip page Q$qid." );
+						self::getLog()->info( "Skip page $qid." );
 						continue;
 					}
 				}
@@ -56,7 +56,7 @@ class SetProfileType extends GraphJob {
 				$store->saveEntity( $item, "Set profile property.", $user,
 					EDIT_FORCE_BOT );
 			} catch ( Throwable $ex ) {
-				self::getLog()->error( "Skip page processing page Q$qid.", [ $ex ] );
+				self::getLog()->error( "Skip page processing page $qid.", [ $ex ] );
 			}
 		}
 

@@ -73,7 +73,7 @@ class Row {
 	public function getItem() {
 		$qid = $this->getQid();
 		$item = new Item();
-		$item->setId( ItemId::newFromNumber( $qid ) );
+		$item->setId( new ItemId( "Q$qid" ) );
 
 		return $item;
 	}

@@ -13,7 +13,7 @@ class Query {
 		global $wgMathProfileQueries;
 		return <<<SPARQL
 SELECT ?qid WHERE {
-    BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid)
+    BIND (REPLACE(STR(?item), "^.*/(Q[^/]*)$", "$1") as ?qid)
 {$wgMathProfileQueries[$type]}
 }
 LIMIT $limit
@@ -31,7 +31,7 @@ SELECT ?qid WHERE {
    hint:Prior hint:runFirst true .
    FILTER (?sitelinks < 1 ).
    ?item wdt:P$wgMathSearchPropertyProfileType wd:{$wgMathProfileQIdMap[$type]} .
-   BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid)
+   BIND (REPLACE(STR(?item), "^.*/(Q[^/]*)$", "$1") as ?qid)
 }
 LIMIT $limit
 OFFSET $offset
@@ -41,7 +41,7 @@ SPARQL;
 	public static function getQidFromPid( string $values, $pid = 'P1451' ) {
 		return /** @lang Sparql */ <<<SPARQL
 SELECT
-  (REPLACE(STR(?item), ".*Q", "") AS ?qid)
+  (REPLACE(STR(?item), ".*Q", "Q") AS ?qid)
   ?de
 WHERE {
   VALUES ?de  { $values }
@@ -68,7 +68,7 @@ SPARQL;
 		global $wgMathSearchPropertyDoi;
 		return <<<SPARQL
 SELECT ?qid ?doi WHERE {
-  BIND (REPLACE(STR(?item), "^.*/Q([^/]*)$", "$1") as ?qid) .
+  BIND (REPLACE(STR(?item), "^.*/(Q[^/]*)$", "$1") as ?qid) .
   ?item wdt:P$wgMathSearchPropertyDoi ?doi .
   FILTER REGEX(?doi, "[a-z]")
 }
@@ -82,7 +82,7 @@ SPARQL;
 PREFIX wikidata_wdt: <http://www.wikidata.org/prop/direct/>
 
 SELECT DISTINCT
-(REPLACE(STR(?mardi_item), ".*Q", "") AS ?qid)
+(REPLACE(STR(?mardi_item), ".*Q", "Q") AS ?qid)
 (REPLACE(STR(?wikidata), ".*Q", "Q") AS ?P12)
 WHERE {
   SERVICE bd:sample { ?mardi_item wdt:P27 ?doi . bd:serviceParam bd:sample.limit 10000 }

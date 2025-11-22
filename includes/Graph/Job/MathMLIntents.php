@@ -65,12 +65,12 @@ class MathMLIntents extends GraphJob {
 		return $qIdMap;
 	}
 
-	private function processRow( string $concept, int $qid, \stdClass $row ) {
+	private function processRow( string $concept, string $qid, \stdClass $row ) {
 		global $wgMathIntentsQIdMap;
 		$pDe = $this->getNumericPropertyId( $wgMathIntentsQIdMap['concept'] );
 		self::getLog()->info( "Add MathML data for concept $concept to $qid." );
 		if ( $qid ) {
-			$item = $this->entityLookup->getEntity( ItemId::newFromNumber( $qid ) );
+			$item = $this->entityLookup->getEntity( new ItemId( $qid ) );
 			if ( !$item instanceof Item ) {
 				self::getLog()->error( "Item Q$qid not found." );
 				return;

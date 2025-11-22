@@ -243,7 +243,7 @@ class QuickStatements extends GraphJob {
 					$pidLookup->warmupFromValues( $values );
 				}
 				$q = $pidLookup->getQ( $value );
-				$item = $this->entityLookup->getEntity( ItemId::newFromNumber( $q ) );
+				$item = $this->entityLookup->getEntity( new ItemId( "Q$q" ) );
 				if ( !$item instanceof Item ) {
 					throw new Exception( "Item Q$q not found." );
 				}
