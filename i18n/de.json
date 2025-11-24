@@ -157,6 +157,7 @@
 	"datatypes-type-contentmath": "Mathematischer Ausdruck (Inhalt)",
 	"quicksparqlstatements": "SPARQL QuickStatements-Generator",
 	"pidredirect": "Umleitung des persistenten Bezeichners",
+	"importfrompid": "Import aus persistentem Bezeichner",
 	"wikibase-listdatatypes-contentmath-head": "Mathematischer Ausdruck (Inhalt)",
 	"wikibase-listdatatypes-contentmath-body": "Literales Datenfeld für mathematische Ausdrücke, Formeln, Gleichungen und ähnliches, ausgedrückt in der DRMF/DLMF-Variante von LaTeX."
 }

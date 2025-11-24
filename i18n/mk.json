@@ -117,6 +117,7 @@
 	"datatypes-type-contentmath": "Математички израз (содржина)",
 	"quicksparqlstatements": "Создавач на Брзи искази за SPARQL",
 	"pidredirect": "Пренасочување кон трајна назнака",
+	"importfrompid": "Увези од трајна назнака",
 	"wikibase-listdatatypes-contentmath-head": "Математички израз (содржина)",
 	"wikibase-listdatatypes-contentmath-body": "Буквалните податочни полиња за математички изрази, формула, равенки и слично, изразени во DRMF/DLMF варијанта на LaTeX."
 }
