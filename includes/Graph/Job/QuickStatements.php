@@ -131,6 +131,10 @@ class QuickStatements extends GraphJob {
 				self::getLog()->warning( "Skip invalid field name.", [ $P ] );
 				continue;
 			}
+			$matches = null;
+			if ( preg_match( '/P(?P<p>\d+)q(?P<q>\d+)/i', $P, $matches ) ) {
+				$value = $this->getPidCache( $matches['p'] )->getQ( $matches['q'] );
+			}
 			$propertyId = $this->getNumericPropertyId( $P );
 			$currentStatements = $statements->getByPropertyId( $propertyId );
 			if ( !$currentStatements->isEmpty() &&
