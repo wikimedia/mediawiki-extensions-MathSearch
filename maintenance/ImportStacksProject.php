@@ -52,31 +52,46 @@ class ImportStacksProject extends Maintenance {
 			}
 			$structures[] = $data;
 		}
-		var_dump( $this->tree2list( $structures ) );
+		$list = $this->tree2list( $structures );
+		$fp = fopen( 'file.csv', 'w' );
+		// header
+		fwrite( $fp, "qP1694,P31,P1696,Den,P37q1694,Len,P459\n" );
+		foreach ( $list as $fields ) {
+			fputcsv( $fp, $fields, ',', '"', '' );
+		}
+
+		fclose( $fp );
 	}
 
 	/**
 	 * Recursive flattening of the tree structure
 	 */
 	private function tree2list( array $tree, int $depth = 0, array $parents = [] ): array {
+		global $wgMathString2QMap;
 		$result = [];
 
 		foreach ( $tree as $node ) {
 			// Handle missing fields roughly like the Python try/except
-			$tag = $node['tag'] ?? null;
-			$name = $node['name'] ?? 'N/A';
-			$reference = $node['reference'] ?? null;
-			$type = $node['type'] ?? null;
+			$tag = $node['tag'];
 
 			$nodeInfo = [
-				'tag' => $tag, // P1694
-				'name' => $name,
-				'reference' => $reference,
-				'type' => $type,
-				'depth' => $depth,
-				'parents' => $parents, // array of ancestor tags
+				'qP1694' => $tag,
+				'P31' => $wgMathString2QMap['P31'][$node['type']],
+				'P1696' => $node['reference'],
+				'Den' => "Stacks Project tag $tag"
 			];
-
+			if ( $depth > 0 ) {
+				$nodeInfo['P37q1694'] = $parents[0];
+			} else {
+				// missing field in the middle (first entry) temporary hack
+				$nodeInfo['P37q1694'] = null;
+			}
+			if ( isset( $node['name'] ) ) {
+				$nodeInfo['Len'] = "{$node['name']} (Stacks Project)";
+				$nodeInfo['P459'] = $node['name'];
+			} else {
+				$nodeInfo['Len'] = "Stacks Project {$node['type']} {$node['reference']}";
+			}
 			$result[$tag] = $nodeInfo;
 
 			if ( isset( $node['children'] ) && is_array( $node['children'] ) ) {

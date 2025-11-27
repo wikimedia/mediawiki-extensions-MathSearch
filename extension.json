@@ -121,17 +121,19 @@
 		},
 		"MathString2QMap": {
 			"P1460": {
-				"dataset": "Q5984635",
-				"formula": "Q5981696",
-				"person": "Q5976445",
-				"publication": "Q5976449",
-				"software": "Q5976450",
 				"academic_discipline": "Q6534268",
 				"algorithm": "Q6503323",
 				"community": "Q6205095",
+				"dataset": "Q5984635",
+				"formula": "Q5981696",
 				"model": "Q6534270",
+				"person": "Q5976445",
+				"publication": "Q5976449",
+				"quantity": "Q6534271",
 				"research_problem": "Q6534269",
 				"service": "Q6503324",
+				"software": "Q5976450",
+				"task": "Q6534272",
 				"theorem": "Q6534201",
 				"workflow": "Q6534216"
 			},
@@ -148,6 +150,7 @@
 				"remark": "Q6775863",
 				"remarks": "Q6775863",
 				"section": "Q56939",
+				"situation": "Q6775864",
 				"subsection": "Q6775865",
 				"theorem": "Q6480559"
 			}
