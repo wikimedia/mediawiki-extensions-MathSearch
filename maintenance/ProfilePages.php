@@ -40,7 +40,7 @@ class ProfilePages extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgMathProfileQueries, $wgMathProfileQIdMap;
+		global $wgMathProfileQueries, $wgMathSearchPropertyProfileType, $wgMathString2QMap;
 		$type = $this->getArg( 'type' );
 		if ( !isset( $wgMathProfileQueries[$type] ) ) {
 			$this->error( "Unknown type of profile to be created.\n" );
@@ -55,7 +55,7 @@ class ProfilePages extends Maintenance {
 			$jobType = PageCreation::class;
 		} elseif ( $action === 'load' ) {
 			$jobType = SetProfileType::class;
-			$jobOptions['qType'] = $wgMathProfileQIdMap[$type];
+			$jobOptions['qType'] = $wgMathString2QMap[$wgMathSearchPropertyProfileType][$type];
 		} else {
 			$this->error( "Unknown action to be performed.\n" );
 			$this->error( $this->printAvailableActions() );

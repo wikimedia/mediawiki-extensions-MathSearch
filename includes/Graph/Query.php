@@ -22,7 +22,7 @@ SPARQL;
 	}
 
 	public static function getQueryFromProfileType( string $type, int $offset, int $limit ) {
-		global $wgMathSearchPropertyProfileType, $wgMathProfileQIdMap;
+		global $wgMathSearchPropertyProfileType, $wgMathString2QMap;
 		return <<<SPARQL
 PREFIX hint: <http://www.bigdata.com/queryHints#>
 
@@ -30,7 +30,7 @@ SELECT ?qid WHERE {
    ?item wikibase:sitelinks ?sitelinks .
    hint:Prior hint:runFirst true .
    FILTER (?sitelinks < 1 ).
-   ?item wdt:P$wgMathSearchPropertyProfileType wd:{$wgMathProfileQIdMap[$type]} .
+   ?item wdt:P$wgMathSearchPropertyProfileType wd:{$wgMathString2QMap["P".$wgMathSearchPropertyProfileType][$type]}.
    BIND (REPLACE(STR(?item), "^.*/(Q[^/]*)$", "$1") as ?qid)
 }
 LIMIT $limit

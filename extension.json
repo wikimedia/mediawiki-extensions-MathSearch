@@ -119,11 +119,38 @@
 			"openalex_id": "P388",
 			"openalex_title": "P159"
 		},
-		"MathProfileQIdMap": {
-			"person": "Q5976445",
-			"formula": "Q5981696",
-			"publication": "Q5976449",
-			"software": "Q5976450"
+		"MathString2QMap": {
+			"P1460": {
+				"dataset": "Q5984635",
+				"formula": "Q5981696",
+				"person": "Q5976445",
+				"publication": "Q5976449",
+				"software": "Q5976450",
+				"academic_discipline": "Q6534268",
+				"algorithm": "Q6503323",
+				"community": "Q6205095",
+				"model": "Q6534270",
+				"research_problem": "Q6534269",
+				"service": "Q6503324",
+				"theorem": "Q6534201",
+				"workflow": "Q6534216"
+			},
+			"P31": {
+				"chapter": "Q56552",
+				"definition": "Q6775803",
+				"eqnarray": "Q6481152",
+				"equation": "Q6481152",
+				"example": "Q6775866",
+				"exercise": "Q6775867",
+				"lemma": "Q6481077",
+				"part": "Q56943",
+				"proposition": "Q6775804",
+				"remark": "Q6775863",
+				"remarks": "Q6775863",
+				"section": "Q56939",
+				"subsection": "Q6775865",
+				"theorem": "Q6480559"
+			}
 		},
 		"MathIntentsQIdMap": {
 			"concept": "P1511",
