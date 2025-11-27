@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Extension\MathSearch\Graph;
 
-use Exception;
 use MediaWiki\Sparql\SparqlException;
 
 class PidLookup {
@@ -17,11 +16,10 @@ class PidLookup {
 	/**
 	 * @param string $de
 	 * @param bool $onlyCache
-	 * @return void
+	 * @return string|false
 	 * @throws SparqlException
-	 * @throws Exception
 	 */
-	private function de2q( string $de, bool $onlyCache = false ): string {
+	private function de2q( string $de, bool $onlyCache = false ): string|false {
 		if ( !isset( $this->qid_cache[$de] ) ) {
 			$this->qid_cache[$de] = false;
 			if ( !$onlyCache ) {
@@ -31,7 +29,7 @@ class PidLookup {
 		return $this->qid_cache[$de];
 	}
 
-	public function getQ( string $key ): string {
+	public function getQ( string $key ): string|false {
 		return $this->de2q( $key );
 	}
 
@@ -72,5 +70,9 @@ class PidLookup {
 
 	public function count(): int {
 		return count( $this->qid_cache );
+	}
+
+	public function overwrite( string $k, string $v ): void {
+		$this->qid_cache[ $k ] = $v;
 	}
 }

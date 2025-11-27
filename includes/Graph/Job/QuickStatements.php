@@ -252,6 +252,19 @@ class QuickStatements extends GraphJob {
 					$pidLookup->warmupFromValues( $values );
 				}
 				$q = $pidLookup->getQ( $value );
+				if ( $q === false && $this->params['create_missing'] ?? false ) {
+					$item = new Item();
+					$this->entityStore->assignFreshId( $item );
+					$statements = $item->getStatements();
+					$statements->addNewStatement(
+						$this->getSnak( substr( $key, 1 ), $value ),
+						[],
+						null,
+						$this->guidGenerator->newGuid( $item->getId() )
+					);
+					$pidLookup->overwrite( $value, $item->getId() );
+					return $item;
+				}
 				$item = $this->entityLookup->getEntity( new ItemId( "Q$q" ) );
 				if ( !$item instanceof Item ) {
 					throw new Exception( "Item Q$q not found." );
