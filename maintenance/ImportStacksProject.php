@@ -18,6 +18,9 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements;
+use MediaWiki\Extension\MathSearch\Graph\Map;
+
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ImportStacksProject extends Maintenance {
@@ -52,15 +55,15 @@ class ImportStacksProject extends Maintenance {
 			}
 			$structures[] = $data;
 		}
-		$list = $this->tree2list( $structures );
-		$fp = fopen( 'file.csv', 'w' );
-		// header
-		fwrite( $fp, "qP1694,P31,P1696,Den,P37q1694,Len,P459\n" );
-		foreach ( $list as $fields ) {
-			fputcsv( $fp, $fields, ',', '"', '' );
+		$parts = array_chunk( $this->tree2list( $structures ), $this->getBatchSize(), true );
+		$graphMap = new Map();
+		$i = 0;
+		foreach ( $parts as $part ) {
+			$graphMap->pushJob( $part, $i++, QuickStatements::class, [
+				'jobname' => 'stacks project' . date( 'ymdhms' ),
+				'create_missing' => true
+			] );
 		}
-
-		fclose( $fp );
 	}
 
 	/**
@@ -71,9 +74,7 @@ class ImportStacksProject extends Maintenance {
 		$result = [];
 
 		foreach ( $tree as $node ) {
-			// Handle missing fields roughly like the Python try/except
 			$tag = $node['tag'];
-
 			$nodeInfo = [
 				'qP1694' => $tag,
 				'P31' => $wgMathString2QMap['P31'][$node['type']],
@@ -82,9 +83,6 @@ class ImportStacksProject extends Maintenance {
 			];
 			if ( $depth > 0 ) {
 				$nodeInfo['P37q1694'] = $parents[0];
-			} else {
-				// missing field in the middle (first entry) temporary hack
-				$nodeInfo['P37q1694'] = null;
 			}
 			if ( isset( $node['name'] ) ) {
 				$nodeInfo['Len'] = "{$node['name']} (Stacks Project)";

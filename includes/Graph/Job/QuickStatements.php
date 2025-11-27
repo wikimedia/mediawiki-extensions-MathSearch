@@ -76,7 +76,7 @@ class QuickStatements extends GraphJob {
 				$item = $this->getRowItem( $row );
 				$this->processRow( $row, $item );
 			} catch ( Throwable $ex ) {
-				self::getLog()->error( "Skip row", [ 'exception' => $ex, 'row' => $row ] );
+				self::getLog()->error( "Skip row: {$ex->getMessage()}", [ 'exception' => $ex, 'row' => $row ] );
 			}
 		}
 		return true;
@@ -133,7 +133,13 @@ class QuickStatements extends GraphJob {
 			}
 			$matches = null;
 			if ( preg_match( '/P(?P<p>\d+)q(?P<q>\d+)/i', $P, $matches ) ) {
-				$value = $this->getPidCache( $matches['p'] )->getQ( $matches['q'] );
+				$transformed = $this->getPidCache( $matches['q'] )->getQ( $value );
+				if ( $transformed === false ) {
+					self::getLog()->info( "Reference $value could not be found. Skipping {P}.", [ 'P' => $P ] );
+					continue;
+				}
+				$value = $transformed;
+				$P = "P{$matches['p']}";
 			}
 			$propertyId = $this->getNumericPropertyId( $P );
 			$currentStatements = $statements->getByPropertyId( $propertyId );
@@ -186,6 +192,9 @@ class QuickStatements extends GraphJob {
 					'precision' => 11,
 					'calendarmodel' => 'http://www.wikidata.org/entity/Q1985727',
 				];
+				break;
+			case 'monolingualtext':
+				$value = [ 'language' => 'en', 'text' => $value ];
 				break;
 			case 'string':
 			case 'external-id':
@@ -247,7 +256,7 @@ class QuickStatements extends GraphJob {
 	 * @throws SparqlException
 	 * @throws Exception
 	 */
-	private function getRowItemFromPID( array $row ): Item {
+	private function getRowItemFromPID( array &$row ): Item {
 		foreach ( $row as $key => $value ) {
 			if ( str_starts_with( $key, 'qP' ) ) {
 				$pidLookup = $this->getPidCache( substr( $key, 2 ) );
@@ -267,12 +276,13 @@ class QuickStatements extends GraphJob {
 						$this->guidGenerator->newGuid( $item->getId() )
 					);
 					$pidLookup->overwrite( $value, $item->getId() );
-					return $item;
+				} else {
+					$item = $this->entityLookup->getEntity( new ItemId( "Q$q" ) );
 				}
-				$item = $this->entityLookup->getEntity( new ItemId( "Q$q" ) );
 				if ( !$item instanceof Item ) {
 					throw new Exception( "Item Q$q not found." );
 				}
+				unset( $row[$key] );
 				return $item;
 			}
 		}
