@@ -6,15 +6,18 @@ use MediaWiki\Config\Config;
 use MediaWiki\Extension\MathSearch\Graph\Job\PageCreation;
 use MediaWiki\JobQueue\JobQueueGroup;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\Output\OutputPage;
 use MediaWiki\Sparql\SparqlException;
 
 class AutoCreateProfilePages {
 	private Config $config;
 	private JobQueueGroup $jobQueueGroup;
+	private OutputPage $outputPage;
 
-	public function __construct( Config $config, JobQueueGroup $jobQueueGroup ) {
+	public function __construct( Config $config, JobQueueGroup $jobQueueGroup, OutputPage $outputPage ) {
 		$this->config = $config;
 		$this->jobQueueGroup = $jobQueueGroup;
+		$this->outputPage = $outputPage;
 	}
 
 	/**
@@ -35,6 +38,6 @@ class AutoCreateProfilePages {
 	}
 
 	public function output( string $out, ?string $channel = 'MathSearch' ): void {
-		LoggerFactory::getInstance( $channel )->info( $out );
+		$this->outputPage->addWikiTextAsContent( $out );
 	}
 }
