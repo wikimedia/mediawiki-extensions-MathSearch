@@ -55,6 +55,12 @@
 				"ConnectionProvider",
 				"RevisionLookup"
 			]
+		},
+		"WikibaseChangeNotification": {
+			"class": "MediaWiki\\Extension\\MathSearch\\Wikidata\\ChangeNotificationHook",
+			"services": [
+				"MainConfig"
+			]
 		}
 	},
 	"Hooks": {
@@ -71,7 +77,8 @@
 		"WikibaseRepoDataTypes": [
 			"MediaWiki\\Extension\\MathSearch\\Wikidata\\Content\\ContentMathWikidataHook::onWikibaseRepoDataTypes",
 			"MediaWiki\\Extension\\MathSearch\\Wikidata\\MathML\\MathMLWikidataHook::onWikibaseRepoDataTypes"
-		]
+		],
+		"WikibaseChangeNotification": "WikibaseChangeNotification"
 	},
 	"config": {
 		"MathDebug": false,

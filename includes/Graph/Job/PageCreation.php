@@ -9,6 +9,7 @@ use RuntimeException;
 use Throwable;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
+use Wikibase\DataModel\Entity\NumericPropertyId;
 use Wikibase\DataModel\Services\Statement\V4GuidGenerator;
 use Wikibase\DataModel\SiteLink;
 use Wikibase\Repo\WikibaseRepo;
@@ -52,7 +53,7 @@ class PageCreation extends GraphJob {
 				} else {
 					self::getLog()->info( "Creating new page for $qid." );
 					$pageContent = ContentHandler::makeContent(
-						'{{' . $this->params['prefix'] . '}}', $newTitle );
+						$this->getTemplateContent( $item ), $newTitle );
 					$pageFactory->newFromTitle( $newTitle )->doUserEditContent( $pageContent, $user,
 						'Created automatically from ' . $this->params['jobname'] );
 				}
@@ -102,6 +103,23 @@ class PageCreation extends GraphJob {
 			return null;
 		}
 		return $t;
+	}
+
+	public function getTemplateContent( Item $item ): string {
+		global $wgMathString2QMap, $wgMathSearchPropertyProfileType;
+		$prefix = $this->params['prefix'];
+		if ( !$prefix ) {
+			try {
+				$p = new NumericPropertyId( "P$wgMathSearchPropertyProfileType" );
+				$profileTypeStatements = $item->getStatements()->getByPropertyId( $p )->getMainSnaks();
+				$profileType = $profileTypeStatements[0]->getDataValue()->getValue()->getEntityId()->getSerialization();
+				$prefix = array_search( $profileType, $wgMathString2QMap["P" . $wgMathSearchPropertyProfileType] );
+			} catch ( Throwable $e ) {
+				// ignore
+			}
+
+		}
+		return '{{' . $prefix . '}}';
 	}
 
 }
