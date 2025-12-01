@@ -7,21 +7,14 @@ use MediaWiki\Extension\MathSearch\Graph\Job\PageCreation;
 use MediaWiki\JobQueue\JobQueueGroup;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\Sparql\SparqlException;
-use MWStake\MediaWiki\Component\RunJobsTrigger\IHandler;
-use MWStake\MediaWiki\Component\RunJobsTrigger\Interval;
-use MWStake\MediaWiki\Component\RunJobsTrigger\Interval\OnceADay;
 
-class AutoCreateProfilePages implements IHandler {
+class AutoCreateProfilePages {
 	private Config $config;
 	private JobQueueGroup $jobQueueGroup;
 
 	public function __construct( Config $config, JobQueueGroup $jobQueueGroup ) {
 		$this->config = $config;
 		$this->jobQueueGroup = $jobQueueGroup;
-	}
-
-	public function getKey(): string {
-		return str_replace( '\\', '-', strtolower( static::class ) );
 	}
 
 	/**
@@ -39,10 +32,6 @@ class AutoCreateProfilePages implements IHandler {
 			);
 		}
 		$this->output( 'All types are scheduled. Done!' );
-	}
-
-	public function getInterval(): Interval {
-		return new OnceADay();
 	}
 
 	public function output( string $out, ?string $channel = 'MathSearch' ): void {

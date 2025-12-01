@@ -473,10 +473,6 @@ class MathSearchHooks implements
 		if ( !in_array( 'latexml', $wgMathValidModes ) ) {
 			$wgMathValidModes[] = 'latexml';
 		}
-		// T406096
-		if ( class_exists( 'MWStake\MediaWiki\ComponentLoader\Bootstrapper' ) ) {
-			MWStake\MediaWiki\ComponentLoader\Bootstrapper::getInstance()->init();
-		}
 	}
 
 	/**
