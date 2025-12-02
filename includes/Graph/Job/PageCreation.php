@@ -44,7 +44,7 @@ class PageCreation extends GraphJob {
 						Title::newFromText( $item->getSiteLink( 'mardi' )->getPageName() ),
 						$this->makeTitle( $item )
 					)->move( $user,
-						'Move profile page according to new naming schema. Job ' . $this->params['jobname'] );
+						'Move profile page according to new naming schema. Job ' . $this->getJobname() );
 					if ( !$status->isOK() ) {
 						self::getLog()->error( "Could not move page for $qid: " . $status->getMessage()->text() );
 						continue;
@@ -55,7 +55,7 @@ class PageCreation extends GraphJob {
 					$pageContent = ContentHandler::makeContent(
 						$this->getTemplateContent( $item ), $newTitle );
 					$pageFactory->newFromTitle( $newTitle )->doUserEditContent( $pageContent, $user,
-						'Created automatically from ' . $this->params['jobname'] );
+						'Created automatically from ' . $this->getJobname() );
 				}
 				$siteLink = new SiteLink( 'mardi', $newTitle->getPrefixedText() );
 				$item->addSiteLink( $siteLink );
@@ -81,7 +81,7 @@ class PageCreation extends GraphJob {
 			$label ?: $description,
 			$label . '_(' . $description . ')',
 			$label . '_' . $id,
-			$this->params['prefix'] . ':' . str_replace( 'Q', '', $id ),
+			$this->getPrefix( $item ) . ':' . str_replace( 'Q', '', $id ),
 			( new V4GuidGenerator() )->newGuid()
 		];
 
@@ -105,21 +105,33 @@ class PageCreation extends GraphJob {
 		return $t;
 	}
 
-	public function getTemplateContent( Item $item ): string {
+	private function getPrefix( Item $item ): string {
 		global $wgMathString2QMap, $wgMathSearchPropertyProfileType;
-		$prefix = $this->params['prefix'];
-		if ( !$prefix ) {
+		$prefix = $this->params['prefix'] ?? false;
+		if ( $prefix === false ) {
 			try {
 				$p = new NumericPropertyId( "P$wgMathSearchPropertyProfileType" );
 				$profileTypeStatements = $item->getStatements()->getByPropertyId( $p )->getMainSnaks();
 				$profileType = $profileTypeStatements[0]->getDataValue()->getValue()->getEntityId()->getSerialization();
 				$prefix = array_search( $profileType, $wgMathString2QMap["P" . $wgMathSearchPropertyProfileType] );
 			} catch ( Throwable $e ) {
-				// ignore
+				$prefix = '';
 			}
-
+			$this->params['prefix'] = $prefix;
 		}
-		return '{{' . $prefix . '}}';
+		return $prefix;
+	}
+
+	private function getJobname(): string {
+		$jobname = $this->params['jobname'] ?? false;
+		if ( $jobname === false ) {
+			$this->params['jobname'] = date( 'ymdhms' );
+		}
+		return $jobname;
+	}
+
+	public function getTemplateContent( Item $item ): string {
+		return '{{' . $this->getPrefix( $item ) . '}}';
 	}
 
 }
