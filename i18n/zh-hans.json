@@ -8,6 +8,7 @@
 			"Lakejason0",
 			"LittlePaw365",
 			"Liuxinyu970226",
+			"Peterxy12",
 			"Yfdyh000",
 			"Yining Chen",
 			"王庭茂"
@@ -164,6 +165,7 @@
 	"datatypes-type-contentmath": "数学表达式（内容）",
 	"quicksparqlstatements": "SPARQL QuickStatements生成器",
 	"pidredirect": "永久标识符重定向",
+	"importfrompid": "从持久性识别码导入",
 	"wikibase-listdatatypes-contentmath-head": "数学表达式（内容）",
 	"wikibase-listdatatypes-contentmath-body": "用于数学表达式、公式、方程等的文字数据字段，以LaTeX的DRMF/DLMF变体表达。"
 }
