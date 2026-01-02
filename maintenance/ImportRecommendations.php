@@ -31,6 +31,7 @@ class ImportRecommendations extends BaseImport {
 		$jobname = 'recommendation' . date( 'ymdhms' );
 		$joboptions = [ 'jobname' => $jobname, 'editsummary' => 'Import recommendations run Q6534273' ];
 		$jobtype = 'MediaWiki\Extension\MathSearch\Graph\Job\Recommendation';
+		$this->groupConsecutiveKeys = true;
 		parent::__construct( $joboptions, $jobtype, 'Batch imports Recommendation data from a CSV file.' );
 		$this->addOption( 'runid', 'The QID of the item that represents the run.', false, true, 'r' );
 	}

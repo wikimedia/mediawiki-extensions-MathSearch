@@ -9,6 +9,7 @@ abstract class BaseImport extends Maintenance {
 
 	protected array $jobOptions;
 	private string $jobType;
+	protected bool $groupConsecutiveKeys = false;
 
 	public function __construct( array $jobOptions, string $jobType, string $description = 'The file to be read' ) {
 		parent::__construct();
@@ -32,20 +33,26 @@ abstract class BaseImport extends Maintenance {
 		$line = fgetcsv( $handle, 0, ',', '"', '' );
 		$graphMap = new Map();
 		$segment = 0;
+		$lastKey = null;
 		while ( $line !== false ) {
 			try {
 				$newRow = $this->readline( $line, $columns );
 				// quasi recursive array + operator
 				$key = array_key_first( $newRow );
+				$splitCondition = count( $table ) >= $this->getBatchSize();
+				if ( $this->groupConsecutiveKeys ) {
+					$splitCondition &= $key !== $lastKey;
+				}
+				$lastKey = $key;
+				if ( $splitCondition ) {
+					$this->output( "Push jobs to segment $segment.\n" );
+					$this->pushJob( $graphMap, $table, $segment );
+					$table = [];
+				}
 				if ( isset( $table[ $key ] ) ) {
 					$table[$key] += $newRow[$key];
 				} else {
 					$table += $newRow;
-				}
-				if ( count( $table ) > $this->getBatchSize() ) {
-					$this->output( "Push jobs to segment $segment.\n" );
-					$this->pushJob( $graphMap, $table, $segment );
-					$table = [];
 				}
 			} catch ( Throwable $e ) {
 				$this->output( "Error processing line: \n" .
