@@ -98,13 +98,19 @@ class QuickStatements extends GraphJob {
 		$statements = $item->getStatements();
 		$currentStatementKey = 0;
 		$newStatements = [];
+		$optionalStatements = [];
 		$textChanges = false;
 		foreach ( $row as $P => $value ) {
 			// ignore suffixes (in SPARQL one cannot use the same column header twice)
 			$P = preg_replace( '/(.*)_(\d+)/i', '$1', $P );
+			$optionalField = in_array( $P, $this->params['optional_fields'] ?? [], true );
 			if ( str_starts_with( $P, 'P' ) ) {
 				$currentStatementKey++;
 			} elseif ( str_starts_with( $P, 'qal' ) ) {
+				if ( !isset( $newStatements[$currentStatementKey] ) ) {
+					self::getLog()->warning( "Skip qualifier without main statement.", [ $P ] );
+					continue;
+				}
 				$newStatements[$currentStatementKey][1][] = $this->getSnak(
 					'P' . substr( $P, 3 ),
 					$value );
@@ -112,6 +118,12 @@ class QuickStatements extends GraphJob {
 			} elseif ( str_starts_with( $P, 'L' ) ) {
 				$languageCode = substr( $P, 1 );
 				if ( $this->languageNameUtils->isValidCode( $languageCode ) ) {
+					if ( $optionalField ) {
+						if ( !$item->getLabels()->hasTermForLanguage( $languageCode ) ) {
+							$item->setLabel( $languageCode, $value );
+						}
+						continue;
+					}
 					$textChanges = true;
 					$item->setLabel( $languageCode, $value );
 				} else {
@@ -121,7 +133,9 @@ class QuickStatements extends GraphJob {
 			} elseif ( str_starts_with( $P, 'D' ) ) {
 				$languageCode = substr( $P, 1 );
 				if ( $this->languageNameUtils->isValidCode( $languageCode ) ) {
-					$textChanges = true;
+					if ( !$optionalField ) {
+						$textChanges = true;
+					}
 					$item->setDescription( $languageCode, $value );
 				} else {
 					self::getLog()->warning( "Skip invalid language code.", [ $P ] );
@@ -147,18 +161,23 @@ class QuickStatements extends GraphJob {
 				!$this->removeOldStatements( $currentStatements, $value, $statements ) ) {
 				continue;
 			}
-			$newStatements[ $currentStatementKey ] = [
+			$newStatement = [
 				$this->getSnak( $P, $value ),
 				[],
 				null,
 				$this->guidGenerator->newGuid( $item->getId() )
-				];
-
+			];
+			if ( $optionalField ) {
+				$optionalStatements[$currentStatementKey] = $newStatement;
+			} else {
+				$newStatements[$currentStatementKey] = $newStatement;
+			}
 		}
 		if ( count( $newStatements ) === 0 && !$textChanges ) {
 			self::getLog()->info( "Skip row (no change)." );
 			return;
 		}
+		$newStatements += $optionalStatements;
 		foreach ( $newStatements as $statement ) {
 			$statements->addNewStatement( ...$statement );
 		}
