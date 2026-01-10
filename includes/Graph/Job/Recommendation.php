@@ -17,6 +17,7 @@ class Recommendation extends GraphJob {
 	public function run() {
 		$this->extractDes();
 		$runid = $this->params['runid'];
+		$this->params['optional_fields'] = [ 'Len' ];
 		$table = [];
 		foreach ( $this->params['rows'] as $seed => $row ) {
 			$qSeed = $this->qid_cache->getQ( $seed );
@@ -24,6 +25,10 @@ class Recommendation extends GraphJob {
 				continue;
 			}
 			$newRow = [ 'qid' => $qSeed ];
+			if ( isset( $row['Len'] ) ) {
+				$newRow['Len'] = $row['Len'];
+				unset( $row['Len'] );
+			}
 			$pos = 0;
 			foreach ( $row as $rs => $score ) {
 				$qRs = $this->qid_cache->getQ( $rs );

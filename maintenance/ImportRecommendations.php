@@ -26,10 +26,9 @@ use MediaWiki\Sparql\SparqlException;
 require_once __DIR__ . '/BaseImport.php';
 
 class ImportRecommendations extends BaseImport {
-
 	public function __construct() {
 		$jobname = 'recommendation' . date( 'ymdhms' );
-		$joboptions = [ 'jobname' => $jobname, 'editsummary' => 'Import recommendations run Q6534273' ];
+		$joboptions = [ 'jobname' => $jobname, 'editsummary' => 'Import recommendations' ];
 		$jobtype = 'MediaWiki\Extension\MathSearch\Graph\Job\Recommendation';
 		$this->groupConsecutiveKeys = true;
 		parent::__construct( $joboptions, $jobtype, 'Batch imports Recommendation data from a CSV file.' );
@@ -37,7 +36,7 @@ class ImportRecommendations extends BaseImport {
 	}
 
 	public function execute() {
-		$runid = $this->getOption( 'runid', 'Q6534273' );
+		$runid = $this->getOption( 'runid', 'Q6821328' );
 		$this->jobOptions['runid'] = $runid;
 		$this->jobOptions['editsummary'] = "Import recommendations run $runid";
 		return parent::execute();
@@ -49,7 +48,8 @@ class ImportRecommendations extends BaseImport {
 	protected function readline( array $line, array $columns ): array {
 		$fields = array_combine( $columns, $line );
 		return [ $fields['seed'] => [
-			$fields['recommendation'] => $fields['similarity_score']
+			$fields['recommendation'] => $fields['similarity_score'],
+			'Len' => $fields['Len']
 		] ];
 	}
 
