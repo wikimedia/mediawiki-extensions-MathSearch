@@ -400,7 +400,7 @@ class SpecialMlpEval extends SpecialPage {
 	 * @return Title
 	 */
 	public function getRevisionTitle() {
-		return Title::newFromLinkTarget( $this->revisionRecord->getPageAsLinkTarget() );
+		return Title::newFromPageIdentity( $this->revisionRecord->getPage() );
 	}
 
 	private function printIntorduction() {

@@ -222,7 +222,7 @@ class SpecialUploadResult extends SpecialPage {
 		$revisionRecord = MediaWikiServices::getInstance()
 			->getRevisionLookup()
 			->getRevisionById( $row['oldId'] );
-		$title = Title::newFromLinkTarget( $revisionRecord->getPageAsLinkTarget() );
+		$title = Title::newFromPageIdentity( $revisionRecord->getPage() );
 		$link = $title->getLinkURL() . $formulaId;
 		$this->getOutput()->addHTML( "<tr><td>{$row['qId']}</td><td><a href=\"$link\" >$formulaId</a></td>
 			<td>{$row['rank']}</td><td>$renderedMath</td></tr>" );

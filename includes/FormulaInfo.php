@@ -137,7 +137,7 @@ class FormulaInfo extends SpecialPage {
 			return false;
 		}
 
-		$title = Title::newFromLinkTarget( $revisionRecord->getPageAsLinkTarget() );
+		$title = Title::newFromPageIdentity( $revisionRecord->getPage() );
 		$pageName = (string)$title;
 		$out->addWikiTextAsInterface( "* Page found: [[$pageName#$eid|$pageName]] (eq $eid)  ", false );
 		$link = $title->getLinkURL( [
