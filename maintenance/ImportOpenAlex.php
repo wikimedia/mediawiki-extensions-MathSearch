@@ -23,7 +23,6 @@ require_once __DIR__ . '/BaseImport.php';
 
 class ImportOpenAlex extends BaseImport {
 
-	/** @var string */
 	private string $filename;
 
 	public function __construct() {

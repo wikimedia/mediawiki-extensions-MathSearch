@@ -100,9 +100,6 @@ class MwsDumpWriter {
 		return $this->getHead() . $this->outBuffer . $this->getFooter();
 	}
 
-	/**
-	 * @param MathIdGenerator $generator
-	 */
 	public function addFromMathIdGenerator( MathIdGenerator $generator ) {
 		foreach ( $generator->getMathTags() as $key => $tag ) {
 			$mml = new MathLaTeXML( $tag[MathIdGenerator::CONTENT_POS],

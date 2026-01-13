@@ -70,9 +70,6 @@ class DumpReader {
 		$this->addJob( $rows );
 	}
 
-	/**
-	 * @param array $rows
-	 */
 	private function addJob( array $rows ) {
 		$part = ++$this->part;
 		$title = Title::newFromText( "SE reader '$this->fileName' part $part" );

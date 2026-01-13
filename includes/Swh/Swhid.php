@@ -28,9 +28,6 @@ class Swhid {
 		return $this->wait;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getUrl(): string {
 		return $this->url;
 	}

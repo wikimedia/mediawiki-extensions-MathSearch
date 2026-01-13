@@ -13,7 +13,6 @@ class ContentMathWikidataHook {
 
 	/**
 	 * Add Datatype "ContentMath" to the Wikibase Repository
-	 * @param array &$dataTypeDefinitions
 	 */
 	public static function onWikibaseRepoDataTypes( array &$dataTypeDefinitions ) {
 		global $wgContentMathEnableWikibaseDataType;

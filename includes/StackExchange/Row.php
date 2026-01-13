@@ -50,9 +50,6 @@ class Row {
 		return $this->fields;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getIgnoredFieldCount(): int {
 		return $this->ignoredFieldCount;
 	}

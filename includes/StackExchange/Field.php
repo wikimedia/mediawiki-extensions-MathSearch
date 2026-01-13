@@ -156,9 +156,6 @@ class Field {
 		}
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isKnown(): bool {
 		return $this->known;
 	}

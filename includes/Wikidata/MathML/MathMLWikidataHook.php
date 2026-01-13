@@ -13,7 +13,6 @@ class MathMLWikidataHook {
 
 	/**
 	 * Add Datatype "MathML" to the Wikibase Repository
-	 * @param array &$dataTypeDefinitions
 	 */
 	public static function onWikibaseRepoDataTypes( array &$dataTypeDefinitions ) {
 		global $wgContentMathEnableWikibaseDataType;

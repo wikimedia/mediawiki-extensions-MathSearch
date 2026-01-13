@@ -198,7 +198,7 @@ class MathObject extends MathMathML {
 			'JOIN mathvarstat ON varstat_featurename = `mathobservation_featurename` AND varstat_featuretype = `mathobservation_featuretype` '
 			.
 			'GROUP BY `mathobservation_featurename`, `mathobservation_featuretype`, mathindex_revision_id ORDER BY CNT DESC', __METHOD__ );
-		// phpcs:enable Generic.Files.LineLength
+		// phpcs:enable
 	}
 
 	public function getStatusCode(): int {
@@ -370,6 +370,9 @@ class MathObject extends MathMathML {
 		);
 	}
 
+	/**
+	 * @return string|false
+	 */
 	public function getPageTitle() {
 		$revisionRecord = MediaWikiServices::getInstance()
 			->getRevisionLookup()
@@ -412,9 +415,6 @@ class MathObject extends MathMathML {
 		return $out;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isCurrent(): bool {
 		$revisionRecord = MediaWikiServices::getInstance()
 			->getRevisionLookup()
@@ -595,9 +595,6 @@ class MathObject extends MathMathML {
 		return $this->rbi;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getPostData(): string {
 		return $this->postData;
 	}
@@ -631,7 +628,6 @@ class MathObject extends MathMathML {
 
 	/**
 	 * Gets an array that matches the variables of the class to the debug database columns
-	 * @return array
 	 */
 	protected function dbDebugOutArray(): array {
 		return [

@@ -12,9 +12,6 @@ class MlpEvalForm extends OOUIHTMLForm {
 	/** @var int */
 	private $step;
 
-	/**
-	 * @param SpecialMlpEval $specialPage
-	 */
 	public function __construct( SpecialMlpEval $specialPage ) {
 		$this->eval = $specialPage;
 		$this->step = $specialPage->getStep();

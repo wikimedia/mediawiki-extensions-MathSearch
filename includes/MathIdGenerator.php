@@ -155,9 +155,6 @@ class MathIdGenerator {
 		return $allIds[$currentIndex];
 	}
 
-	/**
-	 * @return array
-	 */
 	public function getMathTags(): array {
 		return $this->mathTags;
 	}
