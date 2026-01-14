@@ -156,6 +156,7 @@
 	"datatypes-type-contentmath": "Matematisk uttrykk (innhold)",
 	"quicksparqlstatements": "SPARQL QuickStatements-generator",
 	"pidredirect": "Persistent ID-omdirigering",
+	"importfrompid": "Importer fra persistent identifikator",
 	"wikibase-listdatatypes-contentmath-head": "Matematisk uttrykk (innhold)",
 	"wikibase-listdatatypes-contentmath-body": "Bokstavelig felt for matematiske uttrykk, formler, ligninger og lignende, uttrykt i DRMF/DLMF-varianten av LaTeX."
 }
