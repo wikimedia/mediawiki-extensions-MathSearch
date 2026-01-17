@@ -6,6 +6,7 @@
 		<exclude name="MediaWiki.Files.ClassMatchesFilename.NotMatch"/>
 		<exclude name="MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName"/>
 		<exclude name="MediaWiki.Usage.DbrQueryUsage.DbrQueryFound" />
+		<exclude name="MediaWiki.Usage.ForbiddenFunctions.curl_close" />
 		<exclude name="MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment" />
 	</rule>
 	<file>.</file>
