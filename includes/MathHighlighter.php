@@ -4,8 +4,7 @@ class MathHighlighter {
 
 	private const WINDOW_SIZE = 1200;
 
-	/** @var string */
-	private $wikiText;
+	private readonly string $wikiText;
 
 	/**
 	 * @param string $fId

@@ -13,10 +13,7 @@ class MathoidDriver {
 	private $identifiers;
 	/** @var array */
 	private $requiredPackages;
-	/** @var string */
-	private $q;
-	/** @var string */
-	private $type;
+	private readonly string $type;
 	/** @var string */
 	private $version;
 	/** @var stdClass */
@@ -36,12 +33,10 @@ class MathoidDriver {
 		return $this->error;
 	}
 
-	/**
-	 * @param string $q
-	 * @param string $type
-	 */
-	public function __construct( $q = '', $type = 'tex' ) {
-		$this->q = $q;
+	public function __construct(
+		private readonly string $q = '',
+		string $type = 'tex',
+	) {
 		if ( $type === 'pmml' ) {
 			$type = 'mml';
 		}

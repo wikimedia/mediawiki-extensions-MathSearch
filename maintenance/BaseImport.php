@@ -7,17 +7,17 @@ require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 abstract class BaseImport extends Maintenance {
 
-	protected array $jobOptions;
-	private string $jobType;
 	protected bool $groupConsecutiveKeys = false;
 
-	public function __construct( array $jobOptions, string $jobType, string $description = 'The file to be read' ) {
+	public function __construct(
+		protected readonly array $jobOptions,
+		private readonly string $jobType,
+		string $description = 'The file to be read',
+	) {
 		parent::__construct();
 		$this->addArg( 'file', $description );
 		$this->setBatchSize( 100 );
 		$this->requireExtension( 'MathSearch' );
-		$this->jobOptions = $jobOptions;
-		$this->jobType = $jobType;
 	}
 
 	public function execute() {

@@ -9,12 +9,9 @@ use Wikibase\Repo\Hooks\WikibaseChangeNotificationHook;
 
 class ChangeNotificationHook implements WikibaseChangeNotificationHook {
 
-	private Config $config;
-
 	public function __construct(
-		Config $config
+		private readonly Config $config,
 	) {
-		$this->config = $config;
 	}
 
 	public function onWikibaseChangeNotification( Change $change ): void {

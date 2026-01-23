@@ -22,18 +22,18 @@ use Wikibase\Lib\Store\EntityStore;
 use Wikibase\Repo\WikibaseRepo;
 
 class QuickStatements extends GraphJob {
-	private EntityStore $entityStore;
-	private EntityLookup $entityLookup;
-	private GuidGenerator $guidGenerator;
+	private readonly EntityStore $entityStore;
+	private readonly EntityLookup $entityLookup;
+	private readonly GuidGenerator $guidGenerator;
 
 	/** @var array<string,NumericPropertyId> */
 	private array $propertyIds = [];
 	/** @var array<string,string> */
 	private array $propertyTypes = [];
-	private PropertyDataTypeLookup $propertyDataTypeLookup;
-	private DataTypeFactory $dataTypeFactory;
+	private readonly PropertyDataTypeLookup $propertyDataTypeLookup;
+	private readonly DataTypeFactory $dataTypeFactory;
 
-	private LanguageNameUtils $languageNameUtils;
+	private readonly LanguageNameUtils $languageNameUtils;
 	private array $qid_cache = [];
 
 	public function __construct( $params ) {

@@ -12,7 +12,7 @@ use Wikibase\DataModel\Statement\StatementList;
 use Wikibase\Repo\WikibaseRepo;
 
 class NormalizeDoi extends GraphJob {
-	private string $pDoi;
+	private readonly string $pDoi;
 
 	public function __construct( $params ) {
 		global $wgMathSearchPropertyDoi;

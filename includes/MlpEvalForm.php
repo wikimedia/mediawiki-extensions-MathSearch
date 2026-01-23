@@ -7,18 +7,16 @@ use MediaWiki\MediaWikiServices;
 
 class MlpEvalForm extends OOUIHTMLForm {
 
-	/** @var SpecialMlpEval */
-	private $eval;
-	/** @var int */
-	private $step;
+	private readonly int $step;
 
-	public function __construct( SpecialMlpEval $specialPage ) {
-		$this->eval = $specialPage;
-		$this->step = $specialPage->getStep();
+	public function __construct(
+		private readonly SpecialMlpEval $eval,
+	) {
+		$this->step = $eval->getStep();
 		$formDescriptor = [];
 		$this->addControls( $formDescriptor );
 		$this->addOptions( $formDescriptor );
-		parent::__construct( $formDescriptor, $specialPage->getContext() );
+		parent::__construct( $formDescriptor, $eval->getContext() );
 		// $this->mWasSubmitted = false;
 		$this->addStateFields();
 		$this->addButtons();

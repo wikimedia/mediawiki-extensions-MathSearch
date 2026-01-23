@@ -12,7 +12,7 @@ use MediaWiki\Sparql\SparqlException;
 
 class Map {
 	private const ROWS_PER_JOB = 100;
-	private JobQueueGroup $jobQueueGroup;
+	private readonly JobQueueGroup $jobQueueGroup;
 
 	public function __construct( ?JobQueueGroup $jobQueueGroup = null ) {
 		$this->jobQueueGroup = $jobQueueGroup ?? MediaWikiServices::getInstance()->getJobQueueGroup();

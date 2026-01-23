@@ -6,9 +6,6 @@ use MediaWiki\Http\HttpRequestFactory;
 use Throwable;
 
 class Swhid {
-	private string $url;
-	private HttpRequestFactory $httpFactory;
-
 	private ?string $snapshot = null;
 
 	/** @var string|null */
@@ -18,10 +15,9 @@ class Swhid {
 	private int $wait = 0;
 
 	public function __construct(
-		HttpRequestFactory $httpFactory, string $url
+		private readonly HttpRequestFactory $httpFactory,
+		private readonly string $url,
 	) {
-		$this->url = $url;
-		$this->httpFactory = $httpFactory;
 	}
 
 	public function getWait(): int {

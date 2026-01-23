@@ -13,14 +13,6 @@ class MathSearchTerm {
 	public const REL_NAND = 2;
 	public const REL_NOR = 3;
 
-	/** @var int */
-	private $key = 0;
-	/** @var int */
-	private $rel = 0;
-	/** @var int */
-	private $type = 0;
-	/** @var string */
-	private $expr = '';
 	/** @var int[] */
 	private $relevanceMap = [];
 	/** @var array<int,SearchResult|array<string,array[]>> */
@@ -28,17 +20,12 @@ class MathSearchTerm {
 
 	private string $xQuery = '';
 
-	/**
-	 * @param int $i
-	 * @param int $rel
-	 * @param int $type
-	 * @param string $expr
-	 */
-	public function __construct( $i, $rel, $type, $expr ) {
-		$this->key  = $i;
-		$this->rel  = $rel;
-		$this->type = $type;
-		$this->expr = $expr;
+	public function __construct(
+		private int $key,
+		private int $rel,
+		private int $type,
+		private string $expr,
+	) {
 	}
 
 	/**

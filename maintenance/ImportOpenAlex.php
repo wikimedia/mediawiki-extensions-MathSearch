@@ -23,7 +23,7 @@ require_once __DIR__ . '/BaseImport.php';
 
 class ImportOpenAlex extends BaseImport {
 
-	private string $filename;
+	private readonly string $filename;
 
 	public function __construct() {
 		$jobname = 'openalex' . date( 'ymdhms' );

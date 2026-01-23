@@ -23,14 +23,11 @@ class FormulaInfo extends SpecialPage {
 
 	/** @var bool */
 	private $purge = false;
-	/** @var MathConfig */
-	private $mathConfig;
 
 	public function __construct(
-		MathConfig $mathConfig
+		private readonly MathConfig $mathConfig,
 	) {
 		parent::__construct( 'FormulaInfo' );
-		$this->mathConfig = $mathConfig;
 	}
 
 	/**

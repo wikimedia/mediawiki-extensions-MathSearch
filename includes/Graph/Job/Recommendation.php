@@ -7,7 +7,7 @@ use MediaWiki\Extension\MathSearch\Graph\PidLookup;
 
 class Recommendation extends GraphJob {
 
-	private PidLookup $qid_cache;
+	private readonly PidLookup $qid_cache;
 
 	public function __construct( $params ) {
 		parent::__construct( 'Recommendation', $params );

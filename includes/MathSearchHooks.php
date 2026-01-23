@@ -38,8 +38,8 @@ class MathSearchHooks implements
 	private array $idGenerators = [];
 
 	public function __construct(
-		private IConnectionProvider $connectionProvider,
-		private RevisionLookup $revisionLookup
+		private readonly IConnectionProvider $connectionProvider,
+		private readonly RevisionLookup $revisionLookup,
 	) {
 	}
 

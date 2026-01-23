@@ -32,14 +32,14 @@ class BaseX {
 	protected $relevanceMap = [];
 	/** @var int|false */
 	protected $size = false;
-	protected ?MathQueryObject $query;
 
 	/** @var array<int,array<string,array[]>> */
 	protected $resultSet = [];
 	private ?string $content;
 
-	public function __construct( ?MathQueryObject $query = null ) {
-		$this->query = $query;
+	public function __construct(
+		protected ?MathQueryObject $query = null,
+	) {
 	}
 
 	protected function doSearch( string $postData ): string {

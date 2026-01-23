@@ -14,12 +14,10 @@ use MediaWiki\Title\Title;
 
 class SpecialImport extends SpecialPage {
 
-	private HttpRequestFactory $http;
-	private Config $config;
-
-	public function __construct( HttpRequestFactory $http, Config $config ) {
-		$this->http = $http;
-		$this->config = $config;
+	public function __construct(
+		private readonly HttpRequestFactory $http,
+		private readonly Config $config,
+	) {
 		parent::__construct( 'ImportFromPid', 'import' );
 	}
 

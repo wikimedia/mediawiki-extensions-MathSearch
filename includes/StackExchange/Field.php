@@ -10,8 +10,6 @@ use Wikibase\Repo\WikibaseRepo;
 
 class Field {
 
-	/** @var string */
-	private $seName;
 	/** @var string|null */
 	private $propertyId = null;
 	/** @var bool */
@@ -20,10 +18,6 @@ class Field {
 	private $known = false;
 	/** @var bool|null */
 	private $excludeFromWb = null;
-	/** @var string */
-	private $content;
-	/** @var string */
-	private $normFileName;
 	/** @var int|null */
 	private $externalIdType = null;
 
@@ -131,15 +125,11 @@ class Field {
 		return LoggerFactory::getInstance( 'MathSearch' );
 	}
 
-	/**
-	 * @param string $seName
-	 * @param string $content
-	 * @param string $normFileName
-	 */
-	public function __construct( $seName, $content, $normFileName ) {
-		$this->seName = $seName;
-		$this->content = $content;
-		$this->normFileName = $normFileName;
+	public function __construct(
+		private readonly string $seName,
+		private int|string|array $content,
+		private readonly string $normFileName,
+	) {
 		// some posts file from arq20 math task were modified with additional version
 		// information by appending either .V1.0 or _V1_0
 		$fileparts = preg_split( "/[\._]/", $normFileName );

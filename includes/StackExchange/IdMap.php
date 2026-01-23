@@ -2,23 +2,20 @@
 
 namespace MediaWiki\Extension\MathSearch\StackExchange;
 
+use HashBagOStuff;
 use MediaWiki\MediaWikiServices;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
+use Wikibase\Lib\Store\EntityStore;
 use Wikibase\Repo\WikibaseRepo;
+use Wikimedia\Rdbms\IDatabase;
 
 class IdMap {
 
-	/** @var \Wikimedia\Rdbms\IDatabase */
-	private $dbw;
-	/** @var Item */
-	private $item;
-	/** @var \Wikibase\Lib\Store\EntityStore */
-	private $store;
-	/**
-	 * @var \HashBagOStuff
-	 */
-	private $cache;
+	private readonly IDatabase $dbw;
+	private readonly Item $item;
+	private readonly EntityStore $store;
+	private readonly HashBagOStuff $cache;
 	/** @var self|null */
 	private static $instance;
 
@@ -30,7 +27,7 @@ class IdMap {
 		$this->item = new Item();
 		$this->store = WikibaseRepo::getEntityStore();
 		// don't store too many keys
-		$this->cache = new \HashBagOStuff( [ 'maxKeys' => 10000 ] );
+		$this->cache = new HashBagOStuff( [ 'maxKeys' => 10000 ] );
 	}
 
 	/**

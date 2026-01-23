@@ -5,7 +5,7 @@ use MediaWiki\MediaWikiServices;
 use Wikimedia\Rdbms\IDatabase;
 
 class MathIndex {
-	private IDatabase $dbw;
+	private readonly IDatabase $dbw;
 
 	public function __construct( ?IDatabase $dbw = null ) {
 		$this->dbw = $dbw ?? MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getPrimaryDatabase();

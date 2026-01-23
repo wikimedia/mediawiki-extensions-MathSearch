@@ -7,10 +7,10 @@ use MediaWiki\Sparql\SparqlException;
 class PidLookup {
 
 	private array $qid_cache = [];
-	private string $pid;
 
-	public function __construct( $pid = 'P1451' ) {
-		$this->pid = $pid;
+	public function __construct(
+		private readonly string $pid = 'P1451',
+	) {
 	}
 
 	/**

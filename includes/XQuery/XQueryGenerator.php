@@ -23,18 +23,19 @@ abstract class XQueryGenerator {
 	private string $relativeXPath = '';
 	private string $lengthConstraint = '';
 	/** @var DOMDocument the MWS XML */
-	private $xml;
-	private string $rootElementName;
+	private readonly DOMDocument $xml;
 
 	/**
 	 * @param string $cmmlQueryString that contains the MathML query expression
-	 * @param string $rootName the root element tag name of the indexed expression
+	 * @param string $rootElementName the root element tag name of the indexed expression
 	 */
-	public function __construct( string $cmmlQueryString, string $rootName = 'expr' ) {
+	public function __construct(
+		string $cmmlQueryString,
+		private readonly string $rootElementName = 'expr',
+	) {
 		$this->xml = new DOMDocument();
 		$this->xml->preserveWhiteSpace = false;
 		$this->xml->loadXML( $cmmlQueryString );
-		$this->rootElementName = $rootName;
 	}
 
 	/**

@@ -29,10 +29,10 @@ class ImportCsv {
 	 * @var bool
 	 */
 	private $overwrite = false;
-	private UserIdentity $user;
 
-	public function __construct( UserIdentity $user ) {
-		$this->user = $user;
+	public function __construct(
+		private readonly UserIdentity $user,
+	) {
 	}
 
 	/**

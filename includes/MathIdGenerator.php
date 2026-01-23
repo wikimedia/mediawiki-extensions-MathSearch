@@ -13,13 +13,12 @@ class MathIdGenerator {
 	public const CONTENT_POS = 1;
 	public const ATTRIB_POS = 2;
 
-	private string $wikiText;
+	private readonly string $wikiText;
 	/**
 	 * @var array<string,array{0:string,1:string|null,2:array,3:string}> Filtered result from
 	 *  {@see Parser::extractTagsAndParams} with only <math> tags
 	 */
-	private array $mathTags;
-	private int $revisionId;
+	private readonly array $mathTags;
 	/** @var int[] */
 	private $contentAccessStats = [];
 	private string $format = "math.%d.%d";
@@ -54,7 +53,10 @@ class MathIdGenerator {
 		return $this->keys;
 	}
 
-	public function __construct( string $wikiText, int $revisionId = 0 ) {
+	public function __construct(
+		string $wikiText,
+		private readonly int $revisionId = 0,
+	) {
 		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
 		$this->wikiText =
 			Parser::extractTagsAndParams( [ 'nowki', 'syntaxhighlight', 'math' ], $wikiText,
@@ -62,7 +64,6 @@ class MathIdGenerator {
 		$this->mathTags = array_filter( $tags, static function ( $v ) {
 			return $v[0] === 'math';
 		} );
-		$this->revisionId = $revisionId;
 	}
 
 	public static function newFromRevisionId( int $revId ): MathIdGenerator {

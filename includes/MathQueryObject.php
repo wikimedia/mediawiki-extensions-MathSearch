@@ -13,8 +13,6 @@ class MathQueryObject extends MathObject {
 
 	/** @var int */
 	private $queryID = false;
-	/** @var string */
-	private $texquery;
 	/** @var string|null|false */
 	private $cquery = false;
 	/** @var string|false */
@@ -57,10 +55,11 @@ class MathQueryObject extends MathObject {
 	];
 
 	/**
-	 * @param string $texquery the TeX-like search input
+	 * @param string|false $texquery the TeX-like search input
 	 */
-	public function __construct( $texquery = '' ) {
-		$this->texquery = $texquery;
+	public function __construct(
+		private string|bool $texquery = '',
+	) {
 	}
 
 	/**

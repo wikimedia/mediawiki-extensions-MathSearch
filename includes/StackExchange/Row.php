@@ -18,23 +18,23 @@ class Row {
 	private $fields = [];
 	/** @var int */
 	private $ignoredFieldCount = 0;
-	/** @var string */
-	private $normFileName;
 
-	public function __construct( $line, $fileName ) {
-		$this->normFileName = $fileName;
+	public function __construct(
+		$line,
+		private readonly string $normFileName,
+	) {
 		set_error_handler( static function ( $errno, $errstr, $errfile, $errline ) {
 			throw new Exception( $errstr, $errno );
 		} );
 		if ( is_array( $line ) ) {
 			foreach ( $line as $key => $value ) {
-				$this->addField( $fileName, $key, $value );
+				$this->addField( $normFileName, $key, $value );
 			}
 		} else {
 			$row = new SimpleXMLElement( $line );
 			restore_error_handler();
 			foreach ( $row->attributes() as $key => $value ) {
-				$this->addField( $fileName, $key, (string)$value );
+				$this->addField( $normFileName, $key, (string)$value );
 			}
 		}
 	}

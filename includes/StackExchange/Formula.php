@@ -14,28 +14,14 @@ use Wikibase\Repo\WikibaseRepo;
 
 class Formula {
 
-	/** @var int */
-	private $id;
-	/** @var int */
-	private $qid;
-	/** @var string */
-	private $text;
-	/** @var int */
-	private $postQId;
+	private readonly \MathSearchHooks $mathSearchHooks;
 
-	private \MathSearchHooks $mathSearchHooks;
-
-	/**
-	 * @param int $id
-	 * @param int $qid
-	 * @param string $text
-	 * @param int $postQId
-	 */
-	public function __construct( $id, $qid, $text, $postQId ) {
-		$this->id = $id;
-		$this->qid = $qid;
-		$this->text = $text;
-		$this->postQId = $postQId;
+	public function __construct(
+		private readonly int $id,
+		private readonly int $qid,
+		private readonly string $text,
+		private readonly ?int $postQId,
+	) {
 		$this->mathSearchHooks = new \MathSearchHooks(
 			MediaWikiServices::getInstance()->getConnectionProvider(),
 			MediaWikiServices::getInstance()->getRevisionLookup()

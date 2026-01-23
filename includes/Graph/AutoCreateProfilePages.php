@@ -10,14 +10,11 @@ use MediaWiki\Output\OutputPage;
 use MediaWiki\Sparql\SparqlException;
 
 class AutoCreateProfilePages {
-	private Config $config;
-	private JobQueueGroup $jobQueueGroup;
-	private OutputPage $outputPage;
-
-	public function __construct( Config $config, JobQueueGroup $jobQueueGroup, OutputPage $outputPage ) {
-		$this->config = $config;
-		$this->jobQueueGroup = $jobQueueGroup;
-		$this->outputPage = $outputPage;
+	public function __construct(
+		private readonly Config $config,
+		private readonly JobQueueGroup $jobQueueGroup,
+		private readonly OutputPage $outputPage,
+	) {
 	}
 
 	/**

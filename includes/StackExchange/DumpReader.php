@@ -9,16 +9,11 @@ use XMLReader;
 
 class DumpReader {
 
-	/**
-	 * @var XMLReader
-	 */
-	private $file;
+	private readonly XMLReader $file;
 	/**
 	 * @var string
 	 */
 	private $fileName;
-	/** @var string */
-	private $errPath;
 	/** @var int */
 	private $part = 0;
 
@@ -30,11 +25,13 @@ class DumpReader {
 	 * @param \SplFileObject $file
 	 * @param string $errPath
 	 */
-	public function __construct( $file, $errPath ) {
+	public function __construct(
+		$file,
+		private readonly string $errPath,
+	) {
 		$this->file = new XMLReader();
 		XMLReader::open( $file->getRealPath() );
 		$this->normalizeFilename( $file->getFilename() );
-		$this->errPath = $errPath;
 	}
 
 	private function normalizeFilename( string $fileName ) {

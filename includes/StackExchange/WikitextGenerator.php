@@ -7,8 +7,7 @@ use XMLReader;
 
 class WikitextGenerator {
 
-	/** @var IdMap */
-	private $idGen;
+	private readonly IdMap $idGen;
 	/** @var Formula[] */
 	private $formulae = [];
 
@@ -36,7 +35,7 @@ class WikitextGenerator {
 				$fid = (int)$xml->getAttribute( 'id' );
 				$qid = $this->getQId( $fid );
 				$xml->read();
-				$tagText = $xml->value;
+				$tagText = $xml->value ?? '';
 				$this->formulae[] = new Formula( $fid, $qid, $tagText, $postQId );
 				return "<math id='$fid' qid='$qid'>$tagText</math>";
 			}
