@@ -20,7 +20,6 @@
  */
 
 use MediaWiki\Extension\Math\MathRenderer;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Parser\Parser;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
@@ -166,9 +165,10 @@ class UpdateMath extends Maintenance {
 	private function doUpdate( $pid, $pText, $pTitle = "", $revId = 0 ) {
 		$allFormula = [];
 
+		$services = $this->getServiceContainer();
 		$mathSearchHooks = new MathSearchHooks(
-			MediaWikiServices::getInstance()->getConnectionProvider(),
-			MediaWikiServices::getInstance()->getRevisionLookup()
+			$services->getConnectionProvider(),
+			$services->getRevisionLookup()
 		);
 
 		$notused = '';
