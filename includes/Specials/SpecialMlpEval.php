@@ -10,12 +10,17 @@
  */
 
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Logger\LoggerFactory;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
+use MediaWiki\Parser\ParserFactory;
+use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\SpecialPage\SpecialPageFactory;
 use MediaWiki\Title\Title;
+use MediaWiki\User\Options\UserOptionsManager;
+use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
  * @ingroup extensions
@@ -80,7 +85,14 @@ class SpecialMlpEval extends SpecialPage {
 		return $this->identifiers;
 	}
 
-	public function __construct() {
+	public function __construct(
+		private readonly IConnectionProvider $dbProvider,
+		private readonly RendererFactory $rendererFactory,
+		private readonly ParserFactory $parserFactory,
+		private readonly RevisionLookup $revisionLookup,
+		private readonly SpecialPageFactory $specialPageFactory,
+		private readonly UserOptionsManager $userOptionsManager,
+	) {
 		parent::__construct( 'MlpEval' );
 	}
 
@@ -184,9 +196,7 @@ class SpecialMlpEval extends SpecialPage {
 	public function getRandomPageText() {
 		try {
 			$uid = $this->getUser()->getId();
-			$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+			$dbr = $this->dbProvider->getReplicaDatabase();
 			$results = $dbr->selectFieldValues( 'math_review_list', 'revision_id',
 					"revision_id not in (SELECT revision_id from math_mlp where user_id = $uid )",
 					__METHOD__, [
@@ -200,7 +210,7 @@ class SpecialMlpEval extends SpecialPage {
 		} catch ( Exception $e ) {
 			// empty
 		}
-		$rp = MediaWikiServices::getInstance()->getSpecialPageFactory()->getPage( 'Randompage' );
+		$rp = $this->specialPageFactory->getPage( 'Randompage' );
 		$rp->setContext( $this->getContext() );
 		for ( $i = 0; $i < self::MAX_ATTEMPTS; $i++ ) {
 			$title = $rp->getRandomTitle();
@@ -246,9 +256,7 @@ class SpecialMlpEval extends SpecialPage {
 			$this->lastError = "no revision id given";
 			return false;
 		}
-		$this->revisionRecord = MediaWikiServices::getInstance()
-			->getRevisionLookup()
-			->getRevisionById( $revId );
+		$this->revisionRecord = $this->revisionLookup->getRevisionById( $revId );
 		$this->mathIdGen = MathIdGenerator::newFromRevisionRecord(
 			$this->revisionRecord
 		);
@@ -361,9 +369,7 @@ class SpecialMlpEval extends SpecialPage {
 		try {
 			$uid = $this->getUser()->getId();
 			$rid = $this->revisionRecord->getId();
-			$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+			$dbr = $this->dbProvider->getReplicaDatabase();
 			// Note that the math anchor is globally unique
 			$results = $dbr->selectFieldValues( 'math_review_list', 'anchor',
 				"anchor not in (SELECT anchor from math_mlp where user_id = $uid " .
@@ -430,20 +436,19 @@ class SpecialMlpEval extends SpecialPage {
 				}
 				break;
 			case self::STEP_RENDERING:
-				$services = MediaWikiServices::getInstance();
 				switch ( $this->subStep ) {
 					case '4a':
-						$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'mathml' );
+						$this->userOptionsManager->setOption( $this->getUser(), 'math', 'mathml' );
 						$this->printMathObjectInContext( false, false,
 							$this->getMathMLRenderingAsHtmlFragment( 'mathml' ) );
 						break;
 					case '4b':
-						$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'native' );
+						$this->userOptionsManager->setOption( $this->getUser(), 'math', 'native' );
 						$this->printMathObjectInContext( false, false,
 							$this->getMathMLRenderingAsHtmlFragment( 'native' ) );
 						break;
 					case '4c':
-						$services->getUserOptionsManager()->setOption( $this->getUser(), 'math', 'latexml' );
+						$this->userOptionsManager->setOption( $this->getUser(), 'math', 'latexml' );
 						$this->printMathObjectInContext( false, false,
 							$this->getMathMLRenderingAsHtmlFragment( 'latexml' ),
 							[ __CLASS__, 'removeSVGs' ] );
@@ -522,9 +527,7 @@ class SpecialMlpEval extends SpecialPage {
 			$this->printSource( var_export( $message, true ), 'Error: No user found to store results.' );
 			return;
 		}
-		$dbw = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
+		$dbw = $this->dbProvider->getPrimaryDatabase();
 
 		$dbw->upsert( 'math_mlp', $row, [ [ 'user_id', 'revision_id', 'anchor', 'step' ] ], $row, __METHOD__ );
 		if ( $this->fId ) {
@@ -605,9 +608,7 @@ class SpecialMlpEval extends SpecialPage {
 	private function printFormula() {
 		$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
 		/** @var MathRenderer $renderer */
-		$renderer = MediaWikiServices::getInstance()
-			->get( 'Math.RendererFactory' )
-			->getRenderer( $mo->getUserInputTex(), [] );
+		$renderer = $this->rendererFactory->getRenderer( $mo->getUserInputTex(), [] );
 		if ( $renderer->render() ) {
 			$output = $renderer->getHtmlOutput();
 		} else {
@@ -678,7 +679,7 @@ class SpecialMlpEval extends SpecialPage {
 		$popts = $out->parserOptions();
 		$popts->setInterfaceMessage( false );
 
-		$parser = MediaWikiServices::getInstance()->getParserFactory()->getInstance();
+		$parser = $this->parserFactory->getInstance();
 		$parserOutput = $parser->parse(
 			$hl->getWikiText(), $this->getRevisionTitle(), $popts )->getText();
 		if ( $filter ) {

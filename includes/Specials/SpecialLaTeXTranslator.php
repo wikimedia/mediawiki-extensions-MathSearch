@@ -7,25 +7,22 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Logger\LegacyLogger;
 use MediaWiki\Logger\LoggerFactory;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\SpecialPage\SpecialPage;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Wikimedia\ObjectCache\WANObjectCache;
 
 class SpecialLaTeXTranslator extends SpecialPage {
 
 	private const VERSION = '1.0.0';
 
-	/** @var WANObjectCache */
-	private $cache;
 	/** @var string */
 	private $dgUrl;
 	/** @var string */
 	private $compUrl;
-	/** @var HttpRequestFactory */
-	private $httpFactory;
 	/** @var LoggerInterface */
 	private $logger;
 	/** @var string */
@@ -45,17 +42,18 @@ class SpecialLaTeXTranslator extends SpecialPage {
 		}
 	}
 
-	public function __construct() {
+	public function __construct(
+			private readonly HttpRequestFactory $httpFactory,
+			private readonly WANObjectCache $cache,
+			private readonly RevisionLookup $revisionLookup,
+		) {
 		parent::__construct( 'LaTeXTranslator' );
-		$mw = MediaWikiServices::getInstance();
-		$this->cache = $mw->getMainWANObjectCache();
 		// provisional Hack to get the URL
-		$provisionalUrl = $mw->getMainConfig()->get( 'MathSearchTranslationUrl' );
+		$provisionalUrl = $this->getConfig()->get( 'MathSearchTranslationUrl' );
 		$this->dgUrl =
 			preg_replace( '/translation/', 'generateAnnotatedDependencyGraph', $provisionalUrl );
 		$this->compUrl =
 			preg_replace( '/translation/', 'generateTranslatedComputedMoi', $provisionalUrl );
-		$this->httpFactory = $mw->getHttpRequestFactory();
 		$this->logger = LoggerFactory::getInstance( 'MathSearch' );
 	}
 
@@ -70,8 +68,7 @@ class SpecialLaTeXTranslator extends SpecialPage {
 		$output = $this->getOutput();
 		$output->addWikiMsg( 'math-tex2nb-intro' );
 		if ( $pid && $eid ) {
-			$revisionRecord =
-				MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionById( $pid );
+			$revisionRecord = $this->revisionLookup->getRevisionById( $pid );
 			$contentModel =
 				$revisionRecord->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )->getModel();
 			if ( $contentModel !== CONTENT_MODEL_WIKITEXT ) {

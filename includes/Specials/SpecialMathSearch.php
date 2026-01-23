@@ -14,7 +14,7 @@ use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\SpecialPage\SpecialPage;
 
 /**
@@ -52,7 +52,9 @@ class SpecialMathSearch extends SpecialPage {
 		throw new ErrorException( $errstr, 0, $errno, $errfile, $errline );
 	}
 
-	public function __construct() {
+	public function __construct(
+		private readonly RevisionLookup $revisionLookup,
+	) {
 		parent::__construct( 'MathSearch' );
 	}
 
@@ -381,7 +383,7 @@ class SpecialMathSearch extends SpecialPage {
 	 */
 	private function displayRevisionResults( $revisionID ) {
 		$out = $this->getOutput();
-		$revisionStoreRecord = MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionById( $revisionID );
+		$revisionStoreRecord = $this->revisionLookup->getRevisionById( $revisionID );
 		if ( !$revisionStoreRecord ) {
 			LoggerFactory::getInstance( 'MathSearch' )->error( 'invalid revision number' );
 			return false;

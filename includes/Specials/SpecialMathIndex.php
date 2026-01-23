@@ -5,7 +5,7 @@ use MediaWiki\Exception\PermissionsError;
 use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\Extension\MathSearch\Graph\AutoCreateProfilePages;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\JobQueue\JobQueueGroup;
 use MediaWiki\Sparql\SparqlException;
 use MediaWiki\SpecialPage\SpecialPage;
 
@@ -15,7 +15,9 @@ class SpecialMathIndex extends SpecialPage {
 	private const SCRIPT_WRITE_INDEX = 1;
 	private const SCRIPT_PROFILE_PAGES = 2;
 
-	public function __construct() {
+	public function __construct(
+		private readonly JobQueueGroup $jobQueueGroup,
+	) {
 		parent::__construct( 'MathIndex', 'delete', true );
 	}
 
@@ -87,8 +89,8 @@ class SpecialMathIndex extends SpecialPage {
 				break;
 			case self::SCRIPT_PROFILE_PAGES:
 				$creator = new AutoCreateProfilePages(
-					MediaWikiServices::getInstance()->getMainConfig(),
-					MediaWikiServices::getInstance()->getJobQueueGroup(),
+					$this->getConfig(),
+					$this->jobQueueGroup,
 					$this->getOutput()
 				);
 				try {

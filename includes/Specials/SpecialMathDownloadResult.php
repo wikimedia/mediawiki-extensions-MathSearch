@@ -1,7 +1,9 @@
 <?php
 
+use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RevisionLookup;
+use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
  * Lets the user download a CSV file with the results
@@ -10,15 +12,22 @@ use MediaWiki\MediaWikiServices;
  */
 class SpecialMathDownloadResult extends SpecialUploadResult {
 
-	public function __construct( $name = 'MathDownload' ) {
-		parent::__construct( $name );
+	public function __construct(
+		private readonly IConnectionProvider $dbProvider,
+		RendererFactory $rendererFactory,
+		RevisionLookup $revisionLookup,
+	) {
+		parent::__construct(
+			$dbProvider,
+			$rendererFactory,
+			$revisionLookup,
+			'MathDownload'
+		);
 	}
 
-	public static function run2CSV( $runId ) {
+	public function run2CSV( $runId ) {
 		$out = ImportCsv::getCsvColumnHeader() . "\n";
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		$res = $dbr->select( 'math_wmc_results',
 			[ 'qId', 'oldId', 'fId' ],
 			[ 'runId' => $runId ],
@@ -52,7 +61,7 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 		$this->getOutput()->disable();
 		header( 'Content-Type: text/csv' );
 		header( 'Content-Disposition: attachment; filename="run' . $this->runId . '.csv"' );
-		print ( self::run2CSV( $this->runId ) );
+		print ( $this->run2CSV( $this->runId ) );
 		return true;
 	}
 

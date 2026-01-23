@@ -1,7 +1,7 @@
 <?php
 
-use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
+use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
  * Lets the user import a CSV file with the results
@@ -10,12 +10,11 @@ use MediaWiki\SpecialPage\SpecialPage;
  */
 class SpecialDisplayTopics extends SpecialPage {
 
-	/**
-	 * @param string $name
-	 */
-	public function __construct( $name = 'DisplayTopics' ) {
+	public function __construct(
+		private readonly IConnectionProvider $dbProvider,
+	) {
 		$listed = (bool)$this->getConfig()->get( 'MathWmcServer' );
-		parent::__construct( $name, 'mathwmcsubmit', $listed );
+		parent::__construct( 'DisplayTopics', 'mathwmcsubmit', $listed );
 	}
 
 	/**
@@ -42,9 +41,7 @@ class SpecialDisplayTopics extends SpecialPage {
 			return;
 		}
 
-		$dbw = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
+		$dbw = $this->dbProvider->getPrimaryDatabase();
 		$cols = [ '#', 'fId', '#Var', '#matches', 'query', 'reference' ];
 		$res = $dbw->query( <<<SQL
 SELECT
@@ -75,9 +72,7 @@ SQL
 		}
 
 		$out = $this->getOutput();
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		$qId = $dbr->selectField( 'math_wmc_ref', 'qId', [ 'qID' => $query ], __METHOD__ );
 		if ( !$qId ) {
 			$out->addWikiTextAsInterface( "Topic $query does not exist." );
@@ -93,9 +88,7 @@ SQL
 	 */
 	private function printMostFrequentRuns( $qId ) {
 		$out = $this->getOutput();
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		$res = $dbr->query( "select
 			  math_input as            rendering,
 			  count(distinct runs.userId) cntUser,
@@ -131,9 +124,7 @@ SQL
 	private function printIndividualResults( int $qId ) {
 		$out = $this->getOutput();
 		$out->addWikiTextAsInterface( "== Individual results ==" );
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		if ( !$dbr->tableExists( 'math_wmc_page_ranks', __METHOD__ ) ) {
 			MathSearchUtils::createEvaluationTables();
 		}

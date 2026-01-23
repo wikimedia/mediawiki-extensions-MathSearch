@@ -1,10 +1,12 @@
 <?php
 
+use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\HTMLForm\Field\HTMLTextField;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\Title;
+use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
  * Lets the user import a CSV file with the results
@@ -19,10 +21,12 @@ class SpecialUploadResult extends SpecialPage {
 	/** @var bool|int|string */
 	protected $runId = false;
 
-	/**
-	 * @param string $name
-	 */
-	public function __construct( $name = 'MathUpload' ) {
+	public function __construct(
+		private readonly IConnectionProvider $dbProvider,
+		private readonly RendererFactory $rendererFactory,
+		private readonly RevisionLookup $revisionLookup,
+		string $name = 'MathUpload',
+	) {
 		$listed = (bool)$this->getConfig()->get( 'MathWmcServer' );
 		parent::__construct( $name, 'mathwmcsubmit', $listed );
 	}
@@ -86,9 +90,7 @@ class SpecialUploadResult extends SpecialPage {
 			return [];
 		}
 
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		$formFields = [];
 		$options = [];
 		$uID = $this->getUser()->getId();
@@ -135,9 +137,7 @@ class SpecialUploadResult extends SpecialPage {
 	 * @return bool|string
 	 */
 	public function runValidatorFilter() {
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		$uID = $this->getUser()->getId();
 		$res = $dbr->selectField( 'math_wmc_runs', 'runName',
 			[ 'isDraft' => true, 'userID' => $uID, 'runId' => $this->runId ], __METHOD__ );
@@ -207,9 +207,7 @@ class SpecialUploadResult extends SpecialPage {
 		$md5 = MathObject::hash2md5( $row['math_inputhash'] );
 		if ( $this->getRequest()->getBool( "wpdisplayFormulae" ) ) {
 			$this->getOutput()->addModuleStyles( [ 'ext.math.styles' ] );
-			$renderer = MediaWikiServices::getInstance()
-				->get( 'Math.RendererFactory' )
-				->getFromHash( $md5 );
+			$renderer = $this->rendererFactory->getFromHash( $md5 );
 			if ( $renderer->render() ) {
 				$renderedMath = $renderer->getHtmlOutput();
 			} else {
@@ -219,9 +217,7 @@ class SpecialUploadResult extends SpecialPage {
 			$renderedMath = $md5;
 		}
 		$formulaId = MathSearchHooks::generateMathAnchorString( $row['oldId'], $row['fId'] );
-		$revisionRecord = MediaWikiServices::getInstance()
-			->getRevisionLookup()
-			->getRevisionById( $row['oldId'] );
+		$revisionRecord = $this->revisionLookup->getRevisionById( $row['oldId'] );
 		$title = Title::newFromPageIdentity( $revisionRecord->getPage() );
 		$link = $title->getLinkURL() . $formulaId;
 		$this->getOutput()->addHTML( "<tr><td>{$row['qId']}</td><td><a href=\"$link\" >$formulaId</a></td>
@@ -230,9 +226,7 @@ class SpecialUploadResult extends SpecialPage {
 
 	private function displayFeedback() {
 		$runId = $this->runId;
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		$res = $dbr->select(
 			[ 'l' => 'math_wmc_rank_levels', 'r' => 'math_wmc_ref', 'math_wmc_results' ],
 			[
@@ -279,9 +273,7 @@ class SpecialUploadResult extends SpecialPage {
 
 	private function displayFormulaFeedback() {
 		$runId = $this->runId;
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		$res = $dbr->select(
 			[ 'l' => 'math_wmc_rank_levels', 'r' => 'math_wmc_ref', 'math_wmc_results' ],
 			[

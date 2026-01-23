@@ -39,9 +39,9 @@ class BatchExport extends Maintenance {
 			$this->output( "{$dir} is not a directory.\n" );
 			exit( 1 );
 		}
-		$dbr = $this->getServiceContainer()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbProvider = $this->getServiceContainer()->getConnectionProvider();
+		$dbr = $dbProvider->getReplicaDatabase();
+		$specialMathDownloadResult = new SpecialMathDownloadResult( $dbProvider );
 		// runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 		// runName VARCHAR(45),
 		// userId INT UNSIGNED,
@@ -55,7 +55,7 @@ class BatchExport extends Maintenance {
 			$fn = "$dir/$username-$runName-{$row->runId}.csv";
 			$this->output( "Export to file $fn.\n" );
 			$fh = fopen( $fn, 'w' );
-			fwrite( $fh, SpecialMathDownloadResult::run2CSV( $row->runId ) );
+			fwrite( $fh, $specialMathDownloadResult->run2CSV( $row->runId ) );
 			fclose( $fh );
 		}
 	}

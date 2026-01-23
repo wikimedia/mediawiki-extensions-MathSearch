@@ -14,13 +14,17 @@ use MediaWiki\HTMLForm\Field\HTMLIntField;
 use MediaWiki\HTMLForm\Field\HTMLSubmitField;
 use MediaWiki\HTMLForm\Field\HTMLTextField;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Languages\LanguageNameUtils;
+use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Sparql\SparqlException;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\Title;
 
 class SpecialQuickSparqlStatements extends SpecialPage {
-	public function __construct() {
+	public function __construct(
+		private readonly LanguageNameUtils $languageNameUtils,
+		private readonly WikiPageFactory $wikiPageFactory,
+	) {
 		parent::__construct( 'QuickSparqlStatements', 'import' );
 	}
 
@@ -123,7 +127,7 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 					if ( str_starts_with( $key, 'L' ) ) {
 						$this->getOutput()->addWikiTextAsContent( 'success! key starts with L' );
 						$languageCode = substr( $key, 1 );
-						if ( MediaWikiServices::getInstance()->getLanguageNameUtils()->isValidCode( $languageCode ) ) {
+						if ( $this->languageNameUtils->isValidCode( $languageCode ) ) {
 							$this->getOutput()->addWikiTextAsContent(
 								'Language code ' . $languageCode . ' is valid for label/descriptions/aliases.' );
 						} else {
@@ -143,7 +147,6 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 		}
 		$jobParams = $this->getJobParams( $formData );
 		$title  = Title::newFromText( $jobParams['page-name'] );
-		$pageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
 		$text = $formData['job-description'] .
 			'<br/><h3>Query</h3><syntaxhighlight lang="sparql">' .
 			$formData['query'] .
@@ -152,7 +155,7 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 			'</syntaxhighlight><h3>Endpoint</h3>' .
 			Query::getEndpoint();
 		$pageContent = ContentHandler::makeContent( $text, $title );
-		$pageFactory->newFromTitle( $title )
+		$this->wikiPageFactory->newFromTitle( $title )
 			->doUserEditContent( $pageContent, $this->getUser(),
 				'Created automatically via QuickSparql Statements special page.' );
 

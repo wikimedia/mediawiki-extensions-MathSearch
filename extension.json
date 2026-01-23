@@ -200,15 +200,35 @@
 		"remoteExtPath": "MathSearch/resources"
 	},
 	"SpecialPages": {
-		"MathSearch": "SpecialMathSearch",
-		"MlpEval": "SpecialMlpEval",
+		"MathSearch": {
+			"class": "SpecialMathSearch",
+			"services": [
+				"RevisionLookup"
+			]
+		},
+		"MlpEval": {
+			"class": "SpecialMlpEval",
+			"services": [
+				"ConnectionProvider",
+				"Math.RendererFactory",
+				"ParserFactory",
+				"RevisionLookup",
+				"SpecialPageFactory",
+				"UserOptionsManager"
+			]
+		},
 		"FormulaInfo": {
 			"class": "FormulaInfo",
 			"services": [
 				"Math.Config"
 			]
 		},
-		"GetEquationsByQuery": "\\MediaWiki\\Extension\\MathSearch\\Specials\\GetEquationsByQuery",
+		"GetEquationsByQuery": {
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Specials\\GetEquationsByQuery",
+			"services": [
+				"ConnectionProvider"
+			]
+		},
 		"ImportFromPid": {
 			"class": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialImport",
 			"services": [
@@ -217,12 +237,49 @@
 			]
 		},
 		"MathDebug": "SpecialMathDebug",
-		"MathIndex": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialMathIndex",
-		"DisplayTopics": "SpecialDisplayTopics",
-		"LaTeXTranslator": "SpecialLaTeXTranslator",
-		"MathUpload": "SpecialUploadResult",
-		"MathDownload": "SpecialMathDownloadResult",
-		"QuickSparqlStatements": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialQuickSparqlStatements",
+		"MathIndex": {
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialMathIndex",
+			"services": [
+				"JobQueueGroup"
+			]
+		},
+		"DisplayTopics": {
+			"class": "SpecialDisplayTopics",
+			"services": [
+				"ConnectionProvider"
+			]
+		},
+		"LaTeXTranslator": {
+			"class": "SpecialLaTeXTranslator",
+			"services": [
+				"HttpRequestFactory",
+				"MainWANObjectCache",
+				"RevisionLookup"
+			]
+		},
+		"MathUpload": {
+			"class": "SpecialUploadResult",
+			"services": [
+				"ConnectionProvider",
+				"Math.RendererFactory",
+				"RevisionLookup"
+			]
+		},
+		"MathDownload": {
+			"class": "SpecialMathDownloadResult",
+			"services": [
+				"ConnectionProvider",
+				"Math.RendererFactory",
+				"RevisionLookup"
+			]
+		},
+		"QuickSparqlStatements": {
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialQuickSparqlStatements",
+			"services": [
+				"LanguageNameUtils",
+				"WikiPageFactory"
+			]
+		},
 		"PidRedirect": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialPidRedirect"
 
 	},

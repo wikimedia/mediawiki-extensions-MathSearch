@@ -12,12 +12,14 @@ namespace MediaWiki\Extension\MathSearch\Specials;
  */
 
 use MediaWiki\Extension\Math\MathRenderer;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
+use Wikimedia\Rdbms\IConnectionProvider;
 
 class GetEquationsByQuery extends SpecialPage {
 
-	public function __construct() {
+	public function __construct(
+		private readonly IConnectionProvider $dbProvider,
+	) {
 		parent::__construct( 'GetEquationsByQuery' );
 	}
 
@@ -52,9 +54,7 @@ class GetEquationsByQuery extends SpecialPage {
 		$this->getOutput()->addWikiTextAsInterface(
 			"Displaying first 10 equation for query: <pre>" . var_export( $sqlFilter, true ) . '</pre>'
 		);
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		$res = $dbr->select(
 			[ 'mathlog' ],
 			[
