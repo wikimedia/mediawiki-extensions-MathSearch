@@ -3,7 +3,6 @@
 namespace MediaWiki\Extension\MathSearch\Specials;
 
 use Closure;
-use HTMLTextAreaField;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements;
 use MediaWiki\Extension\MathSearch\Graph\Map;
@@ -12,6 +11,7 @@ use MediaWiki\HTMLForm\Field\HTMLCheckField;
 use MediaWiki\HTMLForm\Field\HTMLInfoField;
 use MediaWiki\HTMLForm\Field\HTMLIntField;
 use MediaWiki\HTMLForm\Field\HTMLSubmitField;
+use MediaWiki\HTMLForm\Field\HTMLTextAreaField;
 use MediaWiki\HTMLForm\Field\HTMLTextField;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Languages\LanguageNameUtils;

@@ -2,9 +2,9 @@
 
 namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
-use GenericParameterJob;
-use Job;
 use MediaWiki\Auth\AuthManager;
+use MediaWiki\JobQueue\GenericParameterJob;
+use MediaWiki\JobQueue\Job;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;

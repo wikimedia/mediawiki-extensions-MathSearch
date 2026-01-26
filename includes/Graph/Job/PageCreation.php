@@ -1,7 +1,7 @@
 <?php
 namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
-use ContentHandler;
+use MediaWiki\Content\ContentHandler;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleParser;

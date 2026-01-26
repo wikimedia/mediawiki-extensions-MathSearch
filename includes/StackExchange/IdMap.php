@@ -2,12 +2,12 @@
 
 namespace MediaWiki\Extension\MathSearch\StackExchange;
 
-use HashBagOStuff;
 use MediaWiki\MediaWikiServices;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\Lib\Store\EntityStore;
 use Wikibase\Repo\WikibaseRepo;
+use Wikimedia\ObjectCache\HashBagOStuff;
 use Wikimedia\Rdbms\IDatabase;
 
 class IdMap {

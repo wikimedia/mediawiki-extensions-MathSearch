@@ -2,11 +2,11 @@
 
 namespace MediaWiki\Extension\MathSearch\Graph;
 
-use JobQueueGroup;
 use MediaWiki\Extension\MathSearch\Graph\Job\FetchIdsFromWd;
 use MediaWiki\Extension\MathSearch\Graph\Job\NormalizeDoi;
 use MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements;
 use MediaWiki\Extension\MathSearch\Graph\Job\SetProfileType;
+use MediaWiki\JobQueue\JobQueueGroup;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Sparql\SparqlException;
 
