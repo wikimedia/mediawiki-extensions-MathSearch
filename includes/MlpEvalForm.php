@@ -1,15 +1,16 @@
 <?php
 
 use MediaWiki\Extension\Math\MathConfig;
+use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\HTMLForm\Field\HTMLTitleTextField;
 use MediaWiki\HTMLForm\OOUIHTMLForm;
-use MediaWiki\MediaWikiServices;
 
 class MlpEvalForm extends OOUIHTMLForm {
 
 	private readonly int $step;
 
 	public function __construct(
+		private readonly RendererFactory $rendererFactory,
 		private readonly SpecialMlpEval $eval,
 	) {
 		$this->step = $eval->getStep();
@@ -109,9 +110,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 				$default = [];
 				foreach ( $this->eval->getIdentifiers() as $id ) {
 					/** @var MathRenderer $renderer */
-					$renderer = MediaWikiServices::getInstance()
-						->get( 'Math.RendererFactory' )
-						->getRenderer( $id, [] );
+					$renderer = $this->rendererFactory->getRenderer( $id, [] );
 					if ( $renderer->render() ) {
 						$rendered = $renderer->getHtmlOutput();
 					} else {

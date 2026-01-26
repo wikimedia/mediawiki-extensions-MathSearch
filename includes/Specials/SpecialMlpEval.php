@@ -182,7 +182,7 @@ class SpecialMlpEval extends SpecialPage {
 		if ( !defined( 'MW_PHPUNIT_TEST' ) ) {
 			$this->printIntorduction();
 		}
-		$form = new MlpEvalForm( $this );
+		$form = new MlpEvalForm( $this->rendererFactory, $this );
 		$form->show();
 		if ( $this->step == 5 || $this->step == 6 ) {
 			$this->getOutput()->addWikiMsg( 'math-lp-5-footer' );

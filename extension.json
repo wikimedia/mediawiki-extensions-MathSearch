@@ -220,7 +220,8 @@
 		"FormulaInfo": {
 			"class": "FormulaInfo",
 			"services": [
-				"Math.Config"
+				"Math.Config",
+				"RevisionLookup"
 			]
 		},
 		"GetEquationsByQuery": {

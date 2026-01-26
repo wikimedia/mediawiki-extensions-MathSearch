@@ -13,6 +13,7 @@ use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\Title;
 
@@ -26,6 +27,7 @@ class FormulaInfo extends SpecialPage {
 
 	public function __construct(
 		private readonly MathConfig $mathConfig,
+		private readonly RevisionLookup $revisionLookup,
 	) {
 		parent::__construct( 'FormulaInfo' );
 	}
@@ -126,9 +128,7 @@ class FormulaInfo extends SpecialPage {
 		$out->addWikiTextAsInterface(
 			'Display information for equation id:' . $eid . ' on revision:' . $oldID
 		);
-		$revisionRecord = MediaWikiServices::getInstance()
-			->getRevisionLookup()
-			->getRevisionById( $oldID );
+		$revisionRecord = $this->revisionLookup->getRevisionById( $oldID );
 		if ( !$revisionRecord ) {
 			$out->addWikiTextAsInterface( 'There is no revision with id:' . $oldID . ' in the database.' );
 			return false;
