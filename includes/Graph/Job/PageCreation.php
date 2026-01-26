@@ -3,6 +3,7 @@ namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleParser;
 use RuntimeException;
@@ -15,36 +16,43 @@ use Wikibase\DataModel\SiteLink;
 use Wikibase\Repo\WikibaseRepo;
 
 class PageCreation extends GraphJob {
+	private readonly WikiPageFactory $wikiPageFactory;
+
 	public function __construct( $params ) {
 		parent::__construct( 'CreateProfilePages', $params );
+		$this->wikiPageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
 	}
 
 	public function run(): bool {
 		$user = $this->getUser();
-
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
-		$pageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
 		foreach ( $this->params['rows'] as $qid ) {
 			try {
-				self::getLog()->info( "Creating page $qid." );
+				self::getLog()->debug( "Processing page $qid." );
 				$item = $lookup->getEntity( new ItemId( $qid ) );
-				if ( $item === null ) {
-					self::getLog()->error( "Item Q$qid not found." );
+				if ( !$item instanceof Item ) {
+					self::getLog()->error( "Item $qid not found, or not an item." );
 					continue;
 				}
-				$newTitle = $this->makeTitle( $item );
-				if ( $item->hasLinkToSite( 'mardi' ) ) {
-					self::getLog()->info( "Page for $qid already exists." );
-					if ( $item->getSiteLink( 'mardi' )->getPageName() === $newTitle->getPrefixedText() ) {
+				$templateContent = $this->getTemplateContent( $item );
+				$hasLinkToSite = $item->hasLinkToSite( 'mardi' );
+				if ( $hasLinkToSite ) {
+					self::getLog()->debug( "Page for $qid already exists." );
+					$currentName = $item->getSiteLink( 'mardi' )->getPageName();
+					$newTitle = $this->makeBetterTitle( $item, $currentName );
+					if ( !$newTitle ) {
+						self::getLog()->debug( "Current title for $qid is already optimal." );
 						continue;
 					}
-					self::getLog()->info( "Moving existing page to " . $newTitle->getText() . "." );
+					$newName = $newTitle->getText();
+					self::getLog()->info( "Moving existing page " . $currentName . " to " . $newName . "." );
 					$status = MediaWikiServices::getInstance()->getMovePageFactory()->newMovePage(
-						Title::newFromText( $item->getSiteLink( 'mardi' )->getPageName() ),
-						$this->makeTitle( $item )
+						Title::newFromText( $currentName ),
+						$this->makeBetterTitle( $item )
 					)->move( $user,
-						'Move profile page according to new naming schema. Job ' . $this->getJobname() );
+						'Move profile page according to new naming schema `' . $currentName . '`->`' . $newName
+						. '`' . $this->getJobname() );
 					if ( !$status->isOK() ) {
 						self::getLog()->error( "Could not move page for $qid: " . $status->getMessage()->text() );
 						continue;
@@ -52,9 +60,10 @@ class PageCreation extends GraphJob {
 					$item->removeSiteLink( 'mardi' );
 				} else {
 					self::getLog()->info( "Creating new page for $qid." );
+					$newTitle = $this->makeBetterTitle( $item );
 					$pageContent = ContentHandler::makeContent(
-						$this->getTemplateContent( $item ), $newTitle );
-					$pageFactory->newFromTitle( $newTitle )->doUserEditContent( $pageContent, $user,
+						$templateContent, $newTitle );
+					$this->wikiPageFactory->newFromTitle( $newTitle )->doUserEditContent( $pageContent, $user,
 						'Created automatically from ' . $this->getJobname() );
 				}
 				$siteLink = new SiteLink( 'mardi', $newTitle->getPrefixedText() );
@@ -69,7 +78,7 @@ class PageCreation extends GraphJob {
 		return true;
 	}
 
-	private function makeTitle( Item $item ): Title {
+	private function makeBetterTitle( Item $item, string $currentName = '' ): ?Title {
 		$label = $item->getLabels()->hasTermForLanguage( 'en' ) ?
 			$item->getLabels()->getByLanguage( 'en' )->getText() :
 			'';
@@ -77,15 +86,25 @@ class PageCreation extends GraphJob {
 			$item->getDescriptions()->getByLanguage( 'en' )->getText() :
 			'';
 		$id = $item->getId()->getSerialization();
-		$titleOptions = [
-			$label ?: $description,
-			$label . '_(' . $description . ')',
+		$titleOptions = [];
+		$labelOrDescription = $label ?: $description;
+		if ( $labelOrDescription ) {
+			$titleOptions[] = $labelOrDescription;
+		}
+		if ( $label && $description ) {
+			$titleOptions[] = $label . '_(' . $description . ')';
+		}
+		$titleOptions += [
 			$label . '_' . $id,
-			$this->getPrefix( $item ) . ':' . str_replace( 'Q', '', $id ),
-			( new V4GuidGenerator() )->newGuid()
+			$this->getPrefix( $item ) . ':' . str_replace( 'Q', '', $id )
 		];
-
+		if ( !$currentName ) {
+			$titleOptions[] = ( new V4GuidGenerator() )->newGuid();
+		}
 		foreach ( $titleOptions as $titleOption ) {
+			if ( $currentName === $titleOption ) {
+				return null;
+			}
 			$t = $this->checkTitle( $titleOption );
 			if ( $t !== null ) {
 				return $t;
