@@ -35,7 +35,7 @@ class Map {
 		$jobOptions[ 'date' ] ??= date( 'ymdhms' );
 		$jobOptions[ 'jobname' ] = 'import' . $jobOptions[ 'date' ];
 		$jobOptions[ 'prefix' ] = $type;
-
+		$output( "Jobname: $jobOptions[jobname]\n" );
 		$offset = 0;
 		$rows = [];
 		$segment = 0;
@@ -61,7 +61,16 @@ class Map {
 					$output( "Pushed job.\n" );
 					return;
 				default:
-					$query = Query::getQueryFromProfileType( $type, $offset, $batch_size );
+					if ( isset( $jobOptions['filter'] ) ) {
+						$query = Query::getQueryFromProfileType(
+							$type,
+							$offset,
+							$batch_size,
+							$jobOptions['filter']
+						);
+					} else {
+						$query = Query::getQueryFromProfileType( $type, $offset, $batch_size );
+					}
 			}
 			$rs = Query::getResults( $query );
 			$total += count( $rs );

@@ -51,8 +51,11 @@ class ProfilePages extends Maintenance {
 			'overwrite' => $this->getOption( 'overwrite' )
 		];
 		$action = $this->getArg( 'action' );
-		if ( $action === 'create' ) {
+		if ( $action === 'create' || $action === 'recreate' ) {
 			$jobType = PageCreation::class;
+			if ( $action === 'recreate' ) {
+				$jobOptions['filter'] = '';
+			}
 		} elseif ( $action === 'load' ) {
 			$jobType = SetProfileType::class;
 			$jobOptions['qType'] = $wgMathString2QMap[$wgMathSearchPropertyProfileType][$type];
@@ -78,7 +81,7 @@ class ProfilePages extends Maintenance {
 	}
 
 	public function printAvailableActions(): string {
-		return "Available actions are: create, load.\n";
+		return "Available actions are: create, recreate, load, recreate.\n";
 	}
 
 }
