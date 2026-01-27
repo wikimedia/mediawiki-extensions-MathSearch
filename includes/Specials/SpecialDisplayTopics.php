@@ -10,11 +10,14 @@ use Wikimedia\Rdbms\IConnectionProvider;
  */
 class SpecialDisplayTopics extends SpecialPage {
 
+	private readonly MathSearchUtils $utils;
+
 	public function __construct(
 		private readonly IConnectionProvider $dbProvider,
 	) {
 		$listed = (bool)$this->getConfig()->get( 'MathWmcServer' );
 		parent::__construct( 'DisplayTopics', 'mathwmcsubmit', $listed );
+		$this->utils = new MathSearchUtils( $dbProvider );
 	}
 
 	/**
@@ -126,7 +129,7 @@ SQL
 		$out->addWikiTextAsInterface( "== Individual results ==" );
 		$dbr = $this->dbProvider->getReplicaDatabase();
 		if ( !$dbr->tableExists( 'math_wmc_page_ranks', __METHOD__ ) ) {
-			MathSearchUtils::createEvaluationTables();
+			$this->utils->createEvaluationTables();
 		}
 		$res = $dbr->select( 'math_wmc_page_ranks', '*', [ 'qId' => $qId ], __METHOD__ );
 		foreach ( $res as $rank ) {

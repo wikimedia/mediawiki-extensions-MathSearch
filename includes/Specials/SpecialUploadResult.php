@@ -54,7 +54,7 @@ class SpecialUploadResult extends SpecialPage {
 		}
 
 		$this->getOutput()->addWikiTextAsInterface( $this->msg( 'math-wmc-Introduction' )->text() );
-		$this->importer = new ImportCsv( $this->getUser() );
+		$this->importer = new ImportCsv( $this->dbProvider, $this->getUser() );
 		$formDescriptor = $this->printRunSelector();
 		$formDescriptor['File'] = [
 			'label-message' => 'math-wmc-FileLabel',

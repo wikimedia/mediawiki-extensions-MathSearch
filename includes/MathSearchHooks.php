@@ -358,7 +358,7 @@ class MathSearchHooks implements
 		$wikiPage, $user, $reason, $id, $content, $logEntry, $archivedRevisionCount
 	) {
 		$revId = $wikiPage->getTitle()->getLatestRevID();
-		$engine = new MathIndex();
+		$engine = new MathIndex( $this->connectionProvider->getPrimaryDatabase() );
 		$updated = false;
 		$detail = '';
 		try {
@@ -397,7 +397,7 @@ class MathSearchHooks implements
 		$revId = $title->getLatestRevID();
 		$harvest = $this->getIndexUpdates( $revId );
 
-		$mathEngineBaseX = new MathIndex();
+		$mathEngineBaseX = new MathIndex( $this->connectionProvider->getPrimaryDatabase() );
 		$updated = false;
 		$detail = '';
 		try {
@@ -439,7 +439,7 @@ class MathSearchHooks implements
 		$previousRevisionRecord = $this->revisionLookup
 			->getPreviousRevision( $revisionRecord );
 		$res = false;
-		$index = new MathIndex();
+		$index = new MathIndex( $this->connectionProvider->getPrimaryDatabase() );
 		try {
 			if ( $previousRevisionRecord != null ) {
 				$prevRevId = $previousRevisionRecord->getId();

@@ -1,14 +1,12 @@
 <?php
 namespace MediaWiki\Extension\MathSearch\Engine;
 
-use MediaWiki\MediaWikiServices;
 use Wikimedia\Rdbms\IDatabase;
 
 class MathIndex {
-	private readonly IDatabase $dbw;
-
-	public function __construct( ?IDatabase $dbw = null ) {
-		$this->dbw = $dbw ?? MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getPrimaryDatabase();
+	public function __construct(
+		private readonly IDatabase $dbw,
+	) {
 	}
 
 	public function delete( int $revid ): bool {

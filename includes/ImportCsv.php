@@ -1,7 +1,7 @@
 <?php
 
-use MediaWiki\MediaWikiServices;
 use MediaWiki\User\UserIdentity;
+use Wikimedia\Rdbms\IConnectionProvider;
 
 class ImportCsv {
 
@@ -31,6 +31,7 @@ class ImportCsv {
 	private $overwrite = false;
 
 	public function __construct(
+		private readonly IConnectionProvider $dbProvider,
 		private readonly UserIdentity $user,
 	) {
 	}
@@ -63,9 +64,7 @@ class ImportCsv {
 		if ( $run == '' ) {
 			return date( 'Y-m-d H:i:s (e)' );
 		}
-		$dbw = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
+		$dbw = $this->dbProvider->getPrimaryDatabase();
 		$uID = $this->getUser()->getId();
 		if ( is_int( $run ) ) {
 			$runId = $dbw->selectField( 'math_wmc_runs', 'runId',
@@ -208,9 +207,7 @@ class ImportCsv {
 	 */
 	private function isValidQId( $qId ) {
 		if ( !array_key_exists( $qId, $this->validQIds ) ) {
-			$dbr = MediaWikiServices::getInstance()
-				->getConnectionProvider()
-				->getReplicaDatabase();
+			$dbr = $this->dbProvider->getReplicaDatabase();
 			$exists = (bool)$dbr->selectField( 'math_wmc_ref', 'qId', [ 'qId' => $qId ], __METHOD__ );
 			$this->validQIds[$qId] = $exists;
 		}
@@ -223,9 +220,7 @@ class ImportCsv {
 	 * @return string|false
 	 */
 	private function getInputHash( $pId, $eId ) {
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		return $dbr->selectField( 'mathindex', 'mathindex_inputhash',
 			[ 'mathindex_revision_id' => $pId, 'mathindex_anchor' => $eId ], __METHOD__ );
 	}
@@ -260,9 +255,7 @@ class ImportCsv {
 	 */
 	public function processInput() {
 		$this->deleteRun( $this->runId );
-		$dbw = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getPrimaryDatabase();
+		$dbw = $this->dbProvider->getPrimaryDatabase();
 		$dbw->begin( __METHOD__ );
 		foreach ( $this->results as $result ) {
 			$dbw->insert( 'math_wmc_results', $result, __METHOD__ );
@@ -276,9 +269,7 @@ class ImportCsv {
 	 */
 	public function deleteRun( $runID ) {
 		if ( $this->overwrite ) {
-			$dbw = MediaWikiServices::getInstance()
-				->getConnectionProvider()
-				->getPrimaryDatabase();
+			$dbw = $this->dbProvider->getPrimaryDatabase();
 			$dbw->delete( 'math_wmc_results', [ 'runId' => $runID ], __METHOD__ );
 		}
 	}

@@ -51,13 +51,14 @@ class BatchImport extends Maintenance {
 			exit( 1 );
 		}
 		$files = new GlobIterator( $this->dir . '/*-*.csv' );
+		$dbProvider = $this->getServiceContainer()->getConnectionProvider();
 		foreach ( $files as $file ) {
 			$fn = $file->getFilename();
 			if ( preg_match( '/(?P<user>.*?)-(?P<runName>.*?)\\.csv/', $fn, $matches ) ) {
 				$user = User::newFromName( $matches['user'] );
 				if ( $user->getId() > 0 ) {
 					$this->output( "Importing filename $fn for userId {$user->getId()}.\n" );
-					$importer = new ImportCsv( $user );
+					$importer = new ImportCsv( $dbProvider, $user );
 					$result =
 						$importer->execute( fopen( $file, 'r' ), $matches['runName'],
 							$this->overwrite );

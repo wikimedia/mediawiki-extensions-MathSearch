@@ -154,12 +154,12 @@ TEX;
 			$this->output( "{$dir} is not a directory.\n" );
 			exit( 1 );
 		}
-		MathSearchUtils::createEvaluationTables();
+		$dbProvider = $this->getServiceContainer()->getConnectionProvider();
+		$utils = new MathSearchUtils( $dbProvider );
+		$utils->createEvaluationTables();
 		$this->addExtensionTable( 'math_wmc_udf_create' );
 		$this->dbu->doUpdates( [ "extensions" ] );
-		$dbr = $this->getServiceContainer()
-			->getConnectionProvider()
-			->getReplicaDatabase();
+		$dbr = $dbProvider->getReplicaDatabase();
 		// runId INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 		// runName VARCHAR(45),
 		// userId INT UNSIGNED,
