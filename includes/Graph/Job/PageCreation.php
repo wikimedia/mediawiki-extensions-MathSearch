@@ -52,7 +52,7 @@ class PageCreation extends GraphJob {
 						$this->makeBetterTitle( $item )
 					)->move( $user,
 						'Move profile page according to new naming schema `' . $currentName . '`->`' . $newName
-						. '`' . $this->getJobname() );
+						. '` ' . $this->getJobname() );
 					if ( !$status->isOK() ) {
 						self::getLog()->error( "Could not move page for $qid: " . $status->getMessage()->text() );
 						continue;
