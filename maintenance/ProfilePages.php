@@ -25,24 +25,23 @@ use MediaWiki\Extension\MathSearch\Graph\Map;
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
 class ProfilePages extends Maintenance {
-
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( "Mass perform actions for profile pages." );
 		$this->addArg( 'action', 'Action to be performed. ' . $this->printAvailableActions() );
-		$this->addArg( 'type', 'Type of profile to be addressed. ' . $this->printProfileTypes() );
+		$this->addArg( 'type', 'Type of profile to be addressed. ' );
 		$this->setBatchSize( 100000 );
 		$this->addOption(
 			'overwrite', 'Overwrite existing pages with the same name.', false, false, "o"
 		);
-
 		$this->requireExtension( 'MathSearch' );
 	}
 
 	public function execute() {
-		global $wgMathProfileQueries, $wgMathString2QMap;
+		$profileTypeQIds = $this->getConfig()->get( 'MathString2QMap' )[
+			$this->getConfig()->get( 'MathSearchPropertyProfileType' )];
 		$type = $this->getArg( 'type' );
-		if ( !isset( $wgMathProfileQueries[$type] ) ) {
+		if ( !isset( $profileTypeQIds[$type] ) ) {
 			$this->error( "Unknown type of profile to be created.\n" );
 			$this->error( $this->printProfileTypes() );
 			return;
@@ -58,8 +57,7 @@ class ProfilePages extends Maintenance {
 			}
 		} elseif ( $action === 'load' ) {
 			$jobType = SetProfileType::class;
-			$jobOptions['qType'] = $wgMathString2QMap[
-				$this->getConfig()->get( 'MathSearchPropertyProfileType' )][$type];
+			$jobOptions['qType'] = $profileTypeQIds[$type];
 		} else {
 			$this->error( "Unknown action to be performed.\n" );
 			$this->error( $this->printAvailableActions() );
@@ -76,9 +74,8 @@ class ProfilePages extends Maintenance {
 	}
 
 	public function printProfileTypes(): string {
-		global $wgMathProfileQueries;
-		return "Available types are: " . implode( ', ', array_keys( $wgMathProfileQueries ) ) .
-			"\n";
+		return "Available types are: " . implode( ', ', $this->getConfig()->get( 'MathString2QMap' )[
+			$this->getConfig()->get( 'MathSearchPropertyProfileType' )] ) . "\n";
 	}
 
 	public function printAvailableActions(): string {
