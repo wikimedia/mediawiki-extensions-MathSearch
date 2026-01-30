@@ -15,7 +15,7 @@ class ChangeNotificationHook implements WikibaseChangeNotificationHook {
 	}
 
 	public function onWikibaseChangeNotification( Change $change ): void {
-		if ( in_array( 'P' . $this->config->get( 'MathSearchPropertyProfileType' ),
+		if ( in_array( $this->config->get( 'MathSearchPropertyProfileType' ),
 			$change->getCompactDiff()->getStatementChanges(),
 			true ) ) {
 			( new PageCreation( [

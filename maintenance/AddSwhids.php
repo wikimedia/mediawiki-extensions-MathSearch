@@ -103,14 +103,11 @@ SPARQL;
 	}
 
 	private function createWbItem( string $qID, string $swhid, string $url, string $pit ) {
-		global $wgMathSearchPropertySwhid,
-			   $wgMathSearchPropertyScrUrl,
-			   $wgMathSearchPropertyPointInTime;
 		$mainSnak = new PropertyValueSnak(
-			new NumericPropertyId( "P$wgMathSearchPropertySwhid" ),
+			new NumericPropertyId( $this->getConfig()->get( 'MathSearchPropertySwhid' ) ),
 			new StringValue( $swhid ) );
 		$snakUrl = new PropertyValueSnak(
-			new NumericPropertyId( "P$wgMathSearchPropertyScrUrl" ),
+			new NumericPropertyId( $this->getConfig()->get( 'MathSearchPropertyScrUrl' ) ),
 			 new StringValue( $url ) );
 		$time = new DateTimeImmutable( $pit );
 		// Currently DAY is the maximal precision and the time must be 0:00:00 T57755
@@ -121,7 +118,7 @@ SPARQL;
 			TimeValue::CALENDAR_GREGORIAN
 		);
 		$snakTime = new PropertyValueSnak(
-			new NumericPropertyId( "P$wgMathSearchPropertyPointInTime" ),
+			new NumericPropertyId( $this->getConfig()->get( 'MathSearchPropertyPointInTime' ) ),
 			$date );
 		$item = $this->entityLookup->getEntity( new ItemId( "$qID" ) );
 		$statements = $item->getStatements();

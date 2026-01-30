@@ -129,10 +129,10 @@ class PageCreation extends GraphJob {
 		$prefix = $this->params['prefix'] ?? false;
 		if ( $prefix === false ) {
 			try {
-				$p = new NumericPropertyId( "P$wgMathSearchPropertyProfileType" );
+				$p = new NumericPropertyId( $wgMathSearchPropertyProfileType );
 				$profileTypeStatements = $item->getStatements()->getByPropertyId( $p )->getMainSnaks();
 				$profileType = $profileTypeStatements[0]->getDataValue()->getValue()->getEntityId()->getSerialization();
-				$prefix = array_search( $profileType, $wgMathString2QMap["P" . $wgMathSearchPropertyProfileType] );
+				$prefix = array_search( $profileType, $wgMathString2QMap[$wgMathSearchPropertyProfileType] );
 			} catch ( Throwable $e ) {
 				$prefix = '';
 			}

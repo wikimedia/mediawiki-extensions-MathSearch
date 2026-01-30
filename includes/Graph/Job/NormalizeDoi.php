@@ -17,7 +17,7 @@ class NormalizeDoi extends GraphJob {
 	public function __construct( $params ) {
 		global $wgMathSearchPropertyDoi;
 		parent::__construct( 'NormalizeDoi', $params );
-		$this->pDoi = $this->params['pDoi'] ?? "P$wgMathSearchPropertyDoi";
+		$this->pDoi = $this->params['pDoi'] ?? $wgMathSearchPropertyDoi;
 	}
 
 	public function run(): bool {

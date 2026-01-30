@@ -22,7 +22,7 @@ class SetProfileType extends GraphJob {
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
 		$guidGenerator = new GuidGenerator();
-		$pProfileType = new NumericPropertyId( "P$wgMathSearchPropertyProfileType" );
+		$pProfileType = new NumericPropertyId( $wgMathSearchPropertyProfileType );
 		$mainSnak = new PropertyValueSnak(
 			$pProfileType,
 			new EntityIdValue( new ItemId( $this->params['qType'] ) ) );

@@ -34,7 +34,7 @@ SELECT ?qid WHERE {
    ?item wikibase:sitelinks ?sitelinks .
    hint:Prior hint:runFirst true .
    $filter
-   ?item wdt:P$wgMathSearchPropertyProfileType wd:{$wgMathString2QMap["P".$wgMathSearchPropertyProfileType][$type]}.
+   ?item wdt:$wgMathSearchPropertyProfileType wd:{$wgMathString2QMap[$wgMathSearchPropertyProfileType][$type]}.
    BIND (REPLACE(STR(?item), "^.*/(Q[^/]*)$", "$1") as ?qid)
 }
 LIMIT $limit
@@ -73,7 +73,7 @@ SPARQL;
 		return <<<SPARQL
 SELECT ?qid ?doi WHERE {
   BIND (REPLACE(STR(?item), "^.*/(Q[^/]*)$", "$1") as ?qid) .
-  ?item wdt:P$wgMathSearchPropertyDoi ?doi .
+  ?item wdt:$wgMathSearchPropertyDoi ?doi .
   FILTER REGEX(?doi, "[a-z]")
 }
 LIMIT $limit
