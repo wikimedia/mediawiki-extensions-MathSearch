@@ -74,8 +74,8 @@ class ProfilePages extends Maintenance {
 	}
 
 	public function printProfileTypes(): string {
-		return "Available types are: " . implode( ', ', $this->getConfig()->get( 'MathString2QMap' )[
-			$this->getConfig()->get( 'MathSearchPropertyProfileType' )] ) . "\n";
+		return "Available types are: " . implode( ', ', array_keys( $this->getConfig()->get( 'MathString2QMap' )[
+			$this->getConfig()->get( 'MathSearchPropertyProfileType' )] ) ) . "\n";
 	}
 
 	public function printAvailableActions(): string {

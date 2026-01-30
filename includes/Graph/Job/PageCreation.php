@@ -5,7 +5,6 @@ use MediaWiki\Content\ContentHandler;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Title\Title;
-use MediaWiki\Title\TitleParser;
 use RuntimeException;
 use Throwable;
 use Wikibase\DataModel\Entity\Item;
@@ -79,12 +78,12 @@ class PageCreation extends GraphJob {
 	}
 
 	private function makeBetterTitle( Item $item, string $currentName = '' ): ?Title {
-		$label = $item->getLabels()->hasTermForLanguage( 'en' ) ?
+		$label = str_replace( '#', '', $item->getLabels()->hasTermForLanguage( 'en' ) ?
 			$item->getLabels()->getByLanguage( 'en' )->getText() :
-			'';
-		$description = $item->getDescriptions()->hasTermForLanguage( 'en' ) ?
+			'' );
+		$description = str_replace( '#', '', $item->getDescriptions()->hasTermForLanguage( 'en' ) ?
 			$item->getDescriptions()->getByLanguage( 'en' )->getText() :
-			'';
+			'' );
 		$id = $item->getId()->getSerialization();
 		$titleOptions = [];
 		$labelOrDescription = $label ?: $description;
@@ -92,36 +91,41 @@ class PageCreation extends GraphJob {
 			$titleOptions[] = $labelOrDescription;
 		}
 		if ( $label && $description ) {
-			$titleOptions[] = $label . '_(' . $description . ')';
+			$titleOptions[] = $label . ' (' . $description . ')';
 		}
-		$titleOptions += [
-			$label . '_' . $id,
-			$this->getPrefix( $item ) . ':' . str_replace( 'Q', '', $id )
-		];
-		if ( !$currentName ) {
+		$titleOptions[] = $label . ' ' . $id;
+		$titleOptions[] = $this->getPrefix( $item ) . ':' . str_replace( 'Q', '', $id );
+		if ( $currentName === '' ) {
 			$titleOptions[] = ( new V4GuidGenerator() )->newGuid();
+		} else {
+			// Normalize current name
+			$t = Title::newFromText( $currentName );
+			if ( $t !== null ) {
+				$currentName = $t->getFullText();
+			} else {
+				self::getLog()->notice( "Current name $currentName cannot be parsed as title." );
+			}
 		}
 		foreach ( $titleOptions as $titleOption ) {
 			if ( $currentName === $titleOption ) {
 				return null;
 			}
-			$t = $this->checkTitle( $titleOption );
-			if ( $t !== null ) {
+			$t = Title::newFromText( $titleOption );
+			if ( $t === null ) {
+				continue;
+			}
+			if ( $t->getFullText() === $currentName ) {
+				return null;
+			}
+			if ( !$t->exists() ) {
+				return $t;
+			}
+			// treat redirects as non-existing pages
+			if ( $t->isRedirect() ) {
 				return $t;
 			}
 		}
 		throw new RuntimeException( "Could not create unique title for item " . $id );
-	}
-
-	private function checkTitle( string $title ): ?Title {
-		if ( preg_match( TitleParser::getTitleInvalidRegex(), $title ) === 1 ) {
-			self::getLog()->info( "Title for $title contains invalid chars.", [ $title ] );
-		}
-		$t = Title::newFromText( $title );
-		if ( $t === null || $t->exists() ) {
-			return null;
-		}
-		return $t;
 	}
 
 	private function getPrefix( Item $item ): string {
