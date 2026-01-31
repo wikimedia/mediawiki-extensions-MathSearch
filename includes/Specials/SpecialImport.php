@@ -58,10 +58,10 @@ class SpecialImport extends SpecialPage {
 		$url = "$baseUrl/import/";
 		if ( ( $type ) === 'doi' ) {
 			$reqData = [ 'dois' => $vals ];
-			$url .= 'doi';
+			$url .= 'doi_async';
 		} elseif ( $type === 'qid' ) {
 			$reqData = [ 'qids' => $vals ];
-			$url .= 'wikidata';
+			$url .= 'wikidata_async';
 		} else {
 			return false;
 		}
