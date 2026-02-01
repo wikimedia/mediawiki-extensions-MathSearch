@@ -27,8 +27,11 @@ class SpecialUploadResult extends SpecialPage {
 		private readonly RevisionLookup $revisionLookup,
 		string $name = 'MathUpload',
 	) {
-		$listed = (bool)$this->getConfig()->get( 'MathWmcServer' );
-		parent::__construct( $name, 'mathwmcsubmit', $listed );
+		parent::__construct( $name, 'mathwmcsubmit' );
+	}
+
+	public function isListed(): bool {
+		return (bool)$this->getConfig()->get( 'MathWmcServer' );
 	}
 
 	/**

@@ -15,9 +15,12 @@ class SpecialDisplayTopics extends SpecialPage {
 	public function __construct(
 		private readonly IConnectionProvider $dbProvider,
 	) {
-		$listed = (bool)$this->getConfig()->get( 'MathWmcServer' );
-		parent::__construct( 'DisplayTopics', 'mathwmcsubmit', $listed );
+		parent::__construct( 'DisplayTopics', 'mathwmcsubmit' );
 		$this->utils = new MathSearchUtils( $dbProvider );
+	}
+
+	public function isListed(): bool {
+		return (bool)$this->getConfig()->get( 'MathWmcServer' );
 	}
 
 	/**
