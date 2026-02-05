@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Renessaince"
+			"Renessaince",
+			"Ucukor"
 		]
 	},
-	"mathindex": "Матэматычны індэкс"
+	"mathindex": "Матэматычны індэкс",
+	"math-search-relation-label": "Зьвязак:"
 }
