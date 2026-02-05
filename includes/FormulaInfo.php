@@ -146,7 +146,12 @@ class FormulaInfo extends SpecialPage {
 		if ( !$mo ) {
 			$out->addWikiTextAsInterface( 'Cannot find the equation data in the database.' .
 				' Fetching from revision text.' );
-			$mo = MathObject::newFromRevisionText( $oldID, $eid );
+			try {
+				$mo = MathObject::newFromRevisionText( $oldID, $eid );
+			} catch ( Exception $e ) {
+				$out->addWikiTextAsInterface( 'Failed to fetch from revision text: ' . $e->getMessage() );
+				return false;
+			}
 		}
 		$out->addWikiTextAsInterface( "Occurrences on the following pages:" );
 		$all = $mo->getAllOccurrences();
