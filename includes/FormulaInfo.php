@@ -157,7 +157,7 @@ class FormulaInfo extends SpecialPage {
 		$this->printSource( $mo->getUserInputTex(), 'TeX (original user input)', 'latex' );
 		$texInfo = $mo->getTexInfo();
 		if ( $texInfo ) {
-			$this->printSource( $texInfo->getChecked(), 'TeX (checked)', 'latex' );
+			$this->printSource( $texInfo->getChecked() ?? '', 'TeX (checked)', 'latex' );
 		}
 		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
