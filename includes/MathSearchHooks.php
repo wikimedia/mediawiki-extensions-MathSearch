@@ -395,6 +395,10 @@ class MathSearchHooks implements
 			return true;
 		}
 		$revId = $title->getLatestRevID();
+		if ( !$revId ) {
+			// No revision to restore
+			return true;
+		}
 		$harvest = $this->getIndexUpdates( $revId );
 
 		$mathEngineBaseX = new MathIndex( $this->connectionProvider->getPrimaryDatabase() );
@@ -431,6 +435,10 @@ class MathSearchHooks implements
 		}
 		$prevRevId = -1;
 		$revId = $revisionRecord->getId();
+		if ( !$revId ) {
+			// No revision to index
+			return true;
+		}
 		$harvest = $this->getIndexUpdates( $revId );
 		if ( count( $harvest ) === 0 ) {
 			// No math to index
@@ -484,7 +492,7 @@ class MathSearchHooks implements
 		return $this->idGenerators[$revId];
 	}
 
-	protected function getIndexUpdates( ?int $revId ): array {
+	protected function getIndexUpdates( int $revId ): array {
 		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
 		$mathTags = $idGenerator->getMathTags();
 		$harvest = [];
