@@ -16,10 +16,12 @@ use Wikibase\Repo\WikibaseRepo;
 
 class PageCreation extends GraphJob {
 	private readonly WikiPageFactory $wikiPageFactory;
+	private readonly string $siteId;
 
 	public function __construct( $params ) {
 		parent::__construct( 'CreateProfilePages', $params );
 		$this->wikiPageFactory = MediaWikiServices::getInstance()->getWikiPageFactory();
+		$this->siteId = 'mardi';
 	}
 
 	public function run(): bool {
@@ -35,10 +37,10 @@ class PageCreation extends GraphJob {
 					continue;
 				}
 				$templateContent = $this->getTemplateContent( $item );
-				$hasLinkToSite = $item->hasLinkToSite( 'mardi' );
+				$hasLinkToSite = $item->hasLinkToSite( $this->siteId );
 				if ( $hasLinkToSite ) {
 					self::getLog()->debug( "Page for $qid already exists." );
-					$currentName = $item->getSiteLink( 'mardi' )->getPageName();
+					$currentName = $item->getSiteLink( $this->siteId )->getPageName();
 					$newTitle = $this->makeBetterTitle( $item, $currentName );
 					if ( !$newTitle ) {
 						self::getLog()->debug( "Current title for $qid is already optimal." );
@@ -56,7 +58,7 @@ class PageCreation extends GraphJob {
 						self::getLog()->error( "Could not move page for $qid: " . $status->getMessage()->text() );
 						continue;
 					}
-					$item->removeSiteLink( 'mardi' );
+					$item->removeSiteLink( $this->siteId );
 				} else {
 					self::getLog()->info( "Creating new page for $qid." );
 					$newTitle = $this->makeBetterTitle( $item );
@@ -65,7 +67,7 @@ class PageCreation extends GraphJob {
 					$this->wikiPageFactory->newFromTitle( $newTitle )->doUserEditContent( $pageContent, $user,
 						'Created automatically from ' . $this->getJobname() );
 				}
-				$siteLink = new SiteLink( 'mardi', $newTitle->getPrefixedText() );
+				$siteLink = new SiteLink( $this->siteId, $newTitle->getPrefixedText() );
 				$item->addSiteLink( $siteLink );
 				self::getLog()->info( "Linking page $qid." );
 				$store->saveEntity( $item, "Added link to MaRDI item.", $user, EDIT_FORCE_BOT );

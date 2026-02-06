@@ -59,7 +59,8 @@
 		"WikibaseChangeNotification": {
 			"class": "MediaWiki\\Extension\\MathSearch\\Wikidata\\ChangeNotificationHook",
 			"services": [
-				"MainConfig"
+				"MainConfig",
+				"JobQueueGroup"
 			]
 		}
 	},
