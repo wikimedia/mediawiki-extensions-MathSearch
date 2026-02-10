@@ -238,6 +238,12 @@ class QuickStatements extends GraphJob {
 		if ( !isset( $row['qid'] ) ) {
 			return $this->getRowItemFromPID( $row );
 		}
+		if ( $row['qid'] === '' ) {
+			$item = new Item();
+			$this->entityStore->assignFreshId( $item );
+			unset( $row['qid'] );
+			return $item;
+		}
 		$qID = preg_replace( '/.*?(Q\d+)/i', '$1', $row['qid'] );
 		$item = $this->entityLookup->getEntity( new ItemId( $qID ) );
 		if ( !$item instanceof Item ) {

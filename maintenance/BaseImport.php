@@ -9,6 +9,8 @@ abstract class BaseImport extends Maintenance {
 
 	protected bool $groupConsecutiveKeys = false;
 
+	protected bool $rowsHaveKeys = true;
+
 	public function __construct(
 		protected readonly array $jobOptions,
 		private readonly string $jobType,
@@ -38,7 +40,7 @@ abstract class BaseImport extends Maintenance {
 			try {
 				$newRow = $this->readline( $line, $columns );
 				// quasi recursive array + operator
-				$key = array_key_first( $newRow );
+				$key = $this->rowsHaveKeys ? array_key_first( $newRow ) : null;
 				$splitCondition = count( $table ) >= $this->getBatchSize();
 				if ( $this->groupConsecutiveKeys ) {
 					$splitCondition &= $key !== $lastKey;
@@ -49,11 +51,16 @@ abstract class BaseImport extends Maintenance {
 					$this->pushJob( $graphMap, $table, $segment );
 					$table = [];
 				}
-				if ( isset( $table[ $key ] ) ) {
-					$table[$key] += $newRow[$key];
+				if ( $this->rowsHaveKeys ) {
+					if ( isset( $table[ $key ] ) ) {
+						$table[$key] += $newRow[$key];
+					} else {
+						$table += $newRow;
+					}
 				} else {
-					$table += $newRow;
+					$table[] = $newRow;
 				}
+
 			} catch ( Throwable $e ) {
 				$this->output( "Error processing line: \n" .
 					var_export( implode( ',', $line ), true ) . "\nError:" .
