@@ -203,12 +203,22 @@ class QuickStatements extends GraphJob {
 				$value = [ 'unit' => '1', 'amount' => $value ];
 				break;
 			case 'time':
+				if ( preg_match(
+					'#^(?<date>[+-]\d{4,}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)/(?<precision>\d+)$#',
+					$value,
+					$m ) ) {
+					$date = $m['date'];
+					$precision = (int)$m['precision'];
+				} else {
+					$date = '+' . substr( $value, 0, -4 ) . 'Z';
+					$precision = 11;
+				}
 				$value = [
-					'time' => '+' . substr( $value, 0, -4 ) . 'Z',
+					'time' => $date,
 					'timezone' => 0,
 					'before' => 0,
 					'after' => 0,
-					'precision' => 11,
+					'precision' => $precision,
 					'calendarmodel' => 'http://www.wikidata.org/entity/Q1985727',
 				];
 				break;
