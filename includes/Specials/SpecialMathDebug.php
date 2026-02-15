@@ -143,7 +143,7 @@ class SpecialMathDebug extends SpecialPage {
 			$out->addWikiTextAsInterface(
 				'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>'
 			);
-			if ( in_array( 'latexml', $this->getConfig()->get( 'MathMathValidModes' ) ) ) {
+			if ( in_array( 'latexml', $this->getConfig()->get( 'MathValidModes' ) ) ) {
 				$out->addHTML( self::render( $t, 'latexml', $purge ) );
 			}
 		}
