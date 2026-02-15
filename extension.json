@@ -239,7 +239,12 @@
 				"MainConfig"
 			]
 		},
-		"MathDebug": "SpecialMathDebug",
+		"MathDebug": {
+			"class": "SpecialMathDebug",
+			"services": [
+				"HttpRequestFactory"
+			]
+		},
 		"MathIndex": {
 			"class": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialMathIndex",
 			"services": [

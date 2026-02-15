@@ -3,6 +3,7 @@
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\Title;
@@ -11,7 +12,7 @@ use Wikimedia\Diff\TableDiffFormatter;
 
 class SpecialMathDebug extends SpecialPage {
 
-	public function __construct() {
+	public function __construct( private readonly HttpRequestFactory $httpRequestFactory ) {
 		parent::__construct( 'MathDebug' );
 	}
 
@@ -26,7 +27,7 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	/** @inheritDoc */
-	public function execute( $par ) {
+	public function execute( $subPage ) {
 		$offset = $this->getRequest()->getVal( 'offset', 0 );
 		$length = $this->getRequest()->getVal( 'length', 10 );
 		$page = $this->getRequest()->getVal( 'page', 'Testpage' );
@@ -35,7 +36,7 @@ class SpecialMathDebug extends SpecialPage {
 		if ( !$this->userCanExecute( $this->getUser() ) ) {
 			$this->displayRestrictionError();
 		} else {
-			if ( $action != 'generateParserTests' ) {
+			if ( !in_array( $action, [ 'generateParserTests', 'visualDiff' ] ) ) {
 				$this->setHeaders();
 				$this->displayButtons( $offset, $length, $page, $action, $purge );
 			}
@@ -48,6 +49,10 @@ class SpecialMathDebug extends SpecialPage {
 					break;
 				case 'generateParserTests':
 					$this->generateParserTests( $offset, $length, $page );
+					break;
+				case 'visualDiff':
+					$this->setHeaders();
+					$this->visualDiff();
 					break;
 				default:
 					$this->testParser( $offset, $length, $page, $purge === 'checked' );
@@ -237,5 +242,116 @@ class SpecialMathDebug extends SpecialPage {
 
 	protected function getGroupName(): string {
 		return 'mathsearch';
+	}
+
+	/**
+	 * Fetch a base64-encoded JSON file from the given gitiles URL and return it as an array.
+	 * Returns null on any failure (HTTP error, base64 decode error, JSON parse error).
+	 *
+	 * @param string $url
+	 * @return array|null
+	 */
+	private function fetchJsonFromGitiles( string $url ): ?array {
+		try {
+			$body = $this->httpRequestFactory->get( $url );
+		} catch ( Exception $e ) {
+			return null;
+		}
+
+		if ( $body === false ) {
+			return null;
+		}
+
+		$decoded = base64_decode( trim( $body ) );
+		if ( $decoded === false ) {
+			return null;
+		}
+
+		$data = json_decode( $decoded, true );
+		if ( !is_array( $data ) ) {
+			return null;
+		}
+
+		return $data;
+	}
+
+	private function visualDiff() {
+		$out = $this->getOutput();
+		$refHash = $this->getRequest()->getVal( 'ref' );
+
+		$relativePath = 'tests/phpunit/integration/WikiTexVC/data/reference.json';
+		$baseUrl = 'https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Math/+/';
+
+		if ( !$refHash ) {
+			$out->addWikiTextAsInterface( "Please provide a ref parameter (commit hash) to compare against master." );
+			return;
+		}
+
+		$masterUrl = $baseUrl . 'refs/heads/master/' . $relativePath . '?format=TEXT';
+		$refUrl = $baseUrl . $refHash . '/' . $relativePath . '?format=TEXT';
+
+		// Use helper to fetch and decode JSON content for master and ref
+		$masterData = $this->fetchJsonFromGitiles( $masterUrl );
+		$refData = $this->fetchJsonFromGitiles( $refUrl );
+
+		if ( $masterData === null || $refData === null ) {
+			$out->addWikiTextAsInterface( 'Failed to fetch or decode one or both files from gitiles.' );
+			return;
+		}
+
+		if ( !is_array( $masterData ) || !is_array( $refData ) ) {
+			$out->addWikiTextAsInterface( 'Expected JSON arrays in both master and ref.' );
+			return;
+		}
+
+		$max = max( count( $masterData ), count( $refData ) );
+		for ( $i = 0; $i < $max; $i++ ) {
+			$master = $masterData[$i] ?? null;
+			$ref = $refData[$i] ?? null;
+			if ( $master !== $ref ) {
+				$inMaster = $master['input'] ?? '';
+				$inRef = $ref['input'] ?? '';
+				// Prepare 20-char snippets for the title; if inputs differ show "master vs ref"
+				$snipMaster = htmlspecialchars( mb_substr( $inMaster, 0, 20 ) );
+				$snipRef = htmlspecialchars( mb_substr( $inRef, 0, 20 ) );
+				if ( $inMaster !== '' && $inMaster === $inRef ) {
+					$out->addWikiTextAsInterface( "== Difference at index {$i}: {$snipMaster} ==" );
+				} elseif ( $inMaster === '' ) {
+					$out->addWikiTextAsInterface( "== New test at index {$i}: {$snipRef}  ==" );
+				} else {
+					$out->addWikiTextAsInterface( "== Difference at index {$i}: {$snipMaster} vs {$snipRef} ==" );
+				}
+				// If both have an 'output' field, and it differs, render the MathML / HTML raw
+				$outMaster = is_array( $master ) && array_key_exists( 'output', $master );
+				$outRef = is_array( $ref ) && array_key_exists( 'output', $ref );
+				if ( $outMaster && $outRef && $master['output'] !== $ref['output'] ) {
+					$out->addHTML(
+						'<div class="math-diff"><div class="math-diff-master"><h4>master</h4>' .
+						$master['output'] .
+						'</div><div class="math-diff-ref"><h4>ref ' . htmlspecialchars( $refHash ) . '</h4>' .
+						$ref['output'] .
+						'</div></div>'
+					);
+				} elseif ( !$outMaster && $outRef ) {
+					$out->addHTML(
+						'<div class="math-diff"><div class="math-diff-master"><h4>master</h4><em>new</em></div>' .
+						'<div class="math-diff-ref"><h4>ref ' . htmlspecialchars( $refHash ) . '</h4>' .
+						$ref['output'] .
+						'</div></div>'
+					);
+				} else {
+					$out->addHTML(
+						'<h4>master</h4><pre>' .
+						htmlspecialchars( json_encode( $master, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) ) .
+						'</pre>'
+					);
+					$out->addHTML(
+						'<h4>ref ' . htmlspecialchars( $refHash ) . '</h4><pre>' .
+						htmlspecialchars( json_encode( $ref, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) ) .
+						'</pre>'
+					);
+				}
+			}
+		}
 	}
 }
