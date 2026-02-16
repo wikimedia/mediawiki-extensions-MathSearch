@@ -278,6 +278,7 @@ class SpecialMathDebug extends SpecialPage {
 	private function visualDiff() {
 		$out = $this->getOutput();
 		$refHash = $this->getRequest()->getVal( 'ref' );
+		$masterHash = $this->getRequest()->getVal( 'base', 'refs/heads/master' );
 
 		$relativePath = 'tests/phpunit/integration/WikiTexVC/data/reference.json';
 		$baseUrl = 'https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Math/+/';
@@ -287,7 +288,7 @@ class SpecialMathDebug extends SpecialPage {
 			return;
 		}
 
-		$masterUrl = $baseUrl . 'refs/heads/master/' . $relativePath . '?format=TEXT';
+		$masterUrl = $baseUrl . $masterHash . '/' . $relativePath . '?format=TEXT';
 		$refUrl = $baseUrl . $refHash . '/' . $relativePath . '?format=TEXT';
 
 		// Use helper to fetch and decode JSON content for master and ref
