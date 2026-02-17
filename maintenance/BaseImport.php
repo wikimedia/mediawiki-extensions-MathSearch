@@ -12,7 +12,7 @@ abstract class BaseImport extends Maintenance {
 	protected bool $rowsHaveKeys = true;
 
 	public function __construct(
-		protected readonly array $jobOptions,
+		protected array $jobOptions,
 		private readonly string $jobType,
 		string $description = 'The file to be read',
 	) {
