@@ -283,17 +283,18 @@ class SpecialMathDebug extends SpecialPage {
 		$relativePath = 'tests/phpunit/integration/WikiTexVC/data/reference.json';
 		$baseUrl = 'https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Math/+/';
 
-		if ( !$refHash ) {
-			$out->addWikiTextAsInterface( "Please provide a ref parameter (commit hash) to compare against master." );
-			return;
-		}
-
 		$masterUrl = $baseUrl . $masterHash . '/' . $relativePath . '?format=TEXT';
 		$refUrl = $baseUrl . $refHash . '/' . $relativePath . '?format=TEXT';
 
+		if ( !$refHash ) {
+			$refData = json_decode( file_get_contents( __DIR__ . '/../../../Math/' . $relativePath, 'r' ), true );
+			$refHash = 'local file';
+		} else {
+			$refData = $this->fetchJsonFromGitiles( $refUrl );
+		}
+
 		// Use helper to fetch and decode JSON content for master and ref
 		$masterData = $this->fetchJsonFromGitiles( $masterUrl );
-		$refData = $this->fetchJsonFromGitiles( $refUrl );
 
 		if ( $masterData === null || $refData === null ) {
 			$out->addWikiTextAsInterface( 'Failed to fetch or decode one or both files from gitiles.' );
@@ -312,9 +313,8 @@ class SpecialMathDebug extends SpecialPage {
 			if ( $master !== $ref ) {
 				$inMaster = $master['input'] ?? '';
 				$inRef = $ref['input'] ?? '';
-				// Prepare 20-char snippets for the title; if inputs differ show "master vs ref"
-				$snipMaster = htmlspecialchars( mb_substr( $inMaster, 0, 20 ) );
-				$snipRef = htmlspecialchars( mb_substr( $inRef, 0, 20 ) );
+				$snipMaster = htmlspecialchars( mb_substr( str_replace( "\n", " ", $inMaster ), 0, 40 ) );
+				$snipRef = htmlspecialchars( mb_substr( str_replace( "\n", " ", $inRef ), 0, 40 ) );
 				if ( $inMaster !== '' && $inMaster === $inRef ) {
 					$out->addWikiTextAsInterface( "== Difference at index {$i}: {$snipMaster} ==" );
 				} elseif ( $inMaster === '' ) {
@@ -329,7 +329,7 @@ class SpecialMathDebug extends SpecialPage {
 					$out->addHTML(
 						'<div class="math-diff"><div class="math-diff-master"><h4>master</h4>' .
 						$master['output'] .
-						'</div><div class="math-diff-ref"><h4>ref ' . htmlspecialchars( $refHash ) . '</h4>' .
+						'</div><div class="math-diff-ref"><h4>' . htmlspecialchars( $refHash ) . '</h4>' .
 						$ref['output'] .
 						'</div></div>'
 					);

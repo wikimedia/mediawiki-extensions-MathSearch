@@ -31,8 +31,8 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 
 		// Install mock HTTP responses for master and ref (in that order)
 		$this->installMockHttp( [
-			$this->makeFakeHttpRequest( $masterEncoded ),
 			$this->makeFakeHttpRequest( $refEncoded ),
+			$this->makeFakeHttpRequest( $masterEncoded ),
 		] );
 
 		// Build a faux request with action=visualDiff and a dummy ref value
@@ -45,13 +45,13 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 
 		// The page should render the raw outputs inside the math-diff blocks
 		$this->assertStringContainsString( '<div class="math-diff-master"><h4>master</h4>2', $html );
-		$this->assertStringContainsString( '<div class="math-diff-ref"><h4>ref deadbeef</h4>X', $html );
+		$this->assertStringContainsString( '<div class="math-diff-ref"><h4>deadbeef</h4>X', $html );
 
 		// Accept either escaped JSON blobs or the raw math-diff rendering.
 		$hasEscapedA = strpos( $html, '&quot;output&quot;: &quot;2&quot;' ) !== false;
 		$hasEscapedB = strpos( $html, '&quot;output&quot;: &quot;X&quot;' ) !== false;
 		$hasRawA = strpos( $html, '<div class="math-diff-master"><h4>master</h4>2' ) !== false;
-		$hasRawB = strpos( $html, '<div class="math-diff-ref"><h4>ref deadbeef</h4>X' ) !== false;
+		$hasRawB = strpos( $html, '<div class="math-diff-ref"><h4>deadbeef</h4>X' ) !== false;
 
 		$this->assertTrue(
 			( $hasEscapedA && $hasEscapedB ) || ( $hasRawA && $hasRawB ),
