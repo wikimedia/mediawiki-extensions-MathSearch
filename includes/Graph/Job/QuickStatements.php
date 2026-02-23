@@ -74,7 +74,9 @@ class QuickStatements extends GraphJob {
 		foreach ( $this->params['rows'] as $row ) {
 			try {
 				$item = $this->getRowItem( $row );
-				$this->processRow( $row, $item );
+				if ( $item !== null ) {
+					$this->processRow( $row, $item );
+				}
 			} catch ( Throwable $ex ) {
 				self::getLog()->error( "Skip row: {$ex->getMessage()}", [ 'exception' => $ex, 'row' => $row ] );
 			}
@@ -184,7 +186,7 @@ class QuickStatements extends GraphJob {
 		$item->setStatements( $statements );
 		$this->entityStore->saveEntity(
 			$item,
-			$this->params['editsummary'] ?? 'job ' . $this->params['jobname'],
+			$this->getEditSummary(),
 			$this->getUser(),
 			EDIT_FORCE_BOT );
 	}
@@ -244,7 +246,7 @@ class QuickStatements extends GraphJob {
 		return $this->qid_cache[$pid];
 	}
 
-	private function getRowItem( array &$row ): Item {
+	private function getRowItem( array &$row ): ?Item {
 		if ( !isset( $row['qid'] ) ) {
 			return $this->getRowItemFromPID( $row );
 		}
@@ -291,16 +293,18 @@ class QuickStatements extends GraphJob {
 	 * @throws SparqlException
 	 * @throws Exception
 	 */
-	private function getRowItemFromPID( array &$row ): Item {
+	private function getRowItemFromPID( array &$row ): ?Item {
 		foreach ( $row as $key => $value ) {
-			if ( str_starts_with( $key, 'qP' ) ) {
-				$pidLookup = $this->getPidCache( substr( $key, 2 ) );
+			$deleteItem = str_starts_with( $key, '-qP' );
+			if ( str_starts_with( $key, 'qP' ) || $deleteItem ) {
+				$offset = $deleteItem ? 3 : 2;
+				$pidLookup = $this->getPidCache( substr( $key, $offset ) );
 				if ( $pidLookup->count() === 0 ) {
 					$values = $this->getValuesFromColumn( $key );
 					$pidLookup->warmupFromValues( $values );
 				}
 				$q = $pidLookup->getQ( $value );
-				if ( $q === false && $this->params['create_missing'] ?? false ) {
+				if ( $q === false && ( $this->params['create_missing'] ?? false ) ) {
 					$item = new Item();
 					$this->entityStore->assignFreshId( $item );
 					$statements = $item->getStatements();
@@ -311,13 +315,22 @@ class QuickStatements extends GraphJob {
 						$this->guidGenerator->newGuid( $item->getId() )
 					);
 					$pidLookup->overwrite( $value, $item->getId() );
+				} elseif ( $q !== false ) {
+					$item = $this->entityLookup->getEntity( new ItemId( $q ) );
 				} else {
-					$item = $this->entityLookup->getEntity( new ItemId( "Q$q" ) );
+					$item = false;
 				}
 				if ( !$item instanceof Item ) {
 					throw new Exception( "Item Q$q not found." );
 				}
 				unset( $row[$key] );
+				if ( $deleteItem ) {
+					$this->entityStore->deleteEntity(
+						$item->getId(),
+						$this->getEditSummary(),
+						$this->getUser() );
+					return null;
+				}
 				return $item;
 			}
 		}
@@ -330,6 +343,13 @@ class QuickStatements extends GraphJob {
 			$values[] = $row[$key];
 		}
 		return $values;
+	}
+
+	/**
+	 * @return mixed|string
+	 */
+	public function getEditSummary(): mixed {
+		return $this->params['editsummary'] ?? 'job ' . $this->params['jobname'];
 	}
 
 }

@@ -65,6 +65,7 @@ SPARQL;
 		$client = new SparqlClient( $endPoint, MediaWikiServices::getInstance()->getHttpRequestFactory() );
 		$client->setTimeout( 0 )
 			->appendUserAgent( __CLASS__ );
+		LoggerFactory::getInstance( 'MathSearch' )->debug( "SPARQL query: $query" );
 		return $client->query( $query );
 	}
 
