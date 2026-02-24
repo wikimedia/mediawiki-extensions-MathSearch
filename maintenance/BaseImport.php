@@ -28,18 +28,16 @@ abstract class BaseImport extends Maintenance {
 			$this->output( "{$filename} is not a file.\n" );
 			exit( 1 );
 		}
-		$handle = fopen( $filename, 'r' );
-		$columns = fgetcsv( $handle );
-		$columns = array_map( 'trim', $columns );
-		$table = [];
-		$line = fgetcsv( $handle, 0, ',', '"', '' );
 		$graphMap = new Map();
 		$segment = 0;
 		$lastKey = null;
-		while ( $line !== false ) {
+		$table = [];
+		// for the JSON format rows are arbitrary key-value pairs and must not have the same columns for each line
+		foreach ( $this->getFileRows( $filename ) as [ $line, $columns ] ) {
 			try {
 				$newRow = $this->readline( $line, $columns );
-				// quasi recursive array + operator
+				// There are two forms of rows with a key such as "v1 => (v2, v3)" and no keys "(v1, v2, v3)".
+				// A typical key can be the qID.
 				$key = $this->rowsHaveKeys ? array_key_first( $newRow ) : null;
 				$splitCondition = count( $table ) >= $this->getBatchSize();
 				if ( $this->groupConsecutiveKeys ) {
@@ -60,22 +58,57 @@ abstract class BaseImport extends Maintenance {
 				} else {
 					$table[] = $newRow;
 				}
-
 			} catch ( Throwable $e ) {
 				$this->output( "Error processing line: \n" .
 					var_export( implode( ',', $line ), true ) . "\nError:" .
 					$e->getMessage() . "\n" );
 			}
-			$line = fgetcsv( $handle, 0, ',', '"', '' );
 		}
 		if ( count( $table ) ) {
 			$this->pushJob( $graphMap, $table, $segment );
 			$segment--;
 		}
 		$this->output( "Pushed last $segment.\n" );
-
-		fclose( $handle );
 		return true;
+	}
+
+	/**
+	 * @return \Generator<array{array, array}> Yields [$line, $columns] pairs
+	 */
+	protected function getFileRows( string $filename ): \Generator {
+		if ( str_ends_with( strtolower( $filename ), '.json' ) ) {
+			yield from $this->getJsonRows( $filename );
+		} else {
+			yield from $this->getCsvRows( $filename );
+		}
+	}
+
+	protected function getCsvRows( string $filename ): \Generator {
+		$handle = fopen( $filename, 'r' );
+		$columns = fgetcsv( $handle );
+		$columns = array_map( 'trim', $columns );
+		$line = fgetcsv( $handle, 0, ',', '"', '' );
+		while ( $line !== false ) {
+			yield [ $line, $columns ];
+			$line = fgetcsv( $handle, 0, ',', '"', '' );
+		}
+		fclose( $handle );
+	}
+
+	protected function getJsonRows( string $filename ): \Generator {
+		$content = file_get_contents( $filename );
+		$data = json_decode( $content, true );
+		if ( json_last_error() !== JSON_ERROR_NONE ) {
+			$this->output( "Invalid JSON file: " . json_last_error_msg() . "\n" );
+			exit( 1 );
+		}
+		if ( !is_array( $data ) ) {
+			$this->output( "Invalid JSON file: expected an array of objects.\n" );
+			exit( 1 );
+		}
+		foreach ( $data as $row ) {
+			yield [ array_values( $row ), array_keys( $row ) ];
+		}
 	}
 
 	/**

@@ -25,18 +25,23 @@ require_once __DIR__ . '/BaseImport.php';
 class ImportQuickStatements extends BaseImport {
 	public function __construct() {
 		$jobname = 'quickstatements' . date( 'ymdhms' );
-		$joboptions = [ 'jobname' => $jobname, 'editsummary' => 'QuickStatements import from csv file' ];
+		$joboptions = [ 'jobname' => $jobname, 'editsummary' => 'QuickStatements import from csv/json file' ];
 		$jobtype = 'MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements';
 		$this->rowsHaveKeys = false;
-		parent::__construct( $joboptions, $jobtype, 'Batch imports quick statements from a CSV file.' );
+		parent::__construct( $joboptions, $jobtype, 'Batch imports quick statements from a CSV or JSON file.' );
 		$this->addOption(
-			'create-missing',
+			'createMissing',
 			'Create new items for qPNN column values that do not match any existing item.'
+		);
+		$this->addOption(
+			'forcePageCreation',
+			'Force running the profile page creation hook to move profile pages to the best location.'
 		);
 	}
 
 	public function execute() {
-		$this->jobOptions['create_missing'] = (bool)$this->getOption( 'create-missing', false );
+		$this->jobOptions['createMissing'] = (bool)$this->getOption( 'createMissing', false );
+		$this->jobOptions['forcePageCreation'] = (bool)$this->getOption( 'forcePageCreation', false );
 		parent::execute();
 	}
 

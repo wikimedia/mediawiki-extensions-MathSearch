@@ -61,7 +61,7 @@ class ImportStacksProject extends Maintenance {
 		foreach ( $parts as $part ) {
 			$graphMap->pushJob( $part, $i++, QuickStatements::class, [
 				'jobname' => 'stacks project' . date( 'ymdhms' ),
-				'create_missing' => true
+				'createMissing' => true
 			] );
 		}
 	}

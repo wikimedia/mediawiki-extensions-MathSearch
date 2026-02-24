@@ -60,7 +60,7 @@ class ImportQuickStatementsTest extends MediaWikiUnitTestCase {
 	}
 
 	/**
-	 * Returns a test double that stubs getOption('create-missing') and skips file I/O.
+	 * Returns a test double that stubs getOption('createMissing') and skips file I/O.
 	 */
 	private function newScriptWithCreateMissingFlag( bool $createMissingValue ): ImportQuickStatements {
 		return new class( $createMissingValue ) extends ImportQuickStatements {
@@ -72,12 +72,12 @@ class ImportQuickStatementsTest extends MediaWikiUnitTestCase {
 			}
 
 			public function getOption( $name, $default = null ) {
-				return $name === 'create-missing' ? $this->createMissingValue : $default;
+				return $name === 'createMissing' ? $this->createMissingValue : $default;
 			}
 
 			public function execute(): void {
 				// Mirrors ImportQuickStatements::execute() without file I/O from parent
-				$this->jobOptions['create_missing'] = (bool)$this->getOption( 'create-missing', false );
+				$this->jobOptions['createMissing'] = (bool)$this->getOption( 'createMissing', false );
 			}
 		};
 	}
@@ -88,7 +88,7 @@ class ImportQuickStatementsTest extends MediaWikiUnitTestCase {
 
 		$prop = new ReflectionProperty( ImportQuickStatements::class, 'jobOptions' );
 		$prop->setAccessible( true );
-		$this->assertFalse( $prop->getValue( $testScript )['create_missing'] );
+		$this->assertFalse( $prop->getValue( $testScript )['createMissing'] );
 	}
 
 	public function testExecuteSetsCreateMissingTrueWhenFlagEnabled(): void {
@@ -97,6 +97,6 @@ class ImportQuickStatementsTest extends MediaWikiUnitTestCase {
 
 		$prop = new ReflectionProperty( ImportQuickStatements::class, 'jobOptions' );
 		$prop->setAccessible( true );
-		$this->assertTrue( $prop->getValue( $testScript )['create_missing'] );
+		$this->assertTrue( $prop->getValue( $testScript )['createMissing'] );
 	}
 }

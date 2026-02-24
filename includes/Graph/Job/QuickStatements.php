@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
 use Exception;
 use MediaWiki\Extension\MathSearch\Graph\PidLookup;
+use MediaWiki\JobQueue\JobQueueGroup;
 use MediaWiki\Language\LanguageNameUtils;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Sparql\SparqlException;
@@ -35,6 +36,7 @@ class QuickStatements extends GraphJob {
 
 	private readonly LanguageNameUtils $languageNameUtils;
 	private array $qid_cache = [];
+	private readonly JobQueueGroup $jobQueueGroup;
 
 	public function __construct( $params ) {
 		parent::__construct( 'QuickStatements', $params );
@@ -44,6 +46,7 @@ class QuickStatements extends GraphJob {
 		$this->propertyDataTypeLookup = WikibaseRepo::getPropertyDataTypeLookup();
 		$this->dataTypeFactory = WikibaseRepo::getDataTypeFactory();
 		$this->languageNameUtils = MediaWikiServices::getInstance()->getLanguageNameUtils();
+		$this->jobQueueGroup = MediaWikiServices::getInstance()->getJobQueueGroup();
 	}
 
 	public function validateProperty( string $key ) {
@@ -76,6 +79,13 @@ class QuickStatements extends GraphJob {
 				$item = $this->getRowItem( $row );
 				if ( $item !== null ) {
 					$this->processRow( $row, $item );
+					if ( $this->params['forcePageCreation'] ?? false ) {
+						$this->jobQueueGroup->lazyPush(
+							( new PageCreation( [
+									'rows' => [ $item->getId()->getSerialization() ],
+									'username' => $this->getUser()->getName() ]
+							) ) );
+					}
 				}
 			} catch ( Throwable $ex ) {
 				self::getLog()->error( "Skip row: {$ex->getMessage()}", [ 'exception' => $ex, 'row' => $row ] );
@@ -120,8 +130,12 @@ class QuickStatements extends GraphJob {
 			} elseif ( str_starts_with( $P, 'L' ) ) {
 				$languageCode = substr( $P, 1 );
 				if ( $this->languageNameUtils->isValidCode( $languageCode ) ) {
+					$hasLabel = $item->getLabels()->hasTermForLanguage( $languageCode );
+					if ( $hasLabel && $item->getLabels()->getByLanguage( $languageCode )->getText() == $value ) {
+						continue;
+					}
 					if ( $optionalField ) {
-						if ( !$item->getLabels()->hasTermForLanguage( $languageCode ) ) {
+						if ( !$hasLabel ) {
 							$item->setLabel( $languageCode, $value );
 						}
 						continue;
@@ -304,7 +318,7 @@ class QuickStatements extends GraphJob {
 					$pidLookup->warmupFromValues( $values );
 				}
 				$q = $pidLookup->getQ( $value );
-				if ( $q === false && ( $this->params['create_missing'] ?? false ) ) {
+				if ( $q === false && ( $this->params['createMissing'] ?? false ) ) {
 					$item = new Item();
 					$this->entityStore->assignFreshId( $item );
 					$statements = $item->getStatements();
