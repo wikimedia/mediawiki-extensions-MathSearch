@@ -29,6 +29,15 @@ class ImportQuickStatements extends BaseImport {
 		$jobtype = 'MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements';
 		$this->rowsHaveKeys = false;
 		parent::__construct( $joboptions, $jobtype, 'Batch imports quick statements from a CSV file.' );
+		$this->addOption(
+			'create-missing',
+			'Create new items for qPNN column values that do not match any existing item.'
+		);
+	}
+
+	public function execute() {
+		$this->jobOptions['create_missing'] = (bool)$this->getOption( 'create-missing', false );
+		parent::execute();
 	}
 
 	protected function readline( array $line, array $columns ): array {
