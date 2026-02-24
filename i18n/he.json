@@ -3,6 +3,7 @@
 		"authors": [
 			"Amire80",
 			"Guycn2",
+			"Neriah",
 			"Yona b",
 			"מקף"
 		]
@@ -65,6 +66,7 @@
 	"datatypes-type-contentmath": "ביטוי מתמטי (תוכן)",
 	"quicksparqlstatements": "מחולל SPARQL ל־QuickStatements",
 	"pidredirect": "הפניית מזהה קבועה",
+	"importfrompid": "יבוא ממזהה קבוע",
 	"wikibase-listdatatypes-contentmath-head": "ביטוי מתמטי (תוכן)",
 	"wikibase-listdatatypes-contentmath-body": "שדה נתונים מפורש לביטויים מתמטיים, נוסחאות, משוואות וכיו\"ב, כתובים בתור הגוון DRMF/DLMF של LaTeX."
 }

@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
+			"Chaduvari",
 			"Veeven"
 		]
 	},
 	"math-lp-feedback-label": "అదనపు వ్యాఖ్యలు (ఐచ్చికం)",
-	"math-lp-finish-label": "ముగించు"
+	"math-lp-finish-label": "ముగించు",
+	"math-wmc-SelectRun": "పేరు"
 }
