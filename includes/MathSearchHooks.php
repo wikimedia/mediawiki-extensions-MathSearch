@@ -7,17 +7,19 @@ use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\Extension\MathSearch\Engine\MathIndex;
 use MediaWiki\Installer\DatabaseUpdater;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Page\Hook\ArticleDeleteCompleteHook;
-use MediaWiki\Page\Hook\ArticleUndeleteHook;
+use MediaWiki\Page\Hook\PageDeleteCompleteHook;
+use MediaWiki\Page\Hook\PageUndeleteCompleteHook;
+use MediaWiki\Page\ProperPageIdentity;
 use MediaWiki\Parser\Hook\ParserFirstCallInitHook;
 use MediaWiki\Parser\Parser;
+use MediaWiki\Permissions\Authority;
 use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Storage\Hook\PageSaveCompleteHook;
-use MediaWiki\Title\Title;
 use Wikimedia\Rdbms\DBConnRef;
 use Wikimedia\Rdbms\IConnectionProvider;
 
@@ -28,8 +30,8 @@ use Wikimedia\Rdbms\IConnectionProvider;
  * GPLv2 license; info in main package.
  */
 class MathSearchHooks implements
-	ArticleDeleteCompleteHook,
-	ArticleUndeleteHook,
+	PageDeleteCompleteHook,
+	PageUndeleteCompleteHook,
 	MathFormulaPostRenderRevisionHook,
 	PageSaveCompleteHook,
 	ParserFirstCallInitHook
@@ -354,10 +356,16 @@ class MathSearchHooks implements
 		return [ $renderedMath, "markerType" => 'nowiki' ];
 	}
 
-	public function onArticleDeleteComplete(
-		$wikiPage, $user, $reason, $id, $content, $logEntry, $archivedRevisionCount
+	public function onPageDeleteComplete(
+		ProperPageIdentity $page,
+		Authority $deleter,
+		string $reason,
+		int $pageID,
+		RevisionRecord $deletedRev,
+		ManualLogEntry $logEntry,
+		int $archivedRevisionCount
 	) {
-		$revId = $wikiPage->getTitle()->getLatestRevID();
+		$revId = $deletedRev->getId();
 		$engine = new MathIndex( $this->connectionProvider->getPrimaryDatabase() );
 		$updated = false;
 		$detail = '';
@@ -374,30 +382,31 @@ class MathSearchHooks implements
 	}
 
 	/**
+	 * @inheritDoc
+	 *
 	 * This occurs when an article is undeleted (restored).
 	 * The formulae of the undeleted article are restored then in the index.
-	 * @param Title $title Title corresponding to the article restored
-	 * @param bool $create Whether the restoration caused the page to be created.
-	 * @param string $comment Comment explaining the undeletion.
-	 * @param int $oldPageId ID of page previously deleted. ID will be used for restored page.
-	 * @param array $restoredPages Set of page IDs that have revisions restored for undelete.
-	 * @return true
 	 */
-	public function onArticleUndelete(
-		$title, $create, $comment, $oldPageId, $restoredPages
-	) {
-		if ( $this->revisionLookup
-				->getRevisionByPageId( $oldPageId )
-				->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
+	public function onPageUndeleteComplete(
+		ProperPageIdentity $page,
+		Authority $restorer,
+		string $reason,
+		RevisionRecord $restoredRev,
+		ManualLogEntry $logEntry,
+		int $restoredRevisionCount,
+		bool $created,
+		array $restoredPageIds ): void {
+		if ( $restoredRev->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
 				->getModel() !== CONTENT_MODEL_WIKITEXT
 		) {
 			// Skip pages that do not contain wikitext
-			return true;
+			return;
 		}
-		$revId = $title->getLatestRevID();
+		$revId = $restoredRev->getId();
+
 		if ( !$revId ) {
 			// No revision to restore
-			return true;
+			return;
 		}
 		$harvest = $this->getIndexUpdates( $revId );
 
@@ -415,7 +424,6 @@ class MathSearchHooks implements
 		} else {
 			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId failed: $detail" );
 		}
-		return true;
 	}
 
 	/**
