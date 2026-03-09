@@ -66,8 +66,8 @@
 	},
 	"Hooks": {
 		"LoadExtensionSchemaUpdates": "MathSearchHooks::onLoadExtensionSchemaUpdates",
-		"PageDeleteCompleteHook": "main",
-		"PageUndeleteCompleteHook": "main",
+		"PageDeleteComplete": "main",
+		"PageUndeleteComplete": "main",
 		"MathFormulaPostRenderRevision": "main",
 		"PageSaveComplete": "main",
 		"ParserFirstCallInit": "main",
