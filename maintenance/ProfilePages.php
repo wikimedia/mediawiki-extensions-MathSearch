@@ -34,6 +34,9 @@ class ProfilePages extends Maintenance {
 		$this->addOption(
 			'overwrite', 'Overwrite existing pages with the same name.', false, false, "o"
 		);
+		$this->addOption( 'filter', 'Add a SPARQL command to filter the pages.
+		 Set to an empty string to recreate all pages.
+		 Defaults to `FILTER (?sitelinks < 1 ).`.', false, true );
 		$this->requireExtension( 'MathSearch' );
 	}
 
@@ -50,10 +53,10 @@ class ProfilePages extends Maintenance {
 			'overwrite' => $this->getOption( 'overwrite' )
 		];
 		$action = $this->getArg( 'action' );
-		if ( $action === 'create' || $action === 'recreate' ) {
+		if ( $action === 'create' ) {
 			$jobType = PageCreation::class;
-			if ( $action === 'recreate' ) {
-				$jobOptions['filter'] = '';
+			if ( $this->hasOption( 'filter' ) ) {
+				$jobOptions['filter'] = $this->getOption( 'filter', '' );
 			}
 		} elseif ( $action === 'load' ) {
 			$jobType = SetProfileType::class;
@@ -79,7 +82,7 @@ class ProfilePages extends Maintenance {
 	}
 
 	public function printAvailableActions(): string {
-		return "Available actions are: create, recreate, load, recreate.\n";
+		return "Available actions are: create, load.\n";
 	}
 
 }
