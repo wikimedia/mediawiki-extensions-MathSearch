@@ -37,11 +37,17 @@ class ImportQuickStatements extends BaseImport {
 			'forcePageCreation',
 			'Force running the profile page creation hook to move profile pages to the best location.'
 		);
+		$this->addOption(
+			'optimisticChanges',
+			'Mark item as non-changed if the new value is already in the list of changes.
+			 Does not work for qualifiers, and references.'
+		);
 	}
 
 	public function execute() {
 		$this->jobOptions['createMissing'] = (bool)$this->getOption( 'createMissing', false );
 		$this->jobOptions['forcePageCreation'] = (bool)$this->getOption( 'forcePageCreation', false );
+		$this->jobOptions['optimisticChanges'] = (bool)$this->getOption( 'optimisticChanges', false );
 		parent::execute();
 	}
 

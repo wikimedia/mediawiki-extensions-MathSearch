@@ -177,8 +177,16 @@ class QuickStatements extends GraphJob {
 				!$this->removeOldStatements( $currentStatements, $value, $statements ) ) {
 				continue;
 			}
+			$newSnak = $this->getSnak( $P, $value );
+			if ( $this->params['optimisticChanges'] ?? false ) {
+				foreach ( $currentStatements->getMainSnaks() as $stmt ) {
+					if ( $stmt instanceof PropertyValueSnak && $stmt->equals( $newSnak ) ) {
+						continue;
+					}
+				}
+			}
 			$newStatement = [
-				$this->getSnak( $P, $value ),
+				$newSnak,
 				[],
 				null,
 				$this->guidGenerator->newGuid( $item->getId() )
@@ -335,7 +343,7 @@ class QuickStatements extends GraphJob {
 					$item = false;
 				}
 				if ( !$item instanceof Item ) {
-					throw new Exception( "Item Q$q not found." );
+					throw new Exception( "Item $q not found." );
 				}
 				unset( $row[$key] );
 				if ( $deleteItem ) {
