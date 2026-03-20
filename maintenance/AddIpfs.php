@@ -70,8 +70,6 @@ class AddIpfs extends Maintenance {
 			die( 'Failed to upload to IPFS. HTTP Code: ' . $httpCode . '. Error: ' . curl_error( $ch ) );
 		}
 
-		curl_close( $ch );
-
 		// Parse the IPFS response to get the CID
 		$json = json_decode( $response, true );
 
