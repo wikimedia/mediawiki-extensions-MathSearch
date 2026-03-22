@@ -20,7 +20,13 @@
 
 use MediaWiki\Extension\MathSearch\Graph\Map;
 
-require_once __DIR__ . '/../../../maintenance/Maintenance.php';
+// @codeCoverageIgnoreStart
+$IP = getenv( 'MW_INSTALL_PATH' );
+if ( $IP === false ) {
+	$IP = __DIR__ . '/../../..';
+}
+require_once "$IP/maintenance/Maintenance.php";
+// @codeCoverageIgnoreEnd
 
 class ImportIntentConcepts extends Maintenance {
 	private const URL = 'https://raw.githubusercontent.com/davidcarlisle/mathml-docs/main/_data/core.yml';

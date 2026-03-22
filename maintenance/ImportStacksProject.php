@@ -21,7 +21,13 @@
 use MediaWiki\Extension\MathSearch\Graph\Job\QuickStatements;
 use MediaWiki\Extension\MathSearch\Graph\Map;
 
-require_once __DIR__ . '/../../../maintenance/Maintenance.php';
+// @codeCoverageIgnoreStart
+$IP = getenv( 'MW_INSTALL_PATH' );
+if ( $IP === false ) {
+	$IP = __DIR__ . '/../../..';
+}
+require_once "$IP/maintenance/Maintenance.php";
+// @codeCoverageIgnoreEnd
 
 class ImportStacksProject extends Maintenance {
 	private const URL = 'https://stacks.math.columbia.edu/data/tag/';
