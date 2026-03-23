@@ -30,7 +30,6 @@ class ImportQuickStatementsTest extends MediaWikiUnitTestCase {
 	 */
 	public function testReadline( array $columns, array $line, array $expected ): void {
 		$method = new ReflectionMethod( ImportQuickStatements::class, 'readline' );
-		$method->setAccessible( true );
 		$this->assertSame( $expected, $method->invoke( $this->newScript(), $line, $columns ) );
 	}
 
@@ -87,7 +86,6 @@ class ImportQuickStatementsTest extends MediaWikiUnitTestCase {
 		$testScript->execute();
 
 		$prop = new ReflectionProperty( ImportQuickStatements::class, 'jobOptions' );
-		$prop->setAccessible( true );
 		$this->assertFalse( $prop->getValue( $testScript )['createMissing'] );
 	}
 
@@ -96,7 +94,6 @@ class ImportQuickStatementsTest extends MediaWikiUnitTestCase {
 		$testScript->execute();
 
 		$prop = new ReflectionProperty( ImportQuickStatements::class, 'jobOptions' );
-		$prop->setAccessible( true );
 		$this->assertTrue( $prop->getValue( $testScript )['createMissing'] );
 	}
 }
