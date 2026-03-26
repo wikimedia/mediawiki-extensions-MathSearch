@@ -2,32 +2,15 @@
 
 namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
-use DataValues\QuantityValue;
-use DataValues\StringValue;
 use MediaWiki\Extension\MathSearch\Graph\Query;
 use Throwable;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\NumericPropertyId;
-use Wikibase\DataModel\Services\Lookup\EntityLookup;
-use Wikibase\DataModel\Services\Statement\GuidGenerator;
-use Wikibase\DataModel\Snak\PropertyValueSnak;
-use Wikibase\Lib\Store\EntityStore;
-use Wikibase\Repo\WikibaseRepo;
 
-class MathMLIntents extends GraphJob {
-	private readonly EntityStore $entityStore;
-	private readonly EntityLookup $entityLookup;
-	private readonly GuidGenerator $guidGenerator;
-
-	/** @var array<string,NumericPropertyId> */
-	private array $propertyIds = [];
-
+class MathMLIntents extends QuickStatements {
 	public function __construct( $params ) {
 		parent::__construct( 'MathMLIntents', $params );
-		$this->entityStore = WikibaseRepo::getEntityStore();
-		$this->entityLookup = WikibaseRepo::getEntityLookup();
-		$this->guidGenerator = new GuidGenerator();
 	}
 
 	public function run(): bool {
@@ -65,7 +48,7 @@ class MathMLIntents extends GraphJob {
 		return $qIdMap;
 	}
 
-	private function processRow( string $concept, string $qid, \stdClass $row ) {
+	private function processRow( string $concept, string $qid, array $row ) {
 		global $wgMathIntentsQIdMap;
 		$pDe = $this->getNumericPropertyId( $wgMathIntentsQIdMap['concept'] );
 		self::getLog()->info( "Add MathML data for concept $concept to $qid." );
@@ -107,14 +90,21 @@ class MathMLIntents extends GraphJob {
 
 			$changed = true;
 
-			$mainSnak = new PropertyValueSnak(
-				$propertyId,
-				$key === $wgMathIntentsQIdMap['arity'] ?
-					QuantityValue::newFromNumber( $value )
-					: new StringValue( $value )
-			);
-			$statements->addNewStatement( $mainSnak, [], null,
-				$this->guidGenerator->newGuid( $item->getId() ) );
+			if ( is_string( $value ) ) {
+				$value = [ $value ];
+			}
+			foreach ( $value as $v ) {
+				$qualifiers = [];
+				if ( str_starts_with( $v, '>=' ) ) {
+					$qualifiers[] = $this->getSnak( 'P1768', 'Q6830691' );
+					$v = substr( $v, 2 );
+				}
+				$mainSnak = $this->getSnak( $propertyId, $v );
+				$statements->addNewStatement( $mainSnak, $qualifiers, null,
+					$this->guidGenerator->newGuid( $item->getId() ) );
+
+			}
+
 		}
 		if ( $changed === false ) {
 			self::getLog()->info( "Skip content $concept (no change)." );

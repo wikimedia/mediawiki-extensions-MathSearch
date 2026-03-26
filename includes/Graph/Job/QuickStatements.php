@@ -23,12 +23,12 @@ use Wikibase\Lib\Store\EntityStore;
 use Wikibase\Repo\WikibaseRepo;
 
 class QuickStatements extends GraphJob {
-	private readonly EntityStore $entityStore;
-	private readonly EntityLookup $entityLookup;
-	private readonly GuidGenerator $guidGenerator;
+	protected readonly EntityStore $entityStore;
+	protected readonly EntityLookup $entityLookup;
+	protected readonly GuidGenerator $guidGenerator;
 
 	/** @var array<string,NumericPropertyId> */
-	private array $propertyIds = [];
+	protected array $propertyIds = [];
 	/** @var array<string,string> */
 	private array $propertyTypes = [];
 	private readonly PropertyDataTypeLookup $propertyDataTypeLookup;
@@ -38,8 +38,8 @@ class QuickStatements extends GraphJob {
 	private array $qid_cache = [];
 	private readonly JobQueueGroup $jobQueueGroup;
 
-	public function __construct( $params ) {
-		parent::__construct( 'QuickStatements', $params );
+	public function __construct( $command = 'QuickStatements', $params = [] ) {
+		parent::__construct( $command, $params );
 		$this->entityStore = WikibaseRepo::getEntityStore();
 		$this->entityLookup = WikibaseRepo::getEntityLookup();
 		$this->guidGenerator = new GuidGenerator();
@@ -213,7 +213,7 @@ class QuickStatements extends GraphJob {
 			EDIT_FORCE_BOT );
 	}
 
-	private function getSnak( string $propertyKey, mixed $value ): Snak {
+	protected function getSnak( string $propertyKey, mixed $value ): Snak {
 		$propertyId = $this->getNumericPropertyId( $propertyKey );
 		$type = $this->getPropertyType( $propertyKey );
 		switch ( $type ) {
