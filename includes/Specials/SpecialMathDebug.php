@@ -57,6 +57,7 @@ class SpecialMathDebug extends SpecialPage {
 				default:
 					$this->testParser( $offset, $length, $page, $purge === 'checked' );
 			}
+			$this->getOutput()->addModuleStyles( [ 'ext.math.styles' ] );
 		}
 	}
 
