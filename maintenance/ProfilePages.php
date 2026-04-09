@@ -23,6 +23,7 @@ use MediaWiki\Extension\MathSearch\Graph\Job\SetProfileType;
 use MediaWiki\Extension\MathSearch\Graph\Map;
 use MediaWiki\Logger\ConsoleSpi;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 use Psr\Log\LogLevel;
 use Wikibase\Repo\WikibaseRepo;
 use Wikimedia\Rdbms\IResultWrapper;
@@ -123,6 +124,7 @@ class ProfilePages extends Maintenance {
 		$action = $this->getArg( 'action' );
 		if ( $action === 'fixall' ) {
 			$this->setupSignalHandler();
+			$jobQueueGroup = MediaWikiServices::getInstance()->getJobQueueGroup();
 
 			$lastId = $this->loadState();
 			$entityNamespaceLookup = WikibaseRepo::getEntityNamespaceLookup();
@@ -154,11 +156,10 @@ class ProfilePages extends Maintenance {
 				}
 
 				[ $lastId, $params ] = $this->res2rows( $res );
-				( new PageCreation( $params ) )->run();
-
+				$jobQueueGroup->lazyPush( new PageCreation( $params ) );
 				// Save state immediately after the batch is finished
 				$this->saveState( $lastId );
-				$this->output( "Progress: Processed up to ID $lastId\n" );
+				$this->output( "Progress: Scheduled up to ID $lastId\n" );
 
 				$this->commitTransactionRound( __METHOD__ );
 			}
@@ -220,7 +221,8 @@ class ProfilePages extends Maintenance {
 		return [ $lastId, [
 			'rows' => $rows,
 			'jobname' => 'AllProfilePages' . $this->jobDate,
-			'variable_prefix' => true
+			'variable_prefix' => true,
+			'blank_pages' => true
 		] ];
 	}
 

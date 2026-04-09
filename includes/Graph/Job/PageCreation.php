@@ -111,7 +111,7 @@ class PageCreation extends GraphJob {
 			$titleOptions[] = $label . ' (' . $description . ')';
 		}
 		$titleOptions[] = $label . ' ' . $id;
-		$titleOptions[] = $this->getPrefix( $item ) . ':' . str_replace( 'Q', '', $id );
+		$titleOptions[] = $this->getPrefix( $item ) ?? 'ProfilePage' . ':' . str_replace( 'Q', '', $id );
 		if ( $currentName === '' ) {
 			$titleOptions[] = ( new V4GuidGenerator() )->newGuid();
 		} else {
@@ -174,6 +174,9 @@ class PageCreation extends GraphJob {
 	}
 
 	public function getTemplateContent( Item $item ): string {
+		if ( $this->params['blank_pages'] ?? false ) {
+			return '';
+		}
 		return '{{' . $this->getPrefix( $item ) . '}}';
 	}
 
