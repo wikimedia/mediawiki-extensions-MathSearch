@@ -11,7 +11,7 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Sparql\SparqlException;
 
 class Map {
-	private const ROWS_PER_JOB = 100;
+	public const ROWS_PER_JOB = 100;
 	private readonly JobQueueGroup $jobQueueGroup;
 
 	public function __construct( ?JobQueueGroup $jobQueueGroup = null ) {

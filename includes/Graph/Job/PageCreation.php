@@ -36,30 +36,45 @@ class PageCreation extends GraphJob {
 					self::getLog()->error( "Item $qid not found, or not an item." );
 					continue;
 				}
+				if ( $this->params['variable_prefix'] ?? false ) {
+					$this->params['prefix'] = false;
+					$this->getPrefix( $item );
+					if ( $this->params['prefix'] === '' ) {
+						self::getLog()->Info( "Item $qid has no profile page information." );
+						continue;
+					}
+				}
 				$templateContent = $this->getTemplateContent( $item );
 				$hasLinkToSite = $item->hasLinkToSite( $this->siteId );
 				if ( $hasLinkToSite ) {
 					self::getLog()->debug( "Page for $qid already exists." );
 					$currentName = $item->getSiteLink( $this->siteId )->getPageName();
-					$newTitle = $this->makeBetterTitle( $item, $currentName );
-					if ( !$newTitle ) {
-						self::getLog()->debug( "Current title for $qid is already optimal." );
-						continue;
-					}
-					$newName = $newTitle->getText();
-					self::getLog()->info( "Moving existing page " . $currentName . " to " . $newName . "." );
-					$status = MediaWikiServices::getInstance()->getMovePageFactory()->newMovePage(
-						Title::newFromText( $currentName ),
-						$this->makeBetterTitle( $item )
-					)->move( $user,
-						'Move profile page according to new naming schema `' . $currentName . '`->`' . $newName
-						. '` ' . $this->getJobname() );
-					if ( !$status->isOK() ) {
-						self::getLog()->error( "Could not move page for $qid: " . $status->getMessage()->text() );
-						continue;
+					// double-check that the page exists
+					if ( $this->wikiPageFactory->newFromTitle( Title::newFromText( $currentName ) )->exists() ) {
+						$newTitle = $this->makeBetterTitle( $item, $currentName );
+						if ( !$newTitle ) {
+							self::getLog()->debug( "Current title for $qid is already optimal." );
+							continue;
+						}
+						$newName = $newTitle->getText();
+						self::getLog()->info( "Moving existing page " . $currentName . " to " . $newName . "." );
+						$status = MediaWikiServices::getInstance()->getMovePageFactory()->newMovePage(
+							Title::newFromText( $currentName ),
+							$this->makeBetterTitle( $item )
+						)->move( $user,
+							'Move profile page according to new naming schema `' . $currentName . '`->`' . $newName
+							. '` ' . $this->getJobname() );
+						if ( !$status->isOK() ) {
+							self::getLog()->error( "Could not move page for $qid: " . $status->getMessage()->text() );
+							continue;
+						}
+					} else {
+						self::getLog()->warning( "Profile page $currentName for $qid does not exist." );
+						$hasLinkToSite = false;
 					}
 					$item->removeSiteLink( $this->siteId );
-				} else {
+				}
+				if ( !$hasLinkToSite ) {
 					self::getLog()->info( "Creating new page for $qid." );
 					$newTitle = $this->makeBetterTitle( $item );
 					$pageContent = ContentHandler::makeContent(
@@ -137,9 +152,12 @@ class PageCreation extends GraphJob {
 			try {
 				$p = new NumericPropertyId( $wgMathSearchPropertyProfileType );
 				$profileTypeStatements = $item->getStatements()->getByPropertyId( $p )->getMainSnaks();
+				if ( count( $profileTypeStatements ) !== 1 ) {
+					throw new RuntimeException( "No or multiple statements found for profile type." );
+				}
 				$profileType = $profileTypeStatements[0]->getDataValue()->getValue()->getEntityId()->getSerialization();
 				$prefix = array_search( $profileType, $wgMathString2QMap[$wgMathSearchPropertyProfileType] );
-			} catch ( Throwable $e ) {
+			} catch ( Throwable ) {
 				$prefix = '';
 			}
 			$this->params['prefix'] = $prefix;
