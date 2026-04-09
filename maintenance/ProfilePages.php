@@ -39,7 +39,7 @@ class ProfilePages extends Maintenance {
 	private readonly string $stateFile;
 	private bool $shouldQuit = false;
 
-	private readonly string $jobDate;
+	private string $jobDate;
 
 	public function __construct() {
 		parent::__construct();
@@ -100,12 +100,16 @@ class ProfilePages extends Maintenance {
 	}
 
 	private function saveState( int $id ): void {
-		file_put_contents( $this->stateFile, json_encode( [ 'last_id' => $id, 'timestamp' => time() ] ) );
+		file_put_contents( $this->stateFile, json_encode( [
+			'last_id' => $id, 'timestamp' => time(), 'jobdate' => $this->jobDate ] ) );
 	}
 
 	private function loadState(): int {
 		if ( file_exists( $this->stateFile ) ) {
 			$data = json_decode( file_get_contents( $this->stateFile ), true );
+			if ( isset( $data['jobdate'] ) ) {
+				$this->jobDate = (string)$data['jobdate'];
+			}
 			return $data['last_id'] ?? 0;
 		}
 		return 0;
