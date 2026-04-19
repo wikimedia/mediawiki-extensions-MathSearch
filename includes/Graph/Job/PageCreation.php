@@ -101,6 +101,10 @@ class PageCreation extends GraphJob {
 		$description = str_replace( '#', '', $item->getDescriptions()->hasTermForLanguage( 'en' ) ?
 			$item->getDescriptions()->getByLanguage( 'en' )->getText() :
 			'' );
+		if ( $label === '' && str_starts_with( $description, 'scientific article;' ) ) {
+			self::getLog()->notice( "Keeping $currentName as title is missing." );
+			return null;
+		}
 		$id = $item->getId()->getSerialization();
 		$titleOptions = [];
 		$labelOrDescription = $label ?: $description;
