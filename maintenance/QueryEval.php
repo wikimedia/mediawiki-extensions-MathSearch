@@ -20,6 +20,7 @@
 
 use MediaWiki\Installer\DatabaseUpdater;
 use MediaWiki\Installer\MysqlUpdater;
+use MediaWiki\Maintenance\Maintenance;
 
 // @codeCoverageIgnoreStart
 $IP = getenv( 'MW_INSTALL_PATH' );

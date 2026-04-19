@@ -18,6 +18,8 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Maintenance\Maintenance;
+
 // @codeCoverageIgnoreStart
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {

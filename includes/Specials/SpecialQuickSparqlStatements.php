@@ -14,7 +14,7 @@ use MediaWiki\HTMLForm\Field\HTMLSubmitField;
 use MediaWiki\HTMLForm\Field\HTMLTextAreaField;
 use MediaWiki\HTMLForm\Field\HTMLTextField;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\Languages\LanguageNameUtils;
+use MediaWiki\Language\LanguageNameUtils;
 use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Sparql\SparqlException;
 use MediaWiki\SpecialPage\SpecialPage;

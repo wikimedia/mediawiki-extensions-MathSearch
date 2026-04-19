@@ -4,7 +4,10 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\Parser\ParserOptions;
 use MediaWiki\Title\Title;
+use Wikimedia\ObjectCache\HashBagOStuff;
+use Wikimedia\ObjectCache\WANObjectCache;
 
 /**
  * MediaWiki MathSearch extension

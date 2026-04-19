@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Exception\PermissionsError;
 use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Revision\RevisionLookup;

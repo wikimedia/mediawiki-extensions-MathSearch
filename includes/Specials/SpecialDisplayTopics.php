@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Exception\PermissionsError;
 use MediaWiki\SpecialPage\SpecialPage;
 use Wikimedia\Rdbms\IConnectionProvider;
 

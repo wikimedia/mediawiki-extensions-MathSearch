@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Content\TextContent;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\SlotRecord;

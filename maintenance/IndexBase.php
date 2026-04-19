@@ -29,6 +29,7 @@ if ( $IP === false ) {
 require_once "$IP/maintenance/Maintenance.php";
 // @codeCoverageIgnoreEnd
 
+use MediaWiki\Maintenance\Maintenance;
 use Wikimedia\Rdbms\IResultWrapper;
 
 /**

@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Content\TextContent;
 use MediaWiki\Extension\Math\MathSource;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Parser\Parser;

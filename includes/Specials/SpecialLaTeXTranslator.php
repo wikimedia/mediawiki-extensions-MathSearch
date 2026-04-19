@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Content\TextContent;
 use MediaWiki\HTMLForm\Field\HTMLCheckField;
 use MediaWiki\HTMLForm\Field\HTMLTextAreaField;
 use MediaWiki\HTMLForm\Field\HTMLTextField;

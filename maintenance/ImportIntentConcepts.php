@@ -19,6 +19,7 @@
  */
 
 use MediaWiki\Extension\MathSearch\Graph\Map;
+use MediaWiki\Maintenance\Maintenance;
 
 // @codeCoverageIgnoreStart
 $IP = getenv( 'MW_INSTALL_PATH' );

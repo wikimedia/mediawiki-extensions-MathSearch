@@ -20,7 +20,9 @@
  */
 
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Maintenance\Maintenance;
 use MediaWiki\Parser\Parser;
+use MediaWiki\Parser\ParserOptions;
 
 // @codeCoverageIgnoreStart
 $IP = getenv( 'MW_INSTALL_PATH' );

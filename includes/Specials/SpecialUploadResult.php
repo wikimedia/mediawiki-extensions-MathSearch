@@ -1,8 +1,10 @@
 <?php
 
+use MediaWiki\Exception\PermissionsError;
 use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\HTMLForm\Field\HTMLTextField;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Import\ImportStreamSource;
 use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\Title;

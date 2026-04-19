@@ -22,6 +22,7 @@ use DataValues\StringValue;
 use DataValues\TimeValue;
 use MediaWiki\Extension\MathSearch\Graph\Query;
 use MediaWiki\Extension\MathSearch\Swh\Swhid;
+use MediaWiki\Maintenance\Maintenance;
 use MediaWiki\Sparql\SparqlException;
 use MediaWiki\User\User;
 use Wikibase\DataModel\Entity\ItemId;

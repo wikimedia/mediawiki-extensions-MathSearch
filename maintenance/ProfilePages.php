@@ -23,6 +23,7 @@ use MediaWiki\Extension\MathSearch\Graph\Job\SetProfileType;
 use MediaWiki\Extension\MathSearch\Graph\Map;
 use MediaWiki\Logger\ConsoleSpi;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\Maintenance\Maintenance;
 use MediaWiki\MediaWikiServices;
 use Psr\Log\LogLevel;
 use Wikibase\Repo\WikibaseRepo;

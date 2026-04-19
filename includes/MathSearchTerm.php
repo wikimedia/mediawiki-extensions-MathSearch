@@ -2,6 +2,7 @@
 
 use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Search\SearchResult;
 
 class MathSearchTerm {
 

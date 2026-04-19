@@ -2,10 +2,11 @@
 
 namespace MediaWiki\Extension\MathSearch\StackExchange;
 
+use MediaWiki\JobQueue\Job;
 use MediaWiki\Logger\LoggerFactory;
 use SimpleXMLElement;
 
-class LineReaderJob extends \Job {
+class LineReaderJob extends Job {
 
 	public function __construct( $title, $params ) {
 		parent::__construct( 'SeLineReader', $title, $params );

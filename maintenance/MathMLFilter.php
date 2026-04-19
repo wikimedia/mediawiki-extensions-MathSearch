@@ -18,7 +18,9 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Export\DumpFilter;
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Maintenance\BackupDumper;
 use MediaWiki\Parser\Sanitizer;
 
 /**

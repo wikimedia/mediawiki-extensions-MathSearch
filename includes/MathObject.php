@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\Deferred\DeferredUpdates;
+use MediaWiki\Exception\MWException;
 use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Logger\LoggerFactory;

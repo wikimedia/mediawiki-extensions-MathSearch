@@ -24,6 +24,7 @@ use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRestbaseInterface;
 use MediaWiki\Extension\Math\WikiTexVC\TexVC;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\Maintenance\Maintenance;
 
 // @codeCoverageIgnoreStart
 $IP = getenv( 'MW_INSTALL_PATH' );
