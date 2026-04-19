@@ -54,6 +54,8 @@ class ProfilePages extends Maintenance {
 		$this->addOption( 'filter', 'Add a SPARQL command to filter the pages.
 		 Set to an empty string to recreate all pages.
 		 Defaults to `FILTER (?sitelinks < 1 ).`.', false, true );
+		$this->addOption( 'rowsPerJob', 'Determines how many pages are updated in one job.', false, true );
+		$this->addOption( 'noJobs', 'Performs actions without creating jobs.' );
 		$this->addOption( 'loglevel', 'Overwrite log level.', false, true );
 		$this->requireExtension( 'MathSearch' );
 		$this->stateFile = __DIR__ . '/process_state.json';
@@ -124,11 +126,13 @@ class ProfilePages extends Maintenance {
 		$action = $this->getArg( 'action' );
 		if ( $action === 'fixall' ) {
 			$this->setupSignalHandler();
+			$noJobs = $this->getOption( 'noJobs', false );
 			$jobQueueGroup = MediaWikiServices::getInstance()->getJobQueueGroup();
 
 			$lastId = $this->loadState();
 			$entityNamespaceLookup = WikibaseRepo::getEntityNamespaceLookup();
 			$entityNamespaces = $entityNamespaceLookup->getEntityNamespaces();
+			$rowsPerJob = $this->getOption( 'rowsPerJob', Map::ROWS_PER_JOB );
 
 			if ( !isset( $entityNamespaces['item'] ) ) {
 				$this->error( "Could not determine the item namespace.\n" );
@@ -147,7 +151,7 @@ class ProfilePages extends Maintenance {
 					->where( [ 'page_namespace' => $itemNamespace ] )
 					->andWhere( "page_id > $lastId" )
 					->orderBy( 'page_id', 'ASC' )
-					->limit( Map::ROWS_PER_JOB )
+					->limit( $rowsPerJob )
 					->fetchResultSet();
 
 				if ( $res->numRows() === 0 ) {
@@ -156,12 +160,14 @@ class ProfilePages extends Maintenance {
 				}
 
 				[ $lastId, $params ] = $this->res2rows( $res );
-				$jobQueueGroup->lazyPush( new PageCreation( $params ) );
+				if ( $noJobs ) {
+					( new PageCreation( $params ) )->run();
+				} else {
+					$jobQueueGroup->lazyPush( new PageCreation( $params ) );
+				}
 				// Save state immediately after the batch is finished
 				$this->saveState( $lastId );
-				$this->output( "Progress: Scheduled up to ID $lastId\n" );
-
-				$this->commitTransactionRound( __METHOD__ );
+				$this->output( "Progress: Finished up to ID $lastId\n" );
 			}
 
 			if ( $this->shouldQuit ) {
