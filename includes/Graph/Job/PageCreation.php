@@ -2,6 +2,9 @@
 namespace MediaWiki\Extension\MathSearch\Graph\Job;
 
 use MediaWiki\Content\ContentHandler;
+use MediaWiki\Content\ContentSerializationException;
+use MediaWiki\Content\UnknownContentModelException;
+use MediaWiki\Exception\PermissionsError;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Title\Title;
@@ -24,71 +27,72 @@ class PageCreation extends GraphJob {
 		$this->siteId = 'mardi';
 	}
 
+	/**
+	 * @throws UnknownContentModelException
+	 * @throws ContentSerializationException
+	 * @throws PermissionsError
+	 */
 	public function run(): bool {
 		$user = $this->getUser();
 		$store = WikibaseRepo::getEntityStore();
 		$lookup = WikibaseRepo::getEntityLookup();
 		foreach ( $this->params['rows'] as $qid ) {
-			try {
-				self::getLog()->debug( "Processing page $qid." );
-				$item = $lookup->getEntity( new ItemId( $qid ) );
-				if ( !$item instanceof Item ) {
-					self::getLog()->error( "Item $qid not found, or not an item." );
+			self::getLog()->debug( "Processing page $qid." );
+			$item = $lookup->getEntity( new ItemId( $qid ) );
+			if ( !$item instanceof Item ) {
+				self::getLog()->error( "Item $qid not found, or not an item." );
+				continue;
+			}
+			if ( $this->params['variable_prefix'] ?? false ) {
+				$this->params['prefix'] = false;
+				$this->getPrefix( $item );
+				if ( $this->params['prefix'] === '' ) {
+					self::getLog()->Info( "Item $qid has no profile page information." );
 					continue;
 				}
-				if ( $this->params['variable_prefix'] ?? false ) {
-					$this->params['prefix'] = false;
-					$this->getPrefix( $item );
-					if ( $this->params['prefix'] === '' ) {
-						self::getLog()->Info( "Item $qid has no profile page information." );
+			}
+			$templateContent = $this->getTemplateContent( $item );
+			$hasLinkToSite = $item->hasLinkToSite( $this->siteId );
+			if ( $hasLinkToSite ) {
+				self::getLog()->debug( "Page for $qid already exists." );
+				$currentName = $item->getSiteLink( $this->siteId )->getPageName();
+				// double-check that the page exists
+				if ( $this->wikiPageFactory->newFromTitle( Title::newFromText( $currentName ) )->exists() ) {
+					$newTitle = $this->makeBetterTitle( $item, $currentName );
+					if ( !$newTitle ) {
+						self::getLog()->debug( "Current title for $qid is already optimal." );
 						continue;
 					}
-				}
-				$templateContent = $this->getTemplateContent( $item );
-				$hasLinkToSite = $item->hasLinkToSite( $this->siteId );
-				if ( $hasLinkToSite ) {
-					self::getLog()->debug( "Page for $qid already exists." );
-					$currentName = $item->getSiteLink( $this->siteId )->getPageName();
-					// double-check that the page exists
-					if ( $this->wikiPageFactory->newFromTitle( Title::newFromText( $currentName ) )->exists() ) {
-						$newTitle = $this->makeBetterTitle( $item, $currentName );
-						if ( !$newTitle ) {
-							self::getLog()->debug( "Current title for $qid is already optimal." );
-							continue;
-						}
-						$newName = $newTitle->getText();
-						self::getLog()->info( "Moving existing page " . $currentName . " to " . $newName . "." );
-						$status = MediaWikiServices::getInstance()->getMovePageFactory()->newMovePage(
-							Title::newFromText( $currentName ),
-							$this->makeBetterTitle( $item )
-						)->move( $user,
-							'Move profile page according to new naming schema `' . $currentName . '`->`' . $newName
-							. '` ' . $this->getJobname() );
-						if ( !$status->isOK() ) {
-							self::getLog()->error( "Could not move page for $qid: " . $status->getMessage()->text() );
-							continue;
-						}
-					} else {
-						self::getLog()->warning( "Profile page $currentName for $qid does not exist." );
-						$hasLinkToSite = false;
+					$newName = $newTitle->getText();
+					self::getLog()->info( "Moving existing page " . $currentName . " to " . $newName . "." );
+					$status = MediaWikiServices::getInstance()->getMovePageFactory()->newMovePage(
+						Title::newFromText( $currentName ),
+						$this->makeBetterTitle( $item )
+					)->move( $user,
+						'Move profile page according to new naming schema `' . $currentName . '`->`' . $newName
+						. '` ' . $this->getJobname() );
+					if ( !$status->isOK() ) {
+						self::getLog()->error( "Could not move page for $qid: " . $status->getMessage()->text() );
+						continue;
 					}
-					$item->removeSiteLink( $this->siteId );
+				} else {
+					self::getLog()->warning( "Profile page $currentName for $qid does not exist." );
+					$hasLinkToSite = false;
 				}
-				if ( !$hasLinkToSite ) {
-					self::getLog()->info( "Creating new page for $qid." );
-					$newTitle = $this->makeBetterTitle( $item );
-					$pageContent = ContentHandler::makeContent(
-						$templateContent, $newTitle );
-					$this->wikiPageFactory->newFromTitle( $newTitle )->doUserEditContent( $pageContent, $user,
-						'Created automatically from ' . $this->getJobname() );
-				}
-				$siteLink = new SiteLink( $this->siteId, $newTitle->getPrefixedText() );
-				$item->addSiteLink( $siteLink );
-				self::getLog()->info( "Linking page $qid." );
-				$store->saveEntity( $item, "Added link to MaRDI item.", $user, EDIT_FORCE_BOT );
-			} catch ( Throwable $ex ) {
-				self::getLog()->error( "Skip page processing page $qid.", [ $ex ] );
+				$item->removeSiteLink( $this->siteId );
 			}
+			if ( !$hasLinkToSite ) {
+				self::getLog()->info( "Creating new page for $qid." );
+				$newTitle = $this->makeBetterTitle( $item );
+				$pageContent = ContentHandler::makeContent(
+					$templateContent, $newTitle );
+				$this->wikiPageFactory->newFromTitle( $newTitle )->doUserEditContent( $pageContent, $user,
+					'Created automatically from ' . $this->getJobname() );
+			}
+			$siteLink = new SiteLink( $this->siteId, $newTitle->getPrefixedText() );
+			$item->addSiteLink( $siteLink );
+			self::getLog()->info( "Linking page $qid." );
+			$store->saveEntity( $item, "Added link to MaRDI item.", $user, EDIT_FORCE_BOT );
 		}
 
 		return true;
@@ -115,7 +119,7 @@ class PageCreation extends GraphJob {
 			$titleOptions[] = $label . ' (' . $description . ')';
 		}
 		$titleOptions[] = $label . ' ' . $id;
-		$titleOptions[] = $this->getPrefix( $item ) ?? 'ProfilePage' . ':' . str_replace( 'Q', '', $id );
+		$titleOptions[] = ucfirst( $this->getPrefix( $item ) ?? 'ProfilePage' ) . ':' . str_replace( 'Q', '', $id );
 		if ( $currentName === '' ) {
 			$titleOptions[] = ( new V4GuidGenerator() )->newGuid();
 		} else {
