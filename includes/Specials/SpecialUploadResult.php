@@ -29,7 +29,12 @@ class SpecialUploadResult extends SpecialPage {
 		private readonly RevisionLookup $revisionLookup,
 		string $name = 'MathUpload',
 	) {
-		parent::__construct( $name, 'mathwmcsubmit' );
+		parent::__construct( $name );
+	}
+
+	/** @inheritDoc */
+	public function getRestriction(): string {
+		return 'mathwmcsubmit';
 	}
 
 	public function isListed(): bool {

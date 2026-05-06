@@ -16,8 +16,13 @@ class SpecialDisplayTopics extends SpecialPage {
 	public function __construct(
 		private readonly IConnectionProvider $dbProvider,
 	) {
-		parent::__construct( 'DisplayTopics', 'mathwmcsubmit' );
+		parent::__construct( 'DisplayTopics' );
 		$this->utils = new MathSearchUtils( $dbProvider );
+	}
+
+	/** @inheritDoc */
+	public function getRestriction(): string {
+		return 'mathwmcsubmit';
 	}
 
 	public function isListed(): bool {

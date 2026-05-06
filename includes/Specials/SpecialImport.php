@@ -18,7 +18,12 @@ class SpecialImport extends SpecialPage {
 		private readonly HttpRequestFactory $http,
 		private readonly Config $config,
 	) {
-		parent::__construct( 'ImportFromPid', 'import' );
+		parent::__construct( 'ImportFromPid' );
+	}
+
+	/** @inheritDoc */
+	public function getRestriction(): string {
+		return 'import';
 	}
 
 	public function execute( $subPage ): void {

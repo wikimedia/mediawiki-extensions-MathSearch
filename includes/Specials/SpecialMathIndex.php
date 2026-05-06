@@ -18,7 +18,12 @@ class SpecialMathIndex extends SpecialPage {
 	public function __construct(
 		private readonly JobQueueGroup $jobQueueGroup,
 	) {
-		parent::__construct( 'MathIndex', 'delete' );
+		parent::__construct( 'MathIndex' );
+	}
+
+	/** @inheritDoc */
+	public function getRestriction(): string {
+		return 'delete';
 	}
 
 	/**

@@ -25,8 +25,13 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 		private readonly LanguageNameUtils $languageNameUtils,
 		private readonly WikiPageFactory $wikiPageFactory,
 	) {
-		parent::__construct( 'QuickSparqlStatements', 'import' );
+		parent::__construct( 'QuickSparqlStatements' );
 	}
+
+	/** @inheritDoc */
+	public function getRestriction(): string {
+		return 'import';
+	}#
 
 	public function execute( $subPage ): void {
 		parent::execute( $subPage );
