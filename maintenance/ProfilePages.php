@@ -119,11 +119,15 @@ class ProfilePages extends Maintenance {
 		return 0;
 	}
 
+	/**
+	 * @throws Throwable
+	 * @throws \MediaWiki\Sparql\SparqlException
+	 */
 	public function execute() {
 		$this->setupLogging();
 
 		$profileTypeQIds = $this->getConfig()->get( 'MathString2QMap' )[
-			$this->getConfig()->get( 'MathSearchPropertyProfileType' )];
+		$this->getConfig()->get( 'MathSearchPropertyProfileType' )];
 		$action = $this->getArg( 'action' );
 		if ( $action === 'fixall' ) {
 			$this->setupSignalHandler();
@@ -162,10 +166,18 @@ class ProfilePages extends Maintenance {
 
 				[ $lastId, $params ] = $this->res2rows( $res );
 				if ( $noJobs ) {
-					( new PageCreation( $params ) )->run();
+					$this->beginTransactionRound( __METHOD__ );
+					try {
+						( new PageCreation( $params ) )->run();
+						$this->commitTransactionRound( __METHOD__ );
+					} catch ( Throwable $e ) {
+						$this->rollbackTransactionRound( __METHOD__ );
+						throw $e;
+					}
 				} else {
 					$jobQueueGroup->lazyPush( new PageCreation( $params ) );
 				}
+
 				// Save state immediately after the batch is finished
 				$this->saveState( $lastId );
 				$this->output( "Progress: Finished up to ID $lastId\n" );
