@@ -66,7 +66,7 @@
 	"math-wmc-too-many-results": "Regel $1: Er zijn te veel resultaten voor $2. \n De berekende rang voor de formules \"$3\" was \"$4\". Dit is hoger dan het maximaal toegestane aantal inzendingen ($wgMathWmcMaxResults=$5).",
 	"math-wmc-malformed-formula-reference": "Regel $1: Formuleverwijzing \"$2\" komt niet overeen met het patroon \"$3\".",
 	"math-wmc-wrong-formula-reference": "Regel $1: De formuleverwijzing (versie \"$2\", formule \"$3\") is ongeldig.",
-	"math-wmc-wrong-query-reference": "Regel $1: Queryverwijzing \"$2\" is ongeldig.",
+	"math-wmc-wrong-query-reference": "Regel $1: Queryverwijzing \"$2\" is onjuist.",
 	"math-wmc-importing": "Importeren...",
 	"math-wmc-display-formulae-label": "Weergave van ingediende formules",
 	"math-wmc-display-formulae-help": "Niet aanbevolen voor grote invoerbestanden.",
