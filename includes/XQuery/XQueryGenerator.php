@@ -70,13 +70,13 @@ abstract class XQueryGenerator {
 			}
 		}
 		$query = 'for $x in $m//*:' .
-			$this->xml->getElementsByTagName( $this->rootElementName )->item( 0 )->firstChild->localName . PHP_EOL .
-			$fixedConstraints . PHP_EOL .
-			( ( $qvarConstraintString || $this->lengthConstraint ) ? ' where' : '' ) . PHP_EOL .
+			$this->xml->getElementsByTagName( $this->rootElementName )->item( 0 )->firstChild->localName . "\n" .
+			$fixedConstraints . "\n" .
+			( ( $qvarConstraintString || $this->lengthConstraint ) ? ' where' : '' ) . "\n" .
 			$this->lengthConstraint .
 			( ( ( $qvarConstraintString && $this->lengthConstraint ) ? ' and ' : '' ) ) .
-			$qvarConstraintString . PHP_EOL .
-			' return' . PHP_EOL;
+			$qvarConstraintString . "\n" .
+			' return' . "\n";
 		return $this->getHeader() . $query . $this->getFooter();
 	}
 
