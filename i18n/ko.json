@@ -6,7 +6,8 @@
 			"Theshinster123",
 			"Ykhwong",
 			"고솜",
-			"아라"
+			"아라",
+			"Tensama0415"
 		]
 	},
 	"mathsearch": "수학 검색",
@@ -52,6 +53,7 @@
 	"math-lp-new-article": "다른 문서로 계속하기",
 	"math-lp-new-formula": "다른 수식으로 계속하기",
 	"math-wmc-download-button": "다운로드",
+	"math-wmc-SectionRun": "제출 정보",
 	"math-wmc-SelectRun": "이름",
 	"math-wmc-FileLabel": "CSV 파일",
 	"math-wmc-SubmissionSuccess": "제출에 성공했습니다.",
@@ -65,5 +67,8 @@
 	"math-tex2nb-input": "공식 입력",
 	"math-tex2nb-wikitext": "위키텍스트 컨텍스트",
 	"math-tex2nb-purge": "캐시된 결과를 새로 고칩니다.",
+	"datatypes-type-contentmath": "수학적 표현 (내용)",
+	"quicksparqlstatements": "SPARQL QuickStatements 생성기",
+	"wikibase-listdatatypes-contentmath-head": "수학적 표현 (내용)",
 	"wikibase-listdatatypes-contentmath-body": "수식, 공식, 등호 등에 대한 리터럴 데이터 필드이며 DRMF/DLMF 형식의 LaTeX로 표현합니다."
 }
