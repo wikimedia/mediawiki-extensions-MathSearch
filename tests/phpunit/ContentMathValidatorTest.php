@@ -3,6 +3,7 @@
 use DataValues\NumberValue;
 use DataValues\StringValue;
 use MediaWiki\Extension\MathSearch\Wikidata\Content\ContentMathValidator;
+use MediaWiki\Registration\ExtensionRegistry;
 use ValueValidators\Result;
 
 /**
@@ -16,6 +17,13 @@ class ContentMathValidatorTest extends MediaWikiIntegrationTestCase {
 
 	protected function setUp(): void {
 		parent::setUp();
+
+		if ( !ExtensionRegistry::getInstance()->isLoaded( 'WikibaseClient' ) &&
+			!ExtensionRegistry::getInstance()->isLoaded( 'WikibaseRepository' )
+		) {
+			$this->markTestSkipped( "Extension WikibaseClient or WikibaseRepository are required for this test" );
+		}
+
 		$this->overrideConfigValue( 'MathDisableTexFilter', 'always' );
 	}
 
