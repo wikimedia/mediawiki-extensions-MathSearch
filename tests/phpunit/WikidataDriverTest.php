@@ -7,12 +7,10 @@
  * GPLv2 license; info in main package.
  *
  * @group MathSearch
+ * @covers WikidataDriver
  */
 class WikidataDriverTest extends MediaWikiIntegrationTestCase {
 
-	/**
-	 * @covers WikidataDriver::<public>
-	 */
 	public function testSuccess() {
 		$this->markTestSkipped( 'All HTTP requests are banned in tests. See T265628.' );
 		$wd = new WikidataDriver();
