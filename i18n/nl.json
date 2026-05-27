@@ -83,7 +83,7 @@
 	"math-search-type-2": "xQuery uitdrukking",
 	"math-search-expression-label": "Uitdrukking:",
 	"math-tex2nb-header": "Uw eigen invoer opgeven",
-	"math-tex2nb-intro": "Hier ziet u hoe het omzetten van TeX naar Computer Algebra System (CAS) werkt.\n\nDe demo-applicatie converteert LaTeX-functies die zich direct laten vertalen naar CAS-tegenhangers.\n\nFuncties zonder uitdrukkelijke CAS-ondersteuning kunnen worden vertaald via een DRMF-pakket (in ontwikkeling).",
+	"math-tex2nb-intro": "Hier ziet u hoe het omzetten van TeX naar Computer Algebra System (CAS) werkt.\n\nDe demotoepassing converteert LaTeX-functies die zich direct laten vertalen naar CAS-tegenhangers.\n\nFuncties zonder uitdrukkelijke CAS-ondersteuning kunnen worden vertaald via een DRMF-pakket (in ontwikkeling).",
 	"math-tex2nb-input": "Formule-invoer",
 	"math-tex2nb-wikitext": "Wikitekst-context",
 	"math-tex2nb-latex": "De volgende LaTeX-invoer…",
