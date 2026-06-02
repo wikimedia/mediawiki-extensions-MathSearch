@@ -87,7 +87,7 @@ class PageCreation extends GraphJob {
 				$pageContent = ContentHandler::makeContent(
 					$templateContent, $newTitle );
 				$this->wikiPageFactory->newFromTitle( $newTitle )->doUserEditContent( $pageContent, $user,
-					'Created automatically from ' . $this->getJobname() );
+					'Created automatically from ' . $this->getJobname(), EDIT_FORCE_BOT );
 			}
 			$siteLink = new SiteLink( $this->siteId, $newTitle->getPrefixedText() );
 			$item->addSiteLink( $siteLink );
@@ -178,7 +178,7 @@ class PageCreation extends GraphJob {
 		if ( $jobname === false ) {
 			$this->params['jobname'] = date( 'ymdhms' );
 		}
-		return $jobname;
+		return $this->params['jobname'];
 	}
 
 	public function getTemplateContent( Item $item ): string {

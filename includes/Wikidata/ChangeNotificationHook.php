@@ -23,7 +23,9 @@ class ChangeNotificationHook implements WikibaseChangeNotificationHook {
 			$this->jobQueueGroup->lazyPush(
 				( new PageCreation( [
 						'rows' => [ $change->getObjectId() ],
-						'username' => $change->getMetadata()['user_text'] ]
+						'username' => $change->getMetadata()['user_text'],
+						'jobname' => $change->getObjectId()
+					]
 				) ) );
 		}
 	}
