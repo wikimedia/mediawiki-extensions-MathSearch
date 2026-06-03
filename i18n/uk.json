@@ -6,7 +6,8 @@
 			"DDPAT",
 			"Ice bulldog",
 			"Piramidion",
-			"Ата"
+			"Ата",
+			"Movses"
 		]
 	},
 	"mathsearch": "Математичний пошук",
@@ -158,6 +159,8 @@
 	"math-tex2nb-mathematica": "… перекладено на вихід CAS …",
 	"math-tex2nb-purge": "Очистити кешовані результати.",
 	"datatypes-type-contentmath": "Математичний вираз (вміст)",
+	"quicksparqlstatements": "Генератор SPARQL QuickStatements",
+	"pidredirect": "Постійне перенаправлення ідентифікатора",
 	"wikibase-listdatatypes-contentmath-head": "Математичний вираз (вміст)",
 	"wikibase-listdatatypes-contentmath-body": "Символьне поле даних для математичних виразів, формул, рівнянь та подібного, виражених у DRMF/DLMF-варіанті LaTeX."
 }
