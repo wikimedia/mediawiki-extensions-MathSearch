@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Ahmed-Najib-Biabani-Ibrahimkhel"
+			"Ahmed-Najib-Biabani-Ibrahimkhel",
+			"شاه زمان پټان"
 		]
 	},
 	"math-lp-1-page-label": "د ليکنې سرليک",
@@ -29,7 +30,7 @@
 	"math-lp-4-absolute-option-2": "منځوی",
 	"math-lp-4-absolute-option-3": "بد",
 	"math-lp-6-srt-assessment-option-1": "خورا مرستندويه",
-	"math-lp-6-srt-assessment-option-2": "ښه",
+	"math-lp-6-srt-assessment-option-2": "ډېر گټور",
 	"math-lp-feedback-label": "اضافي تبصرې (اختياري)",
 	"math-lp-finish-label": "پای",
 	"math-search-relation-label": "اړيکه:",
