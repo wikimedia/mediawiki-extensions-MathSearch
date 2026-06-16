@@ -167,7 +167,11 @@
 		"MathIntentsQIdMap": {
 			"characters": "P233",
 			"concept": "P1511",
-			"arity": "P1515"
+			"arity": "P1515",
+			"mathml": "P1455",
+			"urls": "P1690",
+			"property": "P1883",
+			"area": "P1882"
 		}
 	},
 	"MessagesDirs": {

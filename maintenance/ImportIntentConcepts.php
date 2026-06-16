@@ -30,7 +30,7 @@ require_once "$IP/maintenance/Maintenance.php";
 // @codeCoverageIgnoreEnd
 
 class ImportIntentConcepts extends Maintenance {
-	private const URL = 'https://raw.githubusercontent.com/davidcarlisle/mathml-docs/main/_data/core.yml';
+	private const URL = 'https://raw.githubusercontent.com/w3c/mathml-docs/refs/heads/main/_data/open.yml';
 	/** @var bool */
 	private $overwrite;
 

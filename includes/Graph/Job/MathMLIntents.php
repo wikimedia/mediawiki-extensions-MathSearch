@@ -77,6 +77,15 @@ class MathMLIntents extends QuickStatements {
 			$changed = true;
 		}
 		foreach ( $row['content'] as $k => $value ) {
+			if ( $k === 'en' ) {
+				$hasLabel = $item->getDescriptions()->hasTermForLanguage( 'en' );
+				if ( $hasLabel && $item->getDescriptions()->getByLanguage( 'en' )->getText() == $value ) {
+					continue;
+				}
+				$item->setDescription( 'en', $value );
+				$changed = true;
+				continue;
+			}
 			if ( !array_key_exists( $k, $wgMathIntentsQIdMap ) ) {
 				continue;
 			}
@@ -92,6 +101,10 @@ class MathMLIntents extends QuickStatements {
 
 			if ( is_string( $value ) ) {
 				$value = [ $value ];
+			}
+			if ( !is_array( $value ) ) {
+				self::getLog()->error( "Wrong value type for $key of concept $concept." );
+				continue;
 			}
 			foreach ( $value as $v ) {
 				$qualifiers = [];
