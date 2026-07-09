@@ -10,7 +10,7 @@ use Wikibase\DataModel\Entity\NumericPropertyId;
 
 class MathMLIntents extends QuickStatements {
 	public function __construct( $params ) {
-		parent::__construct( 'MathMLIntents', $params );
+		parent::__construct( $params, 'MathMLIntents' );
 	}
 
 	public function run(): bool {

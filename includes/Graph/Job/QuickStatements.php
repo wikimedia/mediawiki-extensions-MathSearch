@@ -38,7 +38,7 @@ class QuickStatements extends GraphJob {
 	private array $qid_cache = [];
 	private readonly JobQueueGroup $jobQueueGroup;
 
-	public function __construct( $command = 'QuickStatements', $params = [] ) {
+	public function __construct( $params = [], $command = 'QuickStatements' ) {
 		parent::__construct( $command, $params );
 		$this->entityStore = WikibaseRepo::getEntityStore();
 		$this->entityLookup = WikibaseRepo::getEntityLookup();
