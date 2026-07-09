@@ -182,7 +182,7 @@ class PageCreation extends GraphJob {
 	}
 
 	public function getTemplateContent( Item $item ): string {
-		if ( $this->params['blank_pages'] ?? false ) {
+		if ( $this->params['blank_pages'] ?? false || $this->getPrefix( $item ) === '' ) {
 			return '';
 		}
 		return '{{' . $this->getPrefix( $item ) . '}}';
