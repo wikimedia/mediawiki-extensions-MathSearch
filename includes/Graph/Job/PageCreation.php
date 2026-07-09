@@ -61,6 +61,20 @@ class PageCreation extends GraphJob {
 					$newTitle = $this->makeBetterTitle( $item, $currentName );
 					if ( !$newTitle ) {
 						self::getLog()->debug( "Current title for $qid is already optimal." );
+						// If overwrite option is set, replace the content of the existing page
+						if ( $this->params['overwrite'] ?? false ) {
+							self::getLog()->info( "Overwriting existing page for $qid." );
+							$currentTitle = Title::newFromText( $currentName );
+							if ( $currentTitle === null ) {
+								self::getLog()->error( "Could not parse existing title for $qid: $currentName" );
+								continue;
+							}
+							$pageContent = ContentHandler::makeContent( $templateContent, $currentTitle );
+							$this->wikiPageFactory->newFromTitle( $currentTitle )->doUserEditContent(
+								$pageContent, $user,
+								'Overwrote automatically from ' . $this->getJobname(), EDIT_FORCE_BOT
+							);
+						}
 						continue;
 					}
 					$newName = $newTitle->getText();
