@@ -676,7 +676,7 @@ class SpecialMlpEval extends SpecialPage {
 		}
 		$out->addHTML( '<div class="mw-collapsible-content">' );
 
-		$popts = $out->parserOptions();
+		$popts = ParserOptions::newFromContext( $out->getContext() );
 		$popts->setInterfaceMessage( false );
 
 		$parser = $this->parserFactory->getInstance();
