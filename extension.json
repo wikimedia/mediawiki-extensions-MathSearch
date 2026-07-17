@@ -62,6 +62,12 @@
 				"MainConfig",
 				"JobQueueGroup"
 			]
+		},
+		"EditFilterMergedContent": {
+			"class": "MediaWiki\\Extension\\MathSearch\\Wikidata\\ProtectUpstreamEntitiesHook",
+			"services": [
+				"MainConfig"
+			]
 		}
 	},
 	"Hooks": {
@@ -79,6 +85,7 @@
 			"MediaWiki\\Extension\\MathSearch\\Wikidata\\Content\\ContentMathWikidataHook::onWikibaseRepoDataTypes",
 			"MediaWiki\\Extension\\MathSearch\\Wikidata\\MathML\\MathMLWikidataHook::onWikibaseRepoDataTypes"
 		],
+		"EditFilterMergedContent": "EditFilterMergedContent",
 		"WikibaseChangeNotification": "WikibaseChangeNotification"
 	},
 	"config": {
@@ -101,6 +108,13 @@
 		"MathWmcMaxResults": 10000,
 		"MathWmcServer": false,
 		"MathSearchWikidataUrl": "https://wikidata.org",
+		"MathSearchMinimumEditableIds": {
+			"description": "Minimum editable entity IDs by entity prefix. Use 0 to disable protection for a prefix. Only P (properties) and Q (items) are checked; other prefixes such as lexemes are ignored for forward compatibility. Protected low-numbered entities are intended to stay as cached upstream copies for resilience when the upstream Wikibase is unavailable.",
+			"value": {
+				"P": 0,
+				"Q": 0
+			}
+		},
 		"ContentMathEnableWikibaseDataType": true,
 		"MathSearchContentTexMaxLength": 5000,
 		"MathSearchInfoPage": "FormulaInfo",

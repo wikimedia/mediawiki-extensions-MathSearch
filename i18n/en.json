@@ -156,6 +156,7 @@
 	"quicksparqlstatements": "SPARQL QuickStatements generator",
 	"pidredirect": "Persistent Identifier Redirection",
 	"importfrompid": "Import from Persistent Identifier",
+	"mathsearch-protected-entity-edit": "$1 $2 is protected because its ID is below $3. Low-numbered entities are kept here as cached upstream copies for resilience when the upstream Wikibase is unavailable. Please make this change upstream at $4.",
 	"wikibase-listdatatypes-contentmath-head": "Mathematical expression (content)",
 	"wikibase-listdatatypes-contentmath-body": "Literal data field for mathematical expressions, formula, equations and such, expressed in the DRMF/DLMF variant of LaTeX."
 }

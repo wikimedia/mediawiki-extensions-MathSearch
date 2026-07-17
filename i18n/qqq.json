@@ -162,6 +162,7 @@
 	"quicksparqlstatements": "{{doc-special|QuickSparqlStatements}} Special page to Write and schedule the execution of SPARQL queries that change Wikibase entries according to the quick statements syntax.",
 	"pidredirect": "{{doc-special|PidRedirect}} Special page to redirect based on persistent identifiers defined in Wikibase.",
 	"importfrompid": "{{doc-special|PidRedirect}} Special page to import based on persistent identifiers such as DOI or Wikidata qIds.",
+	"mathsearch-protected-entity-edit": "Error shown when editing a protected low-numbered entity is blocked locally. The message explains that these entities are cached local copies of upstream entities kept for resilience if the upstream Wikibase is unavailable.\nParameters:\n* $1 - entity type label, for example Item or Property\n* $2 - entity id, for example Q42 or P42\n* $3 - minimum editable id threshold\n* $4 - upstream edit URL",
 	"wikibase-listdatatypes-contentmath-head": "{{Wikibase-datatype-head|Mathematical expression|math}}\n{{Identical|Mathematical expression}}",
 	"wikibase-listdatatypes-contentmath-body": "{{Wikibase-datatype-body|Mathematical expression}}"
 }
