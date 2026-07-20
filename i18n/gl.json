@@ -159,6 +159,7 @@
 	"quicksparqlstatements": "Xerador de QuickStatements SPARQL",
 	"pidredirect": "Redirección de identificador persistente",
 	"importfrompid": "Importar desde o identificador persistente",
+	"mathsearch-protected-entity-edit": "$1 $2 ten protección porque o seu identificador é inferior a $3. As entidades con números baixos mantéñense aquí como copias na caché das entradas principais para unha maior resiliencia cando Wikibase non está dispoñible. Fai este cambio na entrada principal en $4.",
 	"wikibase-listdatatypes-contentmath-head": "Expresión matemática (contido)",
 	"wikibase-listdatatypes-contentmath-body": "Campo de datos literal para as expresións matemáticas, as fórmulas, as ecuacións e outros, expresadas na variante DRMF/DLMF de LaTeX."
 }

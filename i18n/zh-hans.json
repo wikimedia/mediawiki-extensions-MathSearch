@@ -15,14 +15,14 @@
 			"王庭茂"
 		]
 	},
-	"mathsearch": "数式搜索",
+	"mathsearch": "数学搜索",
 	"mlpeval": "数学语言处理评估",
 	"formulainfo": "公式信息",
 	"mathdownload": "下载数学搜索结果",
 	"mathindex": "数学公式索引",
 	"mathupload": "提交数学搜索结果",
 	"latextranslator": "LaTeX至Mathematica的翻译器",
-	"specialpages-group-mathsearch": "数式搜索",
+	"specialpages-group-mathsearch": "数学搜索",
 	"displaytopics": "显示话题",
 	"mathsearch-desc": "整合[http://search.mathweb.org/about.html MathWeb 搜索]引擎",
 	"getequationsbyquery": "通过查询获得方程",
