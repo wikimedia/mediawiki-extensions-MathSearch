@@ -162,6 +162,7 @@
 	"quicksparqlstatements": "SPARQL QuickStatements 생성기",
 	"pidredirect": "영구 식별자 넘겨주기",
 	"importfrompid": "영구 식별자에서 가져오기",
+	"mathsearch-protected-entity-edit": "ID가 $3 미만이므로 $1 $2은(는) 보호됩니다. 번호가 낮은 개체는 업스트림 위키베이스를 사용할 수 없을 때 복원력을 유지하기 위해 캐시된 업스트림 복사본으로써 여기에 보관됩니다. 이 변경 사항은 업스트림인 $4에서 적용해 주세요.",
 	"wikibase-listdatatypes-contentmath-head": "수학적 표현 (내용)",
 	"wikibase-listdatatypes-contentmath-body": "수식, 공식, 등호 등에 대한 리터럴 데이터 필드이며 DRMF/DLMF 형식의 LaTeX로 표현합니다."
 }
