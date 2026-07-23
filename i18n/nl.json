@@ -93,6 +93,7 @@
 	"quicksparqlstatements": "SPARQL QuickStatements-generator",
 	"pidredirect": "Doorverwijzing op basis van blijvende identificatiecode",
 	"importfrompid": "Importeren vanuit permanente identificatiecode",
+	"mathsearch-protected-entity-edit": "$1 $2 is beveiligd omdat de ID lager is dan $3. Entiteiten met een laag nummer worden hier bewaard als gecachede kopieën van de upstream-bron voor redundantie wanneer de upstream Wikibase niet beschikbaar is. Voer deze wijziging upstream door bij $4.",
 	"wikibase-listdatatypes-contentmath-head": "Wiskundige uitdrukking (inhoud)",
 	"wikibase-listdatatypes-contentmath-body": "Letterlijk gegevensveld voor wiskundige uitdrukkingen, formules, vergelijkingen en dergelijke, uitgedrukt in de DRMF/DLMF-variant van LaTeX."
 }
