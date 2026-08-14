@@ -10,7 +10,7 @@
  */
 
 use MediaWiki\Extension\Math\MathConfig;
-use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionLookup;
@@ -27,6 +27,7 @@ class FormulaInfo extends SpecialPage {
 
 	public function __construct(
 		private readonly MathConfig $mathConfig,
+		private readonly RendererFactory $rendererFactory,
 		private readonly RevisionLookup $revisionLookup,
 	) {
 		parent::__construct( 'FormulaInfo' );
@@ -250,7 +251,7 @@ class FormulaInfo extends SpecialPage {
 		$names = $this->mathConfig->getValidRenderingModeNames();
 		$name = $names[$mode];
 		$out->addWikiTextAsInterface( "=== $name rendering === " );
-		$renderer = MathRenderer::getRenderer( $tex, [], $mode );
+		$renderer = $this->rendererFactory->getRenderer( $tex, [], $mode );
 		if ( $this->purge ) {
 			$renderer->render( true );
 		} elseif ( $mode == 'mathml' || !$renderer->isInDatabase() ) {

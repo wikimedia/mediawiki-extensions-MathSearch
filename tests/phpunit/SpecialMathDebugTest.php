@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Tests\Specials;
 
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Request\FauxRequest;
 use SpecialMathDebug;
 
@@ -13,7 +12,11 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 	use \MockHttpTrait;
 
 	protected function newSpecialPage() {
-		return new SpecialMathDebug( MediaWikiServices::getInstance()->getHttpRequestFactory() );
+		$services = $this->getServiceContainer();
+		return new SpecialMathDebug(
+			$services->getHttpRequestFactory(),
+			$services->getService( 'Math.RendererFactory' ),
+		);
 	}
 
 	public function testVisualDiffReportsIndexDifference() {

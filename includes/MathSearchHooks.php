@@ -3,6 +3,7 @@
 use MediaWiki\Extension\Math\Hooks\MathFormulaPostRenderRevisionHook;
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\Extension\MathSearch\Engine\MathIndex;
 use MediaWiki\Installer\DatabaseUpdater;
@@ -41,6 +42,7 @@ class MathSearchHooks implements
 
 	public function __construct(
 		private readonly IConnectionProvider $connectionProvider,
+		private readonly RendererFactory $rendererFactory,
 		private readonly RevisionLookup $revisionLookup,
 	) {
 	}
@@ -510,7 +512,7 @@ class MathSearchHooks implements
 					$id = null;
 					$tagContent = $tag[MathIdGenerator::CONTENT_POS];
 					$attributes = $tag[MathIdGenerator::ATTRIB_POS];
-					$renderer = MathRenderer::getRenderer( $tagContent, $attributes, 'latexml' );
+					$renderer = $this->rendererFactory->getRenderer( $tagContent, $attributes, 'latexml' );
 					$renderer->render();
 					$this->setMathId( $id, $renderer, $revId );
 					$harvest[] = [

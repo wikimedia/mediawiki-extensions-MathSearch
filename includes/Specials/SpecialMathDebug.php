@@ -2,7 +2,7 @@
 
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
-use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -12,7 +12,10 @@ use Wikimedia\Diff\TableDiffFormatter;
 
 class SpecialMathDebug extends SpecialPage {
 
-	public function __construct( private readonly HttpRequestFactory $httpRequestFactory ) {
+	public function __construct(
+		private readonly HttpRequestFactory $httpRequestFactory,
+		private readonly RendererFactory $rendererFactory,
+	) {
 		parent::__construct( 'MathDebug' );
 	}
 
@@ -145,12 +148,12 @@ class SpecialMathDebug extends SpecialPage {
 			array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $t
 		) {
 			$out->addWikiTextAsInterface( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
-			$out->addHTML( self::render( $t, 'source', $purge ) );
+			$out->addHTML( $this->render( $t, 'source', $purge ) );
 			$out->addWikiTextAsInterface(
 				'Texvc`s TeX output:<source lang="latex">' . $this->getTexvcTex( $t ) . '</source>'
 			);
 			if ( in_array( 'latexml', $this->getConfig()->get( 'MathValidModes' ) ) ) {
-				$out->addHTML( self::render( $t, 'latexml', $purge ) );
+				$out->addHTML( $this->render( $t, 'latexml', $purge ) );
 			}
 		}
 	}
@@ -212,9 +215,9 @@ class SpecialMathDebug extends SpecialPage {
 		return true;
 	}
 
-	private static function render( string $t, string $mode, bool $purge = true ): string {
+	private function render( string $t, string $mode, bool $purge = true ): string {
 		$modeInt = (int)substr( $mode, 0, 1 );
-		$renderer = MathRenderer::getRenderer( $t, [], $modeInt );
+		$renderer = $this->rendererFactory->getRenderer( $t, [], $modeInt );
 		$renderer->setPurge( $purge );
 		$renderer->render();
 		$fragment = $renderer->getHtmlOutput();
@@ -236,7 +239,7 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	private function getTexvcTex( string $tex ): string {
-		$renderer = MathRenderer::getRenderer( $tex, [], 'source' );
+		$renderer = $this->rendererFactory->getRenderer( $tex, [], 'source' );
 		$renderer->checkTeX();
 		return $renderer->getTex();
 	}

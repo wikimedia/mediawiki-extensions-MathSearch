@@ -11,7 +11,7 @@ namespace MediaWiki\Extension\MathSearch\Specials;
  * @ingroup extensions
  */
 
-use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\SpecialPage\SpecialPage;
 use Wikimedia\Rdbms\IConnectionProvider;
 
@@ -19,6 +19,7 @@ class GetEquationsByQuery extends SpecialPage {
 
 	public function __construct(
 		private readonly IConnectionProvider $dbProvider,
+		private readonly RendererFactory $rendererFactory,
 	) {
 		parent::__construct( 'GetEquationsByQuery' );
 	}
@@ -75,7 +76,7 @@ class GetEquationsByQuery extends SpecialPage {
 			$showmml = $this->getRequest()->getVal( 'showmml', false );
 			if ( $showmml ) {
 				$tstart = microtime( true );
-				$renderer = MathRenderer::getRenderer( $row->math_tex, [], 'latexml' );
+				$renderer = $this->rendererFactory->getRenderer( $row->math_tex, [], 'latexml' );
 				$renderer->render( true );
 				$tend = microtime( true );
 				$this->getOutput()->addWikiTextAsInterface( ":rendering in " . ( $tend - $tstart ) . "s.", false );

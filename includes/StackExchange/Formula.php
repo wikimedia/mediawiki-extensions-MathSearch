@@ -24,6 +24,7 @@ class Formula {
 	) {
 		$this->mathSearchHooks = new \MathSearchHooks(
 			MediaWikiServices::getInstance()->getConnectionProvider(),
+			MediaWikiServices::getInstance()->getService( 'Math.RendererFactory' ),
 			MediaWikiServices::getInstance()->getRevisionLookup()
 		);
 	}

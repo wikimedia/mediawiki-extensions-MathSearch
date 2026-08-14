@@ -715,7 +715,7 @@ class SpecialMlpEval extends SpecialPage {
 	 */
 	private function getMathMlRenderer( $mode, $tex, $options ) {
 		$this->updateTex( $tex, $options );
-		$renderer = MathRenderer::getRenderer( $tex, $options, $mode );
+		$renderer = $this->rendererFactory->getRenderer( $tex, $options, $mode );
 		$renderer->checkTeX();
 		$renderer->render();
 		$renderer->writeCache();

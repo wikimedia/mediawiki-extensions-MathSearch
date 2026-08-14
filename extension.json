@@ -53,6 +53,7 @@
 			"class": "MathSearchHooks",
 			"services": [
 				"ConnectionProvider",
+				"Math.RendererFactory",
 				"RevisionLookup"
 			]
 		},
@@ -243,13 +244,15 @@
 			"class": "FormulaInfo",
 			"services": [
 				"Math.Config",
+				"Math.RendererFactory",
 				"RevisionLookup"
 			]
 		},
 		"GetEquationsByQuery": {
 			"class": "\\MediaWiki\\Extension\\MathSearch\\Specials\\GetEquationsByQuery",
 			"services": [
-				"ConnectionProvider"
+				"ConnectionProvider",
+				"Math.RendererFactory"
 			]
 		},
 		"ImportFromPid": {
@@ -262,7 +265,8 @@
 		"MathDebug": {
 			"class": "SpecialMathDebug",
 			"services": [
-				"HttpRequestFactory"
+				"HttpRequestFactory",
+				"Math.RendererFactory"
 			]
 		},
 		"MathIndex": {

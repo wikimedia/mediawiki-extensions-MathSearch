@@ -88,9 +88,11 @@ class MathSearchHooksTest extends MediaWikiIntegrationTestCase {
 EOT;
 
 	public function makeMathSearchHooks() {
+		$services = $this->getServiceContainer();
 		return new MathSearchHooks(
-			$this->getServiceContainer()->getConnectionProvider(),
-			$this->getServiceContainer()->getRevisionLookup()
+			$services->getConnectionProvider(),
+			$services->getService( 'Math.RendererFactory' ),
+			$services->getRevisionLookup()
 		);
 	}
 

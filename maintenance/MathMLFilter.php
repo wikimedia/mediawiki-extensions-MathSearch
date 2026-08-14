@@ -19,8 +19,8 @@
  */
 
 use MediaWiki\Export\DumpFilter;
-use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Maintenance\BackupDumper;
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Parser\Sanitizer;
 
 /**
@@ -46,7 +46,9 @@ class MathMLFilter extends DumpFilter {
 	 */
 	private static function renderMath( $match ) {
 		$formula = $match[1];
-		$renderer = MathRenderer::getRenderer( $formula, [], 'latexml' );
+		$renderer = MediaWikiServices::getInstance()
+			->getService( 'Math.RendererFactory' )
+			->getRenderer( $formula, [], 'latexml' );
 		$renderer->render();
 		// TODO: check if there is a MediaWiki function for that
 		return htmlspecialchars( $renderer->getMathml() );

@@ -176,6 +176,7 @@ class UpdateMath extends Maintenance {
 		$services = $this->getServiceContainer();
 		$mathSearchHooks = new MathSearchHooks(
 			$services->getConnectionProvider(),
+			$services->getService( 'Math.RendererFactory' ),
 			$services->getRevisionLookup()
 		);
 
