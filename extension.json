@@ -120,6 +120,7 @@
 		"MathSearchContentTexMaxLength": 5000,
 		"MathSearchInfoPage": "FormulaInfo",
 		"MathSearchImporterUrl": "http://importer",
+		"MathSearchLinkToInfoPage": false,
 		"MathSearchPropertySwhid": "P1454",
 		"MathSearchPropertyDoi": "P27",
 		"MathSearchPropertyScrUrl": "P339",

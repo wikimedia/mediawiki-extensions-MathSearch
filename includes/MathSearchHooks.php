@@ -182,8 +182,11 @@ class MathSearchHooks implements
 		MathRenderer $renderer,
 		&$Result = null
 	): bool {
+		global $wgMathSearchLinkToInfoPage;
 		$revId = $revisionRecord?->getId() ?? 0;
-		$this->addLinkToFormulaInfoPage( $revId, $renderer, $Result );
+		if ( $wgMathSearchLinkToInfoPage ) {
+			$this->addLinkToFormulaInfoPage( $revId, $renderer, $Result );
+		}
 		$this->updateMathIndex( $revId, $renderer, $Result );
 		return true;
 	}
