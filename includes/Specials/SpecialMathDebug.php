@@ -279,6 +279,29 @@ class SpecialMathDebug extends SpecialPage {
 		return $data;
 	}
 
+	private function indexTestsByIdentity( array $tests ): array {
+		$occurrences = [];
+		$indexed = [];
+		foreach ( $tests as $index => $test ) {
+			$input = is_array( $test ) ? (string)( $test['input'] ?? '' ) : '';
+			$params = is_array( $test ) && is_array( $test['params'] ?? null ) ? $test['params'] : [];
+			ksort( $params );
+			$id = sha1( $input );
+			if ( $params !== [] ) {
+				$id .= '-' . substr( sha1( json_encode( $params ) ), 0, 8 );
+			}
+			$occurrence = $occurrences[$id] ?? 0;
+			$occurrences[$id] = $occurrence + 1;
+			$key = $id . ':' . $occurrence;
+			$indexed[$key] = [
+				'id' => $id . ( $occurrence > 0 ? '-' . $occurrence : '' ),
+				'index' => $index,
+				'test' => $test,
+			];
+		}
+		return $indexed;
+	}
+
 	private function visualDiff() {
 		$out = $this->getOutput();
 		$refHash = $this->getRequest()->getVal( 'ref' );
@@ -310,21 +333,29 @@ class SpecialMathDebug extends SpecialPage {
 			return;
 		}
 
-		$max = max( count( $masterData ), count( $refData ) );
-		for ( $i = 0; $i < $max; $i++ ) {
-			$master = $masterData[$i] ?? null;
-			$ref = $refData[$i] ?? null;
+		$masterTests = $this->indexTestsByIdentity( $masterData );
+		$refTests = $this->indexTestsByIdentity( $refData );
+		$testKeys = array_unique( array_merge( array_keys( $masterTests ), array_keys( $refTests ) ) );
+		foreach ( $testKeys as $key ) {
+			$masterEntry = $masterTests[$key] ?? null;
+			$refEntry = $refTests[$key] ?? null;
+			$master = $masterEntry['test'] ?? null;
+			$ref = $refEntry['test'] ?? null;
 			if ( $master !== $ref ) {
+				$i = $refEntry['index'] ?? $masterEntry['index'];
+				$testId = $refEntry['id'] ?? $masterEntry['id'];
 				$inMaster = $master['input'] ?? '';
 				$inRef = $ref['input'] ?? '';
 				$snipMaster = htmlspecialchars( mb_substr( str_replace( "\n", " ", $inMaster ), 0, 40 ) );
 				$snipRef = htmlspecialchars( mb_substr( str_replace( "\n", " ", $inRef ), 0, 40 ) );
 				if ( $inMaster !== '' && $inMaster === $inRef ) {
-					$out->addWikiTextAsInterface( "== Difference at index {$i}: {$snipMaster} ==" );
+					$out->addWikiTextAsInterface( "== Difference at index {$i}: {$snipMaster} ({$testId}) ==" );
 				} elseif ( $inMaster === '' ) {
-					$out->addWikiTextAsInterface( "== New test at index {$i}: {$snipRef}  ==" );
+					$out->addWikiTextAsInterface( "== New test at index {$i}: {$snipRef} ({$testId}) ==" );
 				} else {
-					$out->addWikiTextAsInterface( "== Difference at index {$i}: {$snipMaster} vs {$snipRef} ==" );
+					$out->addWikiTextAsInterface(
+						"== Difference at index {$i}: {$snipMaster} vs {$snipRef} ({$testId}) =="
+					);
 				}
 				// If both have an 'output' field, and it differs, render the MathML / HTML raw
 				$outMaster = is_array( $master ) && array_key_exists( 'output', $master );

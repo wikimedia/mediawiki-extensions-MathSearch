@@ -61,4 +61,53 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 			'Expected either escaped JSON blobs or raw math-diff outputs'
 		);
 	}
+
+	public function testVisualDiffAlignsInsertedTestByInputHash() {
+		$master = [
+			[ 'input' => 'a', 'output' => '1' ],
+			[ 'input' => 'b', 'output' => '2' ],
+		];
+		$ref = [
+			[ 'input' => 'a', 'output' => '1' ],
+			[ 'input' => 'x', 'output' => 'new' ],
+			[ 'input' => 'b', 'output' => '2' ],
+		];
+
+		$this->installMockHttp( [
+			$this->makeFakeHttpRequest( base64_encode( json_encode( $ref ) ) ),
+			$this->makeFakeHttpRequest( base64_encode( json_encode( $master ) ) ),
+		] );
+
+		$req = new FauxRequest( [ 'action' => 'visualDiff', 'ref' => 'deadbeef' ] );
+
+		[ $html, ] = $this->executeSpecialPage( '', $req );
+
+		$this->assertStringContainsString( 'New test at index 1: x', $html );
+		$this->assertStringContainsString( sha1( 'x' ), $html );
+		$this->assertStringNotContainsString( 'Difference at index', $html );
+	}
+
+	public function testVisualDiffDistinguishesTestParameters() {
+		$master = [
+			[ 'input' => 'x', 'output' => 'display' ],
+			[ 'input' => 'x', 'output' => 'display' ],
+		];
+		$ref = [
+			[ 'input' => 'x', 'params' => [ 'display' => 'inline' ], 'output' => 'inline' ],
+			[ 'input' => 'x', 'output' => 'display' ],
+			[ 'input' => 'x', 'output' => 'display' ],
+		];
+
+		$this->installMockHttp( [
+			$this->makeFakeHttpRequest( base64_encode( json_encode( $ref ) ) ),
+			$this->makeFakeHttpRequest( base64_encode( json_encode( $master ) ) ),
+		] );
+
+		$req = new FauxRequest( [ 'action' => 'visualDiff', 'ref' => 'deadbeef' ] );
+
+		[ $html, ] = $this->executeSpecialPage( '', $req );
+
+		$this->assertStringContainsString( 'New test at index 0: x', $html );
+		$this->assertStringNotContainsString( 'Difference at index', $html );
+	}
 }
