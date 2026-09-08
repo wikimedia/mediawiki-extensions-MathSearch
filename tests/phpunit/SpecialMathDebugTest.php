@@ -2,6 +2,7 @@
 
 namespace MediaWiki\Tests\Specials;
 
+use MediaWiki\Extension\Math\MathReferenceData;
 use MediaWiki\Request\FauxRequest;
 use SpecialMathDebug;
 
@@ -19,7 +20,7 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 		);
 	}
 
-	public function testVisualDiffReportsIndexDifference() {
+	public function testVisualDiffReportsHashDifferenceForLegacyData() {
 		$master = [
 			[ 'input' => 'a', 'output' => '1' ],
 			[ 'input' => 'b', 'output' => '2' ],
@@ -43,8 +44,12 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 
 		[ $html, ] = $this->executeSpecialPage( '', $req );
 
-		// Title contains index and first-20-char snippets: inputs are 'b' and 'b' here
-		$this->assertStringContainsString( 'Difference at index 1: b', $html );
+		$this->assertStringContainsString( 'Difference at position 2', $html );
+		$this->assertStringContainsString( 'Input: <code>b</code>', $html );
+		$this->assertStringContainsString(
+			'Input hash: <code>' . hash( MathReferenceData::HASH_ALGORITHM, 'b' ) . '</code>',
+			$html
+		);
 
 		// The page should render the raw outputs inside the math-diff blocks
 		$this->assertStringContainsString( '<div class="math-diff-master"><h4>master</h4>2', $html );
@@ -62,15 +67,20 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 		);
 	}
 
-	public function testVisualDiffAlignsInsertedTestByInputHash() {
+	public function testVisualDiffAlignsAddedAndRemovedTestsByInputHash() {
+		$aHash = hash( MathReferenceData::HASH_ALGORITHM, 'a' );
+		$bHash = hash( MathReferenceData::HASH_ALGORITHM, 'b' );
+		$cHash = hash( MathReferenceData::HASH_ALGORITHM, 'c' );
+		$xHash = hash( MathReferenceData::HASH_ALGORITHM, 'x' );
 		$master = [
-			[ 'input' => 'a', 'output' => '1' ],
-			[ 'input' => 'b', 'output' => '2' ],
+			$aHash => [ 'input' => 'a', 'output' => '1' ],
+			$bHash => [ 'input' => 'b', 'output' => '2' ],
+			$cHash => [ 'input' => 'c', 'output' => '3' ],
 		];
 		$ref = [
-			[ 'input' => 'a', 'output' => '1' ],
-			[ 'input' => 'x', 'output' => 'new' ],
-			[ 'input' => 'b', 'output' => '2' ],
+			$aHash => [ 'input' => 'a', 'output' => '1' ],
+			$xHash => [ 'input' => 'x', 'output' => 'new' ],
+			$bHash => [ 'input' => 'b', 'output' => '2' ],
 		];
 
 		$this->installMockHttp( [
@@ -82,20 +92,35 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 
 		[ $html, ] = $this->executeSpecialPage( '', $req );
 
-		$this->assertStringContainsString( 'New test at index 1: x', $html );
-		$this->assertStringContainsString( sha1( 'x' ), $html );
-		$this->assertStringNotContainsString( 'Difference at index', $html );
+		$this->assertStringContainsString( 'New test at position 2', $html );
+		$this->assertStringContainsString( 'Input: <code>x</code>', $html );
+		$this->assertStringContainsString( 'Input hash: <code>' . $xHash . '</code>', $html );
+		$this->assertStringContainsString( 'Removed test at position 3', $html );
+		$this->assertStringContainsString( 'Input: <code>c</code>', $html );
+		$this->assertStringContainsString( 'Input hash: <code>' . $cHash . '</code>', $html );
+		$this->assertStringNotContainsString( 'Difference at', $html );
 	}
 
 	public function testVisualDiffDistinguishesTestParameters() {
+		$xHash = hash( MathReferenceData::HASH_ALGORITHM, 'x' );
 		$master = [
-			[ 'input' => 'x', 'output' => 'display' ],
-			[ 'input' => 'x', 'output' => 'display' ],
+			$xHash => [
+				'input' => 'x',
+				'outputs' => [
+					[ 'params' => [ 'display' => 'block' ], 'output' => 'block' ],
+					[ 'output' => 'default' ],
+				],
+			],
 		];
 		$ref = [
-			[ 'input' => 'x', 'params' => [ 'display' => 'inline' ], 'output' => 'inline' ],
-			[ 'input' => 'x', 'output' => 'display' ],
-			[ 'input' => 'x', 'output' => 'display' ],
+			$xHash => [
+				'input' => 'x',
+				'outputs' => [
+					[ 'params' => [ 'display' => 'block' ], 'output' => 'block' ],
+					[ 'params' => [ 'display' => 'inline' ], 'output' => 'inline' ],
+					[ 'output' => 'default' ],
+				],
+			],
 		];
 
 		$this->installMockHttp( [
@@ -107,7 +132,9 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 
 		[ $html, ] = $this->executeSpecialPage( '', $req );
 
-		$this->assertStringContainsString( 'New test at index 0: x', $html );
-		$this->assertStringNotContainsString( 'Difference at index', $html );
+		$this->assertStringContainsString( 'New test at position 1.2', $html );
+		$this->assertStringContainsString( 'Input: <code>x</code>', $html );
+		$this->assertStringContainsString( 'Input hash: <code>' . $xHash . '</code>', $html );
+		$this->assertStringNotContainsString( 'Difference at', $html );
 	}
 }

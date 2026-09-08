@@ -2,6 +2,7 @@
 
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
+use MediaWiki\Extension\Math\MathReferenceData;
 use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Logger\LoggerFactory;
@@ -279,25 +280,32 @@ class SpecialMathDebug extends SpecialPage {
 		return $data;
 	}
 
-	private function indexTestsByIdentity( array $tests ): array {
-		$occurrences = [];
+	/** Index output variants by hash and parameters while retaining their display positions. */
+	private function indexTestsByReferenceHash( array $references ): array {
+		if ( array_is_list( $references ) ) {
+			// Keep supporting the legacy list format to compare revisions from before the hash format was introduced.
+			$references = MathReferenceData::groupCases( $references );
+		}
+
 		$indexed = [];
-		foreach ( $tests as $index => $test ) {
-			$input = is_array( $test ) ? (string)( $test['input'] ?? '' ) : '';
-			$params = is_array( $test ) && is_array( $test['params'] ?? null ) ? $test['params'] : [];
-			ksort( $params );
-			$id = sha1( $input );
-			if ( $params !== [] ) {
-				$id .= '-' . substr( sha1( json_encode( $params ) ), 0, 8 );
+		$referencePosition = 0;
+		foreach ( $references as $hash => $reference ) {
+			$referencePosition++;
+			$input = $reference['input'];
+			$hasOutputList = array_key_exists( 'outputs', $reference );
+			$outputs = $reference['outputs'] ?? [ array_diff_key( $reference, [ 'input' => true ] ) ];
+			foreach ( $outputs as $outputIndex => $output ) {
+				$params = $output['params'] ?? [];
+				ksort( $params );
+				// MathReferenceData groups at most one output for each parameter set.
+				$key = $hash . ':' . serialize( $params );
+				$indexed[$key] = [
+					'position' => (string)$referencePosition .
+						( $hasOutputList ? '.' . ( $outputIndex + 1 ) : '' ),
+					'hash' => (string)$hash,
+					'test' => [ 'input' => $input ] + $output,
+				];
 			}
-			$occurrence = $occurrences[$id] ?? 0;
-			$occurrences[$id] = $occurrence + 1;
-			$key = $id . ':' . $occurrence;
-			$indexed[$key] = [
-				'id' => $id . ( $occurrence > 0 ? '-' . $occurrence : '' ),
-				'index' => $index,
-				'test' => $test,
-			];
 		}
 		return $indexed;
 	}
@@ -333,8 +341,8 @@ class SpecialMathDebug extends SpecialPage {
 			return;
 		}
 
-		$masterTests = $this->indexTestsByIdentity( $masterData );
-		$refTests = $this->indexTestsByIdentity( $refData );
+		$masterTests = $this->indexTestsByReferenceHash( $masterData );
+		$refTests = $this->indexTestsByReferenceHash( $refData );
 		$testKeys = array_unique( array_merge( array_keys( $masterTests ), array_keys( $refTests ) ) );
 		foreach ( $testKeys as $key ) {
 			$masterEntry = $masterTests[$key] ?? null;
@@ -342,21 +350,22 @@ class SpecialMathDebug extends SpecialPage {
 			$master = $masterEntry['test'] ?? null;
 			$ref = $refEntry['test'] ?? null;
 			if ( $master !== $ref ) {
-				$i = $refEntry['index'] ?? $masterEntry['index'];
-				$testId = $refEntry['id'] ?? $masterEntry['id'];
+				$position = $refEntry['position'] ?? $masterEntry['position'];
+				$inputHash = $refEntry['hash'] ?? $masterEntry['hash'];
 				$inMaster = $master['input'] ?? '';
 				$inRef = $ref['input'] ?? '';
-				$snipMaster = htmlspecialchars( mb_substr( str_replace( "\n", " ", $inMaster ), 0, 40 ) );
-				$snipRef = htmlspecialchars( mb_substr( str_replace( "\n", " ", $inRef ), 0, 40 ) );
 				if ( $inMaster !== '' && $inMaster === $inRef ) {
-					$out->addWikiTextAsInterface( "== Difference at index {$i}: {$snipMaster} ({$testId}) ==" );
+					$out->addWikiTextAsInterface( "== Difference at position {$position} ==" );
 				} elseif ( $inMaster === '' ) {
-					$out->addWikiTextAsInterface( "== New test at index {$i}: {$snipRef} ({$testId}) ==" );
+					$out->addWikiTextAsInterface( "== New test at position {$position} ==" );
 				} else {
-					$out->addWikiTextAsInterface(
-						"== Difference at index {$i}: {$snipMaster} vs {$snipRef} ({$testId}) =="
-					);
+					$out->addWikiTextAsInterface( "== Removed test at position {$position} ==" );
 				}
+				$input = $inRef !== '' ? $inRef : $inMaster;
+				$out->addHTML(
+					'<p>Input: <code>' . htmlspecialchars( $input ) . '</code><br>' .
+					'Input hash: <code>' . htmlspecialchars( $inputHash ) . '</code></p>'
+				);
 				// If both have an 'output' field, and it differs, render the MathML / HTML raw
 				$outMaster = is_array( $master ) && array_key_exists( 'output', $master );
 				$outRef = is_array( $ref ) && array_key_exists( 'output', $ref );
