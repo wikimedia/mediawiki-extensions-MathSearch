@@ -373,6 +373,10 @@
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\MathSearch\\": "includes/"
 	},
+	"TestAutoloadClasses": {
+		"MediaWiki\\Extension\\MathSearch\\Tests\\WikiTexVC\\MMLComparator": "tests/phpunit/integration/WikiTexVC/MMLComparator.php",
+		"MediaWiki\\Extension\\MathSearch\\Tests\\WikiTexVC\\XMLNode": "tests/phpunit/integration/WikiTexVC/XMLNode.php"
+	},
 	"JobClasses": {
 		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob",
 		"CreateProfilePages": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\PageCreation",
