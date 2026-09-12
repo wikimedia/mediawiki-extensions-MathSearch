@@ -6,3 +6,31 @@
 */
 
 .mwe-math-demo { display: inline-block; vertical-align: middle; }
+
+/* Special:MathDebug visual diff: pair the renderings so each row can be
+   compared left to right, stored markup above, drawn output below. */
+.math-diff {
+	display: grid;
+	grid-template-columns: repeat( 2, minmax( 0, 1fr ) );
+	gap: 0.5em 1.5em;
+	align-items: start;
+	margin-bottom: 1em;
+}
+
+.math-diff > div {
+	overflow-x: auto;
+	min-width: 0;
+}
+
+.math-diff h4 {
+	margin: 0 0 0.25em;
+	font-size: 0.85em;
+	font-weight: normal;
+	color: #54595d;
+}
+
+@media ( max-width: 720px ) {
+	.math-diff {
+		grid-template-columns: minmax( 0, 1fr );
+	}
+}

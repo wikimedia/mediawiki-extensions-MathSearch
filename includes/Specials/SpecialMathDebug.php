@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathReferenceData;
@@ -239,6 +240,57 @@ class SpecialMathDebug extends SpecialPage {
 		}
 	}
 
+	/** @return string HTML, empty unless the entry names a task */
+	private static function taskLink( ?array $ref, ?array $master ): string {
+		$task = $ref['bug'] ?? $master['bug'] ?? null;
+		if ( !is_string( $task ) || !preg_match( '/^T\d+$/', $task ) ) {
+			return '';
+		}
+		return ' Task: <a href="https://phabricator.wikimedia.org/' . $task . '">' .
+			$task . '</a>';
+	}
+
+	/** MathJax typesets every math element that is not marked, including the references. */
+	private static function ignoreInMathJax( string $html ): string {
+		return preg_replace_callback(
+			'/<math\b([^>]*)>/i',
+			static function ( array $m ): string {
+				if ( preg_match( '/\sclass\s*=\s*(["\'])(.*?)\1/i', $m[1], $class ) ) {
+					if ( preg_match( '/(^|\s)mathjax_ignore(\s|$)/', $class[2] ) ) {
+						return $m[0];
+					}
+					return str_replace(
+						$class[0],
+						' class=' . $class[1] . $class[2] . ' mathjax_ignore' . $class[1],
+						$m[0]
+					);
+				}
+				return '<math class="mathjax_ignore"' . $m[1] . '>';
+			},
+			$html
+		);
+	}
+
+	/** @return string HTML, the same input as each pipeline draws it */
+	private function renderComparison( string $tex ): string {
+		return '<div class="math-diff">' .
+			'<div class="math-diff-master"><h4>server SVG</h4>' .
+			self::ignoreInMathJax( $this->renderInMode( $tex, MathConfig::MODE_MATHML ) ) .
+			'</div><div class="math-diff-ref"><h4>client MathJax</h4>' .
+			$this->renderInMode( $tex, MathConfig::MODE_NATIVE_JAX ) .
+			'</div></div>';
+	}
+
+	private function renderInMode( string $tex, string $mode ): string {
+		try {
+			$renderer = $this->rendererFactory->getRenderer( $tex, [], $mode );
+			$renderer->render();
+			return $renderer->getHtmlOutput();
+		} catch ( Exception $e ) {
+			return '<em>' . htmlspecialchars( $e->getMessage() ) . '</em>';
+		}
+	}
+
 	private function getTexvcTex( string $tex ): string {
 		$renderer = $this->rendererFactory->getRenderer( $tex, [], 'source' );
 		$renderer->checkTeX();
@@ -314,6 +366,13 @@ class SpecialMathDebug extends SpecialPage {
 		$out = $this->getOutput();
 		$refHash = $this->getRequest()->getVal( 'ref' );
 		$masterHash = $this->getRequest()->getVal( 'base', 'refs/heads/master' );
+		$withSvg = $this->getRequest()->getVal( 'svg', 'diff' ) !== 'none';
+		$out->addModuleStyles( [ 'ext.mathsearch.styles' ] );
+		if ( $withSvg ) {
+			// The client column is rendered by MathJax in the browser, which is
+			// the only place the mmlFilter polyfills actually run.
+			$out->addModules( [ 'ext.math.mathjax' ] );
+		}
 
 		$relativePath = 'tests/phpunit/integration/WikiTexVC/data/reference.json';
 		$baseUrl = 'https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Math/+/';
@@ -341,6 +400,9 @@ class SpecialMathDebug extends SpecialPage {
 			return;
 		}
 
+		$out->addHTML( '<p>base <code>' . htmlspecialchars( $masterHash ) .
+			'</code> against ref <code>' . htmlspecialchars( $refHash ) . '</code></p>' );
+
 		$masterTests = $this->indexTestsByReferenceHash( $masterData );
 		$refTests = $this->indexTestsByReferenceHash( $refData );
 		$testKeys = array_unique( array_merge( array_keys( $masterTests ), array_keys( $refTests ) ) );
@@ -364,34 +426,39 @@ class SpecialMathDebug extends SpecialPage {
 				$input = $inRef !== '' ? $inRef : $inMaster;
 				$out->addHTML(
 					'<p>Input: <code>' . htmlspecialchars( $input ) . '</code><br>' .
-					'Input hash: <code>' . htmlspecialchars( $inputHash ) . '</code></p>'
+					'Input hash: <code>' . htmlspecialchars( $inputHash ) . '</code>' .
+					self::taskLink( $ref, $master ) . '</p>'
 				);
+				if ( $withSvg ) {
+					$out->addHTML( $this->renderComparison( $input ) );
+				}
 				// If both have an 'output' field, and it differs, render the MathML / HTML raw
 				$outMaster = is_array( $master ) && array_key_exists( 'output', $master );
 				$outRef = is_array( $ref ) && array_key_exists( 'output', $ref );
 				if ( $outMaster && $outRef && $master['output'] !== $ref['output'] ) {
 					$out->addHTML(
-						'<div class="math-diff"><div class="math-diff-master"><h4>master</h4>' .
-						$master['output'] .
-						'</div><div class="math-diff-ref"><h4>' . htmlspecialchars( $refHash ) . '</h4>' .
-						$ref['output'] .
+						'<div class="math-diff"><div class="math-diff-master"><h4>base</h4>' .
+						self::ignoreInMathJax( $master['output'] ) .
+						'</div><div class="math-diff-ref"><h4>ref</h4>' .
+						self::ignoreInMathJax( $ref['output'] ) .
 						'</div></div>'
 					);
 				} elseif ( !$outMaster && $outRef ) {
 					$out->addHTML(
-						'<div class="math-diff"><div class="math-diff-master"><h4>master</h4><em>new</em></div>' .
-						'<div class="math-diff-ref"><h4>ref ' . htmlspecialchars( $refHash ) . '</h4>' .
-						$ref['output'] .
+						'<div class="math-diff"><div class="math-diff-master">' .
+						'<h4>base</h4><em>new</em></div>' .
+						'<div class="math-diff-ref"><h4>ref</h4>' .
+						self::ignoreInMathJax( $ref['output'] ) .
 						'</div></div>'
 					);
 				} else {
 					$out->addHTML(
-						'<h4>master</h4><pre>' .
+						'<h4>base</h4><pre>' .
 						htmlspecialchars( json_encode( $master, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) ) .
 						'</pre>'
 					);
 					$out->addHTML(
-						'<h4>ref ' . htmlspecialchars( $refHash ) . '</h4><pre>' .
+						'<h4>ref</h4><pre>' .
 						htmlspecialchars( json_encode( $ref, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) ) .
 						'</pre>'
 					);
