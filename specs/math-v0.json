@@ -1,0 +1,228 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Math formula rendering",
+		"description": "The RESTBase math endpoints, served by MathSearch. A formula is checked once, which returns its content address in x-resource-location, and every representation is then fetched by that address. Addresses are the same ones wikimedia.org/api/rest_v1 issues.",
+		"version": "0.0.1",
+		"license": {
+			"name": "GPL-2.0-or-later",
+			"url": "https://www.gnu.org/copyleft/gpl.html"
+		}
+	},
+	"servers": [
+		{
+			"url": "/rest.php",
+			"description": "This wiki. Try it out sends requests to rest.php on this host, so an address minted by check here resolves here."
+		}
+	],
+	"security": [],
+	"paths": {
+		"/math/v0/check/{type}": {
+			"post": {
+				"tags": [
+					"Math"
+				],
+				"operationId": "checkFormula",
+				"summary": "Check and normalize a TeX formula.",
+				"description": "Checks the supplied TeX formula for correctness and returns the normalised formula representation as well as information about identifiers. The response contains the `x-resource-location` header, whose value is the formula's content address: append it to `/math/v0/render/{format}/` and issue a GET to obtain a rendering.",
+				"parameters": [
+					{
+						"name": "type",
+						"in": "path",
+						"description": "The input type of the given formula; can be tex, inline-tex or chem",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"tex",
+								"inline-tex",
+								"chem"
+							]
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/x-www-form-urlencoded": {
+							"schema": {
+								"type": "object",
+								"required": [
+									"q"
+								],
+								"properties": {
+									"q": {
+										"type": "string",
+										"description": "The formula to check"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Information about the checked formula",
+						"headers": {
+							"x-resource-location": {
+								"description": "The content address to render the formula by",
+								"schema": {
+									"type": "string"
+								}
+							}
+						},
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean"
+										},
+										"checked": {
+											"type": "string",
+											"description": "The normalised formula"
+										},
+										"requiredPackages": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"identifiers": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											}
+										},
+										"endsWithDot": {
+											"type": "boolean"
+										}
+									}
+								},
+								"example": {
+									"success": true,
+									"checked": "E=mc^{2}",
+									"requiredPackages": [],
+									"identifiers": [
+										"E",
+										"m",
+										"c"
+									],
+									"endsWithDot": false
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The formula was rejected"
+					}
+				}
+			}
+		},
+		"/math/v0/formula/{hash}": {
+			"get": {
+				"tags": [
+					"Math"
+				],
+				"operationId": "getFormula",
+				"summary": "Get a previously-stored formula",
+				"description": "Returns the formula previously stored via `/math/v0/check/{type}` for the given content address.",
+				"parameters": [
+					{
+						"name": "hash",
+						"in": "path",
+						"description": "The content address returned by a check request",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The formula the address stands for",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"q": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
+										}
+									}
+								},
+								"example": {
+									"q": "E=mc^{2}",
+									"type": "tex"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "No formula is known for that address"
+					}
+				}
+			}
+		},
+		"/math/v0/render/{format}/{hash}": {
+			"get": {
+				"tags": [
+					"Math"
+				],
+				"operationId": "renderFormula",
+				"summary": "Get a rendered formula in the given format.",
+				"description": "Renders the formula the address stands for. Obtain the address from the `x-resource-location` header of a check request.",
+				"parameters": [
+					{
+						"name": "format",
+						"in": "path",
+						"description": "The output format",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"svg",
+								"mml"
+							]
+						}
+					},
+					{
+						"name": "hash",
+						"in": "path",
+						"description": "The content address returned by a check request",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The rendered formula",
+						"content": {
+							"image/svg+xml": {
+								"schema": {
+									"type": "string"
+								}
+							},
+							"application/mathml+xml": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Unknown format, or no formula is known for that address"
+					}
+				}
+			}
+		}
+	}
+}

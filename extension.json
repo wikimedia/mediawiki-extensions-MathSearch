@@ -396,7 +396,36 @@
 			"services": [
 				"DBLoadBalancer"
 			]
+		},
+		{
+			"path": "/math/v0/render/{format}/{hash}",
+			"method": "GET",
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Rest\\Render",
+			"services": [
+				"MathSearch.FormulaStore",
+				"Math.RendererFactory"
+			]
+		},
+		{
+			"path": "/math/v0/check/{type}",
+			"method": "POST",
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Rest\\Check",
+			"services": [
+				"Math.CheckerFactory",
+				"MathSearch.FormulaStore"
+			]
+		},
+		{
+			"path": "/math/v0/formula/{hash}",
+			"method": "GET",
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Rest\\Formula",
+			"services": [
+				"MathSearch.FormulaStore"
+			]
 		}
 	],
-	"manifest_version": 2
+	"manifest_version": 2,
+	"ServiceWiringFiles": [
+		"includes/ServiceWiring.php"
+	]
 }
