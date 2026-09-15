@@ -19,14 +19,14 @@ class FormulaHash {
 
 	/** The exact bytes the address is the sha1 of. */
 	public static function preimage( string $q, string $type = 'tex' ): string {
-		// stringify leaves slashes and unicode unescaped, PHP does not by default.
+		// stringify leaves slashes and Unicode unescaped, PHP does not by default.
 		return json_encode(
 			[ 'q' => $q, 'type' => $type ],
 			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
 		);
 	}
 
-	/** Well formed as a content address. */
+	/** Well-formed as a content address. */
 	public static function isRestbase( string $hash ): bool {
 		return (bool)preg_match( '/^[0-9a-f]{' . self::RESTBASE_LENGTH . '}$/', $hash );
 	}

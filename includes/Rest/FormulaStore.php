@@ -13,7 +13,7 @@ use Wikimedia\Rdbms\IConnectionProvider;
  */
 class FormulaStore {
 
-	private const TABLE = 'math_rest_input';
+	private const string TABLE = 'math_rest_input';
 
 	private IConnectionProvider $connectionProvider;
 

@@ -18,13 +18,13 @@ use Wikimedia\ParamValidator\ParamValidator;
  */
 class Render extends SimpleHandler {
 
-	private const FORMATS = [
+	private const array FORMATS = [
 		'svg' => [ 'type' => 'image/svg+xml' ],
 		'mml' => [ 'type' => 'application/mathml+xml' ],
 	];
 
-	private const SVG_PROFILE = 'https://www.mediawiki.org/wiki/Specs/SVG/1.0.0';
-	private const MML_PROFILE = 'https://www.mediawiki.org/wiki/Specs/MathML/1.0.0';
+	private const string SVG_PROFILE = 'https://www.mediawiki.org/wiki/Specs/SVG/1.0.0';
+	private const string MML_PROFILE = 'https://www.mediawiki.org/wiki/Specs/MathML/1.0.0';
 
 	private FormulaStore $store;
 	private RendererFactory $rendererFactory;
