@@ -524,10 +524,6 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	protected function getMathTableName(): string {
-		return 'mathlog';
-	}
-
 	/**
 	 * @return MathoidDriver|false
 	 */
