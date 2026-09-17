@@ -702,10 +702,7 @@ class MathObject extends MathMathML {
 
 	/** @inheritDoc */
 	protected function dbInArray() {
-		$out = MathRenderer::dbInArray();
-		$out = array_diff( $out, [ 'math_inputtex' ] );
-		$out[] = 'math_input';
-		return $out;
+		return [ 'math_inputhash', 'math_mathml', 'math_tex', 'math_svg', 'math_input' ];
 	}
 
 	/** @inheritDoc */
