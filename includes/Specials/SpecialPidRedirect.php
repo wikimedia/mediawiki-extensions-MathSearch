@@ -116,7 +116,8 @@ class SpecialPidRedirect extends SpecialPage {
 							new FieldLayout(
 								new CheckboxInputWidget( [
 									'name' => 'item',
-									'checked' => $this->getRequest()->getBool( 'item' ),
+									'value' => '1',
+									'selected' => $this->getRequest()->getBool( 'item' ),
 								] ),
 								[
 									'label' => 'Item (Link to the item page instead of the site link)',
