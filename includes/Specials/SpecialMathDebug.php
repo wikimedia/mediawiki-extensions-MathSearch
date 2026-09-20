@@ -1,6 +1,5 @@
 <?php
 
-use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathReferenceData;
@@ -250,45 +249,84 @@ class SpecialMathDebug extends SpecialPage {
 			$task . '</a>';
 	}
 
-	/** MathJax typesets every math element that is not marked, including the references. */
-	private static function ignoreInMathJax( string $html ): string {
-		return preg_replace_callback(
-			'/<math\b([^>]*)>/i',
-			static function ( array $m ): string {
-				if ( preg_match( '/\sclass\s*=\s*(["\'])(.*?)\1/i', $m[1], $class ) ) {
-					if ( preg_match( '/(^|\s)mathjax_ignore(\s|$)/', $class[2] ) ) {
-						return $m[0];
-					}
-					return str_replace(
-						$class[0],
-						' class=' . $class[1] . $class[2] . ' mathjax_ignore' . $class[1],
-						$m[0]
-					);
-				}
-				return '<math class="mathjax_ignore"' . $m[1] . '>';
-			},
-			$html
-		);
-	}
-
-	/** @return string HTML, the same input as each pipeline draws it */
-	private function renderComparison( string $tex ): string {
-		return '<div class="math-diff">' .
-			'<div class="math-diff-master"><h4>server SVG</h4>' .
-			self::ignoreInMathJax( $this->renderInMode( $tex, MathConfig::MODE_MATHML ) ) .
-			'</div><div class="math-diff-ref"><h4>client MathJax</h4>' .
-			$this->renderInMode( $tex, MathConfig::MODE_NATIVE_JAX ) .
-			'</div></div>';
-	}
-
-	private function renderInMode( string $tex, string $mode ): string {
-		try {
-			$renderer = $this->rendererFactory->getRenderer( $tex, [], $mode );
-			$renderer->render();
-			return $renderer->getHtmlOutput();
-		} catch ( Exception $e ) {
-			return '<em>' . htmlspecialchars( $e->getMessage() ) . '</em>';
+	/**
+	 * Renders a base/ref diff box for one field of the two entries.
+	 *
+	 * @param ?array $master
+	 * @param ?array $ref
+	 * @param string $field the entry field to compare, e.g. 'output' or 'svg'
+	 * @param string $labelSuffix appended to the "base"/"ref" column headings,
+	 *   e.g. 'svg' to get "base svg"/"ref svg"
+	 * @return string HTML, empty if both sides have the same value for $field
+	 */
+	private function renderFieldDiff( ?array $master, ?array $ref, string $field, string $labelSuffix = '' ): string {
+		$masterValue = $master[$field] ?? null;
+		$refValue = $ref[$field] ?? null;
+		if ( $masterValue === $refValue ) {
+			return '';
 		}
+		$baseLabel = trim( 'base ' . $labelSuffix );
+		$refLabel = trim( 'ref ' . $labelSuffix );
+		$masterHtml = $masterValue ?? '<em>none</em>';
+		$refHtml = $refValue ?? '<em>none</em>';
+		return '<div class="math-diff">' .
+			'<div class="math-diff-master"><h4>' . $baseLabel . '</h4>' . $masterHtml . '</div>' .
+			'<div class="math-diff-ref"><h4>' . $refLabel . '</h4>' . $refHtml . '</div>' .
+			'</div>';
+	}
+
+	/**
+	 * Renders the raw base/ref JSON for whatever isn't already shown by the
+	 * svg/output diffs above, with those two fields replaced by a short
+	 * placeholder so the (often large) content they hold isn't repeated.
+	 *
+	 * @return string HTML, empty if nothing but svg/output differs
+	 */
+	private function renderOtherFieldsDiff( ?array $master, ?array $ref ): string {
+		if ( !self::entriesDiffer( $master, $ref, [ 'svg', 'output' ] ) ) {
+			return '';
+		}
+		return '<h4>base</h4><pre>' .
+			htmlspecialchars( json_encode(
+				self::withFieldPlaceholders( $master ), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
+			) ) .
+			'</pre>' .
+			'<h4>ref</h4><pre>' .
+			htmlspecialchars( json_encode(
+				self::withFieldPlaceholders( $ref ), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
+			) ) .
+			'</pre>';
+	}
+
+	/** Replaces $entry's svg and output values, if any, with a placeholder like "[svg]". */
+	private static function withFieldPlaceholders( ?array $entry ): ?array {
+		if ( !is_array( $entry ) ) {
+			return $entry;
+		}
+		foreach ( [ 'svg', 'output' ] as $field ) {
+			if ( array_key_exists( $field, $entry ) ) {
+				$entry[$field] = '[' . $field . ']';
+			}
+		}
+		return $entry;
+	}
+
+	/**
+	 * @param ?array $master
+	 * @param ?array $ref
+	 * @param string[] $ignoredFields fields to leave out of the comparison
+	 * @return bool whether $master and $ref still differ once those fields are set aside
+	 */
+	private static function entriesDiffer( ?array $master, ?array $ref, array $ignoredFields ): bool {
+		foreach ( $ignoredFields as $field ) {
+			if ( is_array( $master ) ) {
+				unset( $master[$field] );
+			}
+			if ( is_array( $ref ) ) {
+				unset( $ref[$field] );
+			}
+		}
+		return $master !== $ref;
 	}
 
 	private function getTexvcTex( string $tex ): string {
@@ -368,11 +406,6 @@ class SpecialMathDebug extends SpecialPage {
 		$masterHash = $this->getRequest()->getVal( 'base', 'refs/heads/master' );
 		$withSvg = $this->getRequest()->getVal( 'svg', 'diff' ) !== 'none';
 		$out->addModuleStyles( [ 'ext.mathsearch.styles' ] );
-		if ( $withSvg ) {
-			// The client column is rendered by MathJax in the browser, which is
-			// the only place the mmlFilter polyfills actually run.
-			$out->addModules( [ 'ext.math.mathjax' ] );
-		}
 
 		$relativePath = 'tests/phpunit/integration/WikiTexVC/data/reference.json';
 		$baseUrl = 'https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Math/+/';
@@ -411,59 +444,33 @@ class SpecialMathDebug extends SpecialPage {
 			$refEntry = $refTests[$key] ?? null;
 			$master = $masterEntry['test'] ?? null;
 			$ref = $refEntry['test'] ?? null;
-			if ( $master !== $ref ) {
-				$position = $refEntry['position'] ?? $masterEntry['position'];
-				$inputHash = $refEntry['hash'] ?? $masterEntry['hash'];
-				$inMaster = $master['input'] ?? '';
-				$inRef = $ref['input'] ?? '';
-				if ( $inMaster !== '' && $inMaster === $inRef ) {
-					$out->addWikiTextAsInterface( "== Difference at position {$position} ==" );
-				} elseif ( $inMaster === '' ) {
-					$out->addWikiTextAsInterface( "== New test at position {$position} ==" );
-				} else {
-					$out->addWikiTextAsInterface( "== Removed test at position {$position} ==" );
-				}
-				$input = $inRef !== '' ? $inRef : $inMaster;
-				$out->addHTML(
-					'<p>Input: <code>' . htmlspecialchars( $input ) . '</code><br>' .
-					'Input hash: <code>' . htmlspecialchars( $inputHash ) . '</code>' .
-					self::taskLink( $ref, $master ) . '</p>'
-				);
-				if ( $withSvg ) {
-					$out->addHTML( $this->renderComparison( $input ) );
-				}
-				// If both have an 'output' field, and it differs, render the MathML / HTML raw
-				$outMaster = is_array( $master ) && array_key_exists( 'output', $master );
-				$outRef = is_array( $ref ) && array_key_exists( 'output', $ref );
-				if ( $outMaster && $outRef && $master['output'] !== $ref['output'] ) {
-					$out->addHTML(
-						'<div class="math-diff"><div class="math-diff-master"><h4>base</h4>' .
-						self::ignoreInMathJax( $master['output'] ) .
-						'</div><div class="math-diff-ref"><h4>ref</h4>' .
-						self::ignoreInMathJax( $ref['output'] ) .
-						'</div></div>'
-					);
-				} elseif ( !$outMaster && $outRef ) {
-					$out->addHTML(
-						'<div class="math-diff"><div class="math-diff-master">' .
-						'<h4>base</h4><em>new</em></div>' .
-						'<div class="math-diff-ref"><h4>ref</h4>' .
-						self::ignoreInMathJax( $ref['output'] ) .
-						'</div></div>'
-					);
-				} else {
-					$out->addHTML(
-						'<h4>base</h4><pre>' .
-						htmlspecialchars( json_encode( $master, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) ) .
-						'</pre>'
-					);
-					$out->addHTML(
-						'<h4>ref</h4><pre>' .
-						htmlspecialchars( json_encode( $ref, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) ) .
-						'</pre>'
-					);
-				}
+			if ( $master === $ref ) {
+				continue;
 			}
+
+			$position = $refEntry['position'] ?? $masterEntry['position'];
+			$inputHash = $refEntry['hash'] ?? $masterEntry['hash'];
+			$inMaster = $master['input'] ?? '';
+			$inRef = $ref['input'] ?? '';
+			if ( $inMaster !== '' && $inMaster === $inRef ) {
+				$out->addWikiTextAsInterface( "== Difference at position {$position} ==" );
+			} elseif ( $inMaster === '' ) {
+				$out->addWikiTextAsInterface( "== New test at position {$position} ==" );
+			} else {
+				$out->addWikiTextAsInterface( "== Removed test at position {$position} ==" );
+			}
+			$input = $inRef !== '' ? $inRef : $inMaster;
+			$out->addHTML(
+				'<p>Input: <code>' . htmlspecialchars( $input ) . '</code><br>' .
+				'Input hash: <code>' . htmlspecialchars( $inputHash ) . '</code>' .
+				self::taskLink( $ref, $master ) . '</p>'
+			);
+
+			if ( $withSvg ) {
+				$out->addHTML( $this->renderFieldDiff( $master, $ref, 'svg', 'svg' ) );
+			}
+			$out->addHTML( $this->renderFieldDiff( $master, $ref, 'output' ) );
+			$out->addHTML( $this->renderOtherFieldsDiff( $master, $ref ) );
 		}
 	}
 }

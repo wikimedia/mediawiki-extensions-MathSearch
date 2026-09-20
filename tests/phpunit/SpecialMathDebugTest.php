@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Tests\Specials;
 
-use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\MathReferenceData;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Extension\Math\Render\RendererFactory;
@@ -131,6 +130,13 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 		$this->assertStringContainsString( 'Input: <code>c</code>', $html );
 		$this->assertStringContainsString( 'Input hash: <code>' . $cHash . '</code>', $html );
 		$this->assertStringNotContainsString( 'Difference at', $html );
+		// A missing side reads "none" for output, the same as it already does for svg.
+		$this->assertStringContainsString(
+			'<div class="math-diff-master"><h4>base</h4><em>none</em>', $html
+		);
+		$this->assertStringContainsString(
+			'<div class="math-diff-ref"><h4>ref</h4><em>none</em>', $html
+		);
 	}
 
 	public function testVisualDiffDistinguishesTestParameters() {
@@ -188,10 +194,20 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 		];
 	}
 
-	public function testVisualDiffRendersServerAndClientSideBySide() {
-		[ $master, $ref ] = self::renderingCases();
-		$modes = [];
-		$this->stubRendererFactory( $modes );
+	/**
+	 * @return array[] [$master, $ref], each keyed by hash and carrying a
+	 *   distinct stored svg snapshot alongside the usual output field.
+	 */
+	private static function svgRenderingCases(): array {
+		$hash = md5( 'a+b' );
+		return [
+			[ $hash => [ 'input' => 'a+b', 'output' => '<math>x</math>', 'svg' => '<svg>master</svg>' ] ],
+			[ $hash => [ 'input' => 'a+b', 'output' => '<math>x</math>', 'svg' => '<svg>ref</svg>' ] ],
+		];
+	}
+
+	public function testVisualDiffShowsStoredSvgSideBySide() {
+		[ $master, $ref ] = self::svgRenderingCases();
 		$this->installMockHttp( [
 			$this->makeFakeHttpRequest( base64_encode( json_encode( $ref ) ) ),
 			$this->makeFakeHttpRequest( base64_encode( json_encode( $master ) ) ),
@@ -200,19 +216,61 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 		[ $html, ] = $this->executeSpecialPage( '',
 			new FauxRequest( [ 'action' => 'visualDiff', 'ref' => 'deadbeef' ] ) );
 
-		$this->assertStringContainsString( 'server SVG', $html );
-		$this->assertStringContainsString( 'client MathJax', $html );
-		$this->assertSame(
-			[ MathConfig::MODE_MATHML, MathConfig::MODE_NATIVE_JAX ],
-			$modes,
-			'the two columns must come from the server and the client pipeline'
+		$this->assertStringContainsString(
+			'<div class="math-diff-master"><h4>base svg</h4><svg>master</svg>', $html
 		);
+		$this->assertStringContainsString(
+			'<div class="math-diff-ref"><h4>ref svg</h4><svg>ref</svg>', $html
+		);
+		// output is identical in this fixture; nothing more to say once the
+		// svg diff above already explains the only field that changed.
+		$this->assertStringNotContainsString( '<pre>', $html );
+	}
+
+	public function testVisualDiffOmitsSvgDiffWhenSnapshotsMatch() {
+		$hash = md5( 'a+b' );
+		$master = [ $hash => [ 'input' => 'a+b', 'output' => '<math>a</math>', 'svg' => '<svg>same</svg>' ] ];
+		$ref = [ $hash => [ 'input' => 'a+b', 'output' => '<math>b</math>', 'svg' => '<svg>same</svg>' ] ];
+		$this->installMockHttp( [
+			$this->makeFakeHttpRequest( base64_encode( json_encode( $ref ) ) ),
+			$this->makeFakeHttpRequest( base64_encode( json_encode( $master ) ) ),
+		] );
+
+		[ $html, ] = $this->executeSpecialPage( '',
+			new FauxRequest( [ 'action' => 'visualDiff', 'ref' => 'deadbeef' ] ) );
+
+		// The output field still differs, so the entry is listed; the svg
+		// columns are only skipped because the two snapshots are identical.
+		$this->assertStringContainsString( 'Difference at position 1', $html );
+		$this->assertStringNotContainsString( 'base svg', $html );
+	}
+
+	public function testVisualDiffReplacesSvgAndOutputWithPlaceholdersInOtherFieldsDump() {
+		$hash = md5( 'a+b' );
+		$svg = '<svg>' . str_repeat( 'x', 200 ) . '</svg>';
+		$master = [ $hash => [ 'input' => 'a+b', 'output' => '<math>a</math>', 'svg' => $svg ] ];
+		$ref = [ $hash => [
+			'input' => 'a+b', 'output' => '<math>a</math>', 'svg' => $svg, 'bug' => 'T1',
+		] ];
+		$this->installMockHttp( [
+			$this->makeFakeHttpRequest( base64_encode( json_encode( $ref ) ) ),
+			$this->makeFakeHttpRequest( base64_encode( json_encode( $master ) ) ),
+		] );
+
+		[ $html, ] = $this->executeSpecialPage( '',
+			new FauxRequest( [ 'action' => 'visualDiff', 'ref' => 'deadbeef' ] ) );
+
+		// svg and output are identical, so neither diff box renders; the
+		// difference is only in "bug", which the raw dump below must show --
+		// without repeating the (here, deliberately long) svg content.
+		$this->assertStringNotContainsString( 'base svg', $html );
+		$this->assertStringContainsString( '&quot;bug&quot;: &quot;T1&quot;', $html );
+		$this->assertStringContainsString( '&quot;svg&quot;: &quot;[svg]&quot;', $html );
+		$this->assertStringNotContainsString( $svg, $html );
 	}
 
 	public function testVisualDiffOmitsRenderingWhenSvgIsNone() {
-		[ $master, $ref ] = self::renderingCases();
-		$modes = [];
-		$this->stubRendererFactory( $modes );
+		[ $master, $ref ] = self::svgRenderingCases();
 		$this->installMockHttp( [
 			$this->makeFakeHttpRequest( base64_encode( json_encode( $ref ) ) ),
 			$this->makeFakeHttpRequest( base64_encode( json_encode( $master ) ) ),
@@ -221,29 +279,10 @@ class SpecialMathDebugTest extends SpecialPageTestBase {
 		[ $html, ] = $this->executeSpecialPage( '',
 			new FauxRequest( [ 'action' => 'visualDiff', 'ref' => 'deadbeef', 'svg' => 'none' ] ) );
 
-		$this->assertStringNotContainsString( 'server SVG', $html );
-		$this->assertStringNotContainsString( 'client MathJax', $html );
-		$this->assertSame( [], $modes, 'nothing should be rendered when svg=none' );
+		$this->assertStringNotContainsString( 'base svg', $html );
+		$this->assertStringNotContainsString( 'ref svg', $html );
 		// The MathML comparison this page already did is unaffected.
 		$this->assertStringContainsString( 'Difference at position 1', $html );
-	}
-
-	public function testStoredReferencesAreHiddenFromClientSideMathJax() {
-		[ $master, $ref ] = self::renderingCases();
-		$modes = [];
-		$this->stubRendererFactory( $modes );
-		$this->installMockHttp( [
-			$this->makeFakeHttpRequest( base64_encode( json_encode( $ref ) ) ),
-			$this->makeFakeHttpRequest( base64_encode( json_encode( $master ) ) ),
-		] );
-
-		[ $html, ] = $this->executeSpecialPage( '',
-			new FauxRequest( [ 'action' => 'visualDiff', 'ref' => 'deadbeef' ] ) );
-
-		// Without this MathJax would typeset the references themselves, and the
-		// page would compare two MathJax renderings instead of the stored markup.
-		$this->assertStringContainsString( '<math class="mathjax_ignore">master</math>', $html );
-		$this->assertStringContainsString( '<math class="mathjax_ignore">ref</math>', $html );
 	}
 
 	public function testLinksTheTaskAndShortensRevisionLabels() {
