@@ -167,6 +167,7 @@
 	"quicksparqlstatements": "SPARQL QuickStatements生成器",
 	"pidredirect": "永久标识符重定向",
 	"importfrompid": "从持久性识别码导入",
+	"mathsearch-protected-entity-edit": "$1 $2因为其ID低于$3而受到保护。低编号实体在此处作为缓存的上游副本保存，以便在上游Wikibase不可用时保障恢复。请在上游的$4更改。",
 	"wikibase-listdatatypes-contentmath-head": "数学表达式（内容）",
 	"wikibase-listdatatypes-contentmath-body": "用于数学表达式、公式、方程等的文字数据字段，以LaTeX的DRMF/DLMF变体表达。"
 }
