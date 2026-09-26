@@ -15,11 +15,20 @@ use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\NumericPropertyId;
 use Wikibase\DataModel\Entity\Property;
 use Wikibase\Repo\Content\EntityContent;
+use Wikibase\Repo\Hooks\WikibaseEditFilterMergedContentHook;
 
 /**
  * @covers \MediaWiki\Extension\MathSearch\Wikidata\ProtectUpstreamEntitiesHook
  */
 class ProtectUpstreamEntitiesHookTest extends MediaWikiUnitTestCase {
+	protected function setUp(): void {
+		parent::setUp();
+		// Only integration tests can check whether an extension is loaded.
+		if ( !interface_exists( WikibaseEditFilterMergedContentHook::class ) ) {
+			$this->markTestSkipped( 'Wikibase is required for this test' );
+		}
+	}
+
 	private function newHook( array $minimumEditableIds = [ 'P' => 0, 'Q' => 0 ] ): ProtectUpstreamEntitiesHook {
 		return new ProtectUpstreamEntitiesHook( new HashConfig( [
 			'MathSearchMinimumEditableIds' => $minimumEditableIds,
