@@ -15,6 +15,7 @@ class MathObject extends MathMathML {
 	// DEBUG VARIABLES
 	// Available, if Math extension runs in debug mode ($wgMathDebug = true) only.
 	public const MODE_2_USER_OPTION = [
+		'mathjax' => 9,
 		'native' => 8,
 		'latexml' => 7,
 		'mathml' => 5,
