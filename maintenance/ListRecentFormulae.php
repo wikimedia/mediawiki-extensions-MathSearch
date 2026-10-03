@@ -22,6 +22,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
+use MediaWiki\Maintenance\Maintenance;
 
 require_once __DIR__ . '/../../../maintenance/Maintenance.php';
 
