@@ -210,14 +210,14 @@ class MathSearchHooks implements
 		}
 		// Use manually assigned IDs whenever possible
 		// and fallback to automatic IDs otherwise.
-		$hasEid = $this->setMathId( $eid, $renderer, $revId );
+		$this->setMathId( $eid, $renderer, $revId );
 		if ( $eid === null ) {
 			return;
 		}
-		if ( $hasEid === false ) {
-			$Result =
-				preg_replace( '/(class="mwe-math-mathml-(inline|display))/', "id=\"$eid\" \\1",
-					$Result );
+		// Only in the page output: the stored MathML stays without id, so equal formulae share one entry
+		$id = htmlspecialchars( $eid );
+		if ( $Result !== null && !str_contains( $Result, "id=\"$id\"" ) ) {
+			$Result = preg_replace( '/<math\b/', "<math id=\"$id\"", $Result, 1 );
 		}
 		$this->updateIndex( $revId, $eid, $renderer );
 	}
@@ -514,9 +514,8 @@ class MathSearchHooks implements
 			if ( $mathTags ) {
 				foreach ( $mathTags as $tag ) {
 					$id = null;
-					$tagContent = $tag[MathIdGenerator::CONTENT_POS];
-					$attributes = $tag[MathIdGenerator::ATTRIB_POS];
-					$renderer = $this->rendererFactory->getRenderer( $tagContent, $attributes, 'latexml' );
+					[ $tex, $attributes ] = $idGenerator->getRendererInput( $tag );
+					$renderer = $this->rendererFactory->getRenderer( $tex, $attributes, 'latexml' );
 					$renderer->render();
 					$this->setMathId( $id, $renderer, $revId );
 					$harvest[] = [

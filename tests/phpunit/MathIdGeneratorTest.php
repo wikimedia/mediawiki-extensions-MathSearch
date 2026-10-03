@@ -44,4 +44,20 @@ wikiText;
 		$this->assertNotEquals( $id1, $id2, "1 and 2 should not be equal" );
 		$this->assertEquals( "CustomId", $id2 );
 	}
+
+	/**
+	 * @covers MathIdGenerator::getContentIdMap
+	 * @covers MathIdGenerator::getRendererInput
+	 */
+	public function testChemAndVerbatimTags() {
+		$idGen = new MathIdGenerator( '<nowiki><math>a</math></nowiki> <pre><math>b</math></pre> ' .
+			'<source><math>c</math></source> <syntaxhighlight><math>d</math></syntaxhighlight> ' .
+			'<code><math>x</math></code> <chem>H2O</chem> <ce>H2O</ce> <math display="block">x</math>', 42 );
+
+		$this->assertSame( [
+			'x' => [ 'math.42.0' ],
+			'\\ce{H2O}' => [ 'math.42.1', 'math.42.2' ],
+			'{\\displaystyle x}' => [ 'math.42.3' ],
+		], $idGen->getContentIdMap() );
+	}
 }

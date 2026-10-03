@@ -13,6 +13,9 @@ class MathIdGenerator {
 
 	public const CONTENT_POS = 1;
 	public const ATTRIB_POS = 2;
+	private const TAGS = [ 'math', 'chem', 'ce' ];
+	/** Tags whose content the parser shows as text, so math tags inside are not rendered */
+	private const VERBATIM_TAGS = [ 'nowiki', 'pre', 'source', 'syntaxhighlight' ];
 
 	private readonly string $wikiText;
 	/**
@@ -60,10 +63,10 @@ class MathIdGenerator {
 	) {
 		$wikiText = Sanitizer::removeHTMLcomments( $wikiText );
 		$this->wikiText =
-			Parser::extractTagsAndParams( [ 'nowki', 'syntaxhighlight', 'math' ], $wikiText,
+			Parser::extractTagsAndParams( [ ...self::VERBATIM_TAGS, ...self::TAGS ], $wikiText,
 				$tags );
 		$this->mathTags = array_filter( $tags, static function ( $v ) {
-			return $v[0] === 'math';
+			return in_array( $v[0], self::TAGS, true );
 		} );
 	}
 
@@ -207,10 +210,29 @@ class MathIdGenerator {
 	}
 
 	/**
-	 * @param array{1:string,2:array} $tag under unknown circumstances the first argument might be null T391163
+	 * The key of the id map: what MathRenderer::getUserInputTex() returns for this tag, display wrap included
+	 *
+	 * @param array{0:string,1:string,2:array} $tag under unknown circumstances the content might be null T391163
 	 * @return string
 	 */
 	public function getUserInputTex( array $tag ): string {
-		return ( new MathSource( $tag[self::CONTENT_POS] ?? '', $tag[self::ATTRIB_POS] ) )->getUserInputTex();
+		[ $tex, $attributes ] = $this->getRendererInput( $tag );
+		return ( new MathSource( $tex, $attributes ) )->getUserInputTex();
+	}
+
+	/**
+	 * The TeX and attributes as the tag hooks of Math pass them to the renderer, chem wrapped in \\ce{}
+	 *
+	 * @param array{0:string,1:string,2:array} $tag
+	 * @return array{0:string,1:array}
+	 */
+	public function getRendererInput( array $tag ): array {
+		$tex = $tag[self::CONTENT_POS] ?? '';
+		$attributes = $tag[self::ATTRIB_POS];
+		if ( $tag[0] !== 'math' ) {
+			$tex = '\\ce{' . $tex . '}';
+			$attributes['chem'] = true;
+		}
+		return [ $tex, $attributes ];
 	}
 }

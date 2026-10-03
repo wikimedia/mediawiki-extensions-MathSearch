@@ -19,10 +19,11 @@
  * @ingroup Maintenance
  */
 
+use MediaWiki\Content\TextContent;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Maintenance\Maintenance;
-use MediaWiki\Parser\Parser;
 use MediaWiki\Parser\ParserOptions;
+use MediaWiki\Revision\SlotRecord;
 
 // @codeCoverageIgnoreStart
 $IP = getenv( 'MW_INSTALL_PATH' );
@@ -49,13 +50,13 @@ class UpdateMath extends Maintenance {
 	/** @var float[] */
 	private $performance = [];
 	/** @var string */
-	private $renderingMode = 'latexml';
+	private $renderingMode = 'native';
 	/** @var int */
 	private $chunkSize = 1000;
-	/** @var Parser */
-	private $parser;
-	/** @var ParserOptions */
-	private $parserOptions;
+	private int $failures = 0;
+	/** Values of mathlog.math_statuscode for formulae that failed */
+	private const STATUS_TEX_CHECK_FAILED = 1;
+	private const STATUS_RENDERING_FAILED = 2;
 
 	public function __construct() {
 		parent::__construct();
@@ -70,10 +71,8 @@ class UpdateMath extends Maintenance {
 		$this->addOption( 'verbose', "If set output for successful rendering will produced", false,
 			false, 'v' );
 		$this->addOption( 'SVG', "If set SVG images will be produced", false, false );
-		$this->addOption( 'hooks', "If set hooks will be skipped, but index will be updated.",
-			false, false );
 		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
-		$this->addOption( 'mode', 'Rendering mode to be used (mathml, latexml)', false, true,
+		$this->addOption( 'mode', 'Rendering mode to be used (native, mathml, latexml)', false, true,
 			'm' );
 		$this->addOption( 'exportmml', 'export LaTeX and generated MathML to the specified file', false, true,
 			'e' );
@@ -159,7 +158,7 @@ class UpdateMath extends Maintenance {
 			// echo "after" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			$n += $this->chunkSize;
 		}
-		$this->output( "Updated {$fCount} formulae!\n" );
+		$this->output( "Updated {$fCount} formulae, {$this->failures} failed (see mathlog)!\n" );
 	}
 
 	/**
@@ -173,24 +172,17 @@ class UpdateMath extends Maintenance {
 	private function doUpdate( $pid, $pText, $pTitle = "", $revId = 0 ) {
 		$allFormula = [];
 
-		$services = $this->getServiceContainer();
-		$mathSearchHooks = new MathSearchHooks(
-			$services->getConnectionProvider(),
-			$services->getService( 'Math.RendererFactory' ),
-			$services->getRevisionLookup()
-		);
-
-		$notused = '';
-		// $mathSearchHooks->setNextID($eId);
-		$math = MathObject::extractMathTagsFromWikiText( $pText );
+		$idGenerator = new MathIdGenerator( $pText, (int)$revId );
+		$math = $idGenerator->getMathTags();
 		$matches = count( $math );
 		if ( $matches ) {
 			echo ( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math as $formula ) {
 				$this->time = microtime( true );
 				/** @var MathRenderer $renderer */
+				[ $tex, $attributes ] = $idGenerator->getRendererInput( $formula );
 				$renderer = $this->getServiceContainer()->get( 'Math.RendererFactory' )
-					->getRenderer( $formula[1], $formula[2], $this->renderingMode );
+					->getRenderer( $tex, $attributes, $this->renderingMode );
 				$this->current = $renderer;
 				$this->time( "loadClass" );
 				if ( $this->getOption( "texvccheck", false ) ) {
@@ -220,47 +212,30 @@ class UpdateMath extends Maintenance {
 					}
 				} else {
 					$this->time( "checkTex-Fail" );
-					echo "\nF:\t\t" . $renderer->getInputHash() . " texvccheck error:" .
-						$renderer->getLastError();
+					$this->logFailure( $renderer, self::STATUS_TEX_CHECK_FAILED );
 					continue;
 				}
 				$renderer->writeCache();
 				$this->time( "write Cache" );
-				if ( !$this->getOption( "hooks", false ) ) {
-					$hookContainer = $this->getServiceContainer()->getHookContainer();
-					$hookContainer->run(
-						'MathFormulaPostRenderRevision',
-						[
-							$this->getParser( $revId )->getRevisionRecordObject(),
-							&$renderer,
-							&$notused
-						]
-					);
-					$this->time( "hooks" );
-				} else {
-					$eId = null;
-					$mathSearchHooks->setMathId( $eId, $renderer, $revId );
-					$mathSearchHooks->writeMathIndex( $revId, $eId, $renderer->getInputHash(), '' );
-					$this->time( "index" );
-				}
 				if ( $renderer->getLastError() ) {
-					echo "\n\t\t" . $renderer->getLastError();
-					echo "\nF:\t\t" . $renderer->getInputHash() . " equation " . ( $eId ) .
-						"-failed beginning with\n\t\t'" . substr( $formula, 0, 100 )
-						. "'\n\t\tmathml:" . substr( $renderer->getMathml(), 0, 10 ) . "\n ";
+					$this->logFailure( $renderer, self::STATUS_RENDERING_FAILED );
 				} else {
+					$this->storeFormula( $renderer );
 					if ( $this->verbose ) {
 						echo "\nS:\t\t" . $renderer->getInputHash();
 					}
 				}
 				if ( $this->getOption( "exportmml", false ) ) {
-					$allFormula = $this->getMathMLForExport( $formula[1], $renderer, $allFormula );
+					$allFormula = $this->getMathMLForExport( $tex, $renderer, $allFormula );
 				}
 			}
 			$mmlPath = $this->getOption( "exportmml", false );
 			if ( $mmlPath ) {
 				$this->exportMMLtoFile( $mmlPath, $allFormula, $pTitle );
 			}
+			$this->time = microtime( true );
+			$this->indexPage( (int)$revId );
+			$this->time( "index" );
 
 			return $matches;
 
@@ -268,24 +243,42 @@ class UpdateMath extends Maintenance {
 		return 0;
 	}
 
-	private function getParserOptions(): ParserOptions {
-		if ( !$this->parserOptions ) {
-			$this->parserOptions = ParserOptions::newFromAnon();
+	/**
+	 * Formulae that the page does not show, for example in parameters of missing templates,
+	 * reach mathlog only here, because the hooks run for rendered formulae only.
+	 */
+	private function storeFormula( MathRenderer $renderer ): void {
+		$mathObject = MathObject::cloneFromRenderer( $renderer );
+		if ( !$mathObject->isInDatabase() ) {
+			$mathObject->writeToCache();
 		}
-		return $this->parserOptions;
 	}
 
-	private function getParser( int $revId ): Parser {
-		if ( !$this->parser ) {
-			$this->parser = $this->getServiceContainer()->getParserFactory()->create();
+	/**
+	 * Stores the error of a formula in mathlog, where the failures of all wikis can be counted.
+	 */
+	private function logFailure( MathRenderer $renderer, int $status ): void {
+		$this->failures++;
+		$mathObject = MathObject::cloneFromRenderer( $renderer );
+		$mathObject->setStatusCode( $status );
+		$mathObject->setLog( trim( strip_tags( html_entity_decode( $renderer->getLastError() ) ) ) );
+		$mathObject->writeToCache();
+	}
+
+	/**
+	 * Parses the page like a page view, so the hooks give the formulae the same ids as on the page.
+	 * The order of rendering differs from the source, for example for formulae in references.
+	 */
+	private function indexPage( int $revId ): void {
+		$revision = $this->getServiceContainer()->getRevisionLookup()->getRevisionById( $revId );
+		$content = $revision?->getContent( SlotRecord::MAIN );
+		if ( !$content instanceof TextContent ) {
+			return;
 		}
-		// hack to set private field mRevisionId id
-		$this->parser->preprocess(
-			'',
-			null,
-			$this->getParserOptions(),
-			$revId );
-		return $this->parser;
+		$options = ParserOptions::newFromAnon();
+		$options->setOption( 'math', $this->renderingMode );
+		$this->getServiceContainer()->getParserFactory()->getInstance()->parse(
+			$content->getText(), $revision->getPage(), $options, true, true, $revId );
 	}
 
 	public function execute() {
@@ -295,7 +288,7 @@ class UpdateMath extends Maintenance {
 			->getPrimaryDatabase();
 		$this->purge = $this->getOption( "purge", false );
 		$this->verbose = $this->getOption( "verbose", false );
-		$this->renderingMode = $this->getOption( "mode", 'latexml' );
+		$this->renderingMode = $this->getOption( "mode", 'native' );
 		$this->chunkSize = $this->getOption( 'chunk-size', $this->chunkSize );
 		$this->db = $this->getServiceContainer()
 			->getConnectionProvider()
