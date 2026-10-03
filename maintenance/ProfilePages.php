@@ -212,7 +212,7 @@ class ProfilePages extends Maintenance {
 		}
 
 		( new Map() )->scheduleJobs(
-			\Closure::fromCallable( [ $this, 'output' ] ),
+			\Closure::fromCallable( $this->output( ... ) ),
 			$this->getOption( 'batchSize', $this->getBatchSize() ),
 			$type,
 			$jobType,

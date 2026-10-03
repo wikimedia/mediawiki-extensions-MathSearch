@@ -127,7 +127,7 @@ class SpecialMathSearch extends SpecialPage {
 		$formDescriptor = array_merge( $formDescriptor, $this->getSearchRows( $this->noTerms ) );
 		$htmlForm =	new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Search' );
-		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
+		$htmlForm->setSubmitCallback( $this->processInput( ... ) );
 		$htmlForm->setHeaderHtml( "<h2>Input</h2>" );
 		// $htmlForm->show();
 		return $htmlForm;
@@ -180,7 +180,7 @@ class SpecialMathSearch extends SpecialPage {
 	 * @param array $formData
 	 * @return bool
 	 */
-	public function processInput( $formData ) {
+	private function processInput( $formData ) {
 		if ( $formData['noTerms'] != $this->noTerms ) {
 			$this->noTerms = $formData['noTerms'];
 			$this->searchForm();

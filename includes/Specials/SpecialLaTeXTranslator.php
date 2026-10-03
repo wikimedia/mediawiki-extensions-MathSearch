@@ -110,7 +110,7 @@ are often used together.';
 		];
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Translate' );
-		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
+		$htmlForm->setSubmitCallback( $this->processInput( ... ) );
 		$htmlForm->setHeaderHtml( '<h2>' . $this->msg( 'math-tex2nb-header' )->escaped() .
 			'</h2>' );
 		$htmlForm->show();
@@ -121,7 +121,7 @@ are often used together.';
 	 * @param array $formData
 	 * @return bool
 	 */
-	public function processInput( $formData ) {
+	private function processInput( $formData ) {
 		$this->tex = $formData['input'];
 		$this->context = $formData['wikitext'];
 		$this->purge = $formData['purge'];
@@ -139,10 +139,10 @@ are often used together.';
 		}
 
 		return $this->cache->getWithSetCallback( $hash, WANObjectCache::TTL_INDEFINITE,
-			[ $this, 'calculateTranslations' ] );
+			$this->calculateTranslations( ... ) );
 	}
 
-	public function calculateTranslations(): string {
+	private function calculateTranslations(): string {
 		$this->log( LogLevel::INFO, "Cache miss. Calculate translation." );
 		$q = rawurlencode( $this->tex );
 		$url = "{$this->compUrl}?latex=$q";
@@ -180,10 +180,10 @@ are often used together.';
 		}
 
 		return $this->cache->getWithSetCallback( $hash, 31556952,
-			[ $this, 'calculateDependencyGraphFromContext' ] );
+			$this->calculateDependencyGraphFromContext( ... ) );
 	}
 
-	public function calculateDependencyGraphFromContext(): string {
+	private function calculateDependencyGraphFromContext(): string {
 		$this->log( LogLevel::INFO, "Cache miss. Calculate dependency graph." );
 		$url = $this->dgUrl;
 		$q = rawurlencode( $this->context );

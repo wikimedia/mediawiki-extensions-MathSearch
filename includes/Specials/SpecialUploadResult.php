@@ -72,7 +72,7 @@ class SpecialUploadResult extends SpecialPage {
 			'class' => HTMLTextField::class,
 			'type' => 'file',
 			'required' => true,
-			'validation-callback' => [ $this, 'runFileCheck' ],
+			'validation-callback' => $this->runFileCheck( ... ),
 		];
 		$formDescriptor['displayFormulae'] = [
 			'label-message' => 'math-wmc-display-formulae-label',
@@ -85,7 +85,7 @@ class SpecialUploadResult extends SpecialPage {
 			'type' => 'check',
 		];
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
-		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
+		$htmlForm->setSubmitCallback( $this->processInput( ... ) );
 		$htmlForm->show();
 	}
 
@@ -116,8 +116,8 @@ class SpecialUploadResult extends SpecialPage {
 			'options' => $options,
 			'required' => true,
 			'help-message' => 'math-wmc-SelectRunHelp',
-			'filter-callback' => [ $this, 'runSelectorFilter' ],
-			'validation-callback' => [ $this, 'runValidatorFilter' ],
+			'filter-callback' => $this->runSelectorFilter( ... ),
+			'validation-callback' => $this->runValidatorFilter( ... ),
 			// 'section' => 'math-wmc-SectionRun'
 		];
 		return $formFields;
@@ -128,7 +128,7 @@ class SpecialUploadResult extends SpecialPage {
 	 *
 	 * @return bool|int|string
 	 */
-	public function runSelectorFilter( $run ) {
+	private function runSelectorFilter( $run ) {
 		if ( $run == '' ) {
 			return date( 'Y-m-d H:i:s (e)' );
 		}
@@ -146,7 +146,7 @@ class SpecialUploadResult extends SpecialPage {
 	/**
 	 * @return bool|string
 	 */
-	public function runValidatorFilter() {
+	private function runValidatorFilter() {
 		$dbr = $this->dbProvider->getReplicaDatabase();
 		$uID = $this->getUser()->getId();
 		$res = $dbr->selectField( 'math_wmc_runs', 'runName',
@@ -161,7 +161,7 @@ class SpecialUploadResult extends SpecialPage {
 	/**
 	 * @return bool|null|string
 	 */
-	public function runFileCheck() {
+	private function runFileCheck() {
 		$out = $this->getOutput();
 
 		$uploadResult = ImportStreamSource::newFromUpload( 'wpFile' );
@@ -190,7 +190,7 @@ class SpecialUploadResult extends SpecialPage {
 	/**
 	 * @return bool
 	 */
-	public function processInput() {
+	private function processInput() {
 		$this->getOutput()->addWikiMsg( "math-wmc-SubmissionSuccess" );
 		$this->importer->setOverwrite( !$this->getRequest()->getBool( "wpattachResults" ) );
 		$this->importer->processInput();

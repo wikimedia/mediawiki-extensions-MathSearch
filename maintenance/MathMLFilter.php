@@ -63,7 +63,7 @@ class MathMLFilter extends DumpFilter {
 	 */
 	private static function replaceMath( $pText ) {
 		$pText = Sanitizer::removeHTMLcomments( $pText );
-		return preg_replace_callback( '#&lt;math&gt;(.*?)&lt;/math&gt;#s', [ self::class, 'renderMath' ],
+		return preg_replace_callback( '#&lt;math&gt;(.*?)&lt;/math&gt;#s', self::renderMath( ... ),
 			$pText );
 	}
 

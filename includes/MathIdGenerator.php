@@ -89,7 +89,7 @@ class MathIdGenerator {
 	 * @return string[]
 	 */
 	public function formatIds( $mathTags ) {
-		return array_map( [ $this, 'parserKey2fId' ], array_keys( $mathTags ) );
+		return array_map( $this->parserKey2fId( ... ), array_keys( $mathTags ) );
 	}
 
 	/**

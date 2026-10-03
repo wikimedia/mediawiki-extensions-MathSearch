@@ -52,11 +52,11 @@ class SpecialImport extends SpecialPage {
 		];
 		$htmlForm =	HTMLForm::factory( 'codex', $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Run' );
-		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
+		$htmlForm->setSubmitCallback( $this->processInput( ... ) );
 		$htmlForm->show();
 	}
 
-	public function processInput( $formData ) {
+	private function processInput( array $formData ): bool {
 		$vals = [ $formData['value'] ?? '' ];
 		$type = $formData['type'] ?? 'doi';
 		$baseUrl = $this->config->get( 'MathSearchImporterUrl' );

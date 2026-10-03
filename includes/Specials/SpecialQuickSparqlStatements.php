@@ -86,11 +86,11 @@ class SpecialQuickSparqlStatements extends SpecialPage {
 		];
 		$htmlForm =	HTMLForm::factory( 'codex', $formDescriptor, $this->getContext() );
 		$htmlForm->setSubmitText( 'Run' );
-		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
+		$htmlForm->setSubmitCallback( $this->processInput( ... ) );
 		$htmlForm->show();
 	}
 
-	public function processInput( $formData ) {
+	private function processInput( array $formData ): bool {
 		if ( ( $formData['preview'] ?? false ) === true ) {
 			try {
 				$query = $formData['query'] . ' LIMIT 1';

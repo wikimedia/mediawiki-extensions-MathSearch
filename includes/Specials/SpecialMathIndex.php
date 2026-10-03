@@ -67,7 +67,7 @@ class SpecialMathIndex extends SpecialPage {
 			]
 		];
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
-		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
+		$htmlForm->setSubmitCallback( $this->processInput( ... ) );
 		$htmlForm->setHeaderHtml( "<h2>Select script to run</h2>" );
 		$htmlForm->show();
 	}
@@ -76,7 +76,7 @@ class SpecialMathIndex extends SpecialPage {
 	 * OnSubmit Callback, here we do all the logic we want to do...
 	 * @param array $formData
 	 */
-	public function processInput( $formData ) {
+	private function processInput( $formData ) {
 		switch ( $formData['script'] ) {
 			case self::SCRIPT_UPDATE_MATH:
 				require_once __DIR__ . '/../../maintenance/UpdateMath.php';

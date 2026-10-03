@@ -53,12 +53,12 @@ class SpecialMathDownloadResult extends SpecialUploadResult {
 		$formDescriptor = $this->printRunSelector( 'select' );
 		$formDescriptor['run']['help-message'] = '';
 		$htmlForm = new HTMLForm( $formDescriptor, $this->getContext() );
-		$htmlForm->setSubmitCallback( [ $this, 'processInput' ] );
+		$htmlForm->setSubmitCallback( $this->processInput( ... ) );
 		$htmlForm->setSubmitTextMsg( 'math-wmc-download-button' );
 		$htmlForm->show();
 	}
 
-	public function processInput() {
+	private function processInput(): bool {
 		$this->getOutput()->disable();
 		header( 'Content-Type: text/csv' );
 		header( 'Content-Disposition: attachment; filename="run' . $this->runId . '.csv"' );

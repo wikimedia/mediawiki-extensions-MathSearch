@@ -238,7 +238,7 @@ class MathSearchHooks implements
 		$mo->setRevisionID( $revId );
 		$mo->setID( $eid );
 		$Result = preg_replace_callback( "#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u",
-			[ $mo, 'addIdentifierTitle' ], $Result );
+			$mo->addIdentifierTitle( ... ), $Result );
 		return true;
 	}
 

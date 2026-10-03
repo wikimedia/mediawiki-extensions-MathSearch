@@ -58,7 +58,7 @@ class Properties extends Maintenance {
 		}
 
 		( new Map( null ) )->scheduleJobs(
-			Closure::fromCallable( [ $this, 'output' ] ),
+			Closure::fromCallable( $this->output( ... ) ),
 			$this->getOption( 'batchSize', $this->getBatchSize() ),
 			$type,
 			$jobType,
