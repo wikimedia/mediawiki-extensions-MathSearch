@@ -52,7 +52,7 @@ class UpdateMath extends Maintenance {
 	/** @var string */
 	private $renderingMode = 'native';
 	/** @var int */
-	private $chunkSize = 1000;
+	private $chunkSize = 100;
 	private int $failures = 0;
 	/** Values of mathlog.math_statuscode for formulae that failed */
 	private const STATUS_TEX_CHECK_FAILED = 1;

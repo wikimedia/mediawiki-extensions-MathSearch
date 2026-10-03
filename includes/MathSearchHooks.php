@@ -37,8 +37,8 @@ class MathSearchHooks implements
 	PageSaveCompleteHook,
 	ParserFirstCallInitHook
 {
-	/** @var MathIdGenerator[] */
-	private array $idGenerators = [];
+	/** Only the generator of the current revision, as a maintenance script renders many revisions */
+	private ?MathIdGenerator $idGenerator = null;
 
 	public function __construct(
 		private readonly IConnectionProvider $connectionProvider,
@@ -497,13 +497,11 @@ class MathSearchHooks implements
 		}
 	}
 
-	/**
-	 * @param int $revId
-	 * @return MathIdGenerator
-	 */
-	private function getRevIdGenerator( $revId ) {
-		$this->idGenerators[$revId] ??= MathIdGenerator::newFromRevisionId( $revId );
-		return $this->idGenerators[$revId];
+	private function getRevIdGenerator( int $revId ): MathIdGenerator {
+		if ( $this->idGenerator?->getRevisionId() !== $revId ) {
+			$this->idGenerator = MathIdGenerator::newFromRevisionId( $revId );
+		}
+		return $this->idGenerator;
 	}
 
 	protected function getIndexUpdates( int $revId ): array {
