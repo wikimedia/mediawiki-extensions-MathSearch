@@ -7,6 +7,7 @@ require_once dirname( __DIR__, 3 ) . '/maintenance/UpdateMath.php';
 use MediaWiki\MainConfigNames;
 use MediaWiki\Tests\Maintenance\MaintenanceBaseTestCase;
 use MockHttpTrait;
+use Symfony\Component\Yaml\Yaml;
 use UpdateMath;
 use Wikimedia\Rdbms\IExpression;
 use Wikimedia\Rdbms\LikeValue;
@@ -66,7 +67,7 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 			->select( [ 'math_input', 'math_statuscode' ] )
 			->from( 'mathlog' )
 			->where( $this->getDb()->expr( 'math_statuscode', '>', 0 ) )
-			->assertResultSet( [ [ '\\frac{', 1 ] ] );
+			->assertResultSet( [ [ '\\frac{', ord( 'T' ) ] ] );
 		$this->expectOutputRegex( '/1 failed \\(see mathlog\\)/' );
 	}
 
@@ -88,23 +89,8 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 			->from( 'mathlog' )
 			->where( $this->getDb()->expr( 'math_log', IExpression::LIKE,
 				new LikeValue( $this->getDb()->anyString(), '404', $this->getDb()->anyString() ) ) )
-			->assertResultSet( [ [ 'E=mc^2', 2 ] ] );
+			->assertResultSet( [ [ 'E=mc^2', ord( 'R' ) ] ] );
 		$this->expectOutputRegex( '/1 failed \(see mathlog\)/' );
-	}
-
-	public function testUnclosedTagIsStored() {
-		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
-		$this->editPage( 'Unclosed', 'Text <math>x^2 and the rest of the page' );
-
-		$this->maintenance->loadWithArgv( [] );
-		$this->maintenance->execute();
-
-		$this->newSelectQueryBuilder()
-			->select( [ 'math_input', 'math_statuscode', 'math_log' ] )
-			->from( 'mathlog' )
-			->where( $this->getDb()->expr( 'math_statuscode', '>', 0 ) )
-			->assertResultSet( [ [ 'x^2 and the rest of the page', 4, 'unclosed tag' ] ] );
-		$this->expectOutputRegex( '/1 failed \\(see mathlog\\)/' );
 	}
 
 	public function testTooLongInputIsNotStored() {
@@ -112,34 +98,34 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 			'MathValidModes' => [ 'source', 'native' ],
 			'MathSearchContentTexMaxLength' => 5,
 		] );
-		$this->editPage( 'Long', '<math>a+b+c+d</math>' );
+		$this->editPage( 'Long', "<math>a+b\n+c+d</math>" );
+		$yaml = $this->getNewTempFile();
 
-		$this->maintenance->loadWithArgv( [] );
+		$this->maintenance->loadWithArgv( [ '--long-inputs', $yaml ] );
 		$this->maintenance->execute();
 
 		$this->newSelectQueryBuilder()
-			->select( [ 'math_input', 'math_statuscode', 'math_log' ] )
+			->select( [ 'math_input', 'math_statuscode' ] )
 			->from( 'mathlog' )
-			->where( [ 'math_statuscode' => 8 ] )
-			->assertResultSet( [ [ null, 8, '7 characters' ] ] );
+			->where( $this->getDb()->expr( 'math_statuscode', '>', 0 ) )
+			->assertResultSet( [ [ null, ord( 'L' ) ] ] );
+		$this->assertSame( [ md5( "a+b\n+c+d" ) => "a+b\n+c+d" ], Yaml::parseFile( $yaml ) );
 		$this->expectOutputRegex( '/1 failed \\(see mathlog\\)/' );
 	}
 
-	public function testUnclosedAndTooLongAddUp() {
+	public function testLongInputIsRecordedOnce() {
 		$this->overrideConfigValues( [
 			'MathValidModes' => [ 'source', 'native' ],
 			'MathSearchContentTexMaxLength' => 5,
 		] );
-		$this->editPage( 'Both', '<math>a+b+c+d' );
+		$this->editPage( 'First', '<math>a+b+c+d</math>' );
+		$this->editPage( 'Second', '<math>a+b+c+d</math>' );
+		$yaml = $this->getNewTempFile();
 
-		$this->maintenance->loadWithArgv( [] );
+		$this->maintenance->loadWithArgv( [ '--long-inputs', $yaml ] );
 		$this->maintenance->execute();
 
-		$this->newSelectQueryBuilder()
-			->select( [ 'math_input', 'math_statuscode', 'math_log' ] )
-			->from( 'mathlog' )
-			->where( $this->getDb()->expr( 'math_statuscode', '>', 0 ) )
-			->assertResultSet( [ [ null, 12, 'unclosed tag, 7 characters' ] ] );
-		$this->expectOutputRegex( '/1 failed \\(see mathlog\\)/' );
+		$this->assertSame( [ md5( 'a+b+c+d' ) => 'a+b+c+d' ], Yaml::parseFile( $yaml ) );
+		$this->expectOutputRegex( '/2 failed \\(see mathlog\\)/' );
 	}
 }

@@ -24,6 +24,7 @@ use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Maintenance\Maintenance;
 use MediaWiki\Parser\ParserOptions;
 use MediaWiki\Revision\SlotRecord;
+use Symfony\Component\Yaml\Yaml;
 
 // @codeCoverageIgnoreStart
 $IP = getenv( 'MW_INSTALL_PATH' );
@@ -54,6 +55,8 @@ class UpdateMath extends Maintenance {
 	/** @var int */
 	private $chunkSize = 100;
 	private int $failures = 0;
+	/** @var array<string,string> Inputs over the length limit by MD5, mathlog does not store them */
+	private array $longInputs = [];
 
 	public function __construct() {
 		parent::__construct();
@@ -73,6 +76,8 @@ class UpdateMath extends Maintenance {
 			'm' );
 		$this->addOption( 'exportmml', 'export LaTeX and generated MathML to the specified file', false, true,
 			'e' );
+		$this->addOption( 'long-inputs',
+			'Write the inputs longer than $wgMathSearchContentTexMaxLength to this YAML file', false, true );
 		$this->addOption( 'chunk-size',
 			'Determines how many pages are updated in one database transaction.', false, true );
 		$this->requireExtension( 'MathSearch' );
@@ -182,19 +187,11 @@ class UpdateMath extends Maintenance {
 					->getRenderer( $tex, $attributes, $this->renderingMode );
 				$this->current = $renderer;
 				$this->time( "loadClass" );
-				$status = 0;
-				$log = [];
-				if ( !$idGenerator->isClosed( $formula ) ) {
-					$status |= MathObject::STATUS_UNCLOSED_TAG;
-					$log[] = 'unclosed tag';
-				}
 				$length = mb_strlen( $tex );
 				if ( $length > $this->getConfig()->get( 'MathSearchContentTexMaxLength' ) ) {
-					$status |= MathObject::STATUS_TOO_LONG;
-					$log[] = "$length characters";
-				}
-				if ( $status ) {
-					$this->logFailure( $renderer, $status, implode( ', ', $log ) );
+					$input = $renderer->getUserInputTex();
+					$this->longInputs[md5( $input )] = $input;
+					$this->logFailure( $renderer, MathObject::STATUS_TOO_LONG );
 					continue;
 				}
 				if ( $this->getOption( "texvccheck", false ) ) {
@@ -269,10 +266,10 @@ class UpdateMath extends Maintenance {
 	/**
 	 * Stores the error of a formula in mathlog, where the failures of all wikis can be counted.
 	 */
-	private function logFailure( MathRenderer $renderer, int $status, ?string $log = null ): void {
+	private function logFailure( MathRenderer $renderer, string $status, ?string $log = null ): void {
 		$this->failures++;
 		$mathObject = MathObject::cloneFromRenderer( $renderer );
-		$mathObject->setStatusCode( $status );
+		$mathObject->setStatusCode( ord( $status ) );
 		$mathObject->setLog( $log ?? trim( strip_tags( html_entity_decode( $renderer->getLastError() ) ) ) );
 		$mathObject->writeToCache();
 	}
@@ -309,6 +306,12 @@ class UpdateMath extends Maintenance {
 		$this->output( "Loaded.\n" );
 		$this->time = microtime( true );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
+		$longInputsPath = $this->getOption( 'long-inputs' );
+		if ( $longInputsPath ) {
+			// Keyed by MD5 like the JSON datasets
+			file_put_contents( $longInputsPath,
+				Yaml::dump( $this->longInputs, 1, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK ) );
+		}
 	}
 
 	/**

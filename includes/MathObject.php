@@ -12,11 +12,13 @@ use Wikimedia\Rdbms\IResultWrapper;
 
 class MathObject extends MathMathML {
 
-	/** Bits of mathlog.math_statuscode for formulae that failed, an unclosed tag can also be too long */
-	public const STATUS_TEX_CHECK_FAILED = 1;
-	public const STATUS_RENDERING_FAILED = 2;
-	public const STATUS_UNCLOSED_TAG = 4;
-	public const STATUS_TOO_LONG = 8;
+	/**
+	 * Letters stored as mathlog.math_statuscode by UpdateMath, distinct from the WikiTexVC status
+	 * letters that MathPerformance stores (+ E F S C I -)
+	 */
+	public const STATUS_TEX_CHECK_FAILED = 'T';
+	public const STATUS_RENDERING_FAILED = 'R';
+	public const STATUS_TOO_LONG = 'L';
 
 	// DEBUG VARIABLES
 	// Available, if Math extension runs in debug mode ($wgMathDebug = true) only.
