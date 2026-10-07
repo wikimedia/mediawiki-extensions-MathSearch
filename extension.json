@@ -142,7 +142,8 @@
 			"value": true
 		},
 		"MathSearchContentTexMaxLength": {
-			"value": 5000
+			"description": "Maximum length of the TeX input of the Wikibase data types of MathSearch. The longest valid formula in Wikimedia projects has about 10,700 characters.",
+			"value": 20000
 		},
 		"MathSearchInfoPage": {
 			"value": "FormulaInfo"
