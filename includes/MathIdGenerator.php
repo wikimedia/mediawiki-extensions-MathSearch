@@ -235,4 +235,14 @@ class MathIdGenerator {
 		}
 		return [ $tex, $attributes ];
 	}
+
+	/**
+	 * Without a closing tag, the parser takes the rest of the page as the content of the tag
+	 *
+	 * @param array{0:string,1:?string,2:array,3:string} $tag
+	 */
+	public function isClosed( array $tag ): bool {
+		return $tag[self::CONTENT_POS] === null ||
+			preg_match( '/<\/' . preg_quote( $tag[0], '/' ) . '\s*>$/i', $tag[3] );
+	}
 }

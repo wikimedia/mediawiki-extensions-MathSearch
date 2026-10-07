@@ -60,4 +60,14 @@ wikiText;
 			'{\\displaystyle x}' => [ 'math.42.3' ],
 		], $idGen->getContentIdMap() );
 	}
+
+	/**
+	 * @covers MathIdGenerator::isClosed
+	 */
+	public function testIsClosed() {
+		$idGen = new MathIdGenerator( '<math>a</math> <math>b</math > <math/> <chem>H2O</chem> <math>c and the rest' );
+
+		$closed = array_map( $idGen->isClosed( ... ), array_values( $idGen->getMathTags() ) );
+		$this->assertSame( [ true, true, true, true, false ], $closed );
+	}
 }

@@ -54,9 +54,6 @@ class UpdateMath extends Maintenance {
 	/** @var int */
 	private $chunkSize = 100;
 	private int $failures = 0;
-	/** Values of mathlog.math_statuscode for formulae that failed */
-	private const STATUS_TEX_CHECK_FAILED = 1;
-	private const STATUS_RENDERING_FAILED = 2;
 
 	public function __construct() {
 		parent::__construct();
@@ -185,6 +182,21 @@ class UpdateMath extends Maintenance {
 					->getRenderer( $tex, $attributes, $this->renderingMode );
 				$this->current = $renderer;
 				$this->time( "loadClass" );
+				$status = 0;
+				$log = [];
+				if ( !$idGenerator->isClosed( $formula ) ) {
+					$status |= MathObject::STATUS_UNCLOSED_TAG;
+					$log[] = 'unclosed tag';
+				}
+				$length = mb_strlen( $tex );
+				if ( $length > $this->getConfig()->get( 'MathSearchContentTexMaxLength' ) ) {
+					$status |= MathObject::STATUS_TOO_LONG;
+					$log[] = "$length characters";
+				}
+				if ( $status ) {
+					$this->logFailure( $renderer, $status, implode( ', ', $log ) );
+					continue;
+				}
 				if ( $this->getOption( "texvccheck", false ) ) {
 					$checked = true;
 				} else {
@@ -212,13 +224,13 @@ class UpdateMath extends Maintenance {
 					}
 				} else {
 					$this->time( "checkTex-Fail" );
-					$this->logFailure( $renderer, self::STATUS_TEX_CHECK_FAILED );
+					$this->logFailure( $renderer, MathObject::STATUS_TEX_CHECK_FAILED );
 					continue;
 				}
 				$renderer->writeCache();
 				$this->time( "write Cache" );
 				if ( $renderer->getLastError() ) {
-					$this->logFailure( $renderer, self::STATUS_RENDERING_FAILED );
+					$this->logFailure( $renderer, MathObject::STATUS_RENDERING_FAILED );
 				} else {
 					$this->storeFormula( $renderer );
 					if ( $this->verbose ) {
@@ -257,11 +269,11 @@ class UpdateMath extends Maintenance {
 	/**
 	 * Stores the error of a formula in mathlog, where the failures of all wikis can be counted.
 	 */
-	private function logFailure( MathRenderer $renderer, int $status ): void {
+	private function logFailure( MathRenderer $renderer, int $status, ?string $log = null ): void {
 		$this->failures++;
 		$mathObject = MathObject::cloneFromRenderer( $renderer );
 		$mathObject->setStatusCode( $status );
-		$mathObject->setLog( trim( strip_tags( html_entity_decode( $renderer->getLastError() ) ) ) );
+		$mathObject->setLog( $log ?? trim( strip_tags( html_entity_decode( $renderer->getLastError() ) ) ) );
 		$mathObject->writeToCache();
 	}
 

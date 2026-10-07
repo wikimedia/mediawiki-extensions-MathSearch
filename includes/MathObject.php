@@ -12,6 +12,12 @@ use Wikimedia\Rdbms\IResultWrapper;
 
 class MathObject extends MathMathML {
 
+	/** Bits of mathlog.math_statuscode for formulae that failed, an unclosed tag can also be too long */
+	public const STATUS_TEX_CHECK_FAILED = 1;
+	public const STATUS_RENDERING_FAILED = 2;
+	public const STATUS_UNCLOSED_TAG = 4;
+	public const STATUS_TOO_LONG = 8;
+
 	// DEBUG VARIABLES
 	// Available, if Math extension runs in debug mode ($wgMathDebug = true) only.
 	public const MODE_2_USER_OPTION = [
@@ -705,7 +711,9 @@ class MathObject extends MathMathML {
 	/** @inheritDoc */
 	protected function dbOutArray() {
 		$out = MathRenderer::dbOutArray();
-		$out['math_input'] = $out['math_inputtex'];
+		// Longer inputs would be cut off by the column, which can break a multibyte character
+		$maxLength = MediaWikiServices::getInstance()->getMainConfig()->get( 'MathSearchContentTexMaxLength' );
+		$out['math_input'] = mb_strlen( $out['math_inputtex'] ) > $maxLength ? null : $out['math_inputtex'];
 		unset( $out['math_inputtex'] );
 		unset( $out['math_mode'] );
 		$out += $this->dbDebugOutArray();

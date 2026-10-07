@@ -91,4 +91,55 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 			->assertResultSet( [ [ 'E=mc^2', 2 ] ] );
 		$this->expectOutputRegex( '/1 failed \(see mathlog\)/' );
 	}
+
+	public function testUnclosedTagIsStored() {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
+		$this->editPage( 'Unclosed', 'Text <math>x^2 and the rest of the page' );
+
+		$this->maintenance->loadWithArgv( [] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( [ 'math_input', 'math_statuscode', 'math_log' ] )
+			->from( 'mathlog' )
+			->where( $this->getDb()->expr( 'math_statuscode', '>', 0 ) )
+			->assertResultSet( [ [ 'x^2 and the rest of the page', 4, 'unclosed tag' ] ] );
+		$this->expectOutputRegex( '/1 failed \\(see mathlog\\)/' );
+	}
+
+	public function testTooLongInputIsNotStored() {
+		$this->overrideConfigValues( [
+			'MathValidModes' => [ 'source', 'native' ],
+			'MathSearchContentTexMaxLength' => 5,
+		] );
+		$this->editPage( 'Long', '<math>a+b+c+d</math>' );
+
+		$this->maintenance->loadWithArgv( [] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( [ 'math_input', 'math_statuscode', 'math_log' ] )
+			->from( 'mathlog' )
+			->where( [ 'math_statuscode' => 8 ] )
+			->assertResultSet( [ [ null, 8, '7 characters' ] ] );
+		$this->expectOutputRegex( '/1 failed \\(see mathlog\\)/' );
+	}
+
+	public function testUnclosedAndTooLongAddUp() {
+		$this->overrideConfigValues( [
+			'MathValidModes' => [ 'source', 'native' ],
+			'MathSearchContentTexMaxLength' => 5,
+		] );
+		$this->editPage( 'Both', '<math>a+b+c+d' );
+
+		$this->maintenance->loadWithArgv( [] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( [ 'math_input', 'math_statuscode', 'math_log' ] )
+			->from( 'mathlog' )
+			->where( $this->getDb()->expr( 'math_statuscode', '>', 0 ) )
+			->assertResultSet( [ [ null, 12, 'unclosed tag, 7 characters' ] ] );
+		$this->expectOutputRegex( '/1 failed \\(see mathlog\\)/' );
+	}
 }
