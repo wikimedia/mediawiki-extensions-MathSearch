@@ -39,6 +39,16 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 		$this->expectOutputRegex( '/processing 1 math fields for Mass_energy page(?!.*F:)/s' );
 	}
 
+	public function testChunkStartingAtTheLastRevision() {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
+		$revId = $this->editPage( 'Last', '<math>E=mc^2</math>' )->getNewRevision()->getId();
+
+		$this->maintenance->loadWithArgv( [ '--chunk-size', '1', (string)$revId, (string)$revId ] );
+		$this->maintenance->execute();
+
+		$this->expectOutputRegex( '/processing 1 math fields for Last page/' );
+	}
+
 	public function testFormulaNotOnThePageIsStored() {
 		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
 		// The template does not exist, so its parameter and the formula in it are not shown

@@ -116,11 +116,11 @@ class UpdateMath extends Maintenance {
 			$count = $cMax;
 		}
 		$this->output(
-			"Rebuilding index fields for pages with revision < {$count} with option {$this->purge}...\n"
+			"Rebuilding index fields for pages with revision <= {$count} with option {$this->purge}...\n"
 		);
 		$fCount = 0;
 		// return;
-		while ( $n < $count ) {
+		while ( $n <= $count ) {
 			if ( $n ) {
 				$this->output( $n . " of $count \n" );
 			}
