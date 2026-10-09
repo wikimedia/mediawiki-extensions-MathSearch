@@ -7,7 +7,6 @@ require_once dirname( __DIR__, 3 ) . '/maintenance/UpdateMath.php';
 use MediaWiki\MainConfigNames;
 use MediaWiki\Tests\Maintenance\MaintenanceBaseTestCase;
 use MockHttpTrait;
-use Symfony\Component\Yaml\Yaml;
 use UpdateMath;
 use Wikimedia\Rdbms\IExpression;
 use Wikimedia\Rdbms\LikeValue;
@@ -93,39 +92,24 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 		$this->expectOutputRegex( '/1 failed \(see mathlog\)/' );
 	}
 
-	public function testTooLongInputIsNotStored() {
+	public function testInputLongerThanTextIsStored() {
 		$this->overrideConfigValues( [
 			'MathValidModes' => [ 'source', 'native' ],
-			'MathSearchContentTexMaxLength' => 5,
+			'MaxArticleSize' => 100,
+			'ParsoidSettings' => [ 'wt2htmlLimits' => [ 'wikitextSize' => 100 * 1024 ] ],
 		] );
-		$this->editPage( 'Long', "<math>a+b\n+c+d</math>" );
-		$yaml = $this->getNewTempFile();
+		// Longer than the 65,535 bytes of a TEXT column
+		$tex = '\\frac{\\text{' . str_repeat( 'x', 70000 ) . '}';
+		$this->editPage( 'Long', "<math>$tex</math>" );
 
-		$this->maintenance->loadWithArgv( [ '--long-inputs', $yaml ] );
+		$this->maintenance->loadWithArgv( [] );
 		$this->maintenance->execute();
 
 		$this->newSelectQueryBuilder()
-			->select( [ 'math_input', 'math_statuscode' ] )
+			->select( [ 'math_input', 'math_tex', 'math_statuscode', 'LENGTH(math_log)' ] )
 			->from( 'mathlog' )
 			->where( $this->getDb()->expr( 'math_statuscode', '>', 0 ) )
-			->assertResultSet( [ [ null, ord( 'L' ) ] ] );
-		$this->assertSame( [ md5( "a+b\n+c+d" ) => "a+b\n+c+d" ], Yaml::parseFile( $yaml ) );
+			->assertResultSet( [ [ $tex, '', ord( 'T' ), 65535 ] ] );
 		$this->expectOutputRegex( '/1 failed \\(see mathlog\\)/' );
-	}
-
-	public function testLongInputIsRecordedOnce() {
-		$this->overrideConfigValues( [
-			'MathValidModes' => [ 'source', 'native' ],
-			'MathSearchContentTexMaxLength' => 5,
-		] );
-		$this->editPage( 'First', '<math>a+b+c+d</math>' );
-		$this->editPage( 'Second', '<math>a+b+c+d</math>' );
-		$yaml = $this->getNewTempFile();
-
-		$this->maintenance->loadWithArgv( [ '--long-inputs', $yaml ] );
-		$this->maintenance->execute();
-
-		$this->assertSame( [ md5( 'a+b+c+d' ) => 'a+b+c+d' ], Yaml::parseFile( $yaml ) );
-		$this->expectOutputRegex( '/2 failed \\(see mathlog\\)/' );
 	}
 }

@@ -24,7 +24,6 @@ use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Maintenance\Maintenance;
 use MediaWiki\Parser\ParserOptions;
 use MediaWiki\Revision\SlotRecord;
-use Symfony\Component\Yaml\Yaml;
 
 // @codeCoverageIgnoreStart
 $IP = getenv( 'MW_INSTALL_PATH' );
@@ -55,8 +54,6 @@ class UpdateMath extends Maintenance {
 	/** @var int */
 	private $chunkSize = 100;
 	private int $failures = 0;
-	/** @var array<string,string> Inputs over the length limit by MD5, mathlog does not store them */
-	private array $longInputs = [];
 
 	public function __construct() {
 		parent::__construct();
@@ -76,8 +73,6 @@ class UpdateMath extends Maintenance {
 			'm' );
 		$this->addOption( 'exportmml', 'export LaTeX and generated MathML to the specified file', false, true,
 			'e' );
-		$this->addOption( 'long-inputs',
-			'Write the inputs longer than $wgMathSearchContentTexMaxLength to this YAML file', false, true );
 		$this->addOption( 'chunk-size',
 			'Determines how many pages are updated in one database transaction.', false, true );
 		$this->requireExtension( 'MathSearch' );
@@ -187,13 +182,6 @@ class UpdateMath extends Maintenance {
 					->getRenderer( $tex, $attributes, $this->renderingMode );
 				$this->current = $renderer;
 				$this->time( "loadClass" );
-				$length = mb_strlen( $tex );
-				if ( $length > $this->getConfig()->get( 'MathSearchContentTexMaxLength' ) ) {
-					$input = $renderer->getUserInputTex();
-					$this->longInputs[md5( $input )] = $input;
-					$this->logFailure( $renderer, MathObject::STATUS_TOO_LONG );
-					continue;
-				}
 				if ( $this->getOption( "texvccheck", false ) ) {
 					$checked = true;
 				} else {
@@ -306,12 +294,6 @@ class UpdateMath extends Maintenance {
 		$this->output( "Loaded.\n" );
 		$this->time = microtime( true );
 		$this->populateSearchIndex( $this->getArg( 0, 0 ), $this->getArg( 1, -1 ) );
-		$longInputsPath = $this->getOption( 'long-inputs' );
-		if ( $longInputsPath ) {
-			// Keyed by MD5 like the JSON datasets
-			file_put_contents( $longInputsPath,
-				Yaml::dump( $this->longInputs, 1, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK ) );
-		}
 	}
 
 	/**

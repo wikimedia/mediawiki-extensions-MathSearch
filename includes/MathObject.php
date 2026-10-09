@@ -18,7 +18,6 @@ class MathObject extends MathMathML {
 	 */
 	public const STATUS_TEX_CHECK_FAILED = 'T';
 	public const STATUS_RENDERING_FAILED = 'R';
-	public const STATUS_TOO_LONG = 'L';
 
 	// DEBUG VARIABLES
 	// Available, if Math extension runs in debug mode ($wgMathDebug = true) only.
@@ -713,12 +712,15 @@ class MathObject extends MathMathML {
 	/** @inheritDoc */
 	protected function dbOutArray() {
 		$out = MathRenderer::dbOutArray();
-		// Longer inputs would be cut off by the column, which can break a multibyte character
+		$out['math_input'] = $out['math_inputtex'];
 		$maxLength = MediaWikiServices::getInstance()->getMainConfig()->get( 'MathSearchContentTexMaxLength' );
-		$out['math_input'] = mb_strlen( $out['math_inputtex'] ) > $maxLength ? null : $out['math_inputtex'];
 		unset( $out['math_inputtex'] );
 		unset( $out['math_mode'] );
 		$out += $this->dbDebugOutArray();
+		if ( mb_strlen( $out['math_input'] ) > $maxLength ) {
+			$out['math_tex'] = '';
+		}
+		$out['math_log'] = mb_strcut( $out['math_log'], 0, 65535 );
 		return $out;
 	}
 
