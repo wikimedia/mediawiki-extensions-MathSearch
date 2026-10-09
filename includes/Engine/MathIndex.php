@@ -14,10 +14,4 @@ class MathIndex {
 		return true;
 	}
 
-	public function update( array $new = [], array $old = [] ): bool {
-		$this->dbw->delete( 'mathindex', [ 'mathindex_inputhash' => $old ] );
-		$this->dbw->insert( 'mathindex', $new );
-		return true;
-	}
-
 }

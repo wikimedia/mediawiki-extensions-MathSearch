@@ -8,6 +8,7 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Tests\Maintenance\MaintenanceBaseTestCase;
 use MockHttpTrait;
 use UpdateMath;
+use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\IExpression;
 use Wikimedia\Rdbms\LikeValue;
 
@@ -57,11 +58,102 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 		$this->maintenance->loadWithArgv( [] );
 		$this->maintenance->execute();
 
+		// Saving stored the input, UpdateMath logged the rendering next to it
 		$this->newSelectQueryBuilder()
 			->select( 'math_mode' )
 			->from( 'mathlog' )
 			->where( [ 'math_input' => 'z^3' ] )
-			->assertFieldValue( 8 );
+			->orderBy( 'math_mode' )
+			->assertResultSet( [ [ 3 ], [ 8 ] ] );
+		$this->expectOutputRegex( '/0 failed/' );
+	}
+
+	public function testLatestRevisionThatReusesTheContentIsIndexed() {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
+		$page = $this->editPage( 'Dummy', '<math>q</math>' )->getNewRevision()->getPage();
+		$dummy = $this->getServiceContainer()->getWikiPageFactory()->newFromTitle( $page )
+			->newPageUpdater( $this->getTestSysop()->getUser() )
+			->saveDummyRevision( 'dummy' )
+			->getId();
+		$this->getDb()->newDeleteQueryBuilder()
+			->deleteFrom( 'mathindex' )
+			->where( IDatabase::ALL_ROWS )
+			->caller( __METHOD__ )
+			->execute();
+
+		$this->maintenance->loadWithArgv( [ '--mode', 'source' ] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( 'mathindex_anchor' )
+			->from( 'mathindex' )
+			->assertFieldValue( "math.$dummy.0" );
+		$this->expectOutputRegex( '/Updated 1 formulae/' );
+	}
+
+	public function testFormulaNotOnThePageIsIndexed() {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
+		$revId = $this->editPage( 'Hidden', '{{Missing template|<math>z^3</math>}}' )
+			->getNewRevision()->getId();
+
+		$this->maintenance->loadWithArgv( [] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( [ 'mathindex_revision_id', 'mathindex_anchor' ] )
+			->from( 'mathindex' )
+			->join( 'mathlog', null, 'math_inputhash = mathindex_inputhash' )
+			->where( [ 'math_input' => 'z^3' ] )
+			->distinct()
+			->assertResultSet( [ [ $revId, "math.$revId.0" ] ] );
+		$this->expectOutputRegex( '/0 failed/' );
+	}
+
+	public function testFormulaWithAttributesJoinsMathlog() {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
+		$this->editPage( 'Display', '<math display="block" id="eq1">x^2</math>' );
+
+		$this->maintenance->loadWithArgv( [] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( [ 'mathindex_anchor', 'math_input' ] )
+			->from( 'mathindex' )
+			->join( 'mathlog', null, 'math_inputhash = mathindex_inputhash' )
+			->distinct()
+			->assertResultSet( [ [ 'eq1', '{\\displaystyle x^2}' ] ] );
+		$this->expectOutputRegex( '/0 failed/' );
+	}
+
+	public static function provideAnchors() {
+		yield 'id attribute and the same content without' => [
+			'<math id="a">x</math> <math>x</math>', [ [ 'a', 'x' ], [ 'math.%d.1', 'x' ] ] ];
+		yield 'the same id attribute twice' => [
+			'<math id="a">x</math> <math id="a">y</math>', [ [ 'a', 'x' ], [ 'math.%d.1', 'y' ] ] ];
+		yield 'a repeated formula in a reference' => [
+			'<ref><math>y</math></ref> <math>y</math> <math>z</math> <references/>',
+			[ [ 'math.%d.0', 'y' ], [ 'math.%d.1', 'y' ], [ 'math.%d.2', 'z' ] ] ];
+	}
+
+	/**
+	 * @dataProvider provideAnchors
+	 */
+	public function testEveryFormulaIsIndexedOnce( string $wikitext, array $expected ) {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
+		$revId = $this->editPage( 'Anchors', $wikitext )->getNewRevision()->getId();
+
+		$this->maintenance->loadWithArgv( [] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( [ 'mathindex_anchor', 'math_input' ] )
+			->from( 'mathindex' )
+			->join( 'mathlog', null, 'math_inputhash = mathindex_inputhash' )
+			->where( [ 'mathindex_revision_id' => $revId ] )
+			->distinct()
+			->orderBy( 'mathindex_anchor' )
+			->assertResultSet( array_map(
+				static fn ( $row ) => [ sprintf( $row[0], $revId ), $row[1] ], $expected ) );
 		$this->expectOutputRegex( '/0 failed/' );
 	}
 
@@ -79,18 +171,46 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 			->orderBy( 'math_input' )
 			->assertResultSet( [
 				[ 'y', '{}' ],
-				[ '{\\displaystyle x^2}', '{"id":"eq1","display":"block"}' ],
+				[ '{\\displaystyle x^2}', '{"display":"block"}' ],
 			] );
-		$rows = $this->getDb()->newSelectQueryBuilder()
-			->select( [ 'math_inputhash', 'math_input', 'math_params' ] )
+		$this->newSelectQueryBuilder()
+			->select( [ 'math_input', 'math_inputhash' ] )
 			->from( 'mathlog' )
-			->caller( __METHOD__ )
-			->fetchResultSet();
-		foreach ( $rows as $row ) {
-			$this->assertSame( $row->math_inputhash,
-				md5( 'native' . $row->math_input . implode( json_decode( $row->math_params, true ) ) ) );
-		}
+			->distinct()
+			->orderBy( 'math_input' )
+			->assertResultSet( [
+				[ 'y', md5( '{"q":"{\\\\displaystyle y}","type":"tex"}', true ) ],
+				[ '{\\displaystyle x^2}', md5( '{"attributes":{"display":"block"},' .
+					'"q":"{\\\\displaystyle x^2}","type":"tex"}', true ) ],
+			] );
 		$this->expectOutputRegex( '/0 failed/' );
+	}
+
+	public function testSourceModeOnlyIndexesAndStoresTheInputs() {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
+		$revId = $this->editPage( 'Source', 'Text' )->getNewRevision()->getId();
+		$this->getDb()->newUpdateQueryBuilder()
+			->update( 'text' )
+			->set( [ 'old_text' => '<math>a+b</math> <chem>H2O</chem>' ] )
+			->where( [ 'old_text' => 'Text' ] )
+			->caller( __METHOD__ )
+			->execute();
+
+		$this->maintenance->loadWithArgv( [ '--mode', 'source' ] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( [ 'mathindex_anchor', 'mathindex_inputhash', 'math_mode', 'math_mathml' ] )
+			->from( 'mathindex' )
+			->join( 'mathlog', null, 'math_inputhash = mathindex_inputhash' )
+			->where( [ 'mathindex_revision_id' => $revId ] )
+			->orderBy( 'mathindex_anchor' )
+			->assertResultSet( [
+				[ "math.$revId.0", md5( '{"q":"{\\\\displaystyle a+b}","type":"tex"}', true ), 3, '' ],
+				[ "math.$revId.1", md5( '{"attributes":{"chem":true},' .
+					'"q":"{\\\\displaystyle \\\\ce{H2O}}","type":"chem"}', true ), 3, '' ],
+			] );
+		$this->expectOutputRegex( '/Updated 2 formulae, 0 failed/' );
 	}
 
 	public function testFailedTexCheckIsStored() {

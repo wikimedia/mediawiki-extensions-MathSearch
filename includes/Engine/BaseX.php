@@ -160,13 +160,13 @@ class BaseX {
 		}
 	}
 
-	public function update( $harvest = "", ?string $hash = null ): bool {
+	public function update( string $harvest, string $hash ): bool {
 		$options = $this->getBasicHttpOptions( false );
 		$options['body'] = $harvest;
 		$options['method'] = 'PUT';
 		$options['headers']['Content-Type'] = 'application/xml';
 
-		$url = $this->getDatabaseUrl() . '/' . $hash ?? md5( $harvest ) . '.xml';
+		$url = $this->getDatabaseUrl() . '/' . $hash;
 
 		$client = MediaWikiServices::getInstance()->getHttpRequestFactory()->createGuzzleClient( $options );
 		try {
@@ -202,7 +202,7 @@ class BaseX {
 
 	public function storeMathObject( MathObject $mo ): bool {
 		global $wgMathSearchMode;
-		$hash = $mo->getInputHash();
+		$hash = bin2hex( $mo->getInputHash() );
 		if ( $mo->getMode() !== $wgMathSearchMode ) {
 			return false;
 		}

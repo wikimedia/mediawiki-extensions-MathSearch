@@ -34,6 +34,8 @@ class CreateBaseXMathTable extends Maintenance {
 		parent::__construct();
 		$this->addDescription( 'Setup and seeds baseX math search database.' );
 		$this->addOption( 'overwrite', 'Overwrite existing databases or users.' );
+		$this->addOption( 'seed', 'Load the formulae with MathML in $wgMathSearchMode from mathlog.' );
+		$this->setBatchSize( 1000 );
 		$this->addDefaultParams();
 	}
 
@@ -86,6 +88,43 @@ class CreateBaseXMathTable extends Maintenance {
 			echo "Exiting.\n";
 			exit( 1 );
 		}
+		if ( $this->hasOption( 'seed' ) ) {
+			$this->seed( $b );
+		}
+	}
+
+	/**
+	 * Only rendering creates the MathML that BaseX searches, so UpdateMath has to run before
+	 */
+	private function seed( BaseX $baseX ): void {
+		global $wgMathSearchMode;
+		$dbr = $this->getReplicaDB();
+		$seeded = 0;
+		$after = '';
+		do {
+			$rows = $dbr->newSelectQueryBuilder()
+				->select( [ 'math_inputhash', 'math_mathml' ] )
+				->from( 'mathlog' )
+				->where( [
+					'math_mode' => MathObject::MODE_2_USER_OPTION[$wgMathSearchMode],
+					$dbr->expr( 'math_mathml', '!=', '' ),
+					$dbr->expr( 'math_inputhash', '>', $after ),
+				] )
+				->orderBy( 'math_inputhash' )
+				->limit( $this->getBatchSize() )
+				->caller( __METHOD__ )
+				->fetchResultSet();
+			foreach ( $rows as $row ) {
+				$mathObject = new MathObject();
+				$mathObject->setInputHash( $row->math_inputhash );
+				$mathObject->setMode( $wgMathSearchMode );
+				$mathObject->setMathml( $row->math_mathml );
+				$baseX->storeMathObject( $mathObject );
+				$after = $row->math_inputhash;
+				$seeded++;
+			}
+			$this->output( "Seeded $seeded formulae.\n" );
+		} while ( $rows->numRows() === $this->getBatchSize() );
 	}
 
 }

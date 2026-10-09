@@ -200,7 +200,6 @@ XML;
 			]
 		] );
 		$gen = new MathIdGenerator( self::TEST_WIKITEXT, $revId );
-		$gen->setUseCustomIds( true );
 		$dw->addFromMathIdGenerator( $gen );
 		$this->assertEquals( self::EXPECTED_OUTPUT, $dw->getOutput() );
 	}

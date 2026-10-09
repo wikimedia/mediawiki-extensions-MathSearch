@@ -107,7 +107,7 @@ class MwsDumpWriter {
 			$mml->render();
 			$this->outBuffer .= $this->getMwsExpression( $mml->getMathml(),
 				$generator->getRevisionId(),
-				$generator->parserKey2fId( $key ) );
+				$generator->getAnchor( $key ) );
 		}
 	}
 }

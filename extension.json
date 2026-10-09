@@ -52,9 +52,7 @@
 		"main": {
 			"class": "MathSearchHooks",
 			"services": [
-				"ConnectionProvider",
-				"Math.RendererFactory",
-				"RevisionLookup"
+				"ConnectionProvider"
 			]
 		},
 		"WikibaseChangeNotification": {
@@ -73,9 +71,10 @@
 	},
 	"Hooks": {
 		"LoadExtensionSchemaUpdates": "MathSearchHooks::onLoadExtensionSchemaUpdates",
+		"MathFormulaPostRenderRevision": "main",
 		"PageDeleteComplete": "main",
 		"PageUndeleteComplete": "main",
-		"MathFormulaPostRenderRevision": "main",
+		"ParserBeforeInternalParse": "main",
 		"PageSaveComplete": "main",
 		"ParserFirstCallInit": "main",
 		"WikibaseClientDataTypes": [
@@ -148,11 +147,11 @@
 		"MathSearchInfoPage": {
 			"value": "FormulaInfo"
 		},
-		"MathSearchImporterUrl": {
-			"value": "http://importer"
-		},
 		"MathSearchLinkToInfoPage": {
 			"value": false
+		},
+		"MathSearchImporterUrl": {
+			"value": "http://importer"
 		},
 		"MathSearchPropertySwhid": {
 			"value": "P1454"

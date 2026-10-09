@@ -84,8 +84,7 @@ class ExportMathCache extends Maintenance {
 		// Convert result wrapper to array
 		foreach ( $res as $row ) {
 			$out[] = [
-				// the binary encoded input-hash is no valid json output
-				'inputhash' => MathObject::hash2md5( $row->math_inputhash ),
+				'inputhash' => bin2hex( $row->math_inputhash ),
 				'input'     => $row->math_input
 			];
 		}

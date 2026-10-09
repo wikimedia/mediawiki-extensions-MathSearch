@@ -9,44 +9,75 @@ wikiText;
 
 	/**
 	 * @covers MathIdGenerator::getIdList
-	 * @covers MathIdGenerator::getIdsFromContent
+	 * @covers MathIdGenerator::addAnchorsTo
 	 */
 	public function testSimple() {
 		$idGen = new MathIdGenerator( self::WIKITEXT1, 42 );
-		$output = $idGen->getIdList();
-		$this->assertCount( 3, $output );
-		$ids = $idGen->getIdsFromContent( 'E=mc^2' );
-		$this->assertCount( 2, $ids );
-		$id1 = $idGen->guessIdFromContent( 'E=mc^2' );
-		$id2 = $idGen->guessIdFromContent( 'E=mc^2' );
-		$id3 = $idGen->guessIdFromContent( 'E=mc^2' );
-		$this->assertEquals( $id1, $id3 );
-		$this->assertNotEquals( $id1, $id2, "1 and 2 should not be equal" );
-		$this->assertEquals( "math.42.2", $id2 );
+
+		$this->assertSame( [ 'math.42.0', 'math.42.1', 'CustomId' ], $idGen->getIdList() );
+		$this->assertSame( "\tThis is a test <math id=\"math.42.0\">E=mc^2</math>, " .
+			"and <math id=\"math.42.1\">a+b</math>\n\tand further down another <math id=CustomId>E=mc^2</math>",
+			$idGen->addAnchorsTo() );
 	}
 
 	/**
-	 * @covers MathIdGenerator::setUseCustomIds
-	 * @covers MathIdGenerator::getIdList
-	 * @covers MathIdGenerator::getIdsFromContent
+	 * @covers MathIdGenerator::getAnchor
 	 */
-	public function testCustomId() {
-		$idGen = new MathIdGenerator( self::WIKITEXT1, 42 );
-		$idGen->setUseCustomIds( true );
-		$output = $idGen->getIdList();
-		$this->assertCount( 3, $output );
-		$ids = $idGen->getIdsFromContent( 'E=mc^2' );
-		$this->assertCount( 2, $ids );
-		$id1 = $idGen->guessIdFromContent( 'E=mc^2' );
-		$id2 = $idGen->guessIdFromContent( 'E=mc^2' );
-		$id3 = $idGen->guessIdFromContent( 'E=mc^2' );
-		$this->assertEquals( $id1, $id3 );
-		$this->assertNotEquals( $id1, $id2, "1 and 2 should not be equal" );
-		$this->assertEquals( "CustomId", $id2 );
+	public function testRepeatedIdAttribute() {
+		$idGen = new MathIdGenerator( '<math id="a">x</math> <math id="a">y</math> <math id="a">y</math>', 42 );
+
+		$this->assertSame( [ 'a', 'math.42.1', 'math.42.2' ], $idGen->getIdList() );
 	}
 
 	/**
-	 * @covers MathIdGenerator::getContentIdMap
+	 * @covers MathIdGenerator::getAnchor
+	 */
+	public function testIdAttributeLongerThanTheIndex() {
+		$fifty = str_repeat( 'x', 50 );
+		$idGen = new MathIdGenerator( "<math id=\"$fifty\">x</math> <math id=\"{$fifty}y\">y</math>", 42 );
+
+		$this->assertSame( [ $fifty, 'math.42.1' ], $idGen->getIdList() );
+	}
+
+	/**
+	 * @covers MathIdGenerator::getAnchor
+	 */
+	public function testNumericIdAttribute() {
+		$idGen = new MathIdGenerator( '<math id="1">x</math> <math id="1">y</math>', 42 );
+
+		$this->assertSame( [ '1', 'math.42.1' ], $idGen->getIdList() );
+	}
+
+	/**
+	 * @covers MathIdGenerator::addAnchorsTo
+	 */
+	public function testAddAnchorsTo() {
+		$wikiText = '<!-- <math>c</math> --> <nowiki><math>n</math></nowiki> <math>x</math> <chem>H2O</chem> ' .
+			'<math display="block">y</math> <math id="own">z</math> <math/>';
+		$idGen = new MathIdGenerator( $wikiText, 42 );
+
+		$this->assertSame( '<!-- <math>c</math> --> <nowiki><math>n</math></nowiki> <math id="math.42.0">x</math> ' .
+			'<chem id="math.42.1">H2O</chem> <math id="math.42.2" display="block">y</math> <math id="own">z</math> ' .
+			'<math id="math.42.4"/>', $idGen->addAnchorsTo() );
+	}
+
+	/**
+	 * @covers MathIdGenerator::addAnchorsTo
+	 * @covers MathIdGenerator::getRendererInput
+	 */
+	public function testTagNamesInAnyCase() {
+		$wikiText = '<MATH>x</MATH> <mAtH display="block">y</mAtH> <CHEM>H2O</CHEM>';
+		$idGen = new MathIdGenerator( $wikiText, 42 );
+
+		$this->assertSame( [ 'math.42.0', 'math.42.1', 'math.42.2' ], $idGen->getIdList() );
+		$this->assertSame( '<MATH id="math.42.0">x</MATH> <mAtH id="math.42.1" display="block">y</mAtH> ' .
+			'<CHEM id="math.42.2">H2O</CHEM>', $idGen->addAnchorsTo() );
+		$this->assertSame( [ [ 'x', [] ], [ 'y', [ 'display' => 'block' ] ], [ '\\ce{H2O}', [ 'chem' => true ] ] ],
+			array_map( $idGen->getRendererInput( ... ), array_values( $idGen->getMathTags() ) ) );
+	}
+
+	/**
+	 * @covers MathIdGenerator::getIdList
 	 * @covers MathIdGenerator::getRendererInput
 	 */
 	public function testChemAndVerbatimTags() {
@@ -54,11 +85,10 @@ wikiText;
 			'<source><math>c</math></source> <syntaxhighlight><math>d</math></syntaxhighlight> ' .
 			'<code><math>x</math></code> <chem>H2O</chem> <ce>H2O</ce> <math display="block">x</math>', 42 );
 
-		$this->assertSame( [
-			'x' => [ 'math.42.0' ],
-			'\\ce{H2O}' => [ 'math.42.1', 'math.42.2' ],
-			'{\\displaystyle x}' => [ 'math.42.3' ],
-		], $idGen->getContentIdMap() );
+		$this->assertSame( [ 'math.42.0', 'math.42.1', 'math.42.2', 'math.42.3' ], $idGen->getIdList() );
+		$this->assertSame( [ [ 'x', [] ], [ '\\ce{H2O}', [ 'chem' => true ] ], [ '\\ce{H2O}', [ 'chem' => true ] ],
+			[ 'x', [ 'display' => 'block' ] ] ],
+			array_map( $idGen->getRendererInput( ... ), array_values( $idGen->getMathTags() ) ) );
 	}
 
 	/**

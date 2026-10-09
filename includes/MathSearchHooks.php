@@ -3,9 +3,9 @@
 use MediaWiki\Extension\Math\Hooks\MathFormulaPostRenderRevisionHook;
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathRenderer;
-use MediaWiki\Extension\Math\Render\RendererFactory;
-use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\Extension\MathSearch\Engine\MathIndex;
+use MediaWiki\Extension\MathSearch\RevisionIndexer;
+use MediaWiki\Html\Html;
 use MediaWiki\Installer\DatabaseUpdater;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\Logging\ManualLogEntry;
@@ -13,15 +13,14 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Page\Hook\PageDeleteCompleteHook;
 use MediaWiki\Page\Hook\PageUndeleteCompleteHook;
 use MediaWiki\Page\ProperPageIdentity;
+use MediaWiki\Parser\Hook\ParserBeforeInternalParseHook;
 use MediaWiki\Parser\Hook\ParserFirstCallInitHook;
 use MediaWiki\Parser\Parser;
 use MediaWiki\Permissions\Authority;
-use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Storage\Hook\PageSaveCompleteHook;
-use Wikimedia\Rdbms\DBConnRef;
 use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
@@ -31,19 +30,15 @@ use Wikimedia\Rdbms\IConnectionProvider;
  * GPLv2 license; info in main package.
  */
 class MathSearchHooks implements
+	MathFormulaPostRenderRevisionHook,
 	PageDeleteCompleteHook,
 	PageUndeleteCompleteHook,
-	MathFormulaPostRenderRevisionHook,
+	ParserBeforeInternalParseHook,
 	PageSaveCompleteHook,
 	ParserFirstCallInitHook
 {
-	/** Only the generator of the current revision, as a maintenance script renders many revisions */
-	private ?MathIdGenerator $idGenerator = null;
-
 	public function __construct(
 		private readonly IConnectionProvider $connectionProvider,
-		private readonly RendererFactory $rendererFactory,
-		private readonly RevisionLookup $revisionLookup,
 	) {
 	}
 
@@ -68,6 +63,7 @@ class MathSearchHooks implements
 			$updater->addExtensionTable( 'mathlog', $dir . 'mathlog.sql' );
 			$updater->modifyExtensionField( 'mathlog', 'math_input', $dir . 'patch-mathlog-math_input-mediumtext.sql' );
 			$updater->addExtensionField( 'mathlog', 'math_params', $dir . 'patch-mathlog-math_params.sql' );
+			$updater->modifyExtensionField( 'mathlog', 'math_inputhash', $dir . 'patch-inputhash-binary.sql' );
 			$updater->addExtensionTable( 'math_mlp', $dir . 'math_mlp.sql' );
 			$updater->addExtensionTable( 'math_review_list', "{$dir}math_review_list.sql" );
 			$updater->addExtensionTable( 'math_wbs_entity_map', "{$dir}math_wbs_entity_map.sql" );
@@ -92,208 +88,51 @@ class MathSearchHooks implements
 	}
 
 	/**
-	 * Updates the formula index in the database
-	 *
-	 * @param int $revId Page-ID
-	 * @param string $eid Equation-ID (get updated incrementally for every math element on the page)
-	 * @param MathRenderer $renderer
-	 * @param ?DBConnRef $dbr
+	 * The hook also runs for text that extensions parse later, such as references from templates,
+	 * which is not the wikitext of the revision; the first call of a parse is the one with it.
+	 * @inheritDoc
 	 */
-	private function updateIndex(
-		int $revId, string $eid, MathRenderer $renderer, ?DBConnRef $dbr = null
+	public function onParserBeforeInternalParse( $parser, &$text, $stripState ) {
+		$revId = $parser->getRevisionId();
+		$output = $parser->getOutput();
+		// Parser tests pass a revision id without a stored revision
+		if ( $revId && !$output->getExtensionData( 'mathsearch-anchors' ) && $parser->getRevisionRecordObject() ) {
+			$output->setExtensionData( 'mathsearch-anchors', true );
+			$text = ( new MathIdGenerator( $text, $revId ) )->addAnchorsTo();
+		}
+	}
+
+	/** @inheritDoc */
+	public function onMathFormulaPostRenderRevision(
+		?RevisionRecord $revisionRecord, MathRenderer $renderer, string &$renderedMath
 	) {
-		if ( $revId > 0 && $eid ) {
-			try {
-				$inputHash = $renderer->getInputHash();
-				$tex = $renderer->getTex();
-				$mo = MathObject::cloneFromRenderer( $renderer );
-				if ( !$mo->isInDatabase() ) {
-					$mo->writeToCache();
-				}
-				( new BaseX() )->storeMathObject( $mo );
-				$exists = ( $dbr ?? $this->connectionProvider
-					->getReplicaDatabase() )->selectRow( 'mathindex',
-					[ 'mathindex_revision_id', 'mathindex_anchor', 'mathindex_inputhash' ],
-					[
-						'mathindex_revision_id' => $revId,
-						'mathindex_anchor' => $eid,
-						'mathindex_inputhash' => $inputHash
-					]
-				);
-				if ( $exists ) {
-					LoggerFactory::getInstance(
-						'MathSearch'
-					)->warning( 'Index $' . $tex . '$ already in database.' );
-					LoggerFactory::getInstance(
-						'MathSearch'
-					)->warning( "$revId-$eid with hash " . bin2hex( $inputHash ) );
-				} else {
-						$this->writeMathIndex( $revId, $eid, $inputHash, $tex );
-				}
-			} catch ( Exception $e ) {
-				LoggerFactory::getInstance( "MathSearch" )->error( 'Problem writing to math index!'
-					. ' You might want the rebuild the index by running:'
-					. '"php extensions/MathSearch/ReRenderMath.php". The error is'
-					. $e->getMessage() );
-			}
+		global $wgMathSearchLinkToInfoPage, $wgMathSearchInfoPage;
+		$revId = $revisionRecord?->getId();
+		$eid = $renderer->getID();
+		if ( $wgMathSearchLinkToInfoPage && $revId && $eid !== '' ) {
+			$url = SpecialPage::getTitleFor( $wgMathSearchInfoPage )->getLocalURL( [ 'pid' => $revId, 'eid' => $eid ] );
+			$renderedMath = Html::rawElement( 'span', [],
+				Html::rawElement( 'a', [ 'href' => $url, 'style' => 'color:inherit;' ], $renderedMath ) );
 		}
 	}
 
 	/**
-	 * Changes the specified defaultID given as argument ID to
-	 * either the manually assignedID from the MathTag or
-	 * prefixes it with "math" to increase the probability of
-	 * having a unique id that can be referenced via the anchor
-	 * #math{$id}.
-	 * @param string &$id
-	 * @param MathRenderer $renderer
-	 * @param int $revId
-	 * @return bool|null true if an ID has been assigned manually,
-	 * false if the automatic fallback math{$id} was used.
-	 */
-	public function setMathId( &$id, MathRenderer $renderer, $revId ) {
-		if ( $revId > 0 ) {
-			if ( $renderer->getID() ) {
-				$id = $renderer->getID();
-				return true;
-			} else {
-				if ( $id === null ) {
-					try {
-						$id = $this->getRevIdGenerator( $revId )->guessIdFromContent( $renderer->getUserInputTex() );
-					} catch ( Exception $e ) {
-						LoggerFactory::getInstance( "MathSearch" )->warning( "Error generating Math ID", [ $e ] );
-						return false;
-					}
-					$renderer->setID( $id );
-					return true;
-				}
-				return false;
-			}
-		}
-	}
-
-	/**
-	 * Callback function that is called after a formula was rendered
+	 * For a test corpus like the one of NTCIR-11 Math-2, the ids that LaTeXML gives the elements
+	 * of a formula start with the anchor of the formula, so they are unique on the page.
+	 * Enable it in LocalSettings.php with
+	 * <code>$wgHooks['MathFormulaPostRenderRevision'][] = 'MathSearchHooks::onMathFormulaRenderedNoLink';</code>
 	 *
 	 * @param RevisionRecord|null $revisionRecord
 	 * @param MathRenderer $renderer
 	 * @param string|null &$Result
-	 * @return true
-	 */
-	public function onMathFormulaPostRenderRevision(
-		?RevisionRecord $revisionRecord,
-		MathRenderer $renderer,
-		&$Result = null
-	): bool {
-		global $wgMathSearchLinkToInfoPage;
-		$revId = $revisionRecord?->getId() ?? 0;
-		if ( $wgMathSearchLinkToInfoPage ) {
-			$this->addLinkToFormulaInfoPage( $revId, $renderer, $Result );
-		}
-		$this->updateMathIndex( $revId, $renderer, $Result );
-		return true;
-	}
-
-	/**
-	 * Callback function that is called after a formula was rendered
-	 *
-	 * @param int $revId
-	 * @param MathRenderer $renderer
-	 * @param string|null &$Result reference to the rendering result
-	 */
-	private function updateMathIndex(
-		int $revId,
-		MathRenderer $renderer,
-		?string &$Result = null
-	): void {
-		// Only store something if a pageid was set.
-		if ( $revId === 0 ) {
-			return;
-		}
-		// Use manually assigned IDs whenever possible
-		// and fallback to automatic IDs otherwise.
-		$this->setMathId( $eid, $renderer, $revId );
-		if ( $eid === null ) {
-			return;
-		}
-		// Only in the page output: the stored MathML stays without id, so equal formulae share one entry
-		$id = htmlspecialchars( $eid );
-		if ( $Result !== null && !str_contains( $Result, "id=\"$id\"" ) ) {
-			$Result = preg_replace( '/<math\b/', "<math id=\"$id\"", $Result, 1 );
-		}
-		$this->updateIndex( $revId, $eid, $renderer );
-	}
-
-	/**
-	 * Callback function that is called after a formula was rendered
-	 * @param Parser $parser
-	 * @param MathRenderer $renderer
-	 * @param string|null &$Result reference to the rendering result
 	 * @return bool
 	 */
-	public function addIdentifierDescription(
-		Parser $parser, MathRenderer $renderer, &$Result = null
+	public static function onMathFormulaRenderedNoLink(
+		?RevisionRecord $revisionRecord, MathRenderer $renderer, &$Result = null
 	) {
-		$revId = $parser->getRevisionId();
-		$this->setMathId( $eid, $renderer, $revId );
-		$mo = MathObject::cloneFromRenderer( $renderer );
-		$mo->setRevisionID( $revId );
-		$mo->setID( $eid );
-		$Result = preg_replace_callback( "#<(mi|mo)( ([^>].*?))?>(.*?)</\\1>#u",
-			$mo->addIdentifierTitle( ... ), $Result );
-		return true;
-	}
-
-	/**
-	 * Callback function that is called after a formula was rendered
-	 *
-	 * @param int $revId
-	 * @param MathRenderer $renderer
-	 * @param string|null &$Result reference to the rendering result
-	 */
-	private function addLinkToFormulaInfoPage(
-		int $revId,
-		MathRenderer $renderer,
-		?string &$Result = null
-	): void {
-		global $wgMathSearchInfoPage;
-		if ( $revId === 0 || $this->setMathId( $eid, $renderer, $revId ) === false ) {
-			return;
-		}
-		$url = SpecialPage::getTitleFor( $wgMathSearchInfoPage )->getLocalURL( [
-			'pid' => $revId,
-			'eid' => $eid
-		] );
-		$Result = "<span><a href=\"$url\" id=\"$eid\" style=\"color:inherit;\">$Result</a></span>";
-	}
-
-	/**
-	 * Alternative Callback function that is called after a formula was rendered
-	 * used for test corpus generation for NTCIR11 Math-2
-	 * You can enable this alternative hook via setting
-	 * <code>$wgHooks['MathFormulaRendered'] = array(
-	 * 	 'MathSearchHooks::onMathFormulaRenderedNoLink'
-	 * );</code>
-	 * in your local settings
-	 *
-	 * @param Parser $parser
-	 * @param MathRenderer $renderer
-	 * @param string|null &$Result
-	 * @return bool
-	 */
-	public function onMathFormulaRenderedNoLink(
-		Parser $parser, MathRenderer $renderer, &$Result = null
-	) {
-		$revId = $parser->getRevisionId();
-		if ( !$this->setMathId( $eid, $renderer, $revId ) ) {
-			return true;
-		}
-		if ( $revId > 0 ) { // Only store something if a pageid was set.
-			$this->updateIndex( $revId, $eid, $renderer );
-		}
-		if ( preg_match( '#<math(.*)?\sid="(?P<id>[\w\.]+)"#', $Result, $matches ) ) {
-			$rendererId = $matches['id'];
-			$Result = str_replace( $rendererId, $eid, $Result );
+		$anchor = $renderer->getID();
+		if ( $anchor && $Result !== null && preg_match( '#<math(.*)?\sid="(?P<id>[\w\.]+)"#', $Result, $matches ) ) {
+			$Result = str_replace( $matches['id'], $anchor, $Result );
 		}
 		return true;
 	}
@@ -404,10 +243,9 @@ class MathSearchHooks implements
 		int $restoredRevisionCount,
 		bool $created,
 		array $restoredPageIds ): void {
-		if ( $restoredRev->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
-				->getModel() !== CONTENT_MODEL_WIKITEXT
-		) {
-			// Skip pages that do not contain wikitext
+		if ( !MathIdGenerator::indexesModel(
+			$restoredRev->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )->getModel()
+		) ) {
 			return;
 		}
 		$revId = $restoredRev->getId();
@@ -416,22 +254,7 @@ class MathSearchHooks implements
 			// No revision to restore
 			return;
 		}
-		$harvest = $this->getIndexUpdates( $revId );
-
-		$mathEngineBaseX = new MathIndex( $this->connectionProvider->getPrimaryDatabase() );
-		$updated = false;
-		$detail = '';
-		try {
-			$updated = $mathEngineBaseX->update( $harvest );
-		} catch ( Exception $e ) {
-			$detail = $e->getMessage();
-		}
-		if ( $updated ) {
-			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId was successful." );
-
-		} else {
-			LoggerFactory::getInstance( 'MathSearch' )->warning( "Restoring of $revId failed: $detail" );
-		}
+		$this->getIndexer()->indexRevision( $restoredRev );
 	}
 
 	/**
@@ -442,51 +265,16 @@ class MathSearchHooks implements
 	public function onPageSaveComplete(
 		$wikiPage, $user, $summary, $flags, $revisionRecord, $editResult
 	) {
-		if ( $revisionRecord
-			->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )
-			->getModel() !== CONTENT_MODEL_WIKITEXT
-		) {
-			// Skip pages that do not contain wikitext
+		if ( !MathIdGenerator::indexesModel(
+			$revisionRecord->getSlot( SlotRecord::MAIN, RevisionRecord::RAW )->getModel()
+		) ) {
 			return true;
 		}
-		$prevRevId = -1;
-		$revId = $revisionRecord->getId();
-		if ( !$revId ) {
-			// No revision to index
+		if ( !$revisionRecord->getId() ) {
 			return true;
 		}
-		$harvest = $this->getIndexUpdates( $revId );
-		if ( count( $harvest ) === 0 ) {
-			// No math to index
-			return true;
-		}
-		$previousRevisionRecord = $this->revisionLookup
-			->getPreviousRevision( $revisionRecord );
-		$res = false;
-		$index = new MathIndex( $this->connectionProvider->getPrimaryDatabase() );
-		try {
-			if ( $previousRevisionRecord != null ) {
-				$prevRevId = $previousRevisionRecord->getId();
-				# delete the entries previous revision.
-				$res = $index->update( $harvest, [ $prevRevId ] );
-			} else {
-				# just create a new entry in index.
-				$res = $index->update( $harvest, [] );
-			}
-		} catch ( Exception $e ) {
-			LoggerFactory::getInstance( 'MathSearch' )
-				->warning( 'Harvest update failed: {exception}',
-					[ 'exception' => $e->getMessage() ] );
-		}
-		if ( $res ) {
-			LoggerFactory::getInstance(
-				'MathSearch'
-			)->warning( "Update for $revId (was $prevRevId) successful." );
-		} else {
-			LoggerFactory::getInstance(
-				'MathSearch'
-			)->warning( "Update for $revId (was $prevRevId) failed." );
-		}
+		$this->getIndexer()->indexRevision( $revisionRecord );
+		return true;
 	}
 
 	/**
@@ -499,37 +287,8 @@ class MathSearchHooks implements
 		}
 	}
 
-	private function getRevIdGenerator( int $revId ): MathIdGenerator {
-		if ( $this->idGenerator?->getRevisionId() !== $revId ) {
-			$this->idGenerator = MathIdGenerator::newFromRevisionId( $revId );
-		}
-		return $this->idGenerator;
+	private function getIndexer(): RevisionIndexer {
+		return new RevisionIndexer( $this->connectionProvider );
 	}
 
-	protected function getIndexUpdates( int $revId ): array {
-		$idGenerator = MathIdGenerator::newFromRevisionId( $revId );
-		$mathTags = $idGenerator->getMathTags();
-		$harvest = [];
-		try {
-			if ( $mathTags ) {
-				foreach ( $mathTags as $tag ) {
-					$id = null;
-					[ $tex, $attributes ] = $idGenerator->getRendererInput( $tag );
-					$renderer = $this->rendererFactory->getRenderer( $tex, $attributes, 'latexml' );
-					$renderer->render();
-					$this->setMathId( $id, $renderer, $revId );
-					$harvest[] = [
-						'mathindex_revision_id' => $revId,
-						'mathindex_anchor' => $id,
-						'mathindex_inputhash' => $renderer->getInputHash()
-					];
-				}
-			}
-		} catch ( Exception $e ) {
-			LoggerFactory::getInstance( 'MathSearch' )
-				->warning( 'Harvest strinc can not be generated: {exception}',
-					[ 'exception' => $e->getMessage() ] );
-		}
-		return $harvest;
-	}
 }

@@ -23,15 +23,13 @@ class Formula {
 		private readonly ?int $postQId,
 	) {
 		$this->mathSearchHooks = new \MathSearchHooks(
-			MediaWikiServices::getInstance()->getConnectionProvider(),
-			MediaWikiServices::getInstance()->getService( 'Math.RendererFactory' ),
-			MediaWikiServices::getInstance()->getRevisionLookup()
+			MediaWikiServices::getInstance()->getConnectionProvider()
 		);
 	}
 
 	public function updateSearchIndex() {
 		$renderer = new MathMathML( $this->text, [ 'display' => 'block' ] );
-		$hash = $renderer->getInputHash();
+		$hash = \MathObject::hashInput( $this->text, [ 'display' => 'block' ] );
 		$renderer->writeToCache();
 		// TODO: Fix fake revision ID
 		$this->mathSearchHooks->writeMathIndex( 1, $this->id, $hash, $this->text );

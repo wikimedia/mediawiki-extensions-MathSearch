@@ -4,6 +4,7 @@ use MediaWiki\Deferred\DeferredUpdates;
 use MediaWiki\Exception\MWException;
 use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Extension\Math\MathSource;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
@@ -48,15 +49,6 @@ class MathObject extends MathMathML {
 	/** @var int */
 	protected $renderingTime = 0;
 
-	public static function hash2md5( $hash ) {
-		// TODO: make MathRenderer::dbHash2md5 public
-		$dbr = MediaWikiServices::getInstance()
-			->getConnectionProvider()
-			->getReplicaDatabase();
-		$xhash = unpack( 'H32md5', $dbr->decodeBlob( $hash ) . "                " );
-		return $xhash['md5'];
-	}
-
 	public static function findSimilarPages( $pid ): void {
 		global $wgOut;
 		$out = "";
@@ -95,7 +87,7 @@ class MathObject extends MathMathML {
 		}
 	}
 
-	public static function cloneFromRenderer( MathRenderer $renderer ): MathObject {
+	public static function cloneFromRenderer( MathRenderer $renderer, string $inputHash = '' ): MathObject {
 		$instance = new self( $renderer->getUserInputTex() );
 		$instance->setMathml( $renderer->getMathml() );
 		$instance->setSvg( $renderer->getSvg() );
@@ -106,7 +98,34 @@ class MathObject extends MathMathML {
 		}
 		$instance->setInputType( $renderer->getInputType() );
 		$instance->setParams( $renderer->getParams() );
+		$instance->setInputHash( $inputHash );
 		return $instance;
+	}
+
+	/**
+	 * The input as MathMathML sends it to RESTBase, plus the attributes if there are any.
+	 * The id is left out, as Math sets it only on the HTML, so Math can use the same hash.
+	 *
+	 * @param string $tex as MathIdGenerator::getRendererInput() returns it
+	 * @param array $attributes as MathIdGenerator::getRendererInput() returns them
+	 */
+	public static function hashInput( string $tex, array $attributes ): string {
+		$renderer = new MathSource( $tex, $attributes );
+		$q = $renderer->getUserInputTex();
+		if ( !isset( $attributes['display'] ) ) {
+			$q = '{\\displaystyle ' . $q . '}';
+		}
+		$type = isset( $attributes['chem'] ) ? 'chem' : ( $attributes['type'] ?? null );
+		if ( !in_array( $type, [ 'pmml', 'ascii', 'chem' ], true ) ) {
+			$type = $renderer->getInputType();
+		}
+		$preimage = [ 'q' => $q, 'type' => $type ];
+		unset( $attributes['id'] );
+		if ( $attributes ) {
+			ksort( $attributes );
+			$preimage = [ 'attributes' => $attributes ] + $preimage;
+		}
+		return md5( json_encode( $preimage, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ), true );
 	}
 
 	/**
@@ -651,51 +670,28 @@ class MathObject extends MathMathML {
 			return;
 		}
 		$outArray = $this->dbOutArray();
-		$mathTableName = 'mathlog';
 		$fname = __METHOD__;
-		if ( $this->isInDatabase() ) {
-			$this->debug( 'Update database entry' );
-			$inputHash = $this->getInputHash();
-			DeferredUpdates::addCallableUpdate( function () use (
-				$outArray, $inputHash, $mathTableName, $fname
-			) {
-				$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getPrimaryDatabase();
-
-				$dbw->update( $mathTableName, $outArray,
-					[ 'math_inputhash' => $inputHash ], $fname );
-				$this->logger->debug(
-					'Row updated after db transaction was idle: ' .
-					var_export( $outArray, true ) . " to database" );
-			} );
-		} else {
-			$this->storedInCache = true;
-			$this->debug( 'Store new entry in database' );
-			DeferredUpdates::addCallableUpdate( function () use (
-				$outArray, $mathTableName, $fname
-			) {
-				$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->getPrimaryDatabase();
-				$dbw->insert( $mathTableName, $outArray, $fname, [ 'IGNORE' ] );
-				LoggerFactory::getInstance( 'Math' )->debug(
-					'Row inserted after db transaction was idle {out}.',
-					[
-						'out' => var_export( $outArray, true ),
-					]
-				);
-				if ( $dbw->affectedRows() == 0 ) {
-					// That's the price for the delayed update.
-					$this->logger->warning(
-						'Entry could not be written. Might be changed in between.' );
-				}
-			} );
-		}
+		$this->storedInCache = true;
+		DeferredUpdates::addCallableUpdate( static function () use ( $outArray, $fname ) {
+			MediaWikiServices::getInstance()->getConnectionProvider()->getPrimaryDatabase()
+				->newInsertQueryBuilder()
+				->insertInto( 'mathlog' )
+				->row( $outArray )
+				->caller( $fname )
+				->execute();
+		} );
 	}
 
 	public function readFromCache(): bool {
 		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()->getReplicaDatabase();
-		$rpage = $dbr->selectRow( 'mathlog',
-			$this->dbInArray(),
-			[ 'math_inputhash' => $this->getInputHash() ],
-			__METHOD__ );
+		// A rendering rather than the row that only stores the input
+		$rpage = $dbr->newSelectQueryBuilder()
+			->select( $this->dbInArray() )
+			->from( 'mathlog' )
+			->where( [ 'math_inputhash' => $this->getInputHash() ] )
+			->orderBy( [ 'math_mathml IS NULL', 'math_timestamp DESC' ] )
+			->caller( __METHOD__ )
+			->fetchRow();
 		if ( $rpage !== false ) {
 			$this->initializeFromCache( $rpage );
 			return true;
@@ -711,7 +707,7 @@ class MathObject extends MathMathML {
 	}
 
 	/** @inheritDoc */
-	protected function dbOutArray() {
+	public function dbOutArray() {
 		$out = MathRenderer::dbOutArray();
 		$out['math_input'] = $out['math_inputtex'];
 		$maxLength = MediaWikiServices::getInstance()->getMainConfig()->get( 'MathSearchContentTexMaxLength' );
@@ -722,8 +718,7 @@ class MathObject extends MathMathML {
 			$out['math_tex'] = '';
 		}
 		$out['math_log'] = mb_strcut( $out['math_log'], 0, 65535 );
-		// In the order of the tag, as the input hash joins the values in that order
-		$out['math_params'] = json_encode( (object)$this->getParams(),
+		$out['math_params'] = json_encode( (object)array_diff_key( $this->getParams(), [ 'id' => true ] ),
 			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 		return $out;
 	}

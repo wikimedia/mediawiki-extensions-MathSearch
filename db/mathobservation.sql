@@ -5,7 +5,7 @@ CREATE TABLE /*_*/mathobservation (
 
   -- Reference to
   -- Binary MD5 hash of the latex fragment, used as an identifier key.
-  mathobservation_inputhash varbinary(32) NOT NULL,
+  mathobservation_inputhash binary(16) NOT NULL,
 
   -- Type of the feature e.g. mo, mi
   mathobservation_featuretype varchar(10) NOT NULL,

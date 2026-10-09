@@ -1,22 +1,10 @@
 <?php
 
-use MediaWiki\Config\ServiceOptions;
-use MediaWiki\Extension\Math\MathConfig;
-use MediaWiki\Extension\Math\Render\RendererFactory;
-use MediaWiki\Logger\LoggerFactory;
-use MediaWiki\Parser\ParserOptions;
-use MediaWiki\Title\Title;
-use Wikimedia\ObjectCache\HashBagOStuff;
-use Wikimedia\ObjectCache\WANObjectCache;
+use MediaWiki\Revision\RevisionRecord;
 
 /**
- * MediaWiki MathSearch extension
- *
- * (c)2014 Moritz Schubotz
- * GPLv2 license; info in main package.
- *
  * @group MathSearch
- * @group Database
+ * @covers MathSearchHooks::onMathFormulaRenderedNoLink
  */
 class MathSearchHooksTest extends MediaWikiIntegrationTestCase {
 
@@ -87,82 +75,25 @@ class MathSearchHooksTest extends MediaWikiIntegrationTestCase {
 </math>
 EOT;
 
-	public function makeMathSearchHooks() {
-		$services = $this->getServiceContainer();
-		return new MathSearchHooks(
-			$services->getConnectionProvider(),
-			$services->getService( 'Math.RendererFactory' ),
-			$services->getRevisionLookup()
-		);
-	}
-
-	/**
-	 * Tests if ID's for math elements are replaced correctly
-	 * //TODO: Update test
-	 * @group ignore
-	 * @covers MathSearchHooks::onMathFormulaRenderedNoLink
-	 */
 	public function testNTCIRHook() {
-		$sample = self::MATHML_SAMPLE;
-		$logger = LoggerFactory::getInstance( 'mathSearchHooksTest' );
-		$services = $this->getServiceContainer();
-		$userOptionsLookup = $services->getUserOptionsLookup();
-		$services->resetServiceForTesting( 'ParserFactory' );
-		$parser = $services->getParserFactory()->create();
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native', 'latexml' ] ] );
+		$renderer = $this->getServiceContainer()->get( 'Math.RendererFactory' )
+			->getRenderer( 'x', [ 'id' => 'math.42.0' ], 'latexml' );
+		$result = self::MATHML_SAMPLE;
 
-		# Creating a test page.
-		$mytext = "This is a test text";
-		$page = Title::newFromRow( (object)[
-			'page_id' => 187,
-			'page_len' => strlen( $mytext ),
-			'page_latest' => 1337,
-			'page_namespace' => "test_namespace",
-			'page_title' => "test_title",
-			'page_is_redirect' => 0
-		] );
-		# Creating a math config.
-		$mathConfig = $this->createMock( MathConfig::class );
-		# Setting the revisionId to the parser with preprocess.
-		$parser->preprocess( $mytext, $page, ParserOptions::newFromAnon(), 42 );
-		$serviceOptions = $this->createMock( ServiceOptions::class );
-		# Setting up the renderer.
-		$cache = new WANObjectCache( [ 'cache' => new HashBagOStuff() ] );
-		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger, $cache );
-		$renderer = $rendererFactory->getRenderer( '' );
-		$renderer->setID( 'math.42.0' );
-		$mathSearchHooks = $this->makeMathSearchHooks();
-		# Doing Assertions.
-		$this->assertTrue(
-			$mathSearchHooks->onMathFormulaRenderedNoLink(
-				$parser, $renderer, $sample
-			), 'Hook did not return true'
-		);
-		$this->assertStringContainsString(
-			"math.42.0.14.1.cmml",
-			$sample,
-			"expected replaced id not found"
-		);
+		$this->assertTrue( MathSearchHooks::onMathFormulaRenderedNoLink(
+			$this->createMock( RevisionRecord::class ), $renderer, $result ) );
+		$this->assertStringContainsString( 'xml:id="math.42.0.14.1.cmml"', $result );
+		$this->assertStringNotContainsString( 'p1.1.m1.1', $result );
 	}
 
-	/**
-	 * @covers MathSearchHooks::setMathId
-	 */
-	public function testSetMathIdIdempotence() {
-		$logger = LoggerFactory::getInstance( 'mathSearchHooksTest' );
-		$userOptionsLookup = $this->getServiceContainer()->getUserOptionsLookup();
-		$serviceOptions = $this->createMock( ServiceOptions::class );
-		# Creating a math config.
-		$mathConfig = $this->createMock( MathConfig::class );
-		$cache = new WANObjectCache( [ 'cache' => new HashBagOStuff() ] );
-		$rendererFactory = new RendererFactory( $serviceOptions, $mathConfig, $userOptionsLookup, $logger, $cache );
-		$renderer = $rendererFactory->getRenderer( '' );
-		$mathSearchHooks = $this->makeMathSearchHooks();
+	public function testNTCIRHookWithoutAnchor() {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native', 'latexml' ] ] );
+		$renderer = $this->getServiceContainer()->get( 'Math.RendererFactory' )
+			->getRenderer( 'x', [], 'latexml' );
+		$result = self::MATHML_SAMPLE;
 
-		$id = null;
-		$mathSearchHooks->setMathId( $id, $renderer, 0 );
-		$this->assertEquals( $id, $renderer->getID() );
-		$id0 = $id;
-		$mathSearchHooks->setMathId( $id, $renderer, 0 );
-		$this->assertEquals( $id0, $id );
+		MathSearchHooks::onMathFormulaRenderedNoLink( null, $renderer, $result );
+		$this->assertSame( self::MATHML_SAMPLE, $result );
 	}
 }

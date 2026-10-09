@@ -386,7 +386,7 @@ class SpecialMlpEval extends SpecialPage {
 			// empty
 		}
 		$unique = array_rand( $this->mathIdGen->getMathTags() );
-		return $this->mathIdGen->parserKey2fId( $unique );
+		return $this->mathIdGen->getAnchor( $unique );
 	}
 
 	/**

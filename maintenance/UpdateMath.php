@@ -19,10 +19,10 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\Content\TextContent;
+use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Extension\MathSearch\RevisionIndexer;
 use MediaWiki\Maintenance\Maintenance;
-use MediaWiki\Parser\ParserOptions;
 use MediaWiki\Revision\SlotRecord;
 
 // @codeCoverageIgnoreStart
@@ -43,8 +43,10 @@ class UpdateMath extends Maintenance {
 	private $dbw;
 	/** @var \Wikimedia\Rdbms\IDatabase */
 	private $db;
-	/** @var MathRenderer */
-	private $current;
+	private string $currentHash = '';
+	private ?RevisionIndexer $indexer = null;
+	/** @var array<string,true> each input is rendered and logged once per run */
+	private array $rendered = [];
 	/** @var float */
 	private $time = 0.0; // microtime( true );
 	/** @var float[] */
@@ -69,8 +71,9 @@ class UpdateMath extends Maintenance {
 			false, 'v' );
 		$this->addOption( 'SVG', "If set SVG images will be produced", false, false );
 		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
-		$this->addOption( 'mode', 'Rendering mode to be used (native, mathml, latexml)', false, true,
-			'm' );
+		$this->addOption( 'mode',
+			'Rendering mode to be used (native, mathml, latexml); source only indexes and stores the inputs',
+			false, true, 'm' );
 		$this->addOption( 'exportmml', 'export LaTeX and generated MathML to the specified file', false, true,
 			'e' );
 		$this->addOption( 'chunk-size',
@@ -92,7 +95,7 @@ class UpdateMath extends Maintenance {
 		$this->performance[$category] += $delta;
 		if ( $wgMathDebug ) {
 			$this->db->insert( 'mathperformance', [
-				'math_inputhash' => $this->current->getInputHash(),
+				'math_inputhash' => $this->currentHash,
 				'mathperformance_name' => substr( $category, 0, 10 ),
 				'mathperformance_time' => $delta,
 				'mathperformance_mode' => MathObject::MODE_2_USER_OPTION[ $this->renderingMode ]
@@ -127,23 +130,28 @@ class UpdateMath extends Maintenance {
 			$end = min( $n + $this->chunkSize - 1, $count );
 
 			# For filtering page by namespace add condition 'page_namespace = 4'
-			$res = $this->db->select( [ 'page', 'slots', 'content', 'text', 'revision' ],
-				[ 'page_id', 'page_namespace', 'page_title', 'page_latest',
+			$res = $this->db->select( [ 'revision', 'page', 'slots', 'slot_roles', 'content', 'text' ],
+				[ 'page_id', 'page_namespace', 'page_title', 'page_latest', 'page_content_model',
 					'content_address', 'old_text', 'old_flags', 'rev_id' ],
-				[ "rev_id BETWEEN $n AND $end" ],
+				[ "rev_id BETWEEN $n AND $end", 'role_name' => SlotRecord::MAIN ],
 				__METHOD__,
 				[],
 				[
-					'slots' => [ 'INNER JOIN', [ 'slot_origin = page_latest' ] ],
+					'page' => [ 'INNER JOIN', [ 'page_latest = rev_id' ] ],
+					// slot_origin has no index, and reused content would hide the page
+					'slots' => [ 'INNER JOIN', [ 'slot_revision_id = rev_id' ] ],
+					'slot_roles' => [ 'INNER JOIN', [ 'role_id = slot_role_id' ] ],
 					'content' => [ 'INNER JOIN', [ 'content_id = slot_content_id' ] ],
-					'text' => [ 'INNER JOIN', [ 'old_id = substr(content_address,4)' ] ],
-					'revision' => [ 'INNER JOIN', [ 'page_latest = rev_id' ] ] ]
+					'text' => [ 'INNER JOIN', [ 'old_id = substr(content_address,4)' ] ] ]
 			);
 
 			$this->beginTransactionRound( __METHOD__ );
 			$revisionStore = $this->getServiceContainer()->getRevisionStore();
 			// echo "before" +$this->dbw->selectField('mathindex', 'count(*)')."\n";
 			foreach ( $res as $s ) {
+				if ( !MathIdGenerator::indexesModel( $s->page_content_model ?? CONTENT_MODEL_WIKITEXT ) ) {
+					continue;
+				}
 				$this->output( "\nr{$s->rev_id} namespace:  {$s->page_namespace} page title: {$s->page_title}" );
 				$fCount += $this->doUpdate( $s->page_id, $s->old_text, $s->page_title, $s->rev_id );
 			}
@@ -172,6 +180,12 @@ class UpdateMath extends Maintenance {
 		$idGenerator = new MathIdGenerator( $pText, (int)$revId );
 		$math = $idGenerator->getMathTags();
 		$matches = count( $math );
+		$sourceOnly = $this->renderingMode === MathConfig::MODE_SOURCE;
+		$this->indexer ??= new RevisionIndexer( $this->getServiceContainer()->getConnectionProvider() );
+		$this->indexer->index( $idGenerator, $sourceOnly );
+		if ( $sourceOnly ) {
+			return $matches;
+		}
 		if ( $matches ) {
 			echo ( "\t processing $matches math fields for {$pTitle} page\n" );
 			foreach ( $math as $formula ) {
@@ -180,7 +194,11 @@ class UpdateMath extends Maintenance {
 				[ $tex, $attributes ] = $idGenerator->getRendererInput( $formula );
 				$renderer = $this->getServiceContainer()->get( 'Math.RendererFactory' )
 					->getRenderer( $tex, $attributes, $this->renderingMode );
-				$this->current = $renderer;
+				$this->currentHash = MathObject::hashInput( $tex, $attributes );
+				if ( isset( $this->rendered[$this->currentHash] ) && !$this->getOption( 'exportmml' ) ) {
+					continue;
+				}
+				$this->rendered[$this->currentHash] = true;
 				$this->time( "loadClass" );
 				if ( $this->getOption( "texvccheck", false ) ) {
 					$checked = true;
@@ -219,7 +237,7 @@ class UpdateMath extends Maintenance {
 				} else {
 					$this->storeFormula( $renderer );
 					if ( $this->verbose ) {
-						echo "\nS:\t\t" . $renderer->getInputHash();
+						echo "\nS:\t\t" . bin2hex( $this->currentHash );
 					}
 				}
 				if ( $this->getOption( "exportmml", false ) ) {
@@ -230,25 +248,14 @@ class UpdateMath extends Maintenance {
 			if ( $mmlPath ) {
 				$this->exportMMLtoFile( $mmlPath, $allFormula, $pTitle );
 			}
-			$this->time = microtime( true );
-			$this->indexPage( (int)$revId );
-			$this->time( "index" );
-
 			return $matches;
 
 		}
 		return 0;
 	}
 
-	/**
-	 * Formulae that the page does not show, for example in parameters of missing templates,
-	 * reach mathlog only here, because the hooks run for rendered formulae only.
-	 */
 	private function storeFormula( MathRenderer $renderer ): void {
-		$mathObject = MathObject::cloneFromRenderer( $renderer );
-		if ( !$mathObject->isInDatabase() ) {
-			$mathObject->writeToCache();
-		}
+		MathObject::cloneFromRenderer( $renderer, $this->currentHash )->writeToCache();
 	}
 
 	/**
@@ -256,26 +263,10 @@ class UpdateMath extends Maintenance {
 	 */
 	private function logFailure( MathRenderer $renderer, string $status, ?string $log = null ): void {
 		$this->failures++;
-		$mathObject = MathObject::cloneFromRenderer( $renderer );
+		$mathObject = MathObject::cloneFromRenderer( $renderer, $this->currentHash );
 		$mathObject->setStatusCode( ord( $status ) );
 		$mathObject->setLog( $log ?? trim( strip_tags( html_entity_decode( $renderer->getLastError() ) ) ) );
 		$mathObject->writeToCache();
-	}
-
-	/**
-	 * Parses the page like a page view, so the hooks give the formulae the same ids as on the page.
-	 * The order of rendering differs from the source, for example for formulae in references.
-	 */
-	private function indexPage( int $revId ): void {
-		$revision = $this->getServiceContainer()->getRevisionLookup()->getRevisionById( $revId );
-		$content = $revision?->getContent( SlotRecord::MAIN );
-		if ( !$content instanceof TextContent ) {
-			return;
-		}
-		$options = ParserOptions::newFromAnon();
-		$options->setOption( 'math', $this->renderingMode );
-		$this->getServiceContainer()->getParserFactory()->getInstance()->parse(
-			$content->getText(), $revision->getPage(), $options, true, true, $revId );
 	}
 
 	public function execute() {

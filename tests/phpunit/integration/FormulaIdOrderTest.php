@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\MathSearch\Tests\Integration;
 
 require_once dirname( __DIR__, 3 ) . '/maintenance/UpdateMath.php';
 
+use MediaWiki\Content\TextContent;
 use MediaWiki\Parser\ParserOptions;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\Tests\Maintenance\MaintenanceBaseTestCase;
@@ -37,10 +38,12 @@ class FormulaIdOrderTest extends MaintenanceBaseTestCase {
 	private function idsOnPage( string $title ): array {
 		$page = $this->getExistingTestPage( $title );
 		$options = ParserOptions::newFromAnon();
+		// The anchors are added for the legacy parser only
+		$options->setUseParsoid( false );
 		// Only native puts a math element on the page, which can carry the id
 		$options->setOption( 'math', 'native' );
 		$html = $page->getParserOutput( $options, null, true )->getContentHolderText();
-		preg_match_all( '/<math id="([^"]+)"/', $html, $matches );
+		preg_match_all( '/<math\b[^>]*\sid="([^"]+)"/', $html, $matches );
 		return $matches[1];
 	}
 
@@ -66,19 +69,18 @@ class FormulaIdOrderTest extends MaintenanceBaseTestCase {
 	 */
 	private function assertPageMatchesIndex( string $wikitext ): array {
 		$revId = $this->editPage( 'Formula ids', $wikitext )->getNewRevision()->getId();
+		$saved = $this->idsInIndex( $revId );
+
 		$this->truncateTable( 'mathindex' );
+		$onPage = $this->idsOnPage( 'Formula ids' );
+		$this->assertSame( [], $this->idsInIndex( $revId ), 'A page view writes no index' );
+
 		$this->maintenance->loadWithArgv( [] );
 		$this->maintenance->execute();
 		$index = $this->idsInIndex( $revId );
 
-		$this->truncateTable( 'mathindex' );
-		$onPage = $this->idsOnPage( 'Formula ids' );
-
-		$this->assertSame( array_keys( $index ), array_keys( $this->idsInIndex( $revId ) ),
-			'The page view indexes the same ids as UpdateMath' );
-		$this->assertSame( $index, $this->idsInIndex( $revId ),
-			'Each id refers to the same formula in UpdateMath and in the page view' );
-		// Formulae in references are rendered after the text, so only the set of ids is the same
+		$this->assertSame( $index, $saved, 'Saving indexes the same anchors and hashes as UpdateMath' );
+		// Formulae in references are placed after the text, so only the set of ids is the same
 		$this->assertEqualsCanonicalizing( array_keys( $index ), $onPage );
 		return $onPage;
 	}
@@ -96,6 +98,49 @@ class FormulaIdOrderTest extends MaintenanceBaseTestCase {
 			// The reference is rendered after the text, unlike its position in the source
 			"A<ref><math>x</math></ref> <math>y</math> <math>x</math>\n<references/>" );
 		$this->expectOutputRegex( '/./' );
+	}
+
+	public function testAttributeInReference() {
+		if ( !ExtensionRegistry::getInstance()->isLoaded( 'Cite' ) ) {
+			$this->markTestSkipped( 'Needs Cite' );
+		}
+		// The page view renders the plain x first, which must not take the anchor of the one with qid
+		$this->assertPageMatchesIndex( "A<ref><math qid=\"Q1\">x</math></ref> <math>x</math>\n<references/>" );
+		$this->expectOutputRegex( '/./' );
+	}
+
+	public function testSavingIndexesTheNewRevision() {
+		$old = $this->editPage( 'Formula ids', '<math>x</math>' )->getNewRevision()->getId();
+		$new = $this->editPage( 'Formula ids', '<math>y</math> <math>z</math>' )->getNewRevision()->getId();
+
+		$this->assertSame( [ "math.$old.0" ], array_keys( $this->idsInIndex( $old ) ) );
+		$this->assertSame( [ "math.$new.0", "math.$new.1" ], array_keys( $this->idsInIndex( $new ) ) );
+		$this->newSelectQueryBuilder()
+			->select( 'math_input' )
+			->from( 'mathlog' )
+			->where( [ 'math_input' => [ 'y', 'z' ] ] )
+			->distinct()
+			->orderBy( 'math_input' )
+			->assertResultSet( [ [ 'y' ], [ 'z' ] ] );
+	}
+
+	public function testSavingIndexesTextOfOtherModelsButNotCode() {
+		$text = $this->editPage( 'Plain', new TextContent( '<math>x</math>' ) )->getNewRevision()->getId();
+		$code = $this->editPage( 'MediaWiki:Common.js', '"<math>x</math>"' )->getNewRevision()->getId();
+
+		$this->assertSame( [ "math.$text.0" ], array_keys( $this->idsInIndex( $text ) ) );
+		$this->assertSame( [], $this->idsInIndex( $code ) );
+	}
+
+	public function testUpdateMathSkipsCode() {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
+		$code = $this->editPage( 'MediaWiki:Common.js', '"<math>x</math>"' )->getNewRevision()->getId();
+
+		$this->maintenance->loadWithArgv( [ '--mode', 'source' ] );
+		$this->maintenance->execute();
+
+		$this->assertSame( [], $this->idsInIndex( $code ) );
+		$this->expectOutputRegex( '/Updated 0 formulae/' );
 	}
 
 	public function testChem() {

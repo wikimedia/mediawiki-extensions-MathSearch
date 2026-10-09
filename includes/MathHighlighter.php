@@ -13,19 +13,15 @@ class MathHighlighter {
 	 */
 	public function __construct( $fId, $revId, $highlight = true ) {
 		$gen = MathIdGenerator::newFromRevisionId( $revId );
-		$unique = $gen->getUniqueFromId( $fId );
-		$wikiText = $gen->getWikiText();
-		$tagPos = strpos( $wikiText, $unique );
+		$tag = $gen->getAnchoredTag( $gen->getUniqueFromId( $fId ) );
+		$wikiText = $gen->addAnchorsTo();
+		$tagPos = strpos( $wikiText, $tag );
 		$startPos = $this->getStartPos( $tagPos, $wikiText );
 		$length = $this->getEndPos( $tagPos, $wikiText ) - $startPos;
 		$wikiText = substr( $wikiText, $startPos, $length );
-		$tag = $gen->getTagFromId( $fId );
 		if ( $highlight ) {
-			$wikiText = str_replace( $unique, '<span id="mathhighlight" style="background-color: yellow">'
-				. $tag[3] . '</span>', $wikiText );
-		}
-		foreach ( $gen->getMathTags() as $key => $content ) {
-			$wikiText = str_replace( $key, $content[3], $wikiText );
+			$wikiText = str_replace( $tag, '<span id="mathhighlight" style="background-color: yellow">'
+				. $tag . '</span>', $wikiText );
 		}
 		$this->wikiText = $wikiText;
 	}

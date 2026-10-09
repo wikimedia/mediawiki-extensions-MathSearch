@@ -159,7 +159,7 @@ class FormulaInfo extends SpecialPage {
 		foreach ( $all as $occ ) {
 			$out->addWikiTextAsInterface( '*' . $occ->printLink2Page( false ) );
 		}
-		$out->addWikiTextAsInterface( 'Hash: ' . $mo->getInputHash() );
+		$out->addWikiTextAsInterface( 'Hash: ' . bin2hex( $mo->getInputHash() ) );
 		$this->printSource( $mo->getUserInputTex(), 'TeX (original user input)', 'latex' );
 		$texInfo = $mo->getTexInfo();
 		if ( $texInfo ) {

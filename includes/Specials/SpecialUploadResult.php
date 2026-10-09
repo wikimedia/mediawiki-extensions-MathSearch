@@ -214,17 +214,17 @@ class SpecialUploadResult extends SpecialPage {
 	 * @param array $row
 	 */
 	private function printResultRow( $row ) {
-		$md5 = MathObject::hash2md5( $row['math_inputhash'] );
+		$inputHash = bin2hex( $row['math_inputhash'] );
 		if ( $this->getRequest()->getBool( "wpdisplayFormulae" ) ) {
 			$this->getOutput()->addModuleStyles( [ 'ext.math.styles' ] );
-			$renderer = $this->rendererFactory->getFromHash( $md5 );
+			$renderer = $this->rendererFactory->getFromHash( $inputHash );
 			if ( $renderer->render() ) {
 				$renderedMath = $renderer->getHtmlOutput();
 			} else {
-				$renderedMath = $md5;
+				$renderedMath = $inputHash;
 			}
 		} else {
-			$renderedMath = $md5;
+			$renderedMath = $inputHash;
 		}
 		$formulaId = MathSearchHooks::generateMathAnchorString( $row['oldId'], $row['fId'] );
 		$revisionRecord = $this->revisionLookup->getRevisionById( $row['oldId'] );
