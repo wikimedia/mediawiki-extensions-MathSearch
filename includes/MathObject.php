@@ -105,6 +105,7 @@ class MathObject extends MathMathML {
 			$instance->setRestbaseInterface( $renderer->rbi );
 		}
 		$instance->setInputType( $renderer->getInputType() );
+		$instance->setParams( $renderer->getParams() );
 		return $instance;
 	}
 
@@ -706,7 +707,7 @@ class MathObject extends MathMathML {
 
 	/** @inheritDoc */
 	protected function dbInArray() {
-		return [ 'math_inputhash', 'math_mathml', 'math_tex', 'math_svg', 'math_input' ];
+		return [ 'math_inputhash', 'math_mathml', 'math_tex', 'math_svg', 'math_input', 'math_params' ];
 	}
 
 	/** @inheritDoc */
@@ -721,6 +722,9 @@ class MathObject extends MathMathML {
 			$out['math_tex'] = '';
 		}
 		$out['math_log'] = mb_strcut( $out['math_log'], 0, 65535 );
+		// In the order of the tag, as the input hash joins the values in that order
+		$out['math_params'] = json_encode( (object)$this->getParams(),
+			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 		return $out;
 	}
 
@@ -742,6 +746,9 @@ class MathObject extends MathMathML {
 		}
 		if ( !empty( $rpage->math_svg ) ) {
 			$this->svg = $rpage->math_svg;
+		}
+		if ( isset( $rpage->math_params ) ) {
+			$this->params = json_decode( $rpage->math_params, true );
 		}
 		$this->changed = false;
 	}

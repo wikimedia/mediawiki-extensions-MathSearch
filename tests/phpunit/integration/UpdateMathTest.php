@@ -65,6 +65,34 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 		$this->expectOutputRegex( '/0 failed/' );
 	}
 
+	public function testAttributesAreStored() {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
+		$this->editPage( 'Attributes', '<math id="eq1" display="block">x^2</math> <math>y</math>' );
+
+		$this->maintenance->loadWithArgv( [] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( [ 'math_input', 'math_params' ] )
+			->from( 'mathlog' )
+			->distinct()
+			->orderBy( 'math_input' )
+			->assertResultSet( [
+				[ 'y', '{}' ],
+				[ '{\\displaystyle x^2}', '{"id":"eq1","display":"block"}' ],
+			] );
+		$rows = $this->getDb()->newSelectQueryBuilder()
+			->select( [ 'math_inputhash', 'math_input', 'math_params' ] )
+			->from( 'mathlog' )
+			->caller( __METHOD__ )
+			->fetchResultSet();
+		foreach ( $rows as $row ) {
+			$this->assertSame( $row->math_inputhash,
+				md5( 'native' . $row->math_input . implode( json_decode( $row->math_params, true ) ) ) );
+		}
+		$this->expectOutputRegex( '/0 failed/' );
+	}
+
 	public function testFailedTexCheckIsStored() {
 		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
 		$this->editPage( 'Broken', '<math>\\frac{</math>' );

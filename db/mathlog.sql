@@ -25,6 +25,8 @@ CREATE TABLE /*_*/mathlog (
   math_statuscode tinyint,
   -- timestamp
   math_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  -- attributes of the math tag as a JSON object, NULL for rows written before this column
+  math_params TEXT,
   -- key
   key ( math_inputhash, math_mode )
 ) /*$wgDBTableOptions*/;

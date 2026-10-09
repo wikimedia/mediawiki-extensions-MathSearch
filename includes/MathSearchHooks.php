@@ -67,6 +67,7 @@ class MathSearchHooks implements
 			$updater->addExtensionTable( 'mathidentifier', $dir . 'mathidentifier.sql' );
 			$updater->addExtensionTable( 'mathlog', $dir . 'mathlog.sql' );
 			$updater->modifyExtensionField( 'mathlog', 'math_input', $dir . 'patch-mathlog-math_input-mediumtext.sql' );
+			$updater->addExtensionField( 'mathlog', 'math_params', $dir . 'patch-mathlog-math_params.sql' );
 			$updater->addExtensionTable( 'math_mlp', $dir . 'math_mlp.sql' );
 			$updater->addExtensionTable( 'math_review_list', "{$dir}math_review_list.sql" );
 			$updater->addExtensionTable( 'math_wbs_entity_map', "{$dir}math_wbs_entity_map.sql" );
