@@ -111,10 +111,6 @@ class MathIdGenerator {
 		}
 	}
 
-	public function getInputHash( $inputTex ) {
-		return pack( "H32", md5( $inputTex ) );
-	}
-
 	/**
 	 * @param string $content
 	 *
