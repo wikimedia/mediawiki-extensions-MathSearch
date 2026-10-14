@@ -211,16 +211,16 @@ class UpdateMath extends Maintenance {
 						$renderer->render( $this->purge );
 						if ( $renderer->getMathml() ) {
 							$this->time( "render" );
+							if ( $this->getOption( "SVG", false ) ) {
+								try {
+									$svg = $renderer->getSvg();
+								} catch ( Exception $e ) {
+									$svg = '';
+								}
+								$this->time( $svg ? "SVG-Rendering" : "SVG-Fail" );
+							}
 						} else {
 							$this->time( "Failing" );
-						}
-						if ( $this->getOption( "SVG", false ) ) {
-							$svg = $renderer->getSvg();
-							if ( $svg ) {
-								$this->time( "SVG-Rendering" );
-							} else {
-								$this->time( "SVG-Fail" );
-							}
 						}
 					} else {
 						$this->time( 'checkInDB' );
@@ -232,7 +232,7 @@ class UpdateMath extends Maintenance {
 				}
 				$renderer->writeCache();
 				$this->time( "write Cache" );
-				if ( $renderer->getLastError() ) {
+				if ( $renderer->getLastError() || !$renderer->getMathml() ) {
 					$this->logFailure( $renderer, MathObject::STATUS_RENDERING_FAILED );
 				} else {
 					$this->storeFormula( $renderer );

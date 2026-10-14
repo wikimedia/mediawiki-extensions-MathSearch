@@ -228,6 +228,23 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 		$this->expectOutputRegex( '/1 failed \\(see mathlog\\)/' );
 	}
 
+	public function testNoSvgIsRequestedForAFailedRendering() {
+		$this->overrideConfigValues( [
+			'MathValidModes' => [ 'source', 'native', 'mathml' ],
+			'MathSearchMode' => 'latexml',
+			MainConfigNames::HTTPTimeout => 1,
+		] );
+		$this->editPage( 'Mass energy', '<math>E=mc^2</math>' );
+		$this->installMockHttp( $this->makeFakeHttpMultiClient( [
+			[ 'code' => 400, 'body' => '{"success":false,"detail":"invalid"}' ],
+		] ) );
+
+		$this->maintenance->loadWithArgv( [ '--mode', 'mathml', '--SVG' ] );
+		$this->maintenance->execute();
+
+		$this->expectOutputRegex( '/Updated 1 formulae, 1 failed \(see mathlog\)/' );
+	}
+
 	public function testFailedRenderingIsReported() {
 		$this->overrideConfigValues( [
 			'MathValidModes' => [ 'source', 'native', 'latexml' ],
