@@ -40,6 +40,21 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 		$this->expectOutputRegex( '/processing 1 math fields for Mass_energy page(?!.*F:)/s' );
 	}
 
+	public function testCheckedTexIsStored() {
+		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
+		$this->editPage( 'Square', '<math>a^2</math>' );
+
+		$this->maintenance->loadWithArgv( [ '--mode', 'native' ] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( [ 'math_input', 'math_tex' ] )
+			->from( 'mathlog' )
+			->where( [ 'math_mode' => 8 ] )
+			->assertResultSet( [ [ 'a^2', '{\\displaystyle a^{2}}' ] ] );
+		$this->expectOutputRegex( '/0 failed/' );
+	}
+
 	public function testChunkStartingAtTheLastRevision() {
 		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native' ] ] );
 		$revId = $this->editPage( 'Last', '<math>E=mc^2</math>' )->getNewRevision()->getId();

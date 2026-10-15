@@ -90,6 +90,7 @@ class MathObject extends MathMathML {
 
 	public static function cloneFromRenderer( MathRenderer $renderer, string $inputHash = '' ): MathObject {
 		$instance = new self( $renderer->getUserInputTex() );
+		$instance->setTex( $renderer->getTex() );
 		$instance->setMathml( $renderer->getMathml() );
 		// For a failed rendering, MathMathML would ask RESTBase again and throw
 		if ( $renderer->getMathml() ) {
