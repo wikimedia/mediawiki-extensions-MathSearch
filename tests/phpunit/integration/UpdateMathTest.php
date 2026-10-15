@@ -245,6 +245,37 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 		$this->expectOutputRegex( '/Updated 1 formulae, 1 failed \(see mathlog\)/' );
 	}
 
+	public function testFormulaWithoutSvgIsStored() {
+		$this->overrideConfigValues( [
+			'MathValidModes' => [ 'source', 'native', 'mathml' ],
+			'MathSearchMode' => 'latexml',
+			MainConfigNames::HTTPTimeout => 1,
+		] );
+		$this->editPage( 'Mass energy', '<math>E=mc^2</math>' );
+		$mathml = '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>E</mi></math>';
+		$svgError = [ 'code' => 500, 'body' => '' ];
+		$this->installMockHttp( [
+			$this->makeFakeHttpMultiClient( [ [
+				'code' => 200,
+				'headers' => [ 'x-resource-location' => 'RESOURCE_LOCATION' ],
+				'body' => '{"success":true,"checked":"E=mc^2","identifiers":[]}',
+			] ] ),
+			$this->makeFakeHttpMultiClient( [ $mathml ] ),
+			$this->makeFakeHttpMultiClient( [ $svgError ] ),
+			$this->makeFakeHttpMultiClient( [ $svgError ] ),
+		] );
+
+		$this->maintenance->loadWithArgv( [ '--mode', 'mathml', '--SVG' ] );
+		$this->maintenance->execute();
+
+		$this->newSelectQueryBuilder()
+			->select( [ 'math_mathml', 'math_svg', 'math_log' ] )
+			->from( 'mathlog' )
+			->where( [ 'math_mode' => 5 ] )
+			->assertResultSet( [ [ $mathml, '', 'Cannot get svg. Server problem.' ] ] );
+		$this->expectOutputRegex( '/Updated 1 formulae, 0 failed/' );
+	}
+
 	public function testFailedRenderingIsReported() {
 		$this->overrideConfigValues( [
 			'MathValidModes' => [ 'source', 'native', 'latexml' ],
