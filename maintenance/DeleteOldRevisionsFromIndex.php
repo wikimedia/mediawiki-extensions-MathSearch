@@ -77,7 +77,5 @@ class DeleteOldRevisionsFromIndex extends Maintenance {
 	}
 }
 
-// @codeCoverageIgnoreStart
 $maintClass = DeleteOldRevisionsFromIndex::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
-// @codeCoverageIgnoreEnd
