@@ -110,7 +110,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 				$default = [];
 				foreach ( $this->eval->getIdentifiers() as $id ) {
 					/** @var MathRenderer $renderer */
-					$renderer = $this->rendererFactory->getRenderer( $id, [] );
+					$renderer = $this->rendererFactory->getRenderer( $id, [], MathConfig::MODE_NATIVE_MML );
 					if ( $renderer->render() ) {
 						$rendered = $renderer->getHtmlOutput();
 					} else {

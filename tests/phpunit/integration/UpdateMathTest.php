@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\MathSearch\Tests\Integration;
 
 require_once dirname( __DIR__, 3 ) . '/maintenance/UpdateMath.php';
 
+use MediaWiki\Extension\Math\MathRestbaseInterface;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Tests\Maintenance\MaintenanceBaseTestCase;
 use MockHttpTrait;
@@ -22,6 +23,12 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 
 	protected function getMaintenanceClass() {
 		return UpdateMath::class;
+	}
+
+	private function skipWithoutMathoid(): void {
+		if ( !class_exists( MathRestbaseInterface::class ) ) {
+			$this->markTestSkipped( 'Math without Mathoid has no mathml mode' );
+		}
 	}
 
 	public function testNativeIsTheDefaultMode() {
@@ -244,6 +251,7 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 	}
 
 	public function testNoSvgIsRequestedForAFailedRendering() {
+		$this->skipWithoutMathoid();
 		$this->overrideConfigValues( [
 			'MathValidModes' => [ 'source', 'native', 'mathml' ],
 			'MathSearchMode' => 'latexml',
@@ -261,6 +269,7 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 	}
 
 	public function testFormulaWithoutSvgIsStored() {
+		$this->skipWithoutMathoid();
 		$this->overrideConfigValues( [
 			'MathValidModes' => [ 'source', 'native', 'mathml' ],
 			'MathSearchMode' => 'latexml',

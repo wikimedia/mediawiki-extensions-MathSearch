@@ -4,6 +4,7 @@ use MediaWiki\Extension\Math\Hooks\MathFormulaPostRenderRevisionHook;
 use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Extension\MathSearch\Engine\MathIndex;
+use MediaWiki\Extension\MathSearch\MathMLInput;
 use MediaWiki\Extension\MathSearch\RevisionIndexer;
 use MediaWiki\Html\Html;
 use MediaWiki\Installer\DatabaseUpdater;
@@ -172,6 +173,7 @@ class MathSearchHooks implements
 	 */
 	public function onParserFirstCallInit( $parser ) {
 		$parser->setHook( 'mquery', [ 'MathSearchHooks', 'mQueryTagHook' ] );
+		$parser->setHook( 'mathml', [ 'MathSearchHooks', 'mathMLTagHook' ] );
 		LoggerFactory::getInstance( 'MathSearch' )->debug( 'mquery tag registered' );
 		return true;
 	}
@@ -201,6 +203,24 @@ class MathSearchHooks implements
 		$renderer->writeCache();
 
 		return [ $renderedMath, "markerType" => 'nowiki' ];
+	}
+
+	/**
+	 * Renders MathML input, such as the MathML data type, without the Math extension.
+	 *
+	 * @param string|null $content
+	 * @param array $attributes
+	 * @param Parser $parser
+	 * @return string|array
+	 */
+	public static function mathMLTagHook( $content, $attributes, $parser ) {
+		$status = MathMLInput::newFromConfig( MediaWikiServices::getInstance()->getMainConfig() )
+			->check( $content ?? '' );
+		if ( !$status->isGood() ) {
+			return Html::element( 'strong', [ 'class' => 'error' ],
+				wfMessage( $status->getMessages()[0] )->inContentLanguage()->text() );
+		}
+		return [ $status->getValue(), 'markerType' => 'nowiki' ];
 	}
 
 	public function onPageDeleteComplete(

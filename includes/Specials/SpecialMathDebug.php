@@ -1,7 +1,7 @@
 <?php
 
 use MediaWiki\Extension\Math\MathLaTeXML;
-use MediaWiki\Extension\Math\MathMathML;
+use MediaWiki\Extension\Math\MathNativeMML;
 use MediaWiki\Extension\Math\MathReferenceData;
 use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Http\HttpRequestFactory;
@@ -181,7 +181,7 @@ class SpecialMathDebug extends SpecialPage {
 		foreach (
 			array_slice( self::getMathTagsFromPage( $page ), $offset, $length, true ) as $key => $input
 		) {
-			$m = new MathMathML( $input );
+			$m = new MathNativeMML( $input );
 			$m->checkTeX();
 			$parserTests[] = [ 'id' => $key, 'input' => (string)$input, 'texvcjs' => $m->getTex() ];
 		}

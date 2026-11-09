@@ -19,11 +19,7 @@
  * @ingroup Maintenance
  */
 
-use MediaWiki\Extension\Math\MathLaTeXML;
-use MediaWiki\Extension\Math\MathMathML;
-use MediaWiki\Extension\Math\MathRestbaseInterface;
 use MediaWiki\Extension\Math\WikiTexVC\TexVC;
-use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\Maintenance\Maintenance;
 
 // @codeCoverageIgnoreStart
@@ -243,20 +239,7 @@ class MathPerformance extends Maintenance {
 		$formulae = $this->getFormulae( $hash, $tex, $action );
 		foreach ( $formulae as $formula ) {
 			$this->currentHash = $formula->$hash;
-			if ( $this->renderingMode === 'native' ) {
-				$this->runNativeTest( $formula, $action, $hash );
-				continue;
-			}
-			$rbi = new MathRestbaseInterface( $formula->$tex, false );
-			if ( $this->runTest( $rbi ) ) {
-				if ( round( rand( 0, 1 ) ) ) {
-					$this->runTest( $rbi, 'getSvg', '1-' ) &&
-					$this->runTest( $rbi, 'getMathML', '2-' );
-				} else {
-					$this->runTest( $rbi, 'getMathML', '1-' ) &&
-					$this->runTest( $rbi, 'getSvg', '2-' );
-				}
-			}
+			$this->runNativeTest( $formula, $action, $hash );
 		}
 	}
 
@@ -296,101 +279,6 @@ class MathPerformance extends Maintenance {
 		if ( $this->verbose ) {
 			$this->output( $string . "\n" );
 		}
-	}
-
-	private function runTest( MathRestbaseInterface $rbi, string $method = 'checkTeX', string $prefix = '' ): bool {
-		try {
-			$this->resetTimer();
-			$rbi->$method();
-			$this->time( $prefix . $method );
-			return true;
-		} catch ( Exception $e ) {
-			$this->vPrint( "Tex:{$rbi->getTex()}" );
-			$this->vPrint( $e->getMessage() );
-			$this->vPrint( $e->getTraceAsString() );
-			return false;
-		}
-	}
-
-	private function actionPng() {
-		$tex = $this->getOption( 'input', 'math_input' );
-		$hash = $this->getOption( 'hash', 'math_inputhash' );
-		$folder = $this->getOption( 'output', '/tmp/math' );
-		$formulae = $this->getFormulae( $hash, $tex );
-		foreach ( $formulae as $formula ) {
-			$this->currentHash = $formula->$hash;
-			self::processImage( $folder, $formula->$tex );
-		}
-	}
-
-	/**
-	 * @param string $folder
-	 * @param string $input
-	 */
-	private static function processImage( $folder, $input ) {
-		$log = LoggerFactory::getInstance( 'MathSearch-maint' );
-		$mathML = new MathMathML( $input );
-		$md5 = $mathML->getInputHash();
-		$path = self::makePath( $folder, $md5 );
-		$log->debug( 'process image', [
-			'tex' => $input,
-			'path' => $path
-		] );
-
-		// Mathoid
-		if ( !$mathML->render() ) {
-			$log->error( 'MathML rendering returned false', [
-				'mathml' => $mathML,
-				'tex' => $input,
-				'path' => $path
-			] );
-			return;
-		}
-		$o = MathObject::cloneFromRenderer( $mathML );
-		file_put_contents( "$path/new.mml", $o->getMathml() );
-		file_put_contents( "$path/new.svg", $o->getSvg() );
-		file_put_contents( "$path/tex.tex", $o->getUserInputTex() );
-
-		// Mathoid eating it's MathML
-		$mathML = new MathMathML( $o->getMathml(), [ 'type' => 'pmml' ] );
-		if ( !$mathML->render() ) {
-			$log->error( 'MathML rendering returned false', [
-				'mathml' => $mathML,
-				'tex' => $input,
-				'path' => $path
-				] );
-			return;
-		}
-
-		$o = MathObject::cloneFromRenderer( $mathML );
-		file_put_contents( "$path/new-mathml.svg", $o->getSvg( 'force' ) );
-
-		// LaTeXML */
-		$mathML = new MathLaTeXML( $input );
-		if ( !$mathML->readFromCache() ) {
-			$log->error( 'LaTeXML rendering returned false', [
-				'mathml' => $mathML,
-				'tex' => $input,
-				'path' => $path
-			] );
-			return;
-		}
-
-		$o = MathObject::cloneFromRenderer( $mathML );
-		file_put_contents( "$path/new-latexml.svg", $o->getSvg( 'force' ) );
-		file_put_contents( "$path/new-latexml.mml", $mathML->getMathml() );
-	}
-
-	/**
-	 * @param string $folder
-	 * @param string $md5
-	 * @return string
-	 */
-	private static function makePath( $folder, $md5 ) {
-		$subPath = implode( '/', str_split( substr( $md5, 0, 3 ) ) );
-		$path = $folder . '/' . $subPath . '/' . $md5;
-		mkdir( $path, '0755', true );
-		return $path;
 	}
 
 }

@@ -2,7 +2,7 @@
 
 namespace MediaWiki\Extension\MathSearch\StackExchange;
 
-use MediaWiki\Extension\Math\MathMathML;
+use MediaWiki\Extension\Math\MathNativeMML;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;
 use Wikibase\DataModel\Entity\Item;
@@ -28,7 +28,7 @@ class Formula {
 	}
 
 	public function updateSearchIndex() {
-		$renderer = new MathMathML( $this->text, [ 'display' => 'block' ] );
+		$renderer = new MathNativeMML( $this->text, [ 'display' => 'block' ] );
 		$hash = \MathObject::hashInput( $this->text, [ 'display' => 'block' ] );
 		$renderer->writeToCache();
 		// TODO: Fix fake revision ID

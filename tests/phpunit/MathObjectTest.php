@@ -1,7 +1,5 @@
 <?php
 
-use MediaWiki\Extension\Math\MathMathML;
-
 /**
  * @group MathSearch
  */
@@ -54,15 +52,5 @@ EOT;
 		$this->assertEquals( ' x^2 ', $first[1] );
 		$second = array_shift( $longMatch );
 		$this->assertEquals( ' x^3 ', $second[1] );
-	}
-
-	/**
-	 * @covers MathObject::cloneFromRenderer
-	 */
-	public function testAlttext() {
-		$r = new MathMathML( 'E=mc^2' );
-		$r->render();
-		$mo = MathObject::cloneFromRenderer( $r );
-		$this->assertEquals( 'upper E equals m c squared', $mo->getMathMlAltText() );
 	}
 }

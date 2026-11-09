@@ -3,7 +3,10 @@
 namespace MediaWiki\Extension\MathSearch\Wikidata\MathML;
 
 use DataValues\StringValue;
+use InvalidArgumentException;
+use MediaWiki\Extension\MathSearch\MathMLInput;
 use ValueFormatters;
+use ValueValidators\Error;
 use ValueValidators\Result;
 use ValueValidators\ValueValidator;
 
@@ -14,8 +17,13 @@ use ValueValidators\ValueValidator;
  */
 class MathMLValidator implements ValueValidator {
 
+	public function __construct(
+		private readonly MathMLInput $input,
+	) {
+	}
+
 	/**
-	 * Validates a value with MathLaTeXML
+	 * Validates a value with the schema of MathMLInput
 	 *
 	 * @param mixed $value The value to validate
 	 *
@@ -27,6 +35,12 @@ class MathMLValidator implements ValueValidator {
 			throw new InvalidArgumentException( '$value must be a StringValue' );
 		}
 
+		$status = $this->input->check( $value->getValue() );
+		if ( !$status->isGood() ) {
+			return Result::newError( [
+				Error::newError( '', null, 'malformed-value', [ wfMessage( $status->getMessages()[0] ) ] ),
+			] );
+		}
 		return Result::newSuccess();
 	}
 

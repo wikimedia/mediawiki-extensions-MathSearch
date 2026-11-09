@@ -2,6 +2,8 @@
 
 namespace MediaWiki\Extension\MathSearch\Wikidata\MathML;
 
+use MediaWiki\Extension\MathSearch\MathMLInput;
+use MediaWiki\MediaWikiServices;
 use ValueFormatters\FormatterOptions;
 use Wikibase\Repo\Rdf\DedupeBag;
 use Wikibase\Repo\Rdf\EntityMentionListener;
@@ -31,7 +33,9 @@ class MathMLWikidataHook {
 				// returns an array of validators
 				// that add basic string validation such as preventing empty strings
 				$validators = $factory->buildStringValidators( $wgMathSearchContentTexMaxLength );
-				$validators[] = new MathMLValidator();
+				$validators[] = new MathMLValidator(
+					MathMLInput::newFromConfig( MediaWikiServices::getInstance()->getMainConfig() )
+				);
 
 				return $validators;
 			},

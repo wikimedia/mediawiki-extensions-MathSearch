@@ -103,9 +103,6 @@ class MathObject extends MathMathML {
 		}
 		$instance->setMode( $renderer->getMode() );
 		$instance->setMathStyle( $renderer->getMathStyle() );
-		if ( $renderer->rbi ) {
-			$instance->setRestbaseInterface( $renderer->rbi );
-		}
 		$instance->setInputType( $renderer->getInputType() );
 		$instance->setParams( $renderer->getParams() );
 		$instance->setInputHash( $inputHash );
@@ -490,6 +487,11 @@ class MathObject extends MathMathML {
 	public function render( $forceReRendering = false ) {
 	}
 
+	/** Required once MathMathML is abstract; render() above never calls it. */
+	protected function doRender(): StatusValue {
+		return StatusValue::newGood();
+	}
+
 	/** @inheritDoc */
 	public function getSvg( $render = 'render' ) {
 		if ( $render === 'force' ) {
@@ -606,28 +608,6 @@ class MathObject extends MathMathML {
 			return $matches;
 		}
 		return 0;
-	}
-
-	/**
-	 * @param MathRenderer $renderer
-	 * @param float $factor
-	 *
-	 * @return string
-	 */
-	public static function getReSizedSvgLink( MathRenderer $renderer, $factor = 2 ): string {
-		$width = self::getSvgWidth( $renderer->getSvg() );
-		$width = $width[1] * $factor . $width[2];
-		$height = self::getSvgHeight( $renderer->getSvg() );
-		$height = $height[1] * $factor . $height[2];
-		$reflector = new ReflectionObject( $renderer );
-		$method = $reflector->getMethod( 'getFallbackImage' );
-		$fbi = $method->invoke( $renderer );
-		$fbi = preg_replace( "/width: (.*?)(ex|px|em)/", "width: $width", $fbi );
-		return preg_replace( "/height: (.*?)(ex|px|em)/", "height: $height", $fbi );
-	}
-
-	public function getRbi(): \MediaWiki\Extension\Math\MathRestbaseInterface {
-		return $this->rbi;
 	}
 
 	public function getPostData(): string {

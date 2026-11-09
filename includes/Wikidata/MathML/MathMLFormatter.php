@@ -43,7 +43,7 @@ class MathMLFormatter implements ValueFormatter {
 
 		switch ( $this->format ) {
 			case SnakFormatter::FORMAT_WIKI:
-				return "<math type='pmml'>$mml</math>";
+				return "<mathml>$mml</mathml>";
 			case SnakFormatter::FORMAT_HTML_DIFF:
 				return Html::rawElement( 'h4',
 						[ 'class' => 'wb-details wb-math-details wb-math-rendered' ], $mml ) .

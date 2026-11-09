@@ -137,7 +137,8 @@ class MathoidDriver {
 	 */
 	public function getBackendUrl() {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'main' );
-		return $config->get( "MathMathMLUrl" );
+		// Math stops defining it when it drops Mathoid
+		return $config->has( 'MathMathMLUrl' ) ? $config->get( 'MathMathMLUrl' ) : '';
 	}
 
 	protected function getPostData(): string {

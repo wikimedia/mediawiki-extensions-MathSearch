@@ -10,7 +10,6 @@
  */
 
 use MediaWiki\Extension\Math\MathLaTeXML;
-use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\MathSearch\Engine\BaseX;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
@@ -282,19 +281,7 @@ class SpecialMathSearch extends SpecialPage {
 					$this->highlightHit( $node, $dom, $mml );
 				}
 			}
-			if ( $mml != $res->getMathml() ) {
-				$renderer = new MathMathML( $mml, [ 'type' => 'pmml' ] );
-				$renderer->setMathml( $mml );
-				$renderer->render();
-				$out->addHTML( $renderer->getHtmlOutput() );
-				$renderer->writeCache();
-			} else {
-				if ( $res->getMathml() === '' ) {
-					$res->render();
-				}
-				$out->addHTML( $res->getMathml() );
-			}
-
+			$out->addHTML( $mml );
 		}
 	}
 

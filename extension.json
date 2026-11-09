@@ -140,6 +140,11 @@
 		"ContentMathEnableWikibaseDataType": {
 			"value": true
 		},
+		"MathSearchMathMLSchema": {
+			"description": "RELAX NG schema that MathML from users, such as the MathML data type, has to match. It must not allow anything that can run script, such as event handlers, links or HTML. The default is MathML Core plus the parts of full MathML that MaRDI uses, minus those.",
+			"value": "schema/mathml-mardi.rng",
+			"path": true
+		},
 		"MathSearchContentTexMaxLength": {
 			"description": "Maximum length of the TeX input of the Wikibase data types of MathSearch. The longest valid formula in Wikimedia projects has about 10,700 characters.",
 			"value": 20000

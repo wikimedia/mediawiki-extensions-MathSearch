@@ -9,6 +9,7 @@
  * @file
  */
 
+use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Logger\LoggerFactory;
@@ -609,7 +610,7 @@ class SpecialMlpEval extends SpecialPage {
 	private function printFormula() {
 		$mo = MathObject::newFromRevisionText( $this->oldId, $this->fId );
 		/** @var MathRenderer $renderer */
-		$renderer = $this->rendererFactory->getRenderer( $mo->getUserInputTex(), [] );
+		$renderer = $this->rendererFactory->getRenderer( $mo->getUserInputTex(), [], MathConfig::MODE_NATIVE_MML );
 		if ( $renderer->render() ) {
 			$output = $renderer->getHtmlOutput();
 		} else {
