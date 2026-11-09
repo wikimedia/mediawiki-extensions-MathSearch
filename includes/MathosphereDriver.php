@@ -134,11 +134,8 @@ class MathosphereDriver {
 		}
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getBackendUrl() {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'main' );
+	public function getBackendUrl(): string {
+		$config = MediaWikiServices::getInstance()->getMainConfig();
 		return $config->get( "MathSearchBaseXBackendUrl" ) . 'api';
 	}
 
