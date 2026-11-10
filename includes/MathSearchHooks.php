@@ -1,9 +1,9 @@
 <?php
 
 use MediaWiki\Extension\Math\Hooks\MathFormulaPostRenderRevisionHook;
-use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Extension\MathSearch\Engine\MathIndex;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use MediaWiki\Extension\MathSearch\MathMLInput;
 use MediaWiki\Extension\MathSearch\RevisionIndexer;
 use MediaWiki\Html\Html;
@@ -187,7 +187,6 @@ class MathSearchHooks implements
 	 * @return string|string[]
 	 */
 	public static function mQueryTagHook( $content, $attributes, $parser ) {
-		global $wgMathDefaultLaTeXMLSetting;
 		if ( trim( $content ) === '' ) { // bug 8372
 			return '';
 		}
@@ -195,7 +194,7 @@ class MathSearchHooks implements
 		// TODO: Report %\n problem to LaTeXML upstream
 		$content = preg_replace( '/%\n/', '', $content );
 		$renderer = new MathLaTeXML( $content );
-		$mQuerySettings = $wgMathDefaultLaTeXMLSetting;
+		$mQuerySettings = MathLaTeXML::getDefaultSettings();
 		$mQuerySettings['preload'][] = 'mws.sty';
 		$renderer->setLaTeXMLSettings( $mQuerySettings );
 		$renderer->render();

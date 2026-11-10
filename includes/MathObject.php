@@ -2,17 +2,18 @@
 
 use MediaWiki\Deferred\DeferredUpdates;
 use MediaWiki\Exception\MWException;
-use MediaWiki\Extension\Math\MathMathML;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Extension\Math\MathRestbaseException;
 use MediaWiki\Extension\Math\MathSource;
+use MediaWiki\Html\Html;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Title\Title;
+use Wikimedia\Mime\XmlTypeCheck;
 use Wikimedia\Rdbms\IResultWrapper;
 
-class MathObject extends MathMathML {
+class MathObject extends MathRenderer {
 
 	/**
 	 * Letters stored as mathlog.math_statuscode by UpdateMath, distinct from the WikiTexVC status
@@ -49,6 +50,21 @@ class MathObject extends MathMathML {
 	protected $mathTableName = null;
 	/** @var int */
 	protected $renderingTime = 0;
+
+	/** @inheritDoc */
+	public function __construct( string $tex = '', array $params = [], $cache = null ) {
+		parent::__construct( $tex, $params, $cache );
+		$type = $params['type'] ?? null;
+		if ( in_array( $type, [ 'pmml', 'ascii', 'chem' ], true ) ) {
+			$this->inputType = $type;
+		}
+		if ( $type === 'pmml' ) {
+			$this->setMathml( '<math>' . $tex . '</math>' );
+		}
+		if ( !isset( $params['display'] ) && $this->getMathStyle() == 'inlineDisplaystyle' ) {
+			$this->tex = '{\\displaystyle ' . $tex . '}';
+		}
+	}
 
 	public static function findSimilarPages( $pid ): void {
 		global $wgOut;
@@ -487,9 +503,22 @@ class MathObject extends MathMathML {
 	public function render( $forceReRendering = false ) {
 	}
 
-	/** Required once MathMathML is abstract; render() above never calls it. */
-	protected function doRender(): StatusValue {
-		return StatusValue::newGood();
+	public function getHtmlOutput( bool $svg = true ): string {
+		return Html::rawElement( 'span', [ 'class' => 'mwe-math-element' ], $this->getMathml() );
+	}
+
+	/**
+	 * Whether $xml is well-formed and its root element is math.
+	 * @param string $xml
+	 * @return bool
+	 */
+	public function isValidMathML( $xml ) {
+		$xmlObject = new XmlTypeCheck( $xml, null, false );
+		if ( !$xmlObject->wellFormed ) {
+			return false;
+		}
+		$name = explode( ':', $xmlObject->getRootElement() );
+		return end( $name ) === 'math';
 	}
 
 	/** @inheritDoc */

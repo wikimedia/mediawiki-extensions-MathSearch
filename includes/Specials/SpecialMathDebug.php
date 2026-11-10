@@ -1,9 +1,9 @@
 <?php
 
-use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathNativeMML;
 use MediaWiki\Extension\Math\MathReferenceData;
 use MediaWiki\Extension\Math\Render\RendererFactory;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -91,8 +91,6 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	public function compareParser( $offset = 0, $length = 10, $page = 'Testpage' ) {
-		// phpcs:ignore MediaWiki.Usage.ExtendClassUsage.FunctionConfigUsage
-		global $wgMathLaTeXMLUrl;
 		$out = $this->getOutput();
 		if ( !$this->getConfig()->get( 'MathUseLaTeXML' ) ) {
 			$out->addWikiTextAsInterface( "MahtML support must be enabled." );
@@ -110,9 +108,9 @@ class SpecialMathDebug extends SpecialPage {
 			foreach ( array_slice( $formulae, $offset, $length, true ) as $key => $formula ) {
 				$out->addWikiTextAsInterface( "=== Test #" . ( $offset + $i++ ) . ": $key === " );
 				$renderer->setTex( $formula );
-				$wgMathLaTeXMLUrl = $parserA;
+				$renderer->setHost( $parserA );
 				$stringA = $renderer->render( true );
-				$wgMathLaTeXMLUrl = $parserB;
+				$renderer->setHost( $parserB );
 				$stringB = $renderer->render( true );
 				$diff = new Diff( [ $stringA ], [ $stringB ] );
 				if ( $diff->isEmpty() ) {
@@ -217,8 +215,7 @@ class SpecialMathDebug extends SpecialPage {
 	}
 
 	private function render( string $t, string $mode, bool $purge = true ): string {
-		$modeInt = (int)substr( $mode, 0, 1 );
-		$renderer = $this->rendererFactory->getRenderer( $t, [], $modeInt );
+		$renderer = MathLaTeXML::getRenderer( $this->rendererFactory, $t, [], $mode );
 		$renderer->setPurge( $purge );
 		$renderer->render();
 		$fragment = $renderer->getHtmlOutput();

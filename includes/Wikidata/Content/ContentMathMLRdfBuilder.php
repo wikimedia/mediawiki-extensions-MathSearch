@@ -2,7 +2,7 @@
 
 namespace MediaWiki\Extension\MathSearch\Wikidata\Content;
 
-use MediaWiki\Extension\Math\MathLaTeXML;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\Repo\Rdf\ValueSnakRdfBuilder;
 use Wikimedia\Purtle\RdfWriter;

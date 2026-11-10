@@ -1,6 +1,6 @@
 <?php
 
-use MediaWiki\Extension\Math\MathLaTeXML;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 
 class MwsDumpWriter {
 

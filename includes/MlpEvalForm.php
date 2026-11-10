@@ -2,6 +2,7 @@
 
 use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\Render\RendererFactory;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use MediaWiki\HTMLForm\Field\HTMLTitleTextField;
 use MediaWiki\HTMLForm\OOUIHTMLForm;
 
@@ -77,7 +78,7 @@ class MlpEvalForm extends OOUIHTMLForm {
 									$this->eval->getMathMLRenderingAsHtmlFragment(
 										MathConfig::MODE_NATIVE_MML ) => 'native',
 									$this->eval->getMathMLRenderingAsHtmlFragment(
-										MathConfig::MODE_LATEXML ) => 'latexml',
+										MathLaTeXML::MODE ) => 'latexml',
 							],
 							'default' => 'mathoid'
 					];

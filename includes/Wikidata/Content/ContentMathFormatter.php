@@ -4,7 +4,7 @@ namespace MediaWiki\Extension\MathSearch\Wikidata\Content;
 
 use DataValues\StringValue;
 use InvalidArgumentException;
-use MediaWiki\Extension\Math\MathLaTeXML;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use MediaWiki\Html\Html;
 use ValueFormatters\Exceptions\MismatchingDataValueTypeException;
 use ValueFormatters\ValueFormatter;

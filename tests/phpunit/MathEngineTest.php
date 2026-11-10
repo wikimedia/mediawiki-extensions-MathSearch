@@ -1,11 +1,11 @@
 <?php
 
-use MediaWiki\Extension\Math\MathLaTeXML;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 
 class MathEngineTest extends MediaWikiIntegrationTestCase {
 
 	/**
-	 * @covers MediaWiki\Extension\Math\MathMathML::getInputHash
+	 * @covers \MediaWiki\Extension\Math\MathRenderer::getInputHash
 	 */
 	public function testHash() {
 		$test_tex = 'E=mc^2';

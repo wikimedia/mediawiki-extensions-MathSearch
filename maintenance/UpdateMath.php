@@ -21,6 +21,7 @@
 
 use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\MathRenderer;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use MediaWiki\Extension\MathSearch\RevisionIndexer;
 use MediaWiki\Maintenance\Maintenance;
 use MediaWiki\Revision\SlotRecord;
@@ -192,8 +193,10 @@ class UpdateMath extends Maintenance {
 				$this->time = microtime( true );
 				/** @var MathRenderer $renderer */
 				[ $tex, $attributes ] = $idGenerator->getRendererInput( $formula );
-				$renderer = $this->getServiceContainer()->get( 'Math.RendererFactory' )
-					->getRenderer( $tex, $attributes, $this->renderingMode );
+				$renderer = MathLaTeXML::getRenderer(
+					$this->getServiceContainer()->get( 'Math.RendererFactory' ),
+					$tex, $attributes, $this->renderingMode
+				);
 				$this->currentHash = MathObject::hashInput( $tex, $attributes );
 				if ( isset( $this->rendered[$this->currentHash] ) && !$this->getOption( 'exportmml' ) ) {
 					continue;

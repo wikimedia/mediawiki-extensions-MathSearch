@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use MediaWiki\Revision\RevisionRecord;
 
 /**
@@ -76,9 +77,7 @@ class MathSearchHooksTest extends MediaWikiIntegrationTestCase {
 EOT;
 
 	public function testNTCIRHook() {
-		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native', 'latexml' ] ] );
-		$renderer = $this->getServiceContainer()->get( 'Math.RendererFactory' )
-			->getRenderer( 'x', [ 'id' => 'math.42.0' ], 'latexml' );
+		$renderer = new MathLaTeXML( 'x', [ 'id' => 'math.42.0' ] );
 		$result = self::MATHML_SAMPLE;
 
 		$this->assertTrue( MathSearchHooks::onMathFormulaRenderedNoLink(
@@ -88,9 +87,7 @@ EOT;
 	}
 
 	public function testNTCIRHookWithoutAnchor() {
-		$this->overrideConfigValues( [ 'MathValidModes' => [ 'source', 'native', 'latexml' ] ] );
-		$renderer = $this->getServiceContainer()->get( 'Math.RendererFactory' )
-			->getRenderer( 'x', [], 'latexml' );
+		$renderer = new MathLaTeXML( 'x' );
 		$result = self::MATHML_SAMPLE;
 
 		MathSearchHooks::onMathFormulaRenderedNoLink( null, $renderer, $result );

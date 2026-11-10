@@ -9,8 +9,8 @@
  * @file
  */
 
-use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\MathSearch\Engine\BaseX;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\Revision\RevisionLookup;

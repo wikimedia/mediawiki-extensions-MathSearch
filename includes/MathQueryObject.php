@@ -1,7 +1,7 @@
 <?php
 
-use MediaWiki\Extension\Math\MathLaTeXML;
 use MediaWiki\Extension\Math\MathNativeMML;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
@@ -225,16 +225,14 @@ TeX;
 	}
 
 	public function getLaTeXMLCMMLSettings() {
-		global $wgMathDefaultLaTeXMLSetting;
-		$cSettings = $wgMathDefaultLaTeXMLSetting;
+		$cSettings = MathLaTeXML::getDefaultSettings();
 		$cSettings['preload'][] = 'mws.sty';
 		$cSettings['stylesheet'] = 'MWSquery.xsl';
 		return $cSettings;
 	}
 
 	public function getLaTeXMLPMLSettings() {
-		global $wgMathDefaultLaTeXMLSetting;
-		$cSettings = array_diff( $wgMathDefaultLaTeXMLSetting, [ 'cmml' ] );
+		$cSettings = array_diff( MathLaTeXML::getDefaultSettings(), [ 'cmml' ] );
 		$cSettings['preload'][] = 'mws.sty';
 		$cSettings['stylesheet'] = 'MWSquery.xsl';
 		return $cSettings;

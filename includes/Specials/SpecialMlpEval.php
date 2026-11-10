@@ -12,6 +12,7 @@
 use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\MathRenderer;
 use MediaWiki\Extension\Math\Render\RendererFactory;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\Message\Message;
 use MediaWiki\Parser\ParserFactory;
@@ -717,7 +718,7 @@ class SpecialMlpEval extends SpecialPage {
 	 */
 	private function getMathMlRenderer( $mode, $tex, $options ) {
 		$this->updateTex( $tex, $options );
-		$renderer = $this->rendererFactory->getRenderer( $tex, $options, $mode );
+		$renderer = MathLaTeXML::getRenderer( $this->rendererFactory, $tex, $options, $mode );
 		$renderer->checkTeX();
 		$renderer->render();
 		$renderer->writeCache();

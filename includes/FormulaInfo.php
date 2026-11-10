@@ -11,6 +11,7 @@
 
 use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\Render\RendererFactory;
+use MediaWiki\Extension\MathSearch\MathLaTeXML;
 use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\RevisionLookup;
@@ -248,10 +249,9 @@ class FormulaInfo extends SpecialPage {
 			return;
 		}
 		$out = $this->getOutput();
-		$names = $this->mathConfig->getValidRenderingModeNames();
-		$name = $names[$mode];
+		$name = $this->mathConfig->getRenderingModeName( $mode );
 		$out->addWikiTextAsInterface( "=== $name rendering === " );
-		$renderer = $this->rendererFactory->getRenderer( $tex, [], $mode );
+		$renderer = MathLaTeXML::getRenderer( $this->rendererFactory, $tex, [], $mode );
 		if ( $this->purge ) {
 			$renderer->render( true );
 		} elseif ( $mode == 'mathml' || !$renderer->isInDatabase() ) {
