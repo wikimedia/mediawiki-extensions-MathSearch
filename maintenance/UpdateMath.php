@@ -73,7 +73,7 @@ class UpdateMath extends Maintenance {
 		$this->addOption( 'SVG', "If set SVG images will be produced", false, false );
 		$this->addOption( 'texvccheck', "If set texvccheck will be skipped", false, false );
 		$this->addOption( 'mode',
-			'Rendering mode to be used (native, mathml, latexml); source only indexes and stores the inputs',
+			'Rendering mode to be used (native, mathjax, latexml); source only indexes and stores the inputs',
 			false, true, 'm' );
 		$this->addOption( 'exportmml', 'export LaTeX and generated MathML to the specified file', false, true,
 			'e' );
@@ -280,6 +280,9 @@ class UpdateMath extends Maintenance {
 		$this->purge = $this->getOption( "purge", false );
 		$this->verbose = $this->getOption( "verbose", false );
 		$this->renderingMode = $this->getOption( "mode", 'native' );
+		if ( !in_array( $this->renderingMode, [ ...MathConfig::SUPPORTED_MODES, MathLaTeXML::MODE ], true ) ) {
+			$this->fatalError( "Unsupported rendering mode {$this->renderingMode}." );
+		}
 		$this->chunkSize = $this->getOption( 'chunk-size', $this->chunkSize );
 		$this->db = $this->getServiceContainer()
 			->getConnectionProvider()

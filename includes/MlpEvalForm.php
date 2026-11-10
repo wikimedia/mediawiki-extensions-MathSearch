@@ -74,13 +74,11 @@ class MlpEvalForm extends OOUIHTMLForm {
 							'type'    => 'radio',
 							'options' => [
 									$this->eval->getMathMLRenderingAsHtmlFragment(
-										MathConfig::MODE_MATHML ) => 'mathoid',
-									$this->eval->getMathMLRenderingAsHtmlFragment(
 										MathConfig::MODE_NATIVE_MML ) => 'native',
 									$this->eval->getMathMLRenderingAsHtmlFragment(
 										MathLaTeXML::MODE ) => 'latexml',
 							],
-							'default' => 'mathoid'
+							'default' => 'native'
 					];
 				} else {
 					$formDescriptor['4-size'] = [

@@ -4,7 +4,6 @@ namespace MediaWiki\Extension\MathSearch\Tests\Integration;
 
 require_once dirname( __DIR__, 3 ) . '/maintenance/UpdateMath.php';
 
-use MediaWiki\Extension\Math\MathRestbaseInterface;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Tests\Maintenance\MaintenanceBaseTestCase;
 use MockHttpTrait;
@@ -23,12 +22,6 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 
 	protected function getMaintenanceClass() {
 		return UpdateMath::class;
-	}
-
-	private function skipWithoutMathoid(): void {
-		if ( !class_exists( MathRestbaseInterface::class ) ) {
-			$this->markTestSkipped( 'Math without Mathoid has no mathml mode' );
-		}
 	}
 
 	public function testNativeIsTheDefaultMode() {
@@ -250,54 +243,11 @@ class UpdateMathTest extends MaintenanceBaseTestCase {
 		$this->expectOutputRegex( '/1 failed \\(see mathlog\\)/' );
 	}
 
-	public function testNoSvgIsRequestedForAFailedRendering() {
-		$this->skipWithoutMathoid();
-		$this->overrideConfigValues( [
-			'MathValidModes' => [ 'source', 'native', 'mathml' ],
-			'MathSearchMode' => 'latexml',
-			MainConfigNames::HTTPTimeout => 1,
-		] );
-		$this->editPage( 'Mass energy', '<math>E=mc^2</math>' );
-		$this->installMockHttp( $this->makeFakeHttpMultiClient( [
-			[ 'code' => 400, 'body' => '{"success":false,"detail":"invalid"}' ],
-		] ) );
-
-		$this->maintenance->loadWithArgv( [ '--mode', 'mathml', '--SVG' ] );
+	public function testMathoidModeIsRejected() {
+		$this->maintenance->loadWithArgv( [ '--mode', 'mathml' ] );
+		$this->expectCallToFatalError();
+		$this->expectOutputRegex( '/Unsupported rendering mode mathml/' );
 		$this->maintenance->execute();
-
-		$this->expectOutputRegex( '/Updated 1 formulae, 1 failed \(see mathlog\)/' );
-	}
-
-	public function testFormulaWithoutSvgIsStored() {
-		$this->skipWithoutMathoid();
-		$this->overrideConfigValues( [
-			'MathValidModes' => [ 'source', 'native', 'mathml' ],
-			'MathSearchMode' => 'latexml',
-			MainConfigNames::HTTPTimeout => 1,
-		] );
-		$this->editPage( 'Mass energy', '<math>E=mc^2</math>' );
-		$mathml = '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>E</mi></math>';
-		$svgError = [ 'code' => 500, 'body' => '' ];
-		$this->installMockHttp( [
-			$this->makeFakeHttpMultiClient( [ [
-				'code' => 200,
-				'headers' => [ 'x-resource-location' => 'RESOURCE_LOCATION' ],
-				'body' => '{"success":true,"checked":"E=mc^2","identifiers":[]}',
-			] ] ),
-			$this->makeFakeHttpMultiClient( [ $mathml ] ),
-			$this->makeFakeHttpMultiClient( [ $svgError ] ),
-			$this->makeFakeHttpMultiClient( [ $svgError ] ),
-		] );
-
-		$this->maintenance->loadWithArgv( [ '--mode', 'mathml', '--SVG' ] );
-		$this->maintenance->execute();
-
-		$this->newSelectQueryBuilder()
-			->select( [ 'math_mathml', 'math_svg', 'math_log' ] )
-			->from( 'mathlog' )
-			->where( [ 'math_mode' => 5 ] )
-			->assertResultSet( [ [ $mathml, '', 'Cannot get svg. Server problem.' ] ] );
-		$this->expectOutputRegex( '/Updated 1 formulae, 0 failed/' );
 	}
 
 	public function testFailedRenderingIsReported() {

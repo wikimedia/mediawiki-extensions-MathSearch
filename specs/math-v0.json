@@ -181,7 +181,7 @@
 					{
 						"name": "format",
 						"in": "path",
-						"description": "The output format",
+						"description": "The output format. `svg` is only served where `$wgMathSearchRestSvg` is enabled. It is MathJax's rendering of the `mml` output, and the first request for a formula takes a few seconds.",
 						"required": true,
 						"schema": {
 							"type": "string",
@@ -218,8 +218,14 @@
 							}
 						}
 					},
+					"400": {
+						"description": "Unknown format, or `svg` where it is not enabled"
+					},
 					"404": {
-						"description": "Unknown format, or no formula is known for that address"
+						"description": "No formula is known for that address"
+					},
+					"500": {
+						"description": "The formula could not be rendered"
 					}
 				}
 			}

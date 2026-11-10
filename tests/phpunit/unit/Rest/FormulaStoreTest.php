@@ -19,7 +19,7 @@ class FormulaStoreTest extends MediaWikiUnitTestCase {
 	/** @param string|false $field what the single-row lookup returns */
 	private function newStore( $field ): FormulaStore {
 		$builder = $this->createMock( SelectQueryBuilder::class );
-		foreach ( [ 'select', 'from', 'where', 'caller' ] as $method ) {
+		foreach ( [ 'select', 'from', 'where', 'andWhere', 'orderBy', 'caller' ] as $method ) {
 			$builder->method( $method )->willReturnSelf();
 		}
 		$builder->method( 'fetchField' )->willReturn( $field );
@@ -62,6 +62,12 @@ class FormulaStoreTest extends MediaWikiUnitTestCase {
 	}
 
 	/** What is written is the preimage, keyed by the sha1 of exactly those bytes. */
+	public function testReturnsTheStoredSvg() {
+		$formula = [ 'q' => 'x', 'type' => 'tex' ];
+		$this->assertSame( '<svg/>', $this->newStore( '<svg/>' )->getSvg( $formula, '<math/>' ) );
+		$this->assertNull( $this->newStore( false )->getSvg( $formula, '<math/>' ) );
+	}
+
 	public function testRemembersThePreimageUnderItsOwnHash() {
 		$written = [];
 		$builder = $this->createMock( InsertQueryBuilder::class );

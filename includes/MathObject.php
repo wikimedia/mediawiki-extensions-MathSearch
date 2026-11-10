@@ -3,7 +3,6 @@
 use MediaWiki\Deferred\DeferredUpdates;
 use MediaWiki\Exception\MWException;
 use MediaWiki\Extension\Math\MathRenderer;
-use MediaWiki\Extension\Math\MathRestbaseException;
 use MediaWiki\Extension\Math\MathSource;
 use MediaWiki\Html\Html;
 use MediaWiki\Logger\LoggerFactory;
@@ -108,14 +107,8 @@ class MathObject extends MathRenderer {
 		$instance = new self( $renderer->getUserInputTex() );
 		$instance->setTex( $renderer->getTex() );
 		$instance->setMathml( $renderer->getMathml() );
-		// For a failed rendering, MathMathML would ask RESTBase again and throw
 		if ( $renderer->getMathml() ) {
-			try {
-				$instance->setSvg( $renderer->getSvg() );
-			} catch ( MathRestbaseException $e ) {
-				// RESTBase fails the SVG of some inputs whose MathML it renders
-				$instance->setLog( $e->getMessage() );
-			}
+			$instance->setSvg( $renderer->getSvg() );
 		}
 		$instance->setMode( $renderer->getMode() );
 		$instance->setMathStyle( $renderer->getMathStyle() );

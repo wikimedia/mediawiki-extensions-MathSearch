@@ -2,7 +2,9 @@
 
 namespace MediaWiki\Extension\MathSearch\Rest;
 
+use MathObject;
 use Wikimedia\Rdbms\IConnectionProvider;
+use Wikimedia\Rdbms\SelectQueryBuilder;
 
 /**
  * Resolve a content address back to the input it stands for.
@@ -61,5 +63,50 @@ class FormulaStore {
 			return null;
 		}
 		return $formula;
+	}
+
+	/**
+	 * @param array{q:string,type:string} $formula
+	 * @return array<string,mixed> the mathlog key of its native rendering
+	 */
+	private static function logKey( array $formula ): array {
+		return [
+			// As MathObject::hashInput() for a formula without attributes
+			'math_inputhash' => md5( FormulaHash::preimage( $formula['q'], $formula['type'] ), true ),
+			'math_mode' => MathObject::MODE_2_USER_OPTION['native'],
+		];
+	}
+
+	/**
+	 * The SVG stored for exactly this MathML, so a rendering from older code is never served.
+	 *
+	 * @param array{q:string,type:string} $formula
+	 * @param string $mathml
+	 * @return string|null
+	 */
+	public function getSvg( array $formula, string $mathml ): ?string {
+		$dbr = $this->connectionProvider->getReplicaDatabase();
+		$svg = $dbr->newSelectQueryBuilder()
+			->select( 'math_svg' )
+			->from( 'mathlog' )
+			->where( self::logKey( $formula ) )
+			->andWhere( [ 'math_mathml' => $mathml, $dbr->expr( 'math_svg', '!=', '' ) ] )
+			->orderBy( 'math_timestamp', SelectQueryBuilder::SORT_DESC )
+			->caller( __METHOD__ )
+			->fetchField();
+		return is_string( $svg ) ? $svg : null;
+	}
+
+	/** @param array{q:string,type:string} $formula */
+	public function saveSvg( array $formula, string $mathml, string $svg ): void {
+		$this->connectionProvider->getPrimaryDatabase()->newInsertQueryBuilder()
+			->insertInto( 'mathlog' )
+			->row( self::logKey( $formula ) + [
+				'math_input' => $formula['q'],
+				'math_mathml' => $mathml,
+				'math_svg' => $svg,
+			] )
+			->caller( __METHOD__ )
+			->execute();
 	}
 }

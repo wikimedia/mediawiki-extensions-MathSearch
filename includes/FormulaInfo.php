@@ -167,7 +167,6 @@ class FormulaInfo extends SpecialPage {
 			$this->printSource( $texInfo->getChecked() ?? '', 'TeX (checked)', 'latex' );
 		}
 		$this->DisplayRendering( $mo->getUserInputTex(), 'latexml' );
-		$this->DisplayRendering( $mo->getUserInputTex(), 'mathml' );
 		$this->DisplayRendering( $mo->getUserInputTex(), 'native' );
 
 		self::DisplayTranslations( $mo->getUserInputTex() );
@@ -237,11 +236,7 @@ class FormulaInfo extends SpecialPage {
 	}
 
 	public static function hasMathMLSupport( $mode ) {
-		return in_array( $mode, [ 'latexml', 'mathml', 'native' ] );
-	}
-
-	public static function hasSvgSupport( $mode ) {
-		return ( $mode === 'latexml' || $mode === 'mathml' );
+		return in_array( $mode, [ 'latexml', 'native' ] );
 	}
 
 	private function DisplayRendering( string $tex, string $mode ) {
@@ -254,9 +249,7 @@ class FormulaInfo extends SpecialPage {
 		$renderer = MathLaTeXML::getRenderer( $this->rendererFactory, $tex, [], $mode );
 		if ( $this->purge ) {
 			$renderer->render( true );
-		} elseif ( $mode == 'mathml' || !$renderer->isInDatabase() ) {
-			// workaround for restbase mathml mode that does not support database access
-			// $out->addWikiTextAsInterface( "No database entry. Start rendering" );
+		} elseif ( !$renderer->isInDatabase() ) {
 			$renderer->render();
 		}
 		if ( self::hasMathMLSupport( $mode ) ) {
@@ -279,21 +272,6 @@ class FormulaInfo extends SpecialPage {
 				'<syntaxhighlight lang="xml">' . ( $renderer->getMathml() ) . '</syntaxhighlight>'
 			);
 			$out->addHTML( '</div></div>' );
-		}
-		if ( self::hasSvgSupport( $mode ) ) {
-			try {
-				$svg = $renderer->getSvg( 'cached' );
-				if ( $svg === '' ) {
-					$out->addWikiTextAsInterface( 'SVG image empty. Force Re-Rendering' );
-					$renderer->render( true );
-					$svg = $renderer->getSvg( 'render' );
-				}
-				$out->addWikiTextAsInterface( 'SVG (' . self::getlengh( $svg ) . ') :', false );
-				$out->addHTML( $svg ); // FALSE, 'mwe-math-demo' ) );
-				$out->addHTML( "<br />\n" );
-			} catch ( Exception $e ) {
-				$out->addHTML( 'Failed to get svg.' );
-			}
 		}
 		$renderer->writeCache();
 	}

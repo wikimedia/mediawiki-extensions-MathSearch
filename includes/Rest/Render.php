@@ -2,12 +2,14 @@
 
 namespace MediaWiki\Extension\MathSearch\Rest;
 
+use MediaWiki\Config\Config;
 use MediaWiki\Extension\Math\MathConfig;
 use MediaWiki\Extension\Math\Render\RendererFactory;
 use MediaWiki\Rest\HttpException;
 use MediaWiki\Rest\Response;
 use MediaWiki\Rest\SimpleHandler;
 use MediaWiki\Rest\StringStream;
+use RuntimeException;
 use Wikimedia\ParamValidator\ParamValidator;
 
 /**
@@ -19,19 +21,37 @@ use Wikimedia\ParamValidator\ParamValidator;
 class Render extends SimpleHandler {
 
 	private const array FORMATS = [
-		'svg' => [ 'type' => 'image/svg+xml' ],
-		'mml' => [ 'type' => 'application/mathml+xml' ],
+		'svg' => [
+			'type' => 'image/svg+xml',
+			'profile' => 'https://www.mediawiki.org/wiki/Specs/SVG/1.0.0',
+		],
+		'mml' => [
+			'type' => 'application/mathml+xml',
+			'profile' => 'https://www.mediawiki.org/wiki/Specs/MathML/1.0.0',
+		],
 	];
-
-	private const string SVG_PROFILE = 'https://www.mediawiki.org/wiki/Specs/SVG/1.0.0';
-	private const string MML_PROFILE = 'https://www.mediawiki.org/wiki/Specs/MathML/1.0.0';
 
 	private FormulaStore $store;
 	private RendererFactory $rendererFactory;
+	private SvgRenderer $svgRenderer;
+	private Config $config;
 
-	public function __construct( FormulaStore $store, RendererFactory $rendererFactory ) {
+	public function __construct(
+		FormulaStore $store, RendererFactory $rendererFactory, SvgRenderer $svgRenderer, Config $config
+	) {
 		$this->store = $store;
 		$this->rendererFactory = $rendererFactory;
+		$this->svgRenderer = $svgRenderer;
+		$this->config = $config;
+	}
+
+	/** @return string[] */
+	private function getFormats(): array {
+		$formats = array_keys( self::FORMATS );
+		if ( !$this->config->get( 'MathSearchRestSvg' ) ) {
+			$formats = array_diff( $formats, [ 'svg' ] );
+		}
+		return array_values( $formats );
 	}
 
 	/** @inheritDoc */
@@ -39,7 +59,7 @@ class Render extends SimpleHandler {
 		return [
 			'format' => [
 				self::PARAM_SOURCE => 'path',
-				ParamValidator::PARAM_TYPE => array_keys( self::FORMATS ),
+				ParamValidator::PARAM_TYPE => $this->getFormats(),
 				ParamValidator::PARAM_REQUIRED => true,
 			],
 			'hash' => [
@@ -60,43 +80,64 @@ class Render extends SimpleHandler {
 		}
 
 		$spec = self::FORMATS[$format];
-		$body = $this->renderOnServer( $formula['q'], $format );
+		$body = $this->renderOnServer( $formula['q'] );
 		if ( !is_string( $body ) || $body === '' ) {
 			throw new HttpException( "Nothing was produced for format $format", 500 );
 		}
+		if ( $format === 'svg' ) {
+			$body = $this->renderSvg( $formula, $body );
+		}
 
-		return $this->respond( $body, $format, $spec, $formula );
+		return $this->respond( $body, $spec, $formula );
 	}
 
-	/** The reference rendering, from the same service the wiki itself uses. */
-	private function renderOnServer( string $tex, string $format ): ?string {
-		$renderer = $this->rendererFactory->getRenderer( $tex, [], MathConfig::MODE_MATHML );
+	private function renderOnServer( string $tex ): ?string {
+		$renderer = $this->rendererFactory->getRenderer( $tex, [], MathConfig::MODE_NATIVE_MML );
+		// As MathReferenceData does: without this the MathML gets class=mathjax_ignore (T434686).
+		$renderer->setMode( MathConfig::MODE_NATIVE_JAX );
 		if ( !$renderer->render() ) {
 			throw new HttpException(
 				'Server-side rendering failed: ' . $renderer->getLastError(), 500 );
 		}
-		return $format === 'svg' ? $renderer->getSvg() : $renderer->getMathml();
+		return $renderer->getMathml();
+	}
+
+	/** @param array{q:string,type:string} $formula */
+	private function renderSvg( array $formula, string $mathml ): string {
+		$svg = $this->store->getSvg( $formula, $mathml );
+		if ( $svg !== null ) {
+			return $svg;
+		}
+		try {
+			$svg = $this->svgRenderer->render( $mathml );
+		} catch ( RuntimeException $e ) {
+			throw new HttpException( 'SVG rendering failed: ' . $e->getMessage(), 500 );
+		}
+		if ( $svg === null ) {
+			throw new HttpException( 'MathJax produced no SVG', 500 );
+		}
+		$this->store->saveSvg( $formula, $mathml, $svg );
+		return $svg;
 	}
 
 	/**
 	 * @param string $body
-	 * @param string $format
 	 * @param array $spec
 	 * @param array{q:string,type:string} $formula
 	 * @return Response
 	 */
-	private function respond( string $body, string $format, array $spec, array $formula ): Response {
+	private function respond( string $body, array $spec, array $formula ): Response {
 		$response = $this->getResponseFactory()->create();
 		$response->setBody( new StringStream( $body ) );
 
-		$profile = $format === 'svg' ? self::SVG_PROFILE : self::MML_PROFILE;
 		$response->setHeader( 'Content-Type',
-			$spec['type'] . '; charset=utf-8; profile="' . $profile . '"' );
+			$spec['type'] . '; charset=utf-8; profile="' . $spec['profile'] . '"' );
 		$response->setHeader( 'x-resource-location',
 			FormulaHash::fromTex( $formula['q'], $formula['type'] ) );
 		$response->setHeader( 'Cache-Control', 's-maxage=864000, max-age=86400' );
-		// Raw SVG from an API path is a script vector without this.
+		// Raw SVG from an API path is a script vector without these.
 		$response->setHeader( 'X-Content-Type-Options', 'nosniff' );
+		$response->setHeader( 'Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'" );
 		$response->setHeader( 'ETag',
 			'"' . sha1( $body ) . '"' );
 		return $response;

@@ -184,6 +184,10 @@
 			"description": "Maximum length of the TeX input of the Wikibase data types of MathSearch. The longest valid formula in Wikimedia projects has about 10,700 characters.",
 			"value": 20000
 		},
+		"MathSearchRestSvg": {
+			"description": "Serve /math/v0/render/svg/{hash}. A request starts MathJax in a headless Firefox through `npm run qunit`, as FixNativeReferences in Math does. That needs npm, Firefox and $wgEnableJavaScriptTest on the server, and it lets a web request start processes.",
+			"value": false
+		},
 		"MathSearchInfoPage": {
 			"value": "FormulaInfo"
 		},
@@ -417,6 +421,20 @@
 		"MediaWiki\\Extension\\MathSearch\\Tests\\WikiTexVC\\MMLComparator": "tests/phpunit/integration/WikiTexVC/MMLComparator.php",
 		"MediaWiki\\Extension\\MathSearch\\Tests\\WikiTexVC\\XMLNode": "tests/phpunit/integration/WikiTexVC/XMLNode.php"
 	},
+	"QUnitTestModule": {
+		"localBasePath": "",
+		"remoteExtPath": "MathSearch",
+		"packageFiles": [
+			"tests/qunit/renderSvg.test.js",
+			{
+				"name": "tests/qunit/pending.json",
+				"callback": "MediaWiki\\Extension\\MathSearch\\Rest\\SvgRenderer::getPending"
+			}
+		],
+		"dependencies": [
+			"ext.math.mathjax"
+		]
+	},
 	"JobClasses": {
 		"SeLineReader": "\\MathSearch\\StackExchange\\LineReaderJob",
 		"CreateProfilePages": "\\MediaWiki\\Extension\\MathSearch\\Graph\\Job\\PageCreation",
@@ -443,7 +461,9 @@
 			"class": "\\MediaWiki\\Extension\\MathSearch\\Rest\\Render",
 			"services": [
 				"MathSearch.FormulaStore",
-				"Math.RendererFactory"
+				"Math.RendererFactory",
+				"MathSearch.SvgRenderer",
+				"MainConfig"
 			]
 		},
 		{

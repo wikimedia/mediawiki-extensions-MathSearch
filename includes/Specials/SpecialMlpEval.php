@@ -43,7 +43,6 @@ class SpecialMlpEval extends SpecialPage {
 	private $subStepNames = [
 		''   => '',
 		'4'  => '',
-		'4a' => 'Mathoid-',
 		'4b' => 'Native-',
 		'4c' => 'LaTeXML-'
 	];
@@ -301,8 +300,6 @@ class SpecialMlpEval extends SpecialPage {
 				case '':
 					return '4';
 				case '4':
-					return '4a';
-				case '4a':
 					return '4b';
 				case '4b':
 					return '4c';
@@ -324,10 +321,8 @@ class SpecialMlpEval extends SpecialPage {
 		}
 		if ( $step == 4 ) {
 			switch ( $substep ) {
-				case '4a':
-					return '4';
 				case '4b':
-					return '4a';
+					return '4';
 				case '4c':
 					return '4b';
 				// case '4':
@@ -440,11 +435,6 @@ class SpecialMlpEval extends SpecialPage {
 				break;
 			case self::STEP_RENDERING:
 				switch ( $this->subStep ) {
-					case '4a':
-						$this->userOptionsManager->setOption( $this->getUser(), 'math', 'mathml' );
-						$this->printMathObjectInContext( false, false,
-							$this->getMathMLRenderingAsHtmlFragment( 'mathml' ) );
-						break;
 					case '4b':
 						$this->userOptionsManager->setOption( $this->getUser(), 'math', 'native' );
 						$this->printMathObjectInContext( false, false,

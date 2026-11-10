@@ -20,6 +20,9 @@ What deliberately differs from the source:
 * paths are `/math/v0/…` rather than `/media/math/…`, since this is served by
   `rest.php` and versioned separately
 * `png` is not offered; RESTBase rewrites it to `svg` anyway
+* `svg` is off by default, see `$wgMathSearchRestSvg`. It is MathJax's SVG of
+  the `mml` output, rendered in a headless browser as Math's
+  `FixNativeReferences` does, not Mathoid's
 * `servers` and `security` are declared, which RESTBase's fragment leaves to the
   document that includes it
 * each operation has an `operationId`, so Swagger UI can deep-link to it
