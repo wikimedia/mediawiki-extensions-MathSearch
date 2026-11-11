@@ -160,5 +160,6 @@
 	"importfrompid": "Import aus persistentem Bezeichner",
 	"mathsearch-protected-entity-edit": "$1 $2 ist geschützt, da seine ID unter $3 liegt. Entitäten mit niedrigen Nummern werden hier als zwischengespeicherte Upstream-Kopien aufbewahrt, um die Ausfallsicherheit zu gewährleisten, falls die Upstream-Wikibase nicht verfügbar ist. Bitte nimm diese Änderung upstream unter $4 vor.",
 	"wikibase-listdatatypes-contentmath-head": "Mathematischer Ausdruck (Inhalt)",
-	"wikibase-listdatatypes-contentmath-body": "Literales Datenfeld für mathematische Ausdrücke, Formeln, Gleichungen und ähnliches, ausgedrückt in der DRMF/DLMF-Variante von LaTeX."
+	"wikibase-listdatatypes-contentmath-body": "Literales Datenfeld für mathematische Ausdrücke, Formeln, Gleichungen und ähnliches, ausgedrückt in der DRMF/DLMF-Variante von LaTeX.",
+	"mathsearch-mathml-invalid": "Ungültiges MathML: $1"
 }

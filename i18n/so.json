@@ -65,5 +65,6 @@
 	"importfrompid": "Ka soo geli Aqoonsi Joogto ah",
 	"mathsearch-protected-entity-edit": "$1 $2 waa la ilaaliyey sababtoo ah Aqoonsigiisu wuxuu ka hooseeyaa $3. Hay'adaha leh lambarro hoose waxaa halkan loogu hayaa nuqullo kayd ah oo laga soo min-guuriyey isha sare, si adeeggu u sii shaqeeyo marka Wikibase-ka isha sare aan la heli karin. Fadlan isbeddelkan ku samee isha sare ee $4.",
 	"wikibase-listdatatypes-contentmath-head": "Oraah xisaabeed (nuxur)",
-	"wikibase-listdatatypes-contentmath-body": "Goob xogeed toos ah oo loogu talagalay oraahyada xisaabeed, qaacidooyinka, isla'egyada iyo wixii la mid ah, kuwaas oo lagu muujiyey nooca LaTeX ee DRMF/DLMF."
+	"wikibase-listdatatypes-contentmath-body": "Goob xogeed toos ah oo loogu talagalay oraahyada xisaabeed, qaacidooyinka, isla'egyada iyo wixii la mid ah, kuwaas oo lagu muujiyey nooca LaTeX ee DRMF/DLMF.",
+	"mathsearch-mathml-invalid": "MathML aan sax ahayn: $1"
 }
