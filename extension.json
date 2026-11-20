@@ -38,14 +38,27 @@
 		"WikidataDriver": "includes/WikidataDriver.php"
 	},
 	"AvailableRights": [
-		"mathwmcsubmit"
+		"mathwmcsubmit",
+		"mathtrustedkeys"
 	],
 	"ExtensionMessagesFiles": {
 		"MathSearchAlias": "MathSearch.alias.php"
 	},
+	"GrantPermissions": {
+		"mathtrustedkeys": {
+			"mathtrustedkeys": true
+		}
+	},
+	"GrantPermissionGroups": {
+		"mathtrustedkeys": "customization"
+	},
+	"GrantRiskGroups": {
+		"mathtrustedkeys": "security"
+	},
 	"GroupPermissions": {
 		"sysop": {
-			"mathwmcsubmit": true
+			"mathwmcsubmit": true,
+			"mathtrustedkeys": true
 		}
 	},
 	"HookHandlers": {
@@ -481,6 +494,23 @@
 			"class": "\\MediaWiki\\Extension\\MathSearch\\Rest\\Formula",
 			"services": [
 				"MathSearch.FormulaStore"
+			]
+		},
+		{
+			"path": "/math/v0/key",
+			"method": "POST",
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Rest\\AddKey",
+			"services": [
+				"MathSearch.KeyStore",
+				"MainConfig"
+			]
+		},
+		{
+			"path": "/math/v0/key/{key}",
+			"method": "GET",
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Rest\\Key",
+			"services": [
+				"MathSearch.KeyStore"
 			]
 		}
 	],

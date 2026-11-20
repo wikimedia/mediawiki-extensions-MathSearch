@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Extension\MathSearch\Keys\KeyStore;
 use MediaWiki\Extension\MathSearch\Rest\FormulaStore;
 use MediaWiki\Extension\MathSearch\Rest\SvgRenderer;
 use MediaWiki\MainConfigNames;
@@ -12,6 +13,13 @@ use MediaWiki\MediaWikiServices;
 return [
 	'MathSearch.FormulaStore' => static function ( MediaWikiServices $services ): FormulaStore {
 		return new FormulaStore( $services->getConnectionProvider() );
+	},
+	'MathSearch.KeyStore' => static function ( MediaWikiServices $services ): KeyStore {
+		return new KeyStore(
+			$services->getConnectionProvider(),
+			$services->getUserIdentityLookup(),
+			$services->getPermissionManager()
+		);
 	},
 	'MathSearch.SvgRenderer' => static function ( MediaWikiServices $services ): SvgRenderer {
 		$config = $services->getMainConfig();
