@@ -23,6 +23,7 @@ $specialPageAliases['en'] = [
 	'QuickSparqlStatements' => [ 'QuickSparqlStatements', 'SPARQL QuickStatements generator' ],
 	'PidRedirect' => [ 'PidRedirect', 'Persistent Identifier Redirection' ],
 	'ImportFromPid' => [ 'ImportFromPid', 'Import from persistent Identifier' ],
+	'IpfsUpload' => [ 'IpfsUpload', 'IPFS Upload' ],
 ];
 
 /** Arabic (العربية) */

@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Extension\MathSearch\Ipfs\IpfsClient;
 use MediaWiki\Extension\MathSearch\Keys\KeyStore;
 use MediaWiki\Extension\MathSearch\Rest\FormulaStore;
 use MediaWiki\Extension\MathSearch\Rest\SvgRenderer;
@@ -13,6 +14,12 @@ use MediaWiki\MediaWikiServices;
 return [
 	'MathSearch.FormulaStore' => static function ( MediaWikiServices $services ): FormulaStore {
 		return new FormulaStore( $services->getConnectionProvider() );
+	},
+	'MathSearch.IpfsClient' => static function ( MediaWikiServices $services ): IpfsClient {
+		return new IpfsClient(
+			$services->getHttpRequestFactory()->createGuzzleClient(),
+			$services->getMainConfig()->get( 'MathSearchIpfsApi' )
+		);
 	},
 	'MathSearch.KeyStore' => static function ( MediaWikiServices $services ): KeyStore {
 		return new KeyStore(

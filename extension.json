@@ -228,6 +228,10 @@
 		"MathSearchPropertyIpfs": {
 			"value": "P1633"
 		},
+		"MathSearchIpfsApi": {
+			"value": "http://127.0.0.1:5001",
+			"description": "HTTP API of the Kubo node that Special:IpfsUpload adds files to."
+		},
 		"MathSearchMode": {
 			"value": "latexml"
 		},
@@ -365,6 +369,12 @@
 			"services": [
 				"ConnectionProvider",
 				"Math.RendererFactory"
+			]
+		},
+		"IpfsUpload": {
+			"class": "\\MediaWiki\\Extension\\MathSearch\\Specials\\SpecialIpfsUpload",
+			"services": [
+				"MathSearch.IpfsClient"
 			]
 		},
 		"ImportFromPid": {
