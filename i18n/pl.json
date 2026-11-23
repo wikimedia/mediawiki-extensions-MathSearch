@@ -4,6 +4,7 @@
 			"Chrumps",
 			"Darellur",
 			"Matma Rex",
+			"PanWor",
 			"Rail",
 			"Woytecr"
 		]
@@ -72,6 +73,9 @@
 	"math-wmc-bad-header": "Błąd: Nagłówkiem kolumny musi być queryId,formulaId. Dodatkowe kolumny nie są dozwolone.",
 	"math-wmc-importing": "Importowanie...",
 	"math-wmc-display-formulae-help": "Nie zalecane dla dużych plików wejściowych.",
+	"action-mathtrustedkeys": "uznawania swoich kluczy publicznych za zaufane do przypinania plików",
+	"right-mathtrustedkeys": "Uznawanie własnych kluczy publicznych za zaufane do przypinania plików",
+	"grant-mathtrustedkeys": "Dodawanie zaufanych kluczy publicznych do przypinania plików",
 	"math-search-relation-label": "Zależność:",
 	"math-search-relation-0": "i",
 	"math-search-relation-1": "lub",
