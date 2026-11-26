@@ -32,33 +32,12 @@ class AddKeyTest extends MediaWikiIntegrationTestCase {
 		$this->setGroupPermissions( 'trusted-test', 'mathtrustedkeys', true );
 		$pair = sodium_crypto_sign_keypair();
 		$this->secretKey = sodium_crypto_sign_secretkey( $pair );
-		$this->key = self::toBase58( "\x00\x24\x08\x01\x12\x20" . sodium_crypto_sign_publickey( $pair ) );
-	}
-
-	private static function toBase58( string $binary ): string {
-		$alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-		$digits = '';
-		$bytes = array_values( unpack( 'C*', ltrim( $binary, "\0" ) ) );
-		while ( $bytes ) {
-			$rest = 0;
-			foreach ( $bytes as &$byte ) {
-				$rest = $rest * 256 + $byte;
-				$byte = intdiv( $rest, 58 );
-				$rest %= 58;
-			}
-			unset( $byte );
-			$digits = $alphabet[$rest] . $digits;
-			while ( $bytes && $bytes[0] === 0 ) {
-				array_shift( $bytes );
-			}
-		}
-		return str_repeat( '1', strlen( $binary ) - strlen( ltrim( $binary, "\0" ) ) ) . $digits;
+		$this->key = (string)Ed25519Key::fromBytes( sodium_crypto_sign_publickey( $pair ) );
 	}
 
 	private function sign( string $name, int $timestamp ): string {
-		$message = "libp2p-key signed message:mathsearch-key-registration wiki.example $name $timestamp";
-		$signature = sodium_crypto_sign_detached( $message, $this->secretKey );
-		return 'u' . rtrim( strtr( base64_encode( $signature ), '+/', '-_' ), '=' );
+		$message = Ed25519Key::SIGNED_PREFIX . "mathsearch-key-registration wiki.example $name $timestamp";
+		return Ed25519Key::encodeSignature( sodium_crypto_sign_detached( $message, $this->secretKey ) );
 	}
 
 	private function newHandler(): AddKey {

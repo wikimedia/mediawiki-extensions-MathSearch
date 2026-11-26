@@ -12,7 +12,8 @@ class IpfsClient {
 
 	public function __construct(
 		private readonly ClientInterface $client,
-		private readonly string $apiUrl
+		private readonly string $apiUrl,
+		private readonly ?string $token = null
 	) {
 	}
 
@@ -22,6 +23,7 @@ class IpfsClient {
 	 */
 	public function add( string $path, string $name ): string {
 		$response = $this->client->request( 'POST', "$this->apiUrl/api/v0/add", [
+			'headers' => $this->token === null ? [] : [ 'Authorization' => "Bearer $this->token" ],
 			'query' => [
 				'cid-version' => 1,
 				'raw-leaves' => 'true',

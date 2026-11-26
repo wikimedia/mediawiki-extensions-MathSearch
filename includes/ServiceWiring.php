@@ -1,7 +1,9 @@
 <?php
 
 use MediaWiki\Extension\MathSearch\Ipfs\IpfsClient;
+use MediaWiki\Extension\MathSearch\Keys\CidSignatures;
 use MediaWiki\Extension\MathSearch\Keys\KeyStore;
+use MediaWiki\Extension\MathSearch\Keys\ManagedKeys;
 use MediaWiki\Extension\MathSearch\Rest\FormulaStore;
 use MediaWiki\Extension\MathSearch\Rest\SvgRenderer;
 use MediaWiki\MainConfigNames;
@@ -18,7 +20,8 @@ return [
 	'MathSearch.IpfsClient' => static function ( MediaWikiServices $services ): IpfsClient {
 		return new IpfsClient(
 			$services->getHttpRequestFactory()->createGuzzleClient(),
-			$services->getMainConfig()->get( 'MathSearchIpfsApi' )
+			$services->getMainConfig()->get( 'MathSearchIpfsApi' ),
+			$services->getMainConfig()->get( 'MathSearchIpfsApiToken' )
 		);
 	},
 	'MathSearch.KeyStore' => static function ( MediaWikiServices $services ): KeyStore {
@@ -26,6 +29,15 @@ return [
 			$services->getConnectionProvider(),
 			$services->getUserIdentityLookup(),
 			$services->getPermissionManager()
+		);
+	},
+	'MathSearch.CidSignatures' => static function ( MediaWikiServices $services ): CidSignatures {
+		return new CidSignatures( $services->getConnectionProvider() );
+	},
+	'MathSearch.ManagedKeys' => static function ( MediaWikiServices $services ): ManagedKeys {
+		return new ManagedKeys(
+			$services->getConnectionProvider(),
+			$services->getService( 'MathSearch.KeyStore' )
 		);
 	},
 	'MathSearch.SvgRenderer' => static function ( MediaWikiServices $services ): SvgRenderer {

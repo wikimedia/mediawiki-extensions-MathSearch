@@ -72,6 +72,8 @@ class MathSearchHooks implements
 			$updater->addExtensionTable( 'mathpagesimilarity', "{$dir}mathpagesimilarity.sql" );
 			$updater->addExtensionTable( 'math_rest_input', "{$dir}math_rest_input.sql" );
 			$updater->addExtensionTable( 'math_key', "{$dir}math_key.sql" );
+			$updater->addExtensionTable( 'math_managed_key', "{$dir}math_managed_key.sql" );
+			$updater->addExtensionTable( 'math_cid_signature', "{$dir}math_cid_signature.sql" );
 			if ( $wgMathWmcServer ) {
 				$wmcDir = $dir . 'wmc/persistent/';
 				$updater->addExtensionTable( 'math_wmc_ref', $wmcDir . "math_wmc_ref.sql" );

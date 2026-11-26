@@ -21,11 +21,12 @@ class IpfsClientTest extends MediaWikiUnitTestCase {
 			new Response( 200, [], '{"Name":"a.txt","Hash":"bafkreiexample","Size":"5"}' ),
 		] ) );
 		$stack->push( Middleware::history( $requests ) );
-		$client = new IpfsClient( new Client( [ 'handler' => $stack ] ), 'http://ipfs.example:5001' );
+		$client = new IpfsClient( new Client( [ 'handler' => $stack ] ), 'http://ipfs.example:5001', 'secret' );
 
 		$this->assertSame( 'bafkreiexample', $client->add( __FILE__, 'a.txt' ) );
 
 		$request = $requests[0]['request'];
+		$this->assertSame( 'Bearer secret', $request->getHeaderLine( 'Authorization' ) );
 		$this->assertSame( 'http://ipfs.example:5001/api/v0/add', (string)$request->getUri()->withQuery( '' ) );
 		parse_str( $request->getUri()->getQuery(), $query );
 		$this->assertSame( [
@@ -37,5 +38,16 @@ class IpfsClientTest extends MediaWikiUnitTestCase {
 			'pin' => 'true',
 		], $query );
 		$this->assertStringContainsString( 'filename="a.txt"', (string)$request->getBody() );
+	}
+
+	public function testSendsNoAuthorizationWithoutToken() {
+		$requests = [];
+		$stack = HandlerStack::create( new MockHandler( [ new Response( 200, [], '{"Hash":"bafkreiexample"}' ) ] ) );
+		$stack->push( Middleware::history( $requests ) );
+
+		$client = new IpfsClient( new Client( [ 'handler' => $stack ] ), 'http://ipfs.example:5001' );
+		$client->add( __FILE__, 'a.txt' );
+
+		$this->assertFalse( $requests[0]['request']->hasHeader( 'Authorization' ) );
 	}
 }

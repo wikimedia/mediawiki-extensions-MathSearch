@@ -20,8 +20,19 @@ class Ed25519KeyTest extends MediaWikiUnitTestCase {
 		$this->assertTrue( Ed25519Key::fromString( self::KEY )->verify( self::MESSAGE, self::SIGNATURE ) );
 	}
 
-	public function testDecodesTheRawKey() {
-		$this->assertSame( 32, strlen( Ed25519Key::fromString( self::KEY )->getBytes() ) );
+	public function testDecodesAndEncodesTheKey() {
+		$key = Ed25519Key::fromString( self::KEY );
+		$this->assertSame( 32, strlen( $key->getBytes() ) );
+		$this->assertSame( self::KEY, (string)Ed25519Key::fromBytes( $key->getBytes() ) );
+	}
+
+	public function testDecodesAndEncodesTheSignature() {
+		$raw = Ed25519Key::decodeSignature( self::SIGNATURE );
+		$this->assertSame( 64, strlen( $raw ) );
+		$this->assertSame( self::SIGNATURE, Ed25519Key::encodeSignature( $raw ) );
+		$this->assertNull( Ed25519Key::decodeSignature( substr( self::SIGNATURE, 1 ) ) );
+		$this->assertNull( Ed25519Key::decodeSignature( substr( self::SIGNATURE, 0, -2 ) ) );
+		$this->assertNull( Ed25519Key::decodeSignature( self::SIGNATURE . '!' ) );
 	}
 
 	public function testRejectsOtherMessageOrKey() {

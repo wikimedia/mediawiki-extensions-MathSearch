@@ -28,6 +28,7 @@
 	"require": {
 		"ext-dom": "*",
 		"ext-simplexml": "*",
+		"ext-sodium": "*",
 		"ext-xmlreader": "*"
 	},
 	"config": {

@@ -164,9 +164,19 @@
 	"wikibase-listdatatypes-contentmath-body": "Literal data field for mathematical expressions, formula, equations and such, expressed in the DRMF/DLMF variant of LaTeX.",
 	"mathsearch-mathml-invalid": "Invalid MathML: $1",
 	"ipfsupload": "Upload to IPFS",
-	"ipfsupload-summary": "The file is added to the IPFS node of this wiki and pinned there.",
+	"ipfsupload-summary": "The file is added to the IPFS node of this wiki and pinned there. The wiki signs its CID with a key it holds for you, so D-LOCKSS can record you as the uploader.",
 	"ipfsupload-file": "File:",
+	"ipfsupload-key": "Public key:",
+	"ipfsupload-nokey": "None yet. Your first upload creates one.",
+	"ipfsupload-download": "Download private key",
+	"ipfsupload-section-file": "File",
+	"ipfsupload-section-key": "Your key",
+	"ipfsupload-submit": "Upload and sign",
+	"ipfsupload-passphrase": "Passphrase of your key:",
+	"ipfsupload-passphrase-help": "The wiki holds a key for you and signs your files with it. A passphrase keeps the key unusable without you; the wiki cannot recover it. Leave it empty if you do not want one: then anyone who can read the wiki's database can sign in your name.",
+	"ipfsupload-newkey": "Create a new key with this passphrase if it does not open the old one, e.g. because you forgot it. What the old key signed stays signed.",
+	"ipfsupload-badpassphrase": "The passphrase does not match your key. If you forgot it, create a new key.",
 	"ipfsupload-nofile": "No file was uploaded.",
 	"ipfsupload-error": "The IPFS node could not add the file: $1",
-	"ipfsupload-done": "The file was added with the CID <code>$1</code>."
+	"ipfsupload-done": "The file was added with the CID <code>$1</code> and signed with your key <code>$2</code>."
 }

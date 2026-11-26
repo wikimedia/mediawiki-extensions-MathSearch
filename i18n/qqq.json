@@ -172,7 +172,17 @@
 	"ipfsupload": "{{doc-special|IpfsUpload}}",
 	"ipfsupload-summary": "Summary shown above the form on [[Special:IpfsUpload]].",
 	"ipfsupload-file": "Label of the file field on [[Special:IpfsUpload]].\n{{Identical|File}}",
+	"ipfsupload-key": "Label of the public key of the user's managed key on [[Special:IpfsUpload]], shown as a libp2p peer ID (12D3KooW…).",
+	"ipfsupload-nokey": "Shown on [[Special:IpfsUpload]] instead of the public key when the user has no managed key yet.",
+	"ipfsupload-download": "Button on [[Special:IpfsUpload]] that downloads the user's managed private key in the form `ipfs key import` reads. It needs the passphrase.",
+	"ipfsupload-section-file": "Heading of the section of [[Special:IpfsUpload]] with the file to upload.",
+	"ipfsupload-section-key": "Heading of the section of [[Special:IpfsUpload]] with the user's managed key and its passphrase.",
+	"ipfsupload-submit": "Label of the button on [[Special:IpfsUpload]] that adds the file to IPFS and signs its CID.",
+	"ipfsupload-passphrase": "Label of the passphrase field on [[Special:IpfsUpload]].",
+	"ipfsupload-passphrase-help": "Help below the passphrase field on [[Special:IpfsUpload]].",
+	"ipfsupload-newkey": "Label of the checkbox on [[Special:IpfsUpload]] that creates a new managed key.",
+	"ipfsupload-badpassphrase": "Error on [[Special:IpfsUpload]] when the passphrase does not decrypt the managed key.",
 	"ipfsupload-nofile": "Error on [[Special:IpfsUpload]] when the form was sent without a file.",
 	"ipfsupload-error": "Error on [[Special:IpfsUpload]] when the IPFS node fails.\n\nParameters:\n* $1 - the error message of the HTTP request",
-	"ipfsupload-done": "Shown on [[Special:IpfsUpload]] after a successful upload.\n\nParameters:\n* $1 - the CID of the file"
+	"ipfsupload-done": "Shown on [[Special:IpfsUpload]] after a successful upload.\n\nParameters:\n* $1 - the CID of the file\n* $2 - the public key of the user, a libp2p peer ID"
 }

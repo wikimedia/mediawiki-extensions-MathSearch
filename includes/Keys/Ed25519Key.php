@@ -16,7 +16,14 @@ class Ed25519Key {
 	 */
 	private const string PREFIX = "\x00\x24\x08\x01\x12\x20";
 
+	/** What `ipfs key sign` puts before the message it signs */
+	public const string SIGNED_PREFIX = 'libp2p-key signed message:';
+
 	private function __construct( private readonly string $publicKey ) {
+	}
+
+	public static function fromBytes( string $publicKey ): self {
+		return new self( $publicKey );
 	}
 
 	public static function fromString( string $key ): ?self {
@@ -43,9 +50,43 @@ class Ed25519Key {
 		return new self( substr( $binary, strlen( self::PREFIX ) ) );
 	}
 
+	public function __toString(): string {
+		$binary = self::PREFIX . $this->publicKey;
+		$bytes = array_values( unpack( 'C*', ltrim( $binary, "\0" ) ) );
+		$digits = '';
+		while ( $bytes ) {
+			$rest = 0;
+			foreach ( $bytes as &$byte ) {
+				$rest = $rest * 256 + $byte;
+				$byte = intdiv( $rest, 58 );
+				$rest %= 58;
+			}
+			unset( $byte );
+			$digits = self::ALPHABET[$rest] . $digits;
+			while ( $bytes && $bytes[0] === 0 ) {
+				array_shift( $bytes );
+			}
+		}
+		return str_repeat( '1', strspn( $binary, "\0" ) ) . $digits;
+	}
+
 	/** The raw 32-byte public key */
 	public function getBytes(): string {
 		return $this->publicKey;
+	}
+
+	/** The form `ipfs key sign` prints a signature in: multibase base64url */
+	public static function encodeSignature( string $signature ): string {
+		return 'u' . rtrim( strtr( base64_encode( $signature ), '+/', '-_' ), '=' );
+	}
+
+	/** The raw 64-byte signature, or null if $signature is not in the form of `ipfs key sign` */
+	public static function decodeSignature( string $signature ): ?string {
+		if ( !str_starts_with( $signature, 'u' ) ) {
+			return null;
+		}
+		$raw = base64_decode( strtr( substr( $signature, 1 ), '-_', '+/' ), true );
+		return $raw !== false && strlen( $raw ) === SODIUM_CRYPTO_SIGN_BYTES ? $raw : null;
 	}
 
 	/**
@@ -53,9 +94,8 @@ class Ed25519Key {
 	 * Kubo KeyAPI::Sign, swh:1:cnt:27973a706078a5d06a07a3f3d3b88eb649fc76cd;lines=281-316
 	 */
 	public function verify( string $message, string $signature ): bool {
-		$raw = str_starts_with( $signature, 'u' ) ?
-			base64_decode( strtr( substr( $signature, 1 ), '-_', '+/' ), true ) : false;
-		return is_string( $raw ) && strlen( $raw ) === SODIUM_CRYPTO_SIGN_BYTES &&
-			sodium_crypto_sign_verify_detached( $raw, 'libp2p-key signed message:' . $message, $this->publicKey );
+		$raw = self::decodeSignature( $signature );
+		return $raw !== null &&
+			sodium_crypto_sign_verify_detached( $raw, self::SIGNED_PREFIX . $message, $this->publicKey );
 	}
 }
