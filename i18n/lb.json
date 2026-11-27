@@ -54,5 +54,7 @@
 	"math-search-expression-label": "Ausdrock:",
 	"math-tex2nb-header": "Gitt Ären eegenen Input un",
 	"datatypes-type-contentmath": "Mathemateschen Ausdrock (Inhalt)",
-	"wikibase-listdatatypes-contentmath-head": "Mathemateschen Ausdrock (Inhalt)"
+	"wikibase-listdatatypes-contentmath-head": "Mathemateschen Ausdrock (Inhalt)",
+	"ipfsupload-file": "Fichier:",
+	"ipfsupload-nofile": "Et gouf kee Fichier eropgelueden."
 }

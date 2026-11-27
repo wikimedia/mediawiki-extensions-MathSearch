@@ -161,5 +161,11 @@
 	"mathsearch-protected-entity-edit": "$1 $2 ist geschützt, da seine ID unter $3 liegt. Entitäten mit niedrigen Nummern werden hier als zwischengespeicherte Upstream-Kopien aufbewahrt, um die Ausfallsicherheit zu gewährleisten, falls die Upstream-Wikibase nicht verfügbar ist. Bitte nimm diese Änderung upstream unter $4 vor.",
 	"wikibase-listdatatypes-contentmath-head": "Mathematischer Ausdruck (Inhalt)",
 	"wikibase-listdatatypes-contentmath-body": "Literales Datenfeld für mathematische Ausdrücke, Formeln, Gleichungen und ähnliches, ausgedrückt in der DRMF/DLMF-Variante von LaTeX.",
-	"mathsearch-mathml-invalid": "Ungültiges MathML: $1"
+	"mathsearch-mathml-invalid": "Ungültiges MathML: $1",
+	"ipfsupload": "Hochladen auf IPFS",
+	"ipfsupload-summary": "Die Datei wurde dem IPFS-Knoten dieses Wikis hinzugefügt und dort angepinnt.",
+	"ipfsupload-file": "Datei:",
+	"ipfsupload-nofile": "Es wurde keine Datei hochgeladen.",
+	"ipfsupload-error": "Der IPFS-Knoten konnte die Datei nicht hinzufügen: $1",
+	"ipfsupload-done": "Die Datei wurde mit der CID <code>$1</code> hinzugefügt."
 }

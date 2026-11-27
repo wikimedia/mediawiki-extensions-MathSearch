@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Amirhusenjihed"
+		]
+	},
+	"ipfsupload": "IPFS-ꠄ ꠀꠙꠟꠧꠒ ꠇꠞꠥꠘ",
+	"ipfsupload-summary": "ꠚꠣꠁꠟꠐꠤ ꠄꠁ ꠃꠁꠇꠤꠞ ꠀꠁꠙꠤꠄꠚꠄꠡ (IPFS) ꠘꠧꠒꠦ ꠎꠥꠇ꠆ꠔ ꠇꠞꠣ ꠢꠅꠍꠦ ꠄꠛꠋ ꠡꠦꠈꠣꠘꠦ ꠙꠤꠘ ꠇꠞꠦ ꠞꠣꠈꠣ ꠢꠅꠍꠦ।",
+	"ipfsupload-error": "IPFS ꠘꠧꠒꠐꠤ ꠚꠣꠁꠟꠐꠤ ꠎꠧꠉ ꠇꠞꠔꠦ ꠙꠣꠞꠦꠘꠤ: $1",
+	"ipfsupload-done": "ꠚꠣꠁꠟꠐꠤ <code>$1</code> ꠡꠤꠀꠁꠒꠤ (CID) ꠡꠢ ꠎꠥꠇ꠆ꠔ ꠇꠞꠣ ꠢয়ꠦꠍꠦ।"
+}
